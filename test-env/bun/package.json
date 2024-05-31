@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@std/assert": "npm:@jsr/std__assert",
+    "@tai-kun/surrealdb": "file:../.."
+  }
+}

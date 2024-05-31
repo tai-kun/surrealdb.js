@@ -1,0 +1,26 @@
+// https://github.com/swc-project/swc-node/blob/%40swc-node/register%401.9.0/packages/core/index.ts#L34
+{
+  "$schema": "https://swc.rs/schema.json",
+  "jsc": {
+    "target": "es2020",
+    "externalHelpers": false,
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "decorators": true,
+      "dynamicImport": true
+    },
+    "transform": {
+      "legacyDecorator": true,
+      "decoratorMetadata": false,
+      "useDefineForClassFields": false,
+      "decoratorVersion": "2022-03"
+    },
+    "keepClassNames": true,
+    "paths": {}
+  },
+  "minify": false,
+  "isModule": true,
+  "sourceMaps": "inline",
+  "inlineSourcesContent": true
+}

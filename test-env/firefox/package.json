@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@std/assert": "npm:@jsr/std__assert@^0.225.2",
+    "@tai-kun/surrealdb": "file:../..",
+    "@testcontainers/selenium": "^10.9.0",
+    "esbuild": "^0.21.3",
+    "ofetch": "^1.3.4",
+    "selenium-webdriver": "^4.21.0"
+  }
+}

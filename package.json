@@ -1,0 +1,103 @@
+{
+  "name": "@tai-kun/surrealdb",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "The unofficial SurrealDB SDK for JavaScript.",
+  "sideEffects": false,
+  "main": "./dist/client/normal.cjs",
+  "module": "./dist/client/normal.mjs",
+  "types": "./dist/client/normal.d.ts",
+  "exports": {
+    ".": {
+      "tyes": "./dist/client/normal.d.ts",
+      "import": "./dist/client/normal.mjs",
+      "require": "./dist/client/normal.cjs"
+    },
+    "./full": {
+      "tyes": "./dist/client/full.d.ts",
+      "import": "./dist/client/full.mjs",
+      "require": "./dist/client/full.cjs"
+    },
+    "./tiny": {
+      "tyes": "./dist/client/tiny.d.ts",
+      "import": "./dist/client/tiny.mjs",
+      "require": "./dist/client/tiny.cjs"
+    },
+    "./internal": {
+      "tyes": "./dist/internal/index.d.ts",
+      "import": "./dist/internal/index.mjs",
+      "require": "./dist/internal/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "cbor-redux": "^1.0.0",
+    "decimal.js": "^10.4.3",
+    "decimal.js-light": "^2.5.1",
+    "ws": "^8.17.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.1.4",
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/node": "^20.12.12",
+    "@types/unzipper": "^0.10.9",
+    "@types/ws": "^8.5.10",
+    "dprint": "^0.46.1",
+    "esbuild": "^0.21.4",
+    "glob": "^10.4.1",
+    "size-limit": "^11.1.4",
+    "tar": "^7.1.0",
+    "testcontainers": "^10.9.0",
+    "type-fest": "^4.18.3",
+    "typedoc": "^0.25.13",
+    "typescript": "^5.4.5",
+    "unzipper": "^0.11.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tai-kun/surrealdb-js.git"
+  },
+  "author": {
+    "name": "tai-kun",
+    "url": "https://github.com/tai-kun/"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs && tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit && dprint check",
+    "test:bun": "node scripts/test.mjs ci test-bun",
+    "test:cfw": "node scripts/test.mjs ci test-cfw",
+    "test:node": "node scripts/test.mjs ci test-node",
+    "test:deno": "node scripts/test.mjs ci test-deno",
+    "test:chrome": "node scripts/test.mjs ci test-chrome",
+    "test:firefox": "node scripts/test.mjs ci test-firefox",
+    "docs": "typedoc src/client/normal.ts src/client/full.ts src/client/tiny.ts src/internal/index.ts --out docs",
+    "size": "npm run build && size-limit"
+  },
+  "size-limit": [
+    {
+      "import": {
+        "dist/client/tiny.mjs": "{ Surreal, HttpEngine, JsonFormatter, EmptyValidator }"
+      },
+      "gzip": true
+    },
+    {
+      "import": {
+        "dist/client/normal.mjs": "{ Surreal, WebsocketEngine, CborFormatter, EmptyValidator }",
+        "dist/client/tiny.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
+      },
+      "gzip": true
+    },
+    {
+      "import": {
+        "dist/client/full.mjs": "{ Surreal, WebsocketEngine, CborFormatter, ZodValidator, Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
+      },
+      "gzip": true
+    }
+  ],
+  "volta": {
+    "node": "22.2.0"
+  }
+}

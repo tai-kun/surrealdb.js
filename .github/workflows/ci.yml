@@ -1,0 +1,198 @@
+name: CI
+
+on: push
+
+jobs:
+  test-node:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # TODO(tai-kun): Support Node.js 18.x and 20.x
+        # The test runners in those versions cannot specify files to test using glob patterns.
+        node-version:
+          # - "18.x"
+          # - "20.x"
+          - "22.x"
+        surrealdb-version:
+          - "v1.4.2"
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Pretest
+        run: bash scripts/pretest.sh
+
+      - name: Test
+        run: bash test.sh
+        env:
+          SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+        working-directory: test-env/node
+
+  # TODO(tai-kun): Support Deno
+  # Deno cannot import local npm packages, so testing is not possible.
+
+  # test-deno:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       deno-version:
+  #         - "v1.x"
+  #       surrealdb-version:
+  #         - "v1.4.2"
+  #         - "latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Setup Node.js 22.x
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "22.x"
+
+  #     - name: Setup Deno ${{ matrix.deno-version }}
+  #       uses: denoland/setup-deno@v1
+  #       with:
+  #         deno-version: ${{ matrix.deno-version }}
+
+  #     - name: Pretest
+  #       run: bash scripts/pretest.sh
+
+  #     - name: Test
+  #       run: bash test.sh
+  #       env:
+  #         SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+  #       working-directory: test-env/deno
+
+  # TODO(tai-kun): Support Bun
+  # It seems that Bun does not support stage 3 decorators.
+
+  # test-bun:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       bun-version:
+  #         - "1.x"
+  #       surrealdb-version:
+  #         - "v1.4.2"
+  #         - "latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Setup Node.js 22.x
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "22.x"
+
+  #     - name: Setup Bun
+  #       uses: oven-sh/setup-bun@v1
+  #       with:
+  #         bun-version: ${{ matrix.bun-version }}
+
+  #     - name: Pretest
+  #       run: bash scripts/pretest.sh
+
+  #     - name: Test
+  #       run: bash test.sh
+  #       env:
+  #         SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+  #       working-directory: test-env/bun
+
+  # TODO(tai-kun): Support Cloudflare Workers
+  # I'm not entirely sure why, but it seems that Vitest's module resolution isn't working correctly.
+
+  # test-cfw:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       surrealdb-version:
+  #         - "v1.4.2"
+  #         - "latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Setup Node.js 22.x
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22.x
+
+  #     - name: Pretest
+  #       run: bash scripts/pretest.sh
+
+  #     - name: Test
+  #       run: bash test.sh
+  #       env:
+  #         SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+  #       working-directory: test-env/cloudflare-workers
+
+  test-chrome:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # https://hub.docker.com/r/selenium/standalone-chrome/tags
+        browser-version:
+          - "103.0"
+          - "latest"
+        surrealdb-version:
+          - "v1.4.2"
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 22.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+
+      - name: Pretest
+        run: bash scripts/pretest.sh
+
+      - name: Test
+        run: bash test.sh
+        env:
+          SELENIUM_DOCKER_IMAGE: selenium/standalone-chrome
+          SELENIUM_DOCKER_IMAGE_TAG: ${{ matrix.browser-version }}
+          SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+        working-directory: test-env/chrome
+
+  # TODO(tai-kun): Support Firefox
+  # I'm not entirely sure why, but the fetch response body does not return an ArrayBuffer.
+  # Further investigation is needed.
+
+  # test-firefox:
+  #   runs-on: ubuntu-latest
+  #   strategy:
+  #     matrix:
+  #       # https://hub.docker.com/r/selenium/standalone-firefox/tags
+  #       browser-version:
+  #         - "126.0"
+  #       surrealdb-version:
+  #         - "v1.4.2"
+  #         - "latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - name: Setup Node.js 22.x
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 22.x
+
+  #     - name: Pretest
+  #       run: bash scripts/pretest.sh
+
+  #     - name: Test
+  #       run: bash test.sh
+  #       env:
+  #         SELENIUM_DOCKER_IMAGE: selenium/standalone-firefox
+  #         SELENIUM_DOCKER_IMAGE_TAG: ${{ matrix.browser-version }}
+  #         SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+  #       working-directory: test-env/firefox
+
+  # TODO(tai-kun): Support Safari
+  # There is no Selenium Docker image that supports Safari.
+
+  # test-safari:
+  #   ...

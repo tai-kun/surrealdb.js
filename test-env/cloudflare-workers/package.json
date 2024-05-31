@@ -5,5 +5,8 @@
     "@std/assert": "npm:@jsr/std__assert@^0.225.2",
     "@tai-kun/surrealdb": "file:../..",
     "vitest": "1.3.0"
+  },
+  "devDependencies": {
+    "glob": "^10.4.1"
   }
 }

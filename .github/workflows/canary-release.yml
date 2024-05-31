@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/canary-release.yaml"
+      - ".github/workflows/canary-release.yml"
       - "scripts/**"
       - "src/**"
       - "package-lock.json"

@@ -1,7 +1,5 @@
-The unofficial SurrealDB SDK for JavaScript.
-
 [GitHub](https://github.com/tai-kun/surrealdb-js)
-
+[NPM] (https://www.npmjs.com/package/@tai-kun/surrealdb)
 [Official SDK](https://github.com/surrealdb/surrealdb.js)
 
 [![CI](https://github.com/tai-kun/surrealdb-js/actions/workflows/ci.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/ci.yml)

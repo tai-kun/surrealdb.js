@@ -4,7 +4,7 @@ import { isThing, Thing as NormalThing } from "@tai-kun/surrealdb";
 import { Thing } from "@tai-kun/surrealdb/full";
 import { Thing as TinyThing } from "@tai-kun/surrealdb/tiny";
 
-test("should check if a value is a uuid", () => {
+test("should check if a value is a thing", () => {
   assert(isThing(new Thing("person", "john")));
   assert(isThing(new TinyThing("person", "john")));
   assert(isThing(new NormalThing("person", "john")));
@@ -16,9 +16,6 @@ test("should check if a value is a uuid", () => {
 for (
   const [tb, id, expected] of [
     ["person", "john", "person:john"],
-    ["person", "rand()", "person:rand()"],
-    ["person", "ulid()", "person:ulid()"],
-    ["person", "uuid()", "person:uuid()"],
     ["person", 42, "person:42"],
     ["person", 3.14, "person:3.14"],
     ["person", { a: ["b", 0, true] }, "person:{\"a\":[\"b\",0,true]}"],

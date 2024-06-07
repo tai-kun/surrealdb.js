@@ -1,17 +1,17 @@
 import { _defineAssertThing } from "../utils";
 
 /**
- * Escapes a record ID.
+ * Escapes ident.
  *
- * @param rid - The record ID to escape.
+ * @param ident - The ident to escape.
  * @returns The escaped record ID.
  * @see https://github.com/surrealdb/surrealdb/blob/v1.5.0/core/src/sql/escape.rs
  * @see https://github.com/surrealdb/surrealdb.js/blob/v1.0.0-beta.8/src/library/cbor/recordid.ts
  */
-export function escapeRid(rid: string): string {
+export function escapeIdent(ident: string): string {
   let code: number | undefined, char: string;
 
-  for (char of rid) {
+  for (char of ident) {
     if (
       !(code = char.codePointAt(0))
       || (
@@ -21,21 +21,28 @@ export function escapeRid(rid: string): string {
         && !(code == 95) // underscore (_)
       )
     ) {
-      return `⟨${rid.replaceAll("⟩", "\⟩")}⟩`;
+      return `⟨${ident.replaceAll("⟩", "\⟩")}⟩`;
     }
   }
 
-  return rid;
+  return ident;
 }
 
+/**
+ * The generation of record IDs is not currently supported by the CBOR protocol.
+ *
+ * @see [CBOR to SurrealQL](https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/rpc/format/cbor/convert.rs#L191)
+ * @see [SurrealQL to CBOR](https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/rpc/format/cbor/convert.rs#L392-L394)
+ * @see https://github.com/surrealdb/surrealdb.js/pull/275
+ */
 // TODO(tai-kun): Investigate the details.
 export type ThingIdPrimitive =
   | boolean
   | number
   | bigint // CBOR only
-  | "rand()"
-  | "ulid()"
-  | "uuid()"
+  // | "rand()"
+  // | "ulid()"
+  // | "uuid()"
   | (string & {})
   | { readonly toJSON: () => string };
 
@@ -62,7 +69,7 @@ export class Thing {
    * @see https://github.com/surrealdb/surrealdb/blob/v1.5.0/core/src/sql/thing.rs
    */
   static escapeTb(tb: string): string {
-    return escapeRid(tb);
+    return escapeIdent(tb);
   }
 
   /**
@@ -78,13 +85,13 @@ export class Thing {
     }
 
     switch (id) {
-      case "rand()":
-      case "ulid()":
-      case "uuid()":
-        return id;
+      // case "rand()":
+      // case "ulid()":
+      // case "uuid()":
+      //   return id;
 
       default:
-        return escapeRid(id);
+        return escapeIdent(id);
     }
   }
 

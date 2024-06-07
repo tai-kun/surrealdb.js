@@ -1,32 +1,4 @@
-import { _defineAssertThing } from "../utils";
-
-/**
- * Escapes ident.
- *
- * @param ident - The ident to escape.
- * @returns The escaped record ID.
- * @see https://github.com/surrealdb/surrealdb/blob/v1.5.0/core/src/sql/escape.rs
- * @see https://github.com/surrealdb/surrealdb.js/blob/v1.0.0-beta.8/src/library/cbor/recordid.ts
- */
-export function escapeIdent(ident: string): string {
-  let code: number | undefined, char: string;
-
-  for (char of ident) {
-    if (
-      !(code = char.codePointAt(0))
-      || (
-        !(code > 47 && code < 58) // numeric (0-9)
-        && !(code > 64 && code < 91) // upper alpha (A-Z)
-        && !(code > 96 && code < 123) // lower alpha (a-z)
-        && !(code == 95) // underscore (_)
-      )
-    ) {
-      return `⟨${ident.replaceAll("⟩", "\⟩")}⟩`;
-    }
-  }
-
-  return ident;
-}
+import { _defineAssertThing, type AnyTable, escapeIdent } from "../utils";
 
 /**
  * The generation of record IDs is not currently supported by the CBOR protocol.
@@ -44,7 +16,7 @@ export type ThingIdPrimitive =
   // | "ulid()"
   // | "uuid()"
   | (string & {})
-  | { readonly toJSON: () => string };
+  | { readonly toJSON: () => ThingId };
 
 export type ThingIdObject = {
   readonly [key: string | number]: ThingId;
@@ -68,8 +40,8 @@ export class Thing {
    * @returns The escaped table name.
    * @see https://github.com/surrealdb/surrealdb/blob/v1.5.0/core/src/sql/thing.rs
    */
-  static escapeTb(tb: string): string {
-    return escapeIdent(tb);
+  static escapeTb(tb: string | AnyTable): string {
+    return escapeIdent(typeof tb === "string" ? tb : tb.name);
   }
 
   /**
@@ -99,7 +71,7 @@ export class Thing {
    * @param tb - The table name.
    * @param id - The record ID.
    */
-  constructor(public tb: string, public id: ThingId) {
+  constructor(public tb: string | AnyTable, public id: ThingId) {
     _defineAssertThing(this);
   }
 

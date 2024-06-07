@@ -2,6 +2,7 @@ import { decode, encode, TaggedValue } from "cbor-redux";
 import { UnknownCborTag } from "../common/errors";
 import type { RpcResponseData } from "../common/RpcResponseData";
 import {
+  escapeIdent,
   isDatetime,
   isDecimal,
   isDuration,
@@ -107,7 +108,17 @@ export class CborFormatter extends Formatter {
           return new TaggedValue(v.toString(), TAG_TABLE);
 
         case isThing(v):
-          return new TaggedValue([v.tb, v.id], TAG_RECORDID);
+          switch (v.id) {
+            case "rand()":
+            case "ulid()":
+            case "uuid()":
+              return escapeIdent(typeof v.tb === "string" ? v.tb : v.tb.name)
+                + ":"
+                + v.id;
+
+            default:
+              return new TaggedValue([v.tb, v.id], TAG_RECORDID);
+          }
 
         case isUuid(v):
           return new TaggedValue(v.bytes.buffer, TAG_SPEC_UUID);

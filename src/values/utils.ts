@@ -224,6 +224,34 @@ export const isGeometryCollection: IsValue<AnyGeometryCollection> = value =>
  * Table
  *****************************************************************************/
 
+/**
+ * Escapes ident.
+ *
+ * @param ident - The ident to escape.
+ * @returns The escaped record ID.
+ * @see https://github.com/surrealdb/surrealdb/blob/v1.5.0/core/src/sql/escape.rs
+ * @see https://github.com/surrealdb/surrealdb.js/blob/v1.0.0-beta.8/src/library/cbor/recordid.ts
+ */
+export function escapeIdent(ident: string): string {
+  let code: number | undefined, char: string;
+
+  for (char of ident) {
+    if (
+      !(code = char.codePointAt(0))
+      || (
+        !(code > 47 && code < 58) // numeric (0-9)
+        && !(code > 64 && code < 91) // upper alpha (A-Z)
+        && !(code > 96 && code < 123) // lower alpha (a-z)
+        && !(code == 95) // underscore (_)
+      )
+    ) {
+      return `⟨${ident.replaceAll("⟩", "\⟩")}⟩`;
+    }
+  }
+
+  return ident;
+}
+
 export type AnyTable = Table | FullyTable | TinyTable;
 
 const storeTable = new Map();

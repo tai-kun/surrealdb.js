@@ -143,18 +143,11 @@ jobs:
       matrix:
         # https://hub.docker.com/r/selenium/standalone-chrome/tags
         browser-version:
-          - "103"
+          - "103.0"
           - "latest"
         surrealdb-version:
           - "v1.5.0"
           - "latest"
-    services:
-      selenium:
-        image: "selenium/standalone-chrome:${{ matrix.browser-version }}"
-        options: >-
-          --shm-size=2g
-        ports:
-          - 4444:4444
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -164,16 +157,18 @@ jobs:
         with:
           node-version: 22.x
 
-      - name: Setup
+      - name: Run Test
         env:
           SURREALDB_VERSION: ${{ matrix.surrealdb-version }}
         run: |
+          name="$(openssl rand -hex 12)"
+          trap "docker stop $name" EXIT
+          docker run --name "$name" --rm -d --network host --shm-size=2g selenium/standalone-chrome:${{ matrix.browser-version }}
           bash scripts/ci-setup.sh
-          while ! curl --retry 15 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 1; done
-
-      - name: Run Test
-        working-directory: test-env/chrome
-        run: bash test.sh
+          while ! curl --retry 15 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 3; done
+          curl -sSL http://localhost:4444/wd/hub/status | jq -e '.value.nodes' # print info
+          cd test-env/chrome
+          bash test.sh
 
   # TODO(tai-kun): Support Firefox
   # I'm not entirely sure why, but the fetch response body does not return an ArrayBuffer.

@@ -10,6 +10,7 @@ import { Browser, Builder } from "selenium-webdriver";
 const envName = basename(process.cwd());
 const browser = {
   chrome: Browser.CHROME,
+  firefox: Browser.FIREFOX,
 }[envName];
 
 if (!browser) {

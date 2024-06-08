@@ -191,24 +191,32 @@ jobs:
   #       surrealdb-version:
   #         - "v1.5.0"
   #         - "latest"
+  #   services:
+  #     selenium:
+  #       image: "selenium/standalone-firefox:${{ matrix.browser-version }}"
+  #       options: >-
+  #         --shm-size=2g
+  #       ports:
+  #         - 4444:4444
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
 
   #     - name: Setup Node.js 22.x
   #       uses: actions/setup-node@v4
   #       with:
   #         node-version: 22.x
 
-  #     - name: Pretest
-  #       run: bash scripts/pretest.sh
-
-  #     - name: Test
-  #       run: bash test.sh
+  #     - name: Setup
   #       env:
-  #         SELENIUM_DOCKER_IMAGE: selenium/standalone-firefox
-  #         SELENIUM_DOCKER_IMAGE_TAG: ${{ matrix.browser-version }}
-  #         SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+  #         SURREALDB_VERSION: ${{ matrix.surrealdb-version }}
+  #       run: |
+  #         bash scripts/ci-setup.sh
+  #         while ! curl --retry 15 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 1; done
+
+  #     - name: Run Test
   #       working-directory: test-env/firefox
+  #       run: bash test.sh
 
   # TODO(tai-kun): Support Safari
   # There is no Selenium Docker image that supports Safari.

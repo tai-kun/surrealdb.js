@@ -192,7 +192,7 @@ const db = new Surreal({
 
 | Runtime | HTTP | WebSocket | Version |
 | ------- | :--: | :-------: | ------- |
-| Node                  | ✅ | ✅ | `22.x`, `20.x`\*, `18.x`\* |
+| Node.js               | ✅ | ✅ | `22.x`, `20.x`, `18.x` |
 | Deno \*               | ? | ? | `>=1.40` |
 | Bun \*                | ? | ? | ? |
 | Chrome                | ✅ | ✅ | `>=103` |
@@ -303,7 +303,7 @@ import {
 ## TODO
 
 - Improve test coverage.
-- Test on Node 18, Node 20, Deno, Bun, Firefox, and Safari.
+- Test on Deno, Bun, Firefox, and Safari.
 - Lower the minimum supported browser versions as much as possible.
 
 ## Ideas to Try

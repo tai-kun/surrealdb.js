@@ -162,7 +162,7 @@ jobs:
           SURREALDB_VERSION: ${{ matrix.surrealdb-version }}
         run: |
           name="$(openssl rand -hex 12)"
-          trap "docker stop $name" EXIT
+          trap 'docker stop $name' EXIT
           docker run --name "$name" --rm -d --network host --shm-size=2g selenium/standalone-chrome:${{ matrix.browser-version }}
           bash scripts/ci-setup.sh
           while ! curl --retry 15 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 3; done

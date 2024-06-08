@@ -20,12 +20,8 @@ import {
 
 Object.assign(globalThis, {
   IT: "[ws-cbor-zod]",
-  async connect(info: typeof SURREALDB) {
-    if (!info) {
-      throw new Error("SURREALDB is not defined");
-    }
-
-    await SURREALDB.ready;
+  async connect(surrealdb: typeof SURREALDB) {
+    await surrealdb.ready;
     const fmt = new CborFormatter({
       Datetime,
       Table,
@@ -68,7 +64,7 @@ Object.assign(globalThis, {
       },
       validator: v8n,
     });
-    await db.connect(`ws://${info.host}`);
+    await db.connect(`ws://${surrealdb.host}`);
 
     return Object.assign(db, {
       async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")]() {

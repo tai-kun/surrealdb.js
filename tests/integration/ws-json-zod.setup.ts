@@ -7,11 +7,7 @@ import {
 
 Object.assign(globalThis, {
   IT: "[ws-json-zod]",
-  async connect(info: typeof SURREALDB) {
-    if (!info) {
-      throw new Error("SURREALDB is not defined");
-    }
-
+  async connect(surrealdb: typeof SURREALDB) {
     await SURREALDB.ready;
     const fmt = new JsonFormatter();
     const v8n = new ZodValidator();
@@ -41,7 +37,7 @@ Object.assign(globalThis, {
       },
       validator: v8n,
     });
-    await db.connect(`ws://${info.ready}`);
+    await db.connect(`ws://${surrealdb.host}`);
 
     return Object.assign(db, {
       async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")]() {

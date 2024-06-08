@@ -2,31 +2,23 @@
  * This script is a test runner that executes bundled test code in the browser.
  */
 
-import { SeleniumContainer } from "@testcontainers/selenium";
-import { relative } from "node:path";
-import process from "node:process";
+import { basename, relative } from "node:path";
 import { describe, test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { Browser, Builder } from "selenium-webdriver";
 
-const { SELENIUM_DOCKER_IMAGE, SELENIUM_DOCKER_IMAGE_TAG } = process.env;
-const DOCKER_IMAGE = `${SELENIUM_DOCKER_IMAGE}:${SELENIUM_DOCKER_IMAGE_TAG}`;
+const envName = basename(process.cwd());
+const browser = {
+  chrome: Browser.CHROME,
+}[envName];
 
-let c = new SeleniumContainer(DOCKER_IMAGE);
-
-if ("SURREALDB" in globalThis) {
-  c = c.withNetwork(SURREALDB.DOCKER_NETWORK);
+if (!browser) {
+  throw new Error(`Unsupported browser: ${envName}`);
 }
 
-c = await c.start();
-
 const d = await new Builder()
-  .forBrowser(
-    SELENIUM_DOCKER_IMAGE.includes("chrome")
-      ? Browser.CHROME
-      : Browser.FIREFOX,
-  )
-  .usingServer(c.getServerUrl())
+  .forBrowser(browser)
+  .usingServer("http://localhost:4444/wd/hub")
   .build();
 
 const serializeError = `(function serializeError(error) {
@@ -83,11 +75,18 @@ function deserializeError(error) {
   }
 }
 
+if ("SURREALDB" in globalThis) {
+  await SURREALDB.ready;
+}
+
 const runTest = `(async () => {
   const __testQueue = [];
   ${
   "SURREALDB" in globalThis
-    ? `globalThis.SURREALDB_HOST = "${SURREALDB.CONTAINER_NAME}:${SURREALDB.PORT_NUMBER}";`
+    ? `globalThis.SURREALDB = {
+        ready: Promise.resolve(),
+        host: "${SURREALDB.host}",
+      };`
     : ""
 }
   await (async () => { ${BUNDLED_TEST_CODE} })();
@@ -127,17 +126,17 @@ try {
   );
   `);
 
-  if (!scriptResult.success) {
-    throw Error("Failed to run the test script", {
-      cause: scriptResult.error,
-    });
-  }
-
   const rootdir = process.cwd();
   const filename = fileURLToPath(import.meta.url);
   const testfile = relative(rootdir, filename);
 
   describe(testfile, () => {
+    if (!scriptResult.success) {
+      throw Error("Failed to run the test script", {
+        cause: scriptResult.error,
+      });
+    }
+
     for (const testResult of scriptResult.results) {
       if (testResult.status === "passed") {
         test(testResult.name, { timeout: 60e3 }, () => {});

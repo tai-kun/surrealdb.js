@@ -20,11 +20,12 @@ import {
 
 Object.assign(globalThis, {
   IT: "[http-cbor-zod]",
-  async connect(host: typeof SURREALDB_HOST) {
-    if (!host) {
-      throw new Error("SURREALDB_HOST is not defined");
+  async connect(info: typeof SURREALDB) {
+    if (!info) {
+      throw new Error("SURREALDB is not defined");
     }
 
+    await SURREALDB.ready;
     const fmt = new CborFormatter({
       Datetime,
       Table,
@@ -47,7 +48,7 @@ Object.assign(globalThis, {
       },
       validator: v8n,
     });
-    await db.connect(`http://${host}`);
+    await db.connect(`http://${info.host}`);
 
     return Object.assign(db, {
       async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")]() {

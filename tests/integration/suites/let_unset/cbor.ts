@@ -2,7 +2,7 @@
 "use surrealdb";
 
 test(`${IT} should define a bigint variable and be retrieved as a number`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const result1 = await db.let("js_bigint", 42n);
   const result2 = await db.query<[number]>("$js_bigint");
 
@@ -11,7 +11,7 @@ test(`${IT} should define a bigint variable and be retrieved as a number`, async
 });
 
 test(`${IT} should define a bigint variable and be retrieved as a bigint if necessary`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const maxSafeInt = BigInt(Number.MAX_SAFE_INTEGER);
   const jsBigint = maxSafeInt + 42n;
   const result1 = await db.let("js_bigint", jsBigint);
@@ -22,7 +22,7 @@ test(`${IT} should define a bigint variable and be retrieved as a bigint if nece
 });
 
 test(`${IT} should be immutability`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const value = { foo: "bar" };
   const result1 = await db.let("js_object", value);
   value.foo = "baz";

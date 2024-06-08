@@ -7,11 +7,8 @@ import {
 
 Object.assign(globalThis, {
   IT: "[http-json-zod]",
-  async connect(host: typeof SURREALDB_HOST) {
-    if (!host) {
-      throw new Error("SURREALDB_HOST is not defined");
-    }
-
+  async connect(surrealdb: typeof SURREALDB) {
+    await surrealdb.ready;
     const fmt = new JsonFormatter();
     const v8n = new ZodValidator();
     const db = new Surreal({
@@ -20,7 +17,7 @@ Object.assign(globalThis, {
       },
       validator: v8n,
     });
-    await db.connect(`http://${host}`);
+    await db.connect(`http://${surrealdb.host}`);
 
     return Object.assign(db, {
       async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")]() {

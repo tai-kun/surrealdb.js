@@ -4,7 +4,7 @@
 import { ResponseError } from "@tai-kun/surrealdb/full";
 
 test(`${IT} should define a number variable`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const result1 = await db.let("js_number", 42);
   const result2 = await db.query<[number]>("$js_number");
 
@@ -13,7 +13,7 @@ test(`${IT} should define a number variable`, async () => {
 });
 
 test(`${IT} should throw an error when defining a bigint variable`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
 
   await assertRejects(
     async () => {
@@ -25,7 +25,7 @@ test(`${IT} should throw an error when defining a bigint variable`, async () => 
 });
 
 test(`${IT} should redefine a variable`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const result1 = await db.let("js_string", "foo");
   const result2 = await db.let("js_string", "bar");
   const result3 = await db.query<[string]>("$js_string");
@@ -36,7 +36,7 @@ test(`${IT} should redefine a variable`, async () => {
 });
 
 test(`${IT} should remove a variable`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const result1 = await db.let("js_number", 42);
   const result2 = await db.unset("js_number");
 
@@ -58,7 +58,7 @@ test(`${IT} should remove a variable`, async () => {
 });
 
 test(`${IT} should be immutability`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const value = { foo: "bar" };
   const result1 = await db.let("js_object", value);
   value.foo = "baz";

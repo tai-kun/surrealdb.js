@@ -5,7 +5,7 @@ on: push
 jobs:
   test-node:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
@@ -16,31 +16,32 @@ jobs:
           # - "20.x"
           - "22.x"
         surrealdb-version:
-          - "v1.5.0"
+          # - "v1.5.0"
           - "latest"
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Pretest
-        run: bash scripts/pretest.sh
-
-      - name: Test
-        run: bash test.sh
+      - name: Setup
         env:
-          SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+          SURREALDB_VERSION: ${{ matrix.surrealdb-version }}
+        run: bash scripts/ci-setup.sh
+
+      - name: Run Test
         working-directory: test-env/node
+        run: bash test.sh
 
   # TODO(tai-kun): Support Deno
   # Deno cannot import local npm packages, so testing is not possible.
 
   # test-deno:
   #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
+  #   timeout-minutes: 15
   #   strategy:
   #     fail-fast: false
   #     matrix:
@@ -76,7 +77,7 @@ jobs:
 
   # test-bun:
   #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
+  #   timeout-minutes: 15
   #   strategy:
   #     fail-fast: false
   #     matrix:
@@ -112,7 +113,7 @@ jobs:
 
   # test-cfw:
   #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
+  #   timeout-minutes: 15
   #   strategy:
   #     fail-fast: false
   #     matrix:
@@ -138,35 +139,43 @@ jobs:
 
   test-chrome:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
         # https://hub.docker.com/r/selenium/standalone-chrome/tags
         browser-version:
-          - "103.0"
+          # - "103"
           - "latest"
         surrealdb-version:
-          - "v1.5.0"
+          # - "v1.5.0"
           - "latest"
+    services:
+      selenium:
+        image: "selenium/standalone-chrome:${{ matrix.browser-version }}"
+        options: >-
+          --shm-size=2g
+        ports:
+          - 4444:4444
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Node.js 22.x
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
 
-      - name: Pretest
-        run: bash scripts/pretest.sh
-
-      - name: Test
-        run: bash test.sh
+      - name: Setup
         env:
-          SELENIUM_DOCKER_IMAGE: selenium/standalone-chrome
-          SELENIUM_DOCKER_IMAGE_TAG: ${{ matrix.browser-version }}
-          SURREALDB_DOCKER_IMAGE_TAG: ${{ matrix.surrealdb-version }}
+          SURREALDB_VERSION: ${{ matrix.surrealdb-version }}
+        run: |
+          bash scripts/ci-setup.sh
+          while ! curl --retry 15 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 1; done
+
+      - name: Run Test
         working-directory: test-env/chrome
+        run: bash test.sh
 
   # TODO(tai-kun): Support Firefox
   # I'm not entirely sure why, but the fetch response body does not return an ArrayBuffer.
@@ -174,7 +183,7 @@ jobs:
 
   # test-firefox:
   #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
+  #   timeout-minutes: 15
   #   strategy:
   #     fail-fast: false
   #     matrix:

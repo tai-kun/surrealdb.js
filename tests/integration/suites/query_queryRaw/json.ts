@@ -4,7 +4,7 @@
 import { ResponseError, surql } from "@tai-kun/surrealdb/full";
 
 test(`${IT} should return the raw results of a query`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   await db.use("test_namespace", "test_database");
   const num = 42;
   const query = surql`
@@ -28,7 +28,7 @@ test(`${IT} should return the raw results of a query`, async () => {
 });
 
 test(`${IT} should throw a ResponseError when excutes an invalid query`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   const query = surql`
     OUTPUT "OK";
   `;
@@ -43,7 +43,7 @@ test(`${IT} should throw a ResponseError when excutes an invalid query`, async (
 });
 
 test(`${IT} should return the results of a query`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   await db.use("test_namespace", "test_database");
   const results = await db.query<[42]>(
     /* surql */ `
@@ -58,7 +58,7 @@ test(`${IT} should return the results of a query`, async () => {
 });
 
 test(`${IT} should throw a ResponseError when the results includes some errors`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   await db.use("test_namespace", "test_database");
   let error: ResponseError;
 

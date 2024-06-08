@@ -1,33 +1,44 @@
-import process from "node:process";
-import { GenericContainer, Network, PullPolicy, Wait } from "testcontainers";
+import { execSync, spawn } from "node:child_process";
 
-const { SURREALDB_DOCKER_IMAGE_TAG } = process.env;
-const DOCKER_IMAGE = `surrealdb/surrealdb:${SURREALDB_DOCKER_IMAGE_TAG}`;
+const port = execSync(
+  "flock /tmp/lock head -n 1 /tmp/ports && sed -i '1d' /tmp/ports",
+  { encoding: "utf8" },
+);
+const portNumber = parseInt(port.trim(), 10);
 
-const network = await new Network().start();
-const surrealdb = await new GenericContainer(DOCKER_IMAGE)
-  .withPullPolicy(
-    SURREALDB_DOCKER_IMAGE_TAG === "latest"
-      ? PullPolicy.alwaysPull()
-      : PullPolicy.defaultPolicy(),
-  )
-  .withNetwork(network)
-  .withExposedPorts(8000)
-  .withWaitStrategy(Wait.forHttp("/health", 8000))
-  .withStartupTimeout(15e3)
-  .withCommand([
-    "start",
-    ...["--bind", "0.0.0.0:8000"],
-    ...["--username", "root"],
-    ...["--password", "root"],
-  ])
-  .start();
+if (portNumber < 49152 || 65535 < portNumber) {
+  throw new Error(`Port number out of range: ${port}`);
+}
+
+spawn("surreal", [
+  "start",
+  ...["--bind", `0.0.0.0:${portNumber}`],
+  ...["--username", "root"],
+  ...["--password", "root"],
+], {
+  detached: true,
+  stdio: "ignore",
+}).unref();
+
+async function waitForHealthOk() {
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
+  for (;;) {
+    try {
+      const { status } = await fetch(`http://localhost:${portNumber}/health`);
+
+      if (status === 200) {
+        break;
+      }
+    } catch {}
+
+    await sleep(100);
+  }
+}
 
 Object.assign(globalThis, {
   SURREALDB: {
-    PORT_NUMBER: 8000,
-    CONTAINER_NAME: surrealdb.getName().substring("/".length),
-    DOCKER_NETWORK: network,
+    ready: waitForHealthOk(),
+    host: `localhost:${portNumber}`,
   },
-  SURREALDB_HOST: `${surrealdb.getHost()}:${surrealdb.getMappedPort(8000)}`,
 });

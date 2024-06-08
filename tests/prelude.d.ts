@@ -291,7 +291,10 @@ declare function unreachable(reason?: string): never;
  * test-env/shared/use-surrealdb.js
  *****************************************************************************/
 
-declare const SURREALDB_HOST: `${string}:${number}` | undefined;
+declare const SURREALDB: {
+  ready: Promise<void>;
+  host: `${string}:${number}`;
+};
 
 /******************************************************************************
  * tests/integration/<engine>-<formatter>-<validator>.setup.ts
@@ -299,7 +302,7 @@ declare const SURREALDB_HOST: `${string}:${number}` | undefined;
 
 declare const IT: string;
 
-declare function connect(host: `${string}:${number}` | undefined): Promise<
+declare function connect(host: typeof SURREALDB): Promise<
   import("@tai-kun/surrealdb/full").Surreal & {
     [Symbol.asyncDispose](): Promise<void>;
   }

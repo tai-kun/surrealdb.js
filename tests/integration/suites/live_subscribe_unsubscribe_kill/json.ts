@@ -40,7 +40,7 @@ const deletePersonSurql = surql`
 `;
 
 test(`${IT} should return a uuid`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   await db.use("tset_namespace", "tset_database");
   const queryUuid = await db.live<string>("person");
 
@@ -49,7 +49,7 @@ test(`${IT} should return a uuid`, async () => {
 });
 
 test(`${IT} should subscribe to a table`, async () => {
-  await using db = await connect(SURREALDB_HOST);
+  await using db = await connect(SURREALDB);
   await db.use("tset_namespace", "tset_database");
   const queryUuid = await db.live<string>("person");
   const events: { action: LiveAction; result: unknown }[] = [];

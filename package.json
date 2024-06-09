@@ -15,24 +15,24 @@
       "require": "./dist/index.cjs"
     },
     "./clients": {
-      "tyes": "./dist/clients.d.ts",
-      "import": "./dist/clients.mjs",
-      "require": "./dist/clients.cjs"
+      "tyes": "./dist/clients/index.d.ts",
+      "import": "./dist/clients/index.mjs",
+      "require": "./dist/clients/index.cjs"
     },
     "./engines": {
-      "tyes": "./dist/engines.d.ts",
-      "import": "./dist/engines.mjs",
-      "require": "./dist/engines.cjs"
+      "tyes": "./dist/engines/index.d.ts",
+      "import": "./dist/engines/index.mjs",
+      "require": "./dist/engines/index.cjs"
     },
     "./formatters": {
-      "tyes": "./dist/formatters.d.ts",
-      "import": "./dist/formatters.mjs",
-      "require": "./dist/formatters.cjs"
+      "tyes": "./dist/formatters/index.d.ts",
+      "import": "./dist/formatters/index.mjs",
+      "require": "./dist/formatters/index.cjs"
     },
     "./validators": {
-      "tyes": "./dist/validators.d.ts",
-      "import": "./dist/validators.mjs",
-      "require": "./dist/validators.cjs"
+      "tyes": "./dist/validators/index.d.ts",
+      "import": "./dist/validators/index.mjs",
+      "require": "./dist/validators/index.cjs"
     },
     "./errors": {
       "tyes": "./dist/errors.d.ts",
@@ -63,7 +63,7 @@
     "url": "https://github.com/tai-kun/"
   },
   "scripts": {
-    "build": "bash scripts/build/source.sh",
+    "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
     "test:bun:small": "node scripts/test.js ci bun-small-tests",
     "test:deno:small": "echo 'Deno tests are not yet implemented.' && exit 1",

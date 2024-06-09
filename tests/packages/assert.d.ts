@@ -1,5 +1,7 @@
 declare module "@pkg/assert" {
-  type AnyConstructor = new(...args: any[]) => any;
+  type AnyConstructor =
+    | (new(...args: any[]) => any)
+    | (abstract new(...args: any[]) => any);
 
   /**
    * Error thrown when an assertion fails.

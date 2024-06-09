@@ -22,8 +22,12 @@
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "^20.14.2",
+    "@types/unzipper": "^0.10.9",
     "dprint": "^0.46.2",
-    "typescript": "^5.4.5"
+    "esbuild": "^0.21.4",
+    "tar": "^7.2.0",
+    "typescript": "^5.4.5",
+    "unzipper": "^0.12.1"
   },
   "repository": {
     "type": "git",
@@ -32,6 +36,15 @@
   "author": {
     "name": "tai-kun",
     "url": "https://github.com/tai-kun/"
+  },
+  "scripts": {
+    "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit && dprint check",
+    "test:bun:small": "node scripts/test.js ci bun-small-tests",
+    "test:deno:small": "echo 'Deno tests are not yet implemented.' && exit 1",
+    "test:node:small": "node scripts/test.js ci node-small-tests",
+    "test:chrome:small": "node scripts/test.js ci chrome-small-tests",
+    "test:firefox:small": "node scripts/test.js ci firefox-small-tests"
   },
   "volta": {
     "node": "22.2.0"

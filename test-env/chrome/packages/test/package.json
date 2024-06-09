@@ -1,0 +1,5 @@
+{
+  "name": "@pkg/test",
+  "type": "module",
+  "main": "index.js"
+}

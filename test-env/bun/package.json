@@ -1,0 +1,8 @@
+{
+  "type": "module",
+  "dependencies": {
+    "@pkg/assert": "file:./packages/assert",
+    "@pkg/test": "file:./packages/test",
+    "@tai-kun/surrealdb": "file:../.."
+  }
+}

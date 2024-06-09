@@ -1,0 +1,8 @@
+{
+  "name": "@pkg/assert",
+  "type": "module",
+  "main": "index.js",
+  "dependencies": {
+    "@std/assert": "npm:@jsr/std__assert@^0.226.0"
+  }
+}

@@ -1,1 +1,2 @@
-export {};
+export type * from "./initSurreal";
+export { default as initSurreal } from "./initSurreal";

@@ -14,7 +14,7 @@ export interface CreateEngine {
    * @param config - エンジンの設定。
    * @returns クライアントエンジン。
    */
-  (config: ConstructorParameters<typeof EngineAbc>): Promisable<EngineAbc>;
+  (...args: ConstructorParameters<typeof EngineAbc>): Promisable<EngineAbc>;
 }
 
 /**

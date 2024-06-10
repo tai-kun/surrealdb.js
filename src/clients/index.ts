@@ -1,2 +1,2 @@
-export type * from "./ClientAbc";
-export { default as ClientAbc } from "./ClientAbc";
+export type * from "./Abc";
+export { default as ClientAbc } from "./Abc";

@@ -1,11 +1,5 @@
 import { DataConversionFailure } from "../errors";
-
-const toString = Object.prototype.toString;
-const isArrayBuffer = (value: unknown): value is ArrayBuffer =>
-  // 🦆 タイピング
-  // Firefox では ArrayBuffer のインスタンスを instanceof で判定できない。
-  // ただメソッドは備えているようなので、タグ名で判定する。
-  toString.call(value) === "[object ArrayBuffer]";
+import isArrayBuffer from "./isArrayBuffer";
 
 /**
  * RPC リクエストのレスポンスデータを表すクラス。

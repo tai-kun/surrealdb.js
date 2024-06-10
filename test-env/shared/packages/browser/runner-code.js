@@ -75,6 +75,9 @@ const runTest = `(async function() {
   const testQueue = await (async () => {
     "use strict";
     const __testQueue = [];
+    ${(typeof SURREALDB === "undefined" ? "" : `
+      const SURREALDB = ${JSON.stringify(SURREALDB)};
+    `)}
     ${BUNDLED_TEST_CODE}
     return __testQueue;
   })();

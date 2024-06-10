@@ -2,6 +2,7 @@
   "type": "module",
   "dependencies": {
     "@pkg/assert": "file:./packages/assert",
+    "@pkg/surrealdb": "file:./packages/surrealdb",
     "@pkg/test": "file:./packages/test",
     "@tai-kun/surrealdb": "file:../.."
   }

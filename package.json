@@ -70,11 +70,16 @@
   "scripts": {
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
-    "test:bun:small": "node scripts/test.js ci bun-small-tests",
-    "test:deno:small": "echo 'Deno tests are not yet implemented.' && exit 1",
-    "test:node:small": "node scripts/test.js ci node-small-tests",
-    "test:chrome:small": "node scripts/test.js ci chrome-small-tests",
-    "test:firefox:small": "node scripts/test.js ci firefox-small-tests"
+    "test:sm:bun": "node scripts/test.js ci bun-small-tests",
+    "test:md:bun": "node scripts/test.js ci bun-medium-tests",
+    "test:sm:deno": "echo 'Deno tests are not yet implemented.' && exit 1",
+    "test:md:deno": "echo 'Deno tests are not yet implemented.' && exit 1",
+    "test:sm:node": "node scripts/test.js ci node-small-tests",
+    "test:md:node": "node scripts/test.js ci node-medium-tests",
+    "test:sm:chrome": "node scripts/test.js ci chrome-small-tests",
+    "test:md:chrome": "node scripts/test.js ci chrome-medium-tests",
+    "test:sm:firefox": "node scripts/test.js ci firefox-small-tests",
+    "test:md:firefox": "node scripts/test.js ci firefox-medium-tests"
   },
   "volta": {
     "node": "22.2.0"

@@ -21,6 +21,15 @@ export interface SurrealInit<T extends ClientConstructor = ClientConstructor>
 }
 
 /**
+ * Surreal クラス。
+ *
+ * @template T - クライアントのコンストラクターの型。
+ */
+export interface Surreal<T extends ClientConstructor> {
+  new(): InstanceType<T> & AsyncDisposable;
+}
+
+/**
  * Surreal を初期化する。
  *
  * @template T - クライアントのコンストラクターの型。
@@ -29,7 +38,9 @@ export interface SurrealInit<T extends ClientConstructor = ClientConstructor>
  */
 export default function initSurreal<T extends ClientConstructor>(
   init: SurrealInit<T>,
-) {
+): {
+  Surreal: Surreal<T>;
+} {
   const {
     Client,
     engines,
@@ -38,7 +49,7 @@ export default function initSurreal<T extends ClientConstructor>(
   } = init;
 
   // @ts-ignore
-  return class Surreal extends Client {
+  class SurrealClass extends Client {
     constructor() {
       super({
         engines,
@@ -46,5 +57,14 @@ export default function initSurreal<T extends ClientConstructor>(
         Validator,
       });
     }
+
+    async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")]() {
+      await (this as unknown as ClientAbc).disconnect();
+    }
+  }
+
+  return {
+    // @ts-ignore
+    Surreal: SurrealClass,
   };
 }

@@ -8,9 +8,7 @@ if (!target || !size) {
   throw new Error("Please specify a target and size");
 }
 
-const entryPoints = await glob(`tests/${size}/**/*.test.ts`, {
-  ignore: ["*.d.ts"],
-});
+const entryPoints = await glob(`tests/${size}/**/*.ts`, { ignore: ["*.d.ts"] });
 await build({
   bundle: false,
   entryPoints,

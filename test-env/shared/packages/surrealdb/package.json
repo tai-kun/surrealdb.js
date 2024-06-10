@@ -1,0 +1,8 @@
+{
+  "name": "@pkg/surrealdb",
+  "type": "module",
+  "exports": {
+    ".": "./index.js",
+    "./setup": "./setup.js"
+  }
+}

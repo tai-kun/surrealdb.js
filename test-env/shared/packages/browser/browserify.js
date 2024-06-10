@@ -13,7 +13,12 @@ export async function browserify({ target }) {
     platform: "browser",
     target,
     write: false,
+    define: {
+      "process.env.BROWSERIFY": JSON.stringify("true"),
+    },
+    minifySyntax: true, // define による置換を行うため、シンタックスの最小化を行う。
     external: [
+      "node:child_process",
       "undici",
       "ws",
     ],
@@ -22,6 +27,10 @@ export async function browserify({ target }) {
   const runnerCode = fs.readFileSync(join(__dirname, "runner-code.js"), "utf8");
   await Promise.all(outputFiles.map(async ({ path, text }) => {
     const testCode = [
+      !text.includes("BROWSERIFY SHOULD INJECT SURREALDB GLOBALS") ? "" : `
+        import { setup as __setupSurrealDb } from "@pkg/surrealdb/setup";
+        const SURREALDB = await __setupSurrealDb();
+      `,
       `const BUNDLED_TEST_CODE = ${JSON.stringify(text)};`,
       runnerCode,
     ];

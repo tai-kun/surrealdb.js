@@ -56,7 +56,6 @@ async function prepare() {
   const META_URL = "https://api.github.com/repos/nektos/act/releases/latest";
   const tagName = await fetch(META_URL)
     .then(resp => resp.json())
-    // @ts-expect-error: data is unknown
     .then(data => data.tag_name);
   const bin = path.join(
     ".cache",
@@ -82,6 +81,7 @@ async function prepare() {
 
   if (resp.status !== 200) {
     if (resp.body) {
+      // @ts-expect-error: Nodejs 内で実行されるので、for-await-of が使える。
       for await (const _ of resp.body) {
         // force consumption of body
       }

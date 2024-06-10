@@ -38,6 +38,11 @@
       "tyes": "./dist/errors.d.ts",
       "import": "./dist/errors.mjs",
       "require": "./dist/errors.cjs"
+    },
+    "./_internal": {
+      "tyes": "./dist/internal/index.d.ts",
+      "import": "./dist/internal/index.mjs",
+      "require": "./dist/internal/index.cjs"
     }
   },
   "files": [

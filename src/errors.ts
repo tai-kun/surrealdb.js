@@ -304,3 +304,46 @@ export class RpcResponseError extends SurrealDbError {
     }
   }
 }
+
+/**
+ * このエラーは、クライアントが複数のエンドポイントに同時に接続しようとした場合に投げられます。
+ */
+export class ConnectionConflict extends SurrealDbError {
+  static {
+    this.prototype.name = "ConnectionConflict";
+  }
+
+  /**
+   * @param endpoint1 - 一方のエンドポイント。
+   * @param endpoint2 - もう一方のエンドポイント。
+   * @param options - エラーオプション。
+   */
+  constructor(
+    endpoint1: unknown,
+    endpoint2: unknown,
+    options?: ErrorOptions | undefined,
+  ) {
+    super(
+      `Connection conflict between ${endpoint1} and ${endpoint2}.`,
+      options,
+    );
+  }
+}
+
+/**
+ * このエラーは、接続が強制的に終了されたことを示します。
+ * これは AbortSignal を介して取得されるエラーであり、
+ * これを認識するタスクは現在の操作を即座に停止する必要があります。
+ */
+export class EngineDisconnected extends SurrealDbError {
+  static {
+    this.prototype.name = "EngineDisconnected";
+  }
+
+  /**
+   * @param options - エラーオプション。
+   */
+  constructor(options?: ErrorOptions | undefined) {
+    super("The engine is disconnected.", options);
+  }
+}

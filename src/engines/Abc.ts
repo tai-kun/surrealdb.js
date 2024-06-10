@@ -88,17 +88,25 @@ export interface EngineConfig {
   readonly validator: ValidatorAbc;
 }
 
+export const CONNECTING = 0 as const satisfies ConnectionState;
+
+export const OPEN = 1 as const satisfies ConnectionState;
+
+export const CLOSING = 2 as const satisfies ConnectionState;
+
+export const CLOSED = 3 as const satisfies ConnectionState;
+
 /**
  * クライアントエンジンの抽象クラス。
  */
 export default abstract class EngineAbc {
-  static readonly CONNECTING = 0 as const satisfies ConnectionState;
+  static readonly CONNECTING = CONNECTING;
 
-  static readonly OPEN = 1 as const satisfies ConnectionState;
+  static readonly OPEN = OPEN;
 
-  static readonly CLOSING = 2 as const satisfies ConnectionState;
+  static readonly CLOSING = CLOSING;
 
-  static readonly CLOSED = 3 as const satisfies ConnectionState;
+  static readonly CLOSED = CLOSED;
 
   /**
    * イベントエミッター。エンジン内でこのインスタンスを破棄しないでください。

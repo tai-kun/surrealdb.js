@@ -14,10 +14,10 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
-    "./clients": {
-      "tyes": "./dist/clients/index.d.ts",
-      "import": "./dist/clients/index.mjs",
-      "require": "./dist/clients/index.cjs"
+    "./tiny": {
+      "tyes": "./dist/models/tiny/index.d.ts",
+      "import": "./dist/models/tiny/index.mjs",
+      "require": "./dist/models/tiny/index.cjs"
     },
     "./engines": {
       "tyes": "./dist/engines/index.d.ts",

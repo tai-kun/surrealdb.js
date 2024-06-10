@@ -14,7 +14,7 @@
     "moduleResolution": "Bundler",
     "paths": {
       "@tai-kun/surrealdb": ["./src/index.ts"],
-      "@tai-kun/surrealdb/clients": ["./src/clients/index.ts"],
+      "@tai-kun/surrealdb/tiny": ["./src/models/tiny/index.ts"],
       "@tai-kun/surrealdb/engines": ["./src/engines/index.ts"],
       "@tai-kun/surrealdb/formatters": ["./src/formatters/index.ts"],
       "@tai-kun/surrealdb/validators": ["./src/validators/index.ts"],

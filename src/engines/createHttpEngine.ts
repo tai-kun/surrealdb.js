@@ -1,4 +1,4 @@
-import type { CreateEngine } from "../clients/Abc";
+import type { CreateEngine } from "../models/ClientAbc";
 import HttpEngine from "./HttpEngine";
 
 export default (

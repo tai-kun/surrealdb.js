@@ -1,5 +1,5 @@
 import type { Constructor } from "type-fest";
-import type { ClientAbc, ClientConfig } from "./clients";
+import type { ClientConfig, default as ClientAbc } from "./models/ClientAbc";
 
 type ClientConstructor = Constructor<
   any,

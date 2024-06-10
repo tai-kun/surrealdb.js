@@ -1,4 +1,4 @@
-import { assertInstanceOf, assertRejects } from "@pkg/assert";
+import { assertInstanceOf } from "@pkg/assert";
 import { test } from "@pkg/test";
 import { timeoutSignal } from "@tai-kun/surrealdb/_internal";
 
@@ -9,13 +9,15 @@ test("AbortSignal を返す", () => {
 });
 
 test("指定時間経過後に中止される", async () => {
+  // Node.js 18 では、イベントリスナーを登録してもタイムアウトが発生せず、イベントループが終了する。
+  // イベントループを終了させないために、シグナルの中止フラグが立つまで待機する。
+
+  const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
   const signal = timeoutSignal(1);
 
-  await assertRejects(
-    () =>
-      new Promise<unknown>((_, reject) => {
-        signal.onabort = () => reject(signal.reason);
-      }),
-    DOMException,
-  );
+  while (!signal.aborted) {
+    await sleep(100);
+  }
+
+  assertInstanceOf(signal.reason, DOMException);
 });

@@ -35,7 +35,8 @@ jobs:
       fail-fast: false
       matrix:
         node-version:
-          - "18.x"
+          # TODO(tai-kun): GitHub Actions ではタイムアウトになる。原因は不明。ローカルでは動く。
+          # - "18.x"
           - "20.x"
           - "22.x"
         surrealdb-version:

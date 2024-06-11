@@ -1,7 +1,7 @@
-import { assertDeepEquals, assertEquals, assertRejects } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { CLOSED, CLOSING, CONNECTING, OPEN } from "@tai-kun/surrealdb/engines";
 import { ConnectionConflict } from "@tai-kun/surrealdb/errors";
+import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("接続できる", async () => {
   const { endpoint, Surreal } = await getInitializedSurreal();

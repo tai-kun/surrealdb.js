@@ -1,6 +1,6 @@
-import { assertEquals, assertRejects } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { StatefulPromise } from "@tai-kun/surrealdb/_internal";
+import { assertEquals, assertRejects } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("`resolve` で解決できる", async () => {
   const { promise, resolve } = StatefulPromise.withResolvers();

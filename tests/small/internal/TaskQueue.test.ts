@@ -1,12 +1,12 @@
+import { TaskQueue } from "@tai-kun/surrealdb/_internal";
+import { ResourceAlreadyDisposed } from "@tai-kun/surrealdb/errors";
 import {
   assertDeepEquals,
   assertEquals,
   assertMatch,
   assertRejects,
-} from "@pkg/assert";
-import { ENV, test } from "@pkg/test";
-import { TaskQueue } from "@tai-kun/surrealdb/_internal";
-import { ResourceAlreadyDisposed } from "@tai-kun/surrealdb/errors";
+} from "@tools/assert";
+import { ENV, test } from "@tools/test";
 
 test("タスクランナーをキューに追加する", async () => {
   const queue = new TaskQueue();

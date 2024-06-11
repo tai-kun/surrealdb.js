@@ -1,9 +1,9 @@
-import { assertDeepEquals, assertEquals, assertRejects } from "@pkg/assert";
-import { ENV, test } from "@pkg/test";
 import {
   TaskEmitter as _TaskEmitter,
   type TaskListener,
 } from "@tai-kun/surrealdb/_internal";
+import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
+import { ENV, test } from "@tools/test";
 
 // @ts-expect-error
 Symbol.asyncDispose ||= Symbol.for("Symbol.asyncDispose");

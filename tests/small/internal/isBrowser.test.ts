@@ -1,6 +1,6 @@
-import { assertEquals } from "@pkg/assert";
-import { ENV, test } from "@pkg/test";
 import { isBrowser } from "@tai-kun/surrealdb/_internal";
+import { assertEquals } from "@tools/assert";
+import { ENV, test } from "@tools/test";
 
 test("ブラウザかどうかを判定する", () => {
   let browser: boolean;

@@ -1,4 +1,4 @@
-declare module "@pkg/assert" {
+declare module "@tools/assert" {
   type AnyConstructor =
     | (new(...args: any[]) => any)
     | (abstract new(...args: any[]) => any);

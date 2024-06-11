@@ -1,6 +1,6 @@
-import { assertEquals } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { SerialId } from "@tai-kun/surrealdb/_internal";
+import { assertEquals } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("増分 ID を生成する", () => {
   const id = new SerialId();

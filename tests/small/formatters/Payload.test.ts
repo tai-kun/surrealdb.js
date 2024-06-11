@@ -1,7 +1,7 @@
-import { assertDeepEquals, assertEquals, assertRejects } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { DataConversionFailure } from "@tai-kun/surrealdb/errors";
 import { Payload } from "@tai-kun/surrealdb/formatters";
+import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("参照にアクセスできる", () => {
   const data = {};

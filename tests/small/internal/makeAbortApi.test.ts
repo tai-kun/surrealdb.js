@@ -1,11 +1,11 @@
+import { makeAbortApi } from "@tai-kun/surrealdb/_internal";
 import {
   assertEquals,
   assertInstanceOf,
   assertNotEquals,
   assertThrows,
-} from "@pkg/assert";
-import { test } from "@pkg/test";
-import { makeAbortApi } from "@tai-kun/surrealdb/_internal";
+} from "@tools/assert";
+import { test } from "@tools/test";
 
 test("AbortSignal オブジェクトと中止関数を返す", () => {
   const [signal, abort] = makeAbortApi();

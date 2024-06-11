@@ -1,4 +1,4 @@
-import { ENV } from "@pkg/test";
+import { ENV } from "@tools/test";
 
 let ready;
 

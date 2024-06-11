@@ -1,6 +1,6 @@
-import { assertThrows } from "@pkg/assert";
-import { ENV, test } from "@pkg/test";
 import { throwIfAborted } from "@tai-kun/surrealdb/_internal";
+import { assertThrows } from "@tools/assert";
+import { ENV, test } from "@tools/test";
 
 test("中止されていないシグナルを渡すと例外を投げない", () => {
   const controller = new AbortController();

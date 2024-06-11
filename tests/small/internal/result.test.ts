@@ -1,6 +1,6 @@
-import { assertDeepEquals } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { err, ok } from "@tai-kun/surrealdb/_internal";
+import { assertDeepEquals } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("値無しで Ok を作成する", () => {
   const result = ok();

@@ -1,6 +1,6 @@
-import { assertEquals, AssertionError, assertRejects } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { runInAsync } from "@tai-kun/surrealdb/_internal";
+import { assertEquals, AssertionError, assertRejects } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("非同期コンテキストで非同期関数を実行する", async () => {
   async function fn(a: number, b: number): Promise<number> {

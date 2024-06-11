@@ -1,4 +1,4 @@
-declare module "@pkg/test" {
+declare module "@tools/test" {
   type TestFn = () => void | Promise<void>;
 
   /**

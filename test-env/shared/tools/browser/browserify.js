@@ -28,7 +28,7 @@ export async function browserify({ target }) {
   await Promise.all(outputFiles.map(async ({ path, text }) => {
     const testCode = [
       !text.includes("BROWSERIFY SHOULD INJECT SURREALDB GLOBALS") ? "" : `
-        import { setup as __setupSurrealDb } from "@pkg/surrealdb/setup";
+        import { setup as __setupSurrealDb } from "@tools/surrealdb/setup";
         const SURREALDB = await __setupSurrealDb();
       `,
       `const BUNDLED_TEST_CODE = ${JSON.stringify(text)};`,

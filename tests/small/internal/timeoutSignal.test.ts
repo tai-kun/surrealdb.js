@@ -1,6 +1,6 @@
-import { assertInstanceOf } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { timeoutSignal } from "@tai-kun/surrealdb/_internal";
+import { assertInstanceOf } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("AbortSignal を返す", () => {
   const signal = timeoutSignal(1);

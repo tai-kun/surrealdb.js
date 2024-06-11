@@ -1,6 +1,6 @@
-import { assertDeepEquals } from "@pkg/assert";
-import { test } from "@pkg/test";
 import { mutex } from "@tai-kun/surrealdb/_internal";
+import { assertDeepEquals } from "@tools/assert";
+import { test } from "@tools/test";
 
 const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 

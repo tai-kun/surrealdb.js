@@ -1,5 +1,5 @@
 {
-  "name": "@pkg/surrealdb",
+  "name": "@tools/surrealdb",
   "type": "module",
   "exports": {
     ".": "./index.js",

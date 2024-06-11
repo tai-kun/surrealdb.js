@@ -1,5 +1,5 @@
 {
-  "name": "@pkg/browser",
+  "name": "@tools/browser",
   "type": "module",
   "main": "index.js",
   "dependencies": {

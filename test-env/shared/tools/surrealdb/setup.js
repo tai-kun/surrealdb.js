@@ -26,6 +26,7 @@ export async function setup() {
 
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   await sleep(100);
+  let count = 0;
 
   for (;;) {
     try {
@@ -34,7 +35,15 @@ export async function setup() {
       if (status === 200) {
         break;
       }
-    } catch {}
+    } catch (error) {
+      // 約 20 秒
+      if (++count === 200) {
+        console.error("Failing to connect to SurrealDB", {
+          port,
+          error,
+        });
+      }
+    }
 
     await sleep(100);
   }

@@ -56,35 +56,61 @@ jobs:
         working-directory: test-env/node
         run: bash scripts/test.sh
 
-  # TODO(tai-kun): Deno でのテストを追加する。
-  # Deno はローカルの npm パッケージをインストールできない。
+  deno-small-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version:
+          - "v1.x"
+    steps:
+      - uses: actions/checkout@v4
 
-  # deno-small-tests:
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 20
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       deno-version:
-  #         - "v1.x"
-  #   steps:
-  #     - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
 
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: "22.x"
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
 
-  #     - uses: denoland/setup-deno@v1
-  #       with:
-  #         deno-version: ${{ matrix.deno-version }}
+      - name: Prepare
+        run: bash scripts/pretest/small.sh test-env/deno
 
-  #     - name: Prepare
-  #       run: bash scripts/pretest/small.sh test-env/deno
+      - name: Test
+        timeout-minutes: 1
+        working-directory: test-env/deno
+        run: bash scripts/test.sh
 
-  #     - name: Test
-  #       timeout-minutes: 1
-  #       working-directory: test-env/deno
-  #       run: bash scripts/test.sh
+  deno-medium-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version:
+          - "v1.x"
+        surrealdb-version:
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
+
+      - name: Prepare
+        run: bash scripts/pretest/medium.sh test-env/deno ${{ matrix.surrealdb-version }}
+
+      - name: Test
+        timeout-minutes: 5
+        working-directory: test-env/deno
+        run: bash scripts/test.sh
 
   bun-small-tests:
     runs-on: ubuntu-latest

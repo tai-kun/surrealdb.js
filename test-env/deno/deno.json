@@ -1,0 +1,17 @@
+{
+  "imports": {
+    "@std/assert": "jsr:@std/assert@^0.226.0",
+    "@tools/assert": "__ROOT__/test-env/deno/tools/assert/index.js",
+    "@tools/surrealdb": "__ROOT__/test-env/deno/tools/surrealdb/index.js",
+    "@tools/test": "__ROOT__/test-env/deno/tools/test/index.js",
+    "@tai-kun/surrealdb": "__ROOT__/dist/index.mjs",
+    "@tai-kun/surrealdb/standard": "__ROOT__/dist/models/standard/index.mjs",
+    "@tai-kun/surrealdb/tiny": "__ROOT__/dist/models/tiny/index.mjs",
+    "@tai-kun/surrealdb/full": "__ROOT__/dist/models/full/index.mjs",
+    "@tai-kun/surrealdb/engines": "__ROOT__/dist/engines/index.mjs",
+    "@tai-kun/surrealdb/formatters": "__ROOT__/dist/formatters/index.mjs",
+    "@tai-kun/surrealdb/validators": "__ROOT__/dist/validators/index.mjs",
+    "@tai-kun/surrealdb/errors": "__ROOT__/dist/errors.mjs",
+    "@tai-kun/surrealdb/_internal": "__ROOT__/dist/internal/index.mjs"
+  }
+}

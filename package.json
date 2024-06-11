@@ -14,10 +14,20 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
+    "./standard": {
+      "tyes": "./dist/models/standard/index.d.ts",
+      "import": "./dist/models/standard/index.mjs",
+      "require": "./dist/models/standard/index.cjs"
+    },
     "./tiny": {
       "tyes": "./dist/models/tiny/index.d.ts",
       "import": "./dist/models/tiny/index.mjs",
       "require": "./dist/models/tiny/index.cjs"
+    },
+    "./full": {
+      "tyes": "./dist/models/full/index.d.ts",
+      "import": "./dist/models/full/index.mjs",
+      "require": "./dist/models/full/index.cjs"
     },
     "./engines": {
       "tyes": "./dist/engines/index.d.ts",

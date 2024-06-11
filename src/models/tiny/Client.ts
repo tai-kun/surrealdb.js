@@ -1,5 +1,6 @@
 import { CLOSED, OPEN } from "../../engines";
 import {
+  type AggregateTasksError,
   ConnectionConflict,
   ConnectionUnavailable,
   EngineDisconnected,
@@ -60,44 +61,41 @@ export default class Client extends Abc {
   ): Promise<
     | Ok
     | Ok<"AlreadyDisconnected">
-    | Err<unknown>
+    | Err<{
+      disconnect?: unknown;
+      dispose?: AggregateTasksError;
+    }>
   > {
     try {
       if (!this.conn || this.state === CLOSED) {
         return ok("AlreadyDisconnected");
       }
 
-      const {
-        force = false,
-        signal = timeoutSignal(15_000),
-      } = options;
-      const promise = this.ee.once(CLOSED, { signal });
-
-      if (force) {
+      if (options.force) {
         this.ee.abort(new EngineDisconnected());
       }
 
       const disconnResult = await this.conn.disconnect();
-
-      try {
-        const [result] = await promise;
-
-        if (!result.ok) {
-          throw result.error;
-        }
-      } finally {
-        await this.ee.dispose();
-      }
-
       const disposeResult = await this.ee.dispose();
 
-      if (!disconnResult.ok) {
-        throw disconnResult.error;
+      if (!disconnResult.ok || !disposeResult.ok) {
+        const error: {
+          disconnect?: unknown;
+          dispose?: AggregateTasksError;
+        } = {};
+
+        if (!disconnResult.ok) {
+          error.disconnect = disconnResult.error;
+        }
+
+        if (!disposeResult.ok) {
+          error.dispose = disposeResult.error;
+        }
+
+        return err(error);
       }
 
       return disposeResult;
-    } catch (error) {
-      return err(error);
     } finally {
       this.ee = new TaskEmitter();
       this.conn = null;

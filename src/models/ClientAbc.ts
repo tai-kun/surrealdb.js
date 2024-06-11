@@ -7,6 +7,7 @@ import {
   type EngineEvents,
 } from "../engines";
 import {
+  type AggregateTasksError,
   CircularEngineReference,
   TypeError,
   UnsupportedProtocol,
@@ -79,10 +80,6 @@ export interface ClientDisconnectOptions {
    * true にすると、実行中のタスクに対して中止シグナルが送信されます。
    */
   readonly force?: boolean | undefined;
-  /**
-   * 切断の結果を待機する時間。
-   */
-  readonly signal?: AbortSignal | undefined;
 }
 
 /**
@@ -245,7 +242,10 @@ export default abstract class ClientAbc {
   abstract disconnect(options?: ClientDisconnectOptions | undefined): Promise<
     | Ok
     | Ok<"AlreadyDisconnected">
-    | Err<unknown>
+    | Err<{
+      disconnect?: unknown;
+      dispose?: AggregateTasksError;
+    }>
   >;
 
   /**

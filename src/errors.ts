@@ -6,6 +6,45 @@ import type {
 export class SurrealDbError extends Error {}
 
 /**
+ * このエラーは、到達不能なコードに到達した場合に投げられます。
+ */
+export class UnreachableError extends SurrealDbError {
+  static {
+    this.prototype.name = "UnreachableError";
+  }
+
+  /**
+   * @param options - エラーオプション。
+   */
+  constructor(options?: ErrorOptions | undefined) {
+    super("Unreachable code reached.", options);
+  }
+}
+
+/**
+ * 到達不能であることを示します。
+ *
+ * @throws {UnreachableError}
+ */
+export function unreachable(): never;
+
+/**
+ * 到達不能であることを示します。
+ *
+ * @param cause - 到達不能の原因。
+ * @throws {UnreachableError}
+ */
+export function unreachable(cause: never): never;
+
+export function unreachable(...args: [cause?: never]): never {
+  if (args.length === 0) {
+    throw new UnreachableError();
+  } else {
+    throw new UnreachableError({ cause: args[0] });
+  }
+}
+
+/**
  * このエラーは、主に値が期待された型と異なる場合に投げられます。
  */
 export class TypeError extends SurrealDbError {

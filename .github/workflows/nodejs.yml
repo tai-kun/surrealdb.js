@@ -1,0 +1,58 @@
+name: Node.js
+
+on: push
+
+jobs:
+  small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - "18.x"
+          - "20.x"
+          - "22.x"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Prepare
+        run: bash scripts/pretest/small.sh test-env/node
+
+      - name: Test
+        timeout-minutes: 1
+        working-directory: test-env/node
+        run: bash scripts/test.sh
+
+  medium:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          # TODO(tai-kun): GitHub Actions ではタイムアウトになる。原因は不明。ローカルでは動く。
+          # - "18.x"
+          - "20.x"
+          - "22.x"
+        surrealdb-version:
+          - "v1.5.0"
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Prepare
+        run: bash scripts/pretest/medium.sh test-env/node ${{ matrix.surrealdb-version }}
+
+      - name: Test
+        timeout-minutes: 5
+        working-directory: test-env/node
+        run: bash scripts/test.sh

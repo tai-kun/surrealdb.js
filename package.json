@@ -81,16 +81,16 @@
   "scripts": {
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
-    "test:sm:bun": "node scripts/test.js ci bun-small-tests",
-    "test:md:bun": "node scripts/test.js ci bun-medium-tests",
-    "test:sm:deno": "node scripts/test.js ci deno-small-tests",
-    "test:md:deno": "node scripts/test.js ci deno-medium-tests",
-    "test:sm:node": "node scripts/test.js ci node-small-tests",
-    "test:md:node": "node scripts/test.js ci node-medium-tests",
-    "test:sm:chrome": "node scripts/test.js ci chrome-small-tests",
-    "test:md:chrome": "node scripts/test.js ci chrome-medium-tests",
-    "test:sm:firefox": "node scripts/test.js ci firefox-small-tests",
-    "test:md:firefox": "node scripts/test.js ci firefox-medium-tests"
+    "test:sm:bun": "node scripts/test.js bun small",
+    "test:md:bun": "node scripts/test.js bun medium",
+    "test:sm:deno": "node scripts/test.js deno small",
+    "test:md:deno": "node scripts/test.js deno medium",
+    "test:sm:node": "node scripts/test.js nodejs small",
+    "test:md:node": "node scripts/test.js nodejs medium",
+    "test:sm:chrome": "node scripts/test.js chrome small",
+    "test:md:chrome": "node scripts/test.js chrome medium",
+    "test:sm:firefox": "node scripts/test.js firefox small",
+    "test:md:firefox": "node scripts/test.js firefox medium"
   },
   "volta": {
     "node": "22.2.0"

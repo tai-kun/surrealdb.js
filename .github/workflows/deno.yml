@@ -1,0 +1,61 @@
+name: Deno
+
+on: push
+
+jobs:
+  small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version:
+          - "v1.x"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
+
+      - name: Prepare
+        run: bash scripts/pretest/small.sh test-env/deno
+
+      - name: Test
+        timeout-minutes: 1
+        working-directory: test-env/deno
+        run: bash scripts/test.sh
+
+  medium:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version:
+          - "v1.x"
+        surrealdb-version:
+          - "v1.5.0"
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
+
+      - name: Prepare
+        run: bash scripts/pretest/medium.sh test-env/deno ${{ matrix.surrealdb-version }}
+
+      - name: Test
+        timeout-minutes: 5
+        working-directory: test-env/deno
+        run: bash scripts/test.sh

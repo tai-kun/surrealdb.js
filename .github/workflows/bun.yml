@@ -1,0 +1,61 @@
+name: Bun
+
+on: push
+
+jobs:
+  small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        bun-version:
+          - "1.1.12"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ matrix.bun-version }}
+
+      - name: Prepare
+        run: bash scripts/pretest/small.sh test-env/bun
+
+      - name: Test
+        timeout-minutes: 1
+        working-directory: test-env/bun
+        run: bash scripts/test.sh
+
+  medium:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        bun-version:
+          - "1.1.12"
+        surrealdb-version:
+          - "v1.5.0"
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: ${{ matrix.bun-version }}
+
+      - name: Prepare
+        run: bash scripts/pretest/medium.sh test-env/bun ${{ matrix.surrealdb-version }}
+
+      - name: Test
+        timeout-minutes: 5
+        working-directory: test-env/bun
+        run: bash scripts/test.sh

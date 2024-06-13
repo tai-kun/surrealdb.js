@@ -50,15 +50,87 @@ export default class Thing extends SurqlValueAbc {
     _defineAssertThing(this);
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const thing = new Thing("tb", {
+   *   string: "あいうえお😢",
+   *   number: [
+   *     123,
+   *     3.14,
+   *   ],
+   *   bigint: 9007199254740992n, // Number.MAX_SAFE_INTEGER + 1
+   *   boolean: [
+   *     true,
+   *     false,
+   *   ],
+   *   null: null,
+   *   undefined: undefined,
+   *   date: new Date(0),
+   * });
+   * thing.toString();
+   * // => tb:{"bigint":9007199254740992,"boolean":[true,false],"date":d"1970-01-01T00:00:00.000Z","null":NULL,"number":[123,3.14],"string":s"あいうえお😢","undefined":NONE}
+   * ```
+   */
   override toString(): `${string}:${any}` {
     return `${Thing.escapeTb(this.tb)}:${Thing.escapeId(this.id)}`;
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const thing = new Thing("tb", {
+   *   string: "あいうえお😢",
+   *   number: [
+   *     123,
+   *     3.14,
+   *   ],
+   *   bigint: 9007199254740992n, // Number.MAX_SAFE_INTEGER + 1
+   *   boolean: [
+   *     true,
+   *     false,
+   *   ],
+   *   null: null,
+   *   undefined: undefined,
+   *   date: new Date(0),
+   * });
+   * thing.toString();
+   * // => tb:{"bigint":9007199254740992,"boolean":[true,false],"date":d"1970-01-01T00:00:00.000Z","null":NULL,"number":[123,3.14],"string":s"あいうえお😢","undefined":NONE}
+   * ```
+   */
   toJSON(): `${string}:${any}` {
     return `${Thing.escapeTb(this.tb)}:${Thing.escapeId(this.id)}`;
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const thing = new Thing("tb", {
+   *   string: "あいうえお😢",
+   *   number: [
+   *     123,
+   *     3.14,
+   *   ],
+   *   bigint: 9007199254740992n, // Number.MAX_SAFE_INTEGER + 1
+   *   boolean: [
+   *     true,
+   *     false,
+   *   ],
+   *   null: null,
+   *   undefined: undefined,
+   *   date: new Date(0),
+   * });
+   * thing.toString();
+   * // => r"tb:{\"bigint\":9007199254740992,\"boolean\":[true,false],\"date\":d\"1970-01-01T00:00:00.000Z\",\"null\":NULL,\"number\":[123,3.14],\"string\":s\"あいうえお😢\",\"undefined\":NONE}"
+   * ```
+   */
   toSurql(): `r"${string}:${any}"` {
-    return `r"${Thing.escapeTb(this.tb)}:${Thing.escapeId(this.id)}"`;
+    return `r${
+      JSON.stringify(
+        Thing.escapeTb(this.tb)
+          + ":"
+          + Thing.escapeId(this.id),
+      )
+    }` as `r"${string}:${any}"`;
   }
 }

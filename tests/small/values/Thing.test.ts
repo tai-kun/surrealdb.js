@@ -111,14 +111,14 @@ test("ID が文字列以外の場合", async () => {
 
   assertEquals(
     thing.toString(),
-    `tb:{${[
-      `"bigint":9007199254740992`,
-      `"boolean":[true,false]`,
-      `"date":d"1970-01-01T00:00:00.000Z"`,
-      `"null":NULL`,
-      `"number":[123,3.14]`,
-      `"string":s"あいうえお😢"`,
-      `"undefined":NONE`,
-    ]}}`,
+    `tb:{"bigint":9007199254740992,"boolean":[true,false],"date":d"1970-01-01T00:00:00.000Z","null":NULL,"number":[123,3.14],"string":s"あいうえお😢","undefined":NONE}`,
+  );
+  assertEquals(
+    thing.toJSON(),
+    `tb:{"bigint":9007199254740992,"boolean":[true,false],"date":d"1970-01-01T00:00:00.000Z","null":NULL,"number":[123,3.14],"string":s"あいうえお😢","undefined":NONE}`,
+  );
+  assertEquals(
+    thing.toSurql(),
+    `r"tb:{\\"bigint\\":9007199254740992,\\"boolean\\":[true,false],\\"date\\":d\\"1970-01-01T00:00:00.000Z\\",\\"null\\":NULL,\\"number\\":[123,3.14],\\"string\\":s\\"あいうえお😢\\",\\"undefined\\":NONE}"`,
   );
 });

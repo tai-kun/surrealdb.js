@@ -6,12 +6,11 @@
  * @see https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/escape.rs#L90-L93
  */
 export function escapeIdent(rid: string) {
-  const escaped = () => "⟨" + rid.replaceAll("⟩", "\⟩") + "⟩";
-
   if (rid === "") {
-    return escaped();
+    return "⟨⟩";
   }
 
+  const escaped = () => "⟨" + rid.replaceAll("⟩", "\⟩") + "⟩";
   let numericOnly = true;
 
   for (

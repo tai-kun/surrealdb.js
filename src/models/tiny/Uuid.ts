@@ -171,14 +171,38 @@ export default class Uuid extends SurqlValueAbc {
     return this.#bytes.slice(); // Copy
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
+   * uuid.toString();
+   * // => 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
+   * ```
+   */
   override toString(): string {
     return toString36(this.#bytes);
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
+   * uuid.toString();
+   * // => 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
+   * ```
+   */
   toJSON(): string {
     return toString36(this.#bytes);
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
+   * uuid.toSurql();
+   * // => u"8f3c721e-439a-4fc0-963c-8dbedf5cc7ee"
+   * ```
+   */
   toSurql(): string {
     return "u\"" + toString36(this.#bytes) + "\"";
   }

@@ -36,14 +36,38 @@ export default class Table extends SurqlValueAbc {
     this.name = name;
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const table = new Table("0xff");
+   * table.toString();
+   * // => 0xff
+   * ```
+   */
   override toString(): string {
     return this.name;
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const table = new Table("0xff");
+   * table.toJSON();
+   * // => 0xff
+   * ```
+   */
   toJSON(): string {
     return this.name;
   }
 
+  /**
+   * @example
+   * ```typescript
+   * const table = new Table("255");
+   * table.toSurql();
+   * // => ⟨255⟩
+   * ```
+   */
   toSurql(): string {
     return Table.escapeName(this.name);
   }

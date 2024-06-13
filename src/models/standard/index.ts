@@ -45,11 +45,12 @@ export { default as Uuid } from "./Uuid";
 export type * from "../ClientAbc";
 export { default as ClientAbc } from "../ClientAbc";
 
+export { escapeIdent } from "../escape";
+
 export {
   type DatetimeAny,
   type DecimalAny,
   type DurationAny,
-  escapeIdent,
   type GeometryCollectionAny,
   type GeometryLineAny,
   type GeometryMultiLineAny,

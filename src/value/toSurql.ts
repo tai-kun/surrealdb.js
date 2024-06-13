@@ -31,7 +31,7 @@ export default function toSurql(value: SurqlValue): string {
     },
   ): string {
     if (typeof x === "string") {
-      return JSON.stringify(x);
+      return "s" + JSON.stringify(x);
     }
 
     if (typeof x === "number" || typeof x === "bigint") {

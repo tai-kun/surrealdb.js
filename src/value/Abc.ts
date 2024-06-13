@@ -1,4 +1,4 @@
-import type { SurqlValue } from "./toSurql";
+import type { Jsonifiable } from "type-fest";
 
 export default abstract class SurqlValueAbc {
   /**
@@ -6,7 +6,7 @@ export default abstract class SurqlValueAbc {
    *
    * @returns SurrealQL の変数の値。
    */
-  abstract toJSON(): SurqlValue;
+  abstract toJSON(): Jsonifiable;
 
   /**
    * SurrealQL に直接埋め込める文字列に変換します。

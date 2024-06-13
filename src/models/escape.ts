@@ -7,7 +7,12 @@
  */
 export function escapeIdent(rid: string) {
   const escaped = () => "⟨" + rid.replaceAll("⟩", "\⟩") + "⟩";
-  let numericOnly = !!rid; // 空文字の場合は false になる。
+
+  if (rid === "") {
+    return escaped();
+  }
+
+  let numericOnly = true;
 
   for (
     let i = 0,

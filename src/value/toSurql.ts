@@ -11,7 +11,8 @@ export type SurqlPrimitive =
 
 export type SurqlObject =
   | { readonly [_ in string | number]?: SurqlValue }
-  | { readonly toSurqlValue: () => SurqlValue };
+  | { readonly toSurqlValue: () => SurqlValue }
+  | Date;
 
 export type SurqlArray = readonly SurqlValue[];
 
@@ -73,10 +74,10 @@ export default function toSurql(value: SurqlValue): string {
 
       c.seen.add(x);
 
-      if (typeof x.toSurqlValue === "function") {
-        s = inner(x.toSurqlValue(), c);
-      } else if (x instanceof Date) {
+      if (x instanceof Date) {
         s = "d\"" + x.toISOString() + "\"";
+      } else if (typeof x.toSurqlValue === "function") {
+        s = inner(x.toSurqlValue(), c);
       } else if (isPlainObject(x)) {
         s = "{"
           + Object.entries(x)

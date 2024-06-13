@@ -16,7 +16,9 @@ test("UUID v1 形式の文字列から UUID インスタンスを作成できる
   const UUID_STRING = "fe8aab8e-27ba-11ef-9454-0242ac120002";
   const uuid = new Uuid(UUID_STRING);
 
-  assertEquals(uuid.toString(), UUID_STRING);
+  assertEquals(uuid.toString(), "fe8aab8e-27ba-11ef-9454-0242ac120002");
+  assertEquals(uuid.toJSON(), "fe8aab8e-27ba-11ef-9454-0242ac120002");
+  assertEquals(uuid.toSurql(), "u\"fe8aab8e-27ba-11ef-9454-0242ac120002\"");
   assertEquals(uuid.variant, "RFC");
   assertEquals(uuid.version, 1);
 });
@@ -25,7 +27,9 @@ test("UUID v4 形式の文字列から UUID インスタンスを作成できる
   const UUID_STRING = "8f3c721e-439a-4fc0-963c-8dbedf5cc7ee";
   const uuid = new Uuid(UUID_STRING);
 
-  assertEquals(uuid.toString(), UUID_STRING);
+  assertEquals(uuid.toString(), "8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
+  assertEquals(uuid.toJSON(), "8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
+  assertEquals(uuid.toSurql(), "u\"8f3c721e-439a-4fc0-963c-8dbedf5cc7ee\"");
   assertEquals(uuid.variant, "RFC");
   assertEquals(uuid.version, 4);
 });
@@ -34,7 +38,9 @@ test("UUID v7 形式の文字列から UUID インスタンスを作成できる
   const UUID_STRING = "018fb2c0-7bb7-7fca-8308-b24d0be065dc";
   const uuid = new Uuid(UUID_STRING);
 
-  assertEquals(uuid.toString(), UUID_STRING);
+  assertEquals(uuid.toString(), "018fb2c0-7bb7-7fca-8308-b24d0be065dc");
+  assertEquals(uuid.toJSON(), "018fb2c0-7bb7-7fca-8308-b24d0be065dc");
+  assertEquals(uuid.toSurql(), "u\"018fb2c0-7bb7-7fca-8308-b24d0be065dc\"");
   assertEquals(uuid.variant, "RFC");
   assertEquals(uuid.version, 7);
 });
@@ -43,7 +49,9 @@ test("Nil UUID から UUID インスタンスを作成できる", () => {
   const UUID_STRING = "00000000-0000-0000-0000-000000000000";
   const uuid = new Uuid(UUID_STRING);
 
-  assertEquals(uuid.toString(), UUID_STRING);
+  assertEquals(uuid.toString(), "00000000-0000-0000-0000-000000000000");
+  assertEquals(uuid.toJSON(), "00000000-0000-0000-0000-000000000000");
+  assertEquals(uuid.toSurql(), "u\"00000000-0000-0000-0000-000000000000\"");
   assertEquals(uuid.variant, "NIL");
   assertEquals(uuid.version, null);
 });
@@ -52,7 +60,9 @@ test("Max UUID から UUID インスタンスを作成できる", () => {
   const UUID_STRING = "ffffffff-ffff-ffff-ffff-ffffffffffff";
   const uuid = new Uuid(UUID_STRING);
 
-  assertEquals(uuid.toString(), UUID_STRING);
+  assertEquals(uuid.toString(), "ffffffff-ffff-ffff-ffff-ffffffffffff");
+  assertEquals(uuid.toJSON(), "ffffffff-ffff-ffff-ffff-ffffffffffff");
+  assertEquals(uuid.toSurql(), "u\"ffffffff-ffff-ffff-ffff-ffffffffffff\"");
   assertEquals(uuid.variant, "MAX");
   assertEquals(uuid.version, null);
 });
@@ -67,7 +77,7 @@ test("バイト配列は常にコピーされる", () => {
     uuid.bytes[i] = 0xff;
   }
 
-  assertEquals(uuid.toString(), UUID_STRING);
+  assertEquals(uuid.toJSON(), UUID_STRING);
 });
 
 test("UUID クラスであると判定できる", () => {
@@ -118,7 +128,7 @@ test("バイト配列から UUID インスタンスを作成できる", () => {
   const uuidFromString = new Uuid(STRING_UUID);
   const uuidFromBytes = new Uuid(BYTES_UUID);
 
-  assertEquals(uuidFromString.toString(), uuidFromBytes.toString());
+  assertEquals(uuidFromString.toJSON(), uuidFromBytes.toJSON());
 });
 
 test("UUID v1 の文字列を解析できる", () => {

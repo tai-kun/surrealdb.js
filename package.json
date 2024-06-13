@@ -58,6 +58,9 @@
   "files": [
     "dist"
   ],
+  "dependencies": {
+    "is-plain-obj": "^4.1.0"
+  },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "^20.14.2",

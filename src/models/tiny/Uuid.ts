@@ -1,4 +1,5 @@
 import { TypeError } from "../../errors";
+import { SurqlValueAbc } from "../../value";
 import { _defineAssertUuid } from "../internal";
 
 const UUID_36_REGEX =
@@ -138,13 +139,14 @@ function toString36(bytes: Uint8Array): string {
 /**
  * UUID を表すクラス。
  */
-export default class Uuid {
+export default class Uuid extends SurqlValueAbc {
   #bytes: Uint8Array;
 
   /**
    * @param uuid - UUID を表すバイト配列または文字列。
    */
   constructor(uuid: Uint8Array | string) {
+    super();
     _defineAssertUuid(this);
 
     if (typeof uuid === "string") {
@@ -169,21 +171,15 @@ export default class Uuid {
     return this.#bytes.slice(); // Copy
   }
 
-  /**
-   * UUID の文字列表現を返します。
-   *
-   * @returns UUID の文字列表現。
-   */
-  toString(): string {
+  override toString(): string {
     return toString36(this.#bytes);
   }
 
-  /**
-   * UUID の JSON 表現を返します。これは `toString` と同じです。
-   *
-   * @returns UUID の文字列表現。
-   */
   toJSON(): string {
-    return this.toString();
+    return toString36(this.#bytes);
+  }
+
+  toSurql(): string {
+    return "u\"" + toString36(this.#bytes) + "\"";
   }
 }

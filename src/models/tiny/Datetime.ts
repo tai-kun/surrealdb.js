@@ -1,4 +1,4 @@
-import type { SurqlValue } from "../../value";
+import type { SurqlValueInterface } from "../../value";
 import { _defineAssertDatetime } from "../internal";
 import { isDatetime } from "../values";
 
@@ -24,7 +24,7 @@ const ms2ns = (ms: number): number =>
     ? ms * 1_000_000
     : NaN;
 
-export default class Datetime extends Date implements SurqlValue {
+export default class Datetime extends Date implements SurqlValueInterface {
   #ns: number = NaN;
 
   constructor();

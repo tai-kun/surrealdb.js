@@ -1,5 +1,5 @@
 import { TypeError } from "../../errors";
-import type { SurqlValue } from "../../value";
+import type { SurqlValueInterface } from "../../value";
 import { _defineAssertUuid } from "../internal";
 
 const UUID_36_REGEX =
@@ -139,7 +139,7 @@ function toString36(bytes: Uint8Array): string {
 /**
  * UUID を表すクラス。
  */
-export default class Uuid implements SurqlValue {
+export default class Uuid implements SurqlValueInterface {
   #bytes: Uint8Array;
 
   /**

@@ -42,10 +42,14 @@ export { default as Uuid } from "./Uuid";
 
 // re-exports
 
+export type * from "../../value/escapeIdent";
+export { default as escapeIdent } from "../../value/escapeIdent";
+
+export type * from "../../value/toSurql";
+export { default as toSurql } from "../../value/toSurql";
+
 export type * from "../ClientAbc";
 export { default as ClientAbc } from "../ClientAbc";
-
-export { escapeIdent } from "../escape";
 
 export {
   type DatetimeAny,

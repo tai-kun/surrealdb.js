@@ -3,7 +3,7 @@ import type { Jsonifiable } from "type-fest";
 /**
  * SurrealQL の値を実装するインターフェース。
  */
-export default interface SurqlValue {
+export default interface SurqlValueInterface {
   /**
    * SurrealQL の変数の値に変換します。
    *

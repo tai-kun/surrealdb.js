@@ -1,12 +1,16 @@
-import { type SurqlValue, type SurqlValue, toSurql } from "../../value";
-import { escapeIdent } from "../escape";
+import {
+  escapeIdent,
+  type SurqlValue,
+  type SurqlValueInterface,
+  toSurql,
+} from "../../value";
 import { _defineAssertThing } from "../internal";
 import type { TableAny } from "../values";
 
 /**
  * テーブル名とテーブル内のレコードの識別子から成るレコード ID を表すクラス。
  */
-export default class Thing implements SurqlValue {
+export default class Thing implements SurqlValueInterface {
   /**
    * テーブル名をエスケープします。
    *

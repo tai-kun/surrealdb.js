@@ -1,12 +1,11 @@
 import { TypeError } from "../../errors";
-import type { SurqlValue } from "../../value";
-import { escapeIdent } from "../escape";
+import { escapeIdent, type SurqlValueInterface } from "../../value";
 import { _defineAssertTable } from "../internal";
 
 /**
  * テーブルを表すクラス。
  */
-export default class Table implements SurqlValue {
+export default class Table implements SurqlValueInterface {
   /**
    * テーブル名をエスケープします。
    *

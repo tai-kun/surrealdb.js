@@ -1,5 +1,5 @@
 import { TypeError } from "../../errors";
-import { SurqlValueAbc } from "../../value";
+import type { SurqlValue } from "../../value";
 import { _defineAssertUuid } from "../internal";
 
 const UUID_36_REGEX =
@@ -139,14 +139,13 @@ function toString36(bytes: Uint8Array): string {
 /**
  * UUID を表すクラス。
  */
-export default class Uuid extends SurqlValueAbc {
+export default class Uuid implements SurqlValue {
   #bytes: Uint8Array;
 
   /**
    * @param uuid - UUID を表すバイト配列または文字列。
    */
   constructor(uuid: Uint8Array | string) {
-    super();
     _defineAssertUuid(this);
 
     if (typeof uuid === "string") {
@@ -179,7 +178,7 @@ export default class Uuid extends SurqlValueAbc {
    * // => 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
    * ```
    */
-  override toString(): string {
+  toString(): string {
     return toString36(this.#bytes);
   }
 

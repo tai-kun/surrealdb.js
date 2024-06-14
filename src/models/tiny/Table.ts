@@ -1,12 +1,12 @@
 import { TypeError } from "../../errors";
-import { SurqlValueAbc } from "../../value";
+import type { SurqlValue } from "../../value";
 import { escapeIdent } from "../escape";
 import { _defineAssertTable } from "../internal";
 
 /**
  * テーブルを表すクラス。
  */
-export default class Table extends SurqlValueAbc {
+export default class Table implements SurqlValue {
   /**
    * テーブル名をエスケープします。
    *
@@ -26,7 +26,6 @@ export default class Table extends SurqlValueAbc {
    * @param name - テーブル名。
    */
   constructor(name: string) {
-    super();
     _defineAssertTable(this);
 
     if (typeof name !== "string") {
@@ -44,7 +43,7 @@ export default class Table extends SurqlValueAbc {
    * // => 0xff
    * ```
    */
-  override toString(): string {
+  toString(): string {
     return this.name;
   }
 

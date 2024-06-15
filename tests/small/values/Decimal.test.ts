@@ -1,7 +1,7 @@
 import { Decimal, isDecimal } from "@tai-kun/surrealdb/full";
 import { Decimal as DecimalStandard } from "@tai-kun/surrealdb/standard";
 import { Decimal as DecimalTiny } from "@tai-kun/surrealdb/tiny";
-import { assert, assertEquals } from "@tools/assert";
+import { assert, assertEquals, assertInstanceOf } from "@tools/assert";
 import { test } from "@tools/test";
 
 test("文字列から Decimal を作成する", () => {
@@ -34,4 +34,28 @@ test("Decimal クラスであると判定できる", () => {
   assert(isDecimal(d3));
   assert(!isDecimal(3.14));
   assert(!isDecimal("3.14"));
+});
+
+test("decimal.js-light の静的メソッドにアクセスできる", () => {
+  assertEquals(typeof DecimalStandard.ROUND_CEIL, "number");
+});
+
+test("decimal.js の静的メソッドにアクセスできる", () => {
+  assertEquals(typeof Decimal.ROUND_CEIL, "number");
+});
+
+test("decimal.js-light のインスタンスメソッドにアクセスできる", () => {
+  const d = new DecimalStandard("0.1").plus("0.1").plus("0.1");
+
+  assertEquals(d.valueOf(), "0.3");
+  assertInstanceOf(d, DecimalStandard);
+  assert(isDecimal(d));
+});
+
+test("decimal.js のインスタンスメソッドにアクセスできる", () => {
+  const d = new Decimal("0.1").plus("0.1").plus("0.1");
+
+  assertEquals(d.valueOf(), "0.3");
+  assertInstanceOf(d, Decimal);
+  assert(isDecimal(d));
 });

@@ -1,4 +1,5 @@
 import { unreachable } from "../../errors";
+import type { SurqlValueSerializer } from "../../value";
 import Base, { byteToHex } from "../tiny/Uuid";
 
 /**
@@ -16,10 +17,34 @@ export type UuidVariant =
 
 export type UuidVersion = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
-export default class Uuid extends Base {
+export default class Uuid extends Base implements SurqlValueSerializer {
   #variant: UuidVariant | undefined;
   #version: UuidVersion | null | undefined;
   #timestamp: number | null | undefined;
+
+  /**
+   * @example
+   * ```typescript
+   * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
+   * uuid.toString();
+   * // 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
+   * ```
+   */
+  toJSON(): string {
+    return this.toString();
+  }
+
+  /**
+   * @example
+   * ```typescript
+   * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
+   * uuid.toSurql();
+   * // u"8f3c721e-439a-4fc0-963c-8dbedf5cc7ee"
+   * ```
+   */
+  toSurql(): string {
+    return "u\"" + this.toString() + "\"";
+  }
 
   /**
    * UUID のバリアント。

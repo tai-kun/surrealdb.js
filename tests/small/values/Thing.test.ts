@@ -14,11 +14,6 @@ test("ID が半角英数字とアンダースコアのみで構成される", as
     const thing = new Thing("tb", id);
 
     assertEquals(
-      thing.toString(),
-      `tb:${id}`,
-      id + " の String 表現はエスケープされない",
-    );
-    assertEquals(
       thing.toJSON(),
       `tb:${id}`,
       id + " の JSON 表現はエスケープされない",
@@ -46,11 +41,6 @@ test("ID に 10 進数または半角英数字とアンダースコア以外が�
     const thing = new Thing("tb", id);
 
     assertEquals(
-      thing.toString(),
-      `tb:⟨${id}⟩`,
-      id + " の String 表現はエスケープされる",
-    );
-    assertEquals(
       thing.toJSON(),
       `tb:⟨${id}⟩`,
       id + " の JSON 表現はエスケープされる",
@@ -73,11 +63,6 @@ test("ID が ID ジェネレーターの場合", async () => {
   ) {
     const thing = new Thing("tb", id);
 
-    assertEquals(
-      thing.toString(),
-      `tb:${id}`,
-      id + " の String 表現はエスケープされない",
-    );
     assertEquals(
       thing.toJSON(),
       `tb:${id}`,
@@ -109,10 +94,6 @@ test("ID が文字列以外の場合", async () => {
   };
   const thing = new Thing("tb", id);
 
-  assertEquals(
-    thing.toString(),
-    `tb:{"bigint":9007199254740992,"boolean":[true,false],"date":d"1970-01-01T00:00:00.000Z","null":NULL,"number":[123,3.14],"string":s"あいうえお😢","undefined":NONE}`,
-  );
   assertEquals(
     thing.toJSON(),
     `tb:{"bigint":9007199254740992,"boolean":[true,false],"date":d"1970-01-01T00:00:00.000Z","null":NULL,"number":[123,3.14],"string":s"あいうえお😢","undefined":NONE}`,

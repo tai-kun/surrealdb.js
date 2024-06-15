@@ -1,5 +1,4 @@
 import { TypeError } from "../../errors";
-import type { SurqlValueInterface } from "../../value";
 import { _defineAssertUuid } from "../internal";
 
 const UUID_36_REGEX =
@@ -139,7 +138,7 @@ function toString36(bytes: Uint8Array): string {
 /**
  * UUID を表すクラス。
  */
-export default class Uuid implements SurqlValueInterface {
+export default class Uuid {
   #bytes: Uint8Array;
 
   /**
@@ -175,34 +174,10 @@ export default class Uuid implements SurqlValueInterface {
    * ```typescript
    * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
    * uuid.toString();
-   * // => 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
+   * // 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
    * ```
    */
   toString(): string {
     return toString36(this.#bytes);
-  }
-
-  /**
-   * @example
-   * ```typescript
-   * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
-   * uuid.toString();
-   * // => 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
-   * ```
-   */
-  toJSON(): string {
-    return toString36(this.#bytes);
-  }
-
-  /**
-   * @example
-   * ```typescript
-   * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
-   * uuid.toSurql();
-   * // => u"8f3c721e-439a-4fc0-963c-8dbedf5cc7ee"
-   * ```
-   */
-  toSurql(): string {
-    return "u\"" + toString36(this.#bytes) + "\"";
   }
 }

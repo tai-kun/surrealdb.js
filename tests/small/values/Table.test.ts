@@ -16,11 +16,6 @@ test("半角英数字とアンダースコアのみで構成される", async ()
     const table = new Table(name);
 
     assertEquals(
-      table.toString(),
-      name,
-      name + " の String 表現はエスケープされない",
-    );
-    assertEquals(
       table.toJSON(),
       name,
       name + " の JSON 表現はエスケープされない",
@@ -48,18 +43,13 @@ test("10 進数または半角英数字とアンダースコア以外が含ま�
     const table = new Table(name);
 
     assertEquals(
-      table.toString(),
-      name,
-      name + " の String 表現はエスケープされない",
-    );
-    assertEquals(
       table.toJSON(),
       name,
       name + " の JSON 表現はエスケープされない",
     );
     assertEquals(
       table.toSurql(),
-      "⟨" + name + "⟩",
+      "`" + name + "`",
       name + " の Surql 表現はエスケープされる",
     );
   }

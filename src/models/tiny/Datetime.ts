@@ -1,4 +1,3 @@
-import type { SurqlValueInterface } from "../../value";
 import { _defineAssertDatetime } from "../internal";
 import { isDatetime } from "../values";
 
@@ -24,7 +23,7 @@ const ms2ns = (ms: number): number =>
     ? ms * 1_000_000
     : NaN;
 
-export default class Datetime extends Date implements SurqlValueInterface {
+export default class Datetime extends Date {
   #ns: number = NaN;
 
   constructor();
@@ -171,9 +170,5 @@ export default class Datetime extends Date implements SurqlValueInterface {
     const ms = this.getUTCNanoseconds().toString(10).padStart(9, "0");
 
     return `${Y}-${M}-${D}T${h}:${m}:${s}.${ms}Z`;
-  }
-
-  toSurql(): `d"${string}"` {
-    return `d"${this.toISOString()}"`;
   }
 }

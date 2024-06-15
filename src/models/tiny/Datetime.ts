@@ -2,17 +2,6 @@ import { _defineAssertDatetime } from "../internal";
 import { isDatetime } from "../values";
 
 /**
- * 小数点以下を切り捨てます。
- *
- * @param v - 数値。
- * @returns 整数。
- */
-const int = (v: number): number =>
-  v < 0
-    ? Math.trunc(v)
-    : Math.floor(v);
-
-/**
  * ミリ秒をナノ秒に変換します。
  *
  * @param ms - ミリ秒。
@@ -98,7 +87,7 @@ export default class Datetime extends Date {
           super(NaN); // To be invalid date
         }
       } else if (
-        typeof v === "number"
+        (typeof v === "number" && Number.isFinite(v))
         || typeof v === "string"
         || v instanceof Date
       ) {
@@ -129,9 +118,9 @@ export default class Datetime extends Date {
 
     // dprint-ignore
     const nanoTime =
-      BigInt(int(this.getTime() / 1_000)) // 秒数に変換してミリ秒以下を切り捨て。
+      BigInt(Math.trunc(this.getTime() / 1_000)) // 秒数に変換してミリ秒以下を切り捨て。
       * 1_000_000_000n // 秒数をナノ秒に変換。
-      + BigInt(int(ns)); // ナノ秒を加算/減算。
+      + BigInt(Math.trunc(ns)); // ナノ秒を加算/減算。
     this.#ns = Number(nanoTime.toString(10).slice(-9));
 
     return super.setTime(Number(nanoTime / 1_000_000n)); // ミリ秒に変換して設定。

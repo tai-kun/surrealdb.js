@@ -24,7 +24,6 @@ export default function escapeNumeric(
 
   for (let i = 0, len = str.length, code: number; i < len; i++) {
     code = str.charCodeAt(i);
-    console.log(str[i], code);
 
     if (!(isAsciiAlphaNumeric(code) || code === UNDERSCORE)) {
       return escape(str, left, right, escaped);

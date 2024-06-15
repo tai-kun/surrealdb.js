@@ -61,6 +61,10 @@
   "dependencies": {
     "is-plain-obj": "^4.1.0"
   },
+  "optionalDependencies": {
+    "decimal.js": "^10.4.3",
+    "decimal.js-light": "^2.5.1"
+  },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "^20.14.2",

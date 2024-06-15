@@ -1,11 +1,13 @@
+import DecimalJs from "./Decimal";
+
 export type * from "./Client";
 export { default as Client } from "./Client";
 
 export type * from "./Datetime";
 export { default as Datetime } from "./Datetime";
 
-export type * from "./Decimal";
-export { default as Decimal } from "./Decimal";
+export const Decimal = DecimalJs;
+export type Decimal = DecimalJs;
 
 export type * from "./Duration";
 export { default as Duration } from "./Duration";

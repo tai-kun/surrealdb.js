@@ -1,26 +1,13 @@
+import { TypeError } from "../../errors";
 import { _defineAssertDatetime } from "../internal";
 import { isDatetime } from "../values";
 
-/**
- * ミリ秒をナノ秒に変換します。
- *
- * @param ms - ミリ秒。
- * @returns ナノ秒。
- */
-const ms2ns = (ms: number): number =>
-  Number.isFinite(ms)
-    ? ms * 1_000_000
-    : NaN;
-
 export default class Datetime extends Date {
-  #ns: number = NaN;
+  #s: number;
+  #ns: number;
 
   constructor();
 
-  /**
-   * @param value - 日付を表す文字列、1970 年 1 月 1 日 00:00:00 UTC からのミリ秒数を表す数値、
-   * Date オブジェクト、または秒とナノ秒のペア。
-   */
   constructor(
     value:
       | number
@@ -29,16 +16,6 @@ export default class Datetime extends Date {
       | readonly [seconds: number, nanoseconds: number],
   );
 
-  /**
-   * @param year - 世紀をまたぐ日付の精度を保つには、完全な `year` の指定が必要です。
-   * `year` が 0 から 99 までの場合、1900 年 + `year` とみなされます。
-   * @param monthIndex - 月は 0 から 11 までの数字で表されます (1 月から 12 月)。
-   * @param date - 1 から 31 までの数字で表した日付。
-   * @param hours - `minutes` を指定する場合は、これも指定する必要があります。時間を指定する 0 ～ 23 (午前 0 時～午後 11 時) の数値です。
-   * @param minutes - `seconds` を指定する場合は、これも指定する必要があります。分数を指定する 0 ～ 59 の数値です。
-   * @param seconds - `ms` を指定する場合は指定する必要があります。秒を指定する 0 ～ 59 の数値です。
-   * @param ms - ミリ秒を指定する 0 ～ 999 の数値。
-   */
   constructor(
     year: number,
     monthIndex: number,
@@ -47,106 +24,217 @@ export default class Datetime extends Date {
     minutes?: number | undefined,
     seconds?: number | undefined,
     ms?: number | undefined,
+    us?: number | undefined,
+    ns?: number | undefined,
   );
 
-  constructor(...args: any[]) {
+  constructor(
+    ...args:
+      | []
+      | [number | string | Date | readonly [number, number]]
+      | [
+        number,
+        number,
+        (number | undefined)?,
+        (number | undefined)?,
+        (number | undefined)?,
+        (number | undefined)?,
+        (number | undefined)?,
+        (number | undefined)?,
+        (number | undefined)?,
+      ]
+  ) {
     if (args.length === 0) {
       // @ts-expect-error
       super();
-      const ms = this.getUTCMilliseconds();
-      this.#ns = ms2ns(ms); // 整数のミリ秒からの変換では、ナノ秒の範囲を超えない。
+      // ミリ秒時刻を取得する。
+      const t = super.getTime();
+      // ミリ秒時刻から秒数の部分を取得する。
+      this.#s = Math.trunc(t / 1_000);
+      // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+      this.#ns = t % 1_000 * 1_000_000;
     } else if (args.length === 1) {
+      super();
       const [v] = args;
 
-      if (Array.isArray(v)) {
-        const [s, ns] = v;
-
-        if (Number.isFinite(s) && Number.isFinite(ns)) {
-          // dprint-ignore
-          const nanoTime =
-            BigInt(s)
-            * 1_000_000_000n // 秒数をナノ秒に変換。
-            + BigInt(ns); // ナノ秒を加算/減算。
-          super(Number(nanoTime / 1_000_000n));
-          this.#ns = Number(nanoTime.toString(10).slice(-9));
-        } else {
-          super(NaN); // To be invalid date
-        }
+      if (typeof v === "number") {
+        // ミリ秒時刻を設定して取得する。
+        const t = super.setTime(v);
+        // ミリ秒時刻から秒数の部分を取得する。
+        this.#s = Math.trunc(t / 1_000);
+        // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+        this.#ns = t % 1_000 * 1_000_000;
+      } else if (typeof v === "string") {
+        // ミリ秒時刻を設定して取得する。
+        const t = super.setTime(Date.parse(v));
+        // ミリ秒時刻から秒数の部分を取得する。
+        this.#s = Math.trunc(t / 1_000);
+        // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+        this.#ns = t % 1_000 * 1_000_000;
       } else if (isDatetime(v)) {
-        const [ms, ns] = [v.getTime(), v.getUTCNanoseconds()];
-
-        if (Number.isFinite(ms) && Number.isFinite(ns)) {
-          // dprint-ignore
-          const nanoTime =
-            BigInt(ms)
-            * 1_000_000n // ミリ秒をナノ秒に変換。
-            + BigInt(ns); // ナノ秒を加算/減算。
-          super(Number(nanoTime / 1_000_000n));
-          this.#ns = Number(nanoTime.toString(10).slice(-9));
-        } else {
-          super(NaN); // To be invalid date
-        }
+        // ミリ秒時刻を引き継ぐ。
+        this.#s = v.seconds;
+        // ナノ秒時刻を引き継ぐ。
+        this.#ns = v.nanoseconds;
+      } else if (v instanceof Date) {
+        // ミリ秒時刻を設定して取得する。
+        const t = super.setTime(v.getTime());
+        // ミリ秒時刻から秒数の部分を取得する。
+        this.#s = Math.trunc(t / 1_000);
+        // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+        this.#ns = t % 1_000 * 1_000_000;
       } else if (
-        (typeof v === "number" && Number.isFinite(v))
-        || typeof v === "string"
-        || v instanceof Date
+        Array.isArray(v)
+        && v.length === 2
+        && v.every(i => typeof i === "number")
       ) {
-        super(v);
-        const ms = this.getUTCMilliseconds();
-        this.#ns = ms2ns(ms); // 整数のミリ秒からの変換では、ナノ秒の範囲を超えない。
+        // 秒時刻とナノ秒時刻の秒時刻 (10 桁目以上) を合算して取得する。
+        this.#s = Math.trunc(v[0] + v[1] / 1_000_000_000);
+        // ナノ秒時刻のナノ秒時刻 (9 桁目以下) を取得する。
+        this.#ns = Math.trunc(v[1]) % 1_000_000_000;
+        // dprint-ignore
+        super.setTime(
+          // 秒時刻からミリ秒時刻 (下位 3 桁) を取得する。
+          this.#s * 1_000
+          // ナノ秒時刻からミリ秒時刻 (上位 3 桁) を取得する。
+          + Math.trunc(this.#ns / 1_000_000),
+        );
       } else {
-        super(NaN); // To be invalid date
+        throw new TypeError("Invalid datetime");
       }
+    } else if (
+      typeof args[0] === "number"
+      && typeof args[1] === "number"
+      && (() => {
+        let required = false;
+
+        for (const i of [8, 7, 6, 5, 4, 3]) {
+          if (typeof args[i] === "number") {
+            required = true;
+          } else if (args[i] === undefined) {
+            if (required) {
+              return false;
+            }
+          } else {
+            return false;
+          }
+        }
+
+        return true;
+      })()
+    ) {
+      super(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+      const nt =
+        // マイクロ秒をナノ秒時刻に変換する。
+        Math.trunc(args[7] ?? 0) * 1_000
+        // ナノ秒時刻を加算する。
+        + Math.trunc(args[8] ?? 0);
+      // ナノ秒時刻からミリ秒時刻 (6 桁目以上) を取得する。
+      const mt = Math.trunc(nt / 1_000_000);
+      // ミリ秒の現在時刻に、マイクロ秒とナノ秒がオーバーフローした分のミリ秒を加算する。
+      const t = super.setTime(super.getTime() + mt);
+      // ミリ秒時刻から秒数の部分を取得する。
+      this.#s = Math.trunc(t / 1_000);
+      this.#ns =
+        // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+        t % 1_000 * 1_000_000
+        // ナノ秒時刻のマイクロ秒時刻以下 (6 桁目以下) を取得する。ミリ秒の部分は上記で取得済み。
+        + nt % 1_000_000;
     } else {
-      // @ts-expect-error
-      super(...args);
-      const ms = this.getUTCMilliseconds();
-      this.#ns = ms2ns(ms); // 整数のミリ秒からの変換では、ナノ秒の範囲を超えない。
+      throw new TypeError("Invalid datetime");
     }
 
     _defineAssertDatetime(this);
   }
 
-  getUTCNanoseconds(): number {
+  get seconds(): number {
+    return this.#s;
+  }
+
+  set seconds(value: number) {
+    super.setTime(value * 1_000 + Math.trunc(this.#ns / 1_000_000));
+    this.#s = value;
+  }
+
+  get nanoseconds(): number {
     return this.#ns;
   }
 
-  setUTCNanoseconds(ns: number): number {
-    if (!Number.isFinite(ns)) {
-      return super.setTime(NaN);
-    }
+  set nanoseconds(value: number) {
+    const t = super.setTime(this.#s * 1_000 + Math.trunc(value / 1_000_000));
+    // ミリ秒時刻から秒数の部分を取得する。
+    this.#s = Math.trunc(t / 1_000);
+    this.#ns =
+      // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+      t % 1_000 * 1_000_000
+      // ナノ秒時刻のマイクロ秒時刻以下 (6 桁目以下) を取得する。ミリ秒の部分は上記で取得済み。
+      + value % 1_000_000;
+  }
 
-    // dprint-ignore
-    const nanoTime =
-      BigInt(Math.trunc(this.getTime() / 1_000)) // 秒数に変換してミリ秒以下を切り捨て。
-      * 1_000_000_000n // 秒数をナノ秒に変換。
-      + BigInt(Math.trunc(ns)); // ナノ秒を加算/減算。
-    this.#ns = Number(nanoTime.toString(10).slice(-9));
+  getMicroseconds(): number {
+    return Math.trunc(this.nanoseconds / 1_000) % 1_000;
+  }
 
-    return super.setTime(Number(nanoTime / 1_000_000n)); // ミリ秒に変換して設定。
+  getNanoseconds(): number {
+    return this.nanoseconds % 1_000;
+  }
+
+  setMicroseconds(value: number): number {
+    this.nanoseconds += value * 1_000;
+
+    return this.getTime();
+  }
+
+  setNanoseconds(value: number): number {
+    this.nanoseconds += value;
+
+    return this.getTime();
+  }
+
+  getUTCMicroseconds(): number {
+    return this.getMicroseconds();
+  }
+
+  getUTCNanoseconds(): number {
+    return this.getNanoseconds();
+  }
+
+  setUTCMicroseconds(value: number): number {
+    return this.setMicroseconds(value);
+  }
+
+  setUTCNanoseconds(value: number): number {
+    return this.setNanoseconds(value);
   }
 
   override setTime(time: number): number {
-    time = super.setTime(time);
-    this.#ns = Number.isFinite(time)
-      ? time % 1_000 * 1_000_000
-      : NaN;
+    const t = super.setTime(time);
+    // ミリ秒時刻から秒数の部分を取得する。
+    this.#s = Math.trunc(t / 1_000);
+    this.#ns =
+      // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+      t % 1_000 * 1_000_000
+      // ナノ秒時刻のマイクロ秒時刻以下 (6 桁目以下) を取得し、ナノ秒時刻に加算する。
+      + this.#ns % 1_000_000;
 
-    return time;
+    return t;
   }
 
   override setMilliseconds(ms: number): number {
-    const time = super.setMilliseconds(ms);
-    this.#ns = ms2ns(super.getUTCMilliseconds());
+    const t = super.setMilliseconds(ms);
+    // ミリ秒時刻から秒数の部分を取得する。
+    this.#s = Math.trunc(t / 1_000);
+    this.#ns =
+      // ミリ秒時刻からナノ秒の上位 3 桁を取得し、下位 6 桁を 0 で埋め、ナノ秒時刻にする。
+      t % 1_000 * 1_000_000
+      // ナノ秒時刻のマイクロ秒時刻以下 (6 桁目以下) を取得し、ナノ秒時刻に加算する。
+      + this.#ns % 1_000_000;
 
-    return time;
+    return t;
   }
 
   override setUTCMilliseconds(ms: number): number {
-    const time = super.setUTCMilliseconds(ms);
-    this.#ns = ms2ns(super.getUTCMilliseconds());
-
-    return time;
+    return this.setMilliseconds(ms);
   }
 
   override toISOString(): string {
@@ -156,7 +244,7 @@ export default class Datetime extends Date {
     const h = this.getUTCHours().toString(10).padStart(2, "0");
     const m = this.getUTCMinutes().toString(10).padStart(2, "0");
     const s = this.getUTCSeconds().toString(10).padStart(2, "0");
-    const ms = this.getUTCNanoseconds().toString(10).padStart(9, "0");
+    const ms = this.nanoseconds.toString(10).padStart(9, "0");
 
     return `${Y}-${M}-${D}T${h}:${m}:${s}.${ms}Z`;
   }

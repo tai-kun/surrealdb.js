@@ -108,7 +108,7 @@ declare module "@tools/assert" {
     T extends import("type-fest").Jsonifiable,
   >(
     actual: T,
-    expected: T,
+    expected: import("type-fest").Jsonifiable,
     msg?: string,
   ): void;
 
@@ -125,7 +125,7 @@ declare module "@tools/assert" {
     T extends import("type-fest").Jsonifiable,
   >(
     actual: T,
-    expected: T,
+    expected: import("type-fest").Jsonifiable,
     msg?: string,
   ): void;
 

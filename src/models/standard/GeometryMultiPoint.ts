@@ -1,9 +1,4 @@
-import { _defineAssertGeometryMultiPoint } from "../internal";
-import Geometry from "./Geometry";
+import createGeometryMultiPoint from "../createGeometryMultiPoint";
+import GeometryPoint from "./GeometryPoint";
 
-export default class GeometryMultiPoint extends Geometry {
-  constructor() {
-    super();
-    _defineAssertGeometryMultiPoint(this);
-  }
-}
+export default /* @__PURE__ */ createGeometryMultiPoint(GeometryPoint);

@@ -1,9 +1,4 @@
-import { _defineAssertGeometryLine } from "../internal";
-import Geometry from "./Geometry";
+import createGeometryLine from "../createGeometryLine";
+import GeometryPoint from "./GeometryPoint";
 
-export default class GeometryLine extends Geometry {
-  constructor() {
-    super();
-    _defineAssertGeometryLine(this);
-  }
-}
+export default /* @__PURE__ */ createGeometryLine(GeometryPoint);

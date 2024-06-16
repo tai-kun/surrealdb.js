@@ -1,9 +1,4 @@
-import { _defineAssertGeometryMultiLine } from "../internal";
-import Geometry from "./Geometry";
+import createGeometryMultiLine from "../createGeometryMultiLine";
+import GeometryLine from "./GeometryLine";
 
-export default class GeometryMultiLine extends Geometry {
-  constructor() {
-    super();
-    _defineAssertGeometryMultiLine(this);
-  }
-}
+export default /* @__PURE__ */ createGeometryMultiLine(GeometryLine);

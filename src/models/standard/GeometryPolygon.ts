@@ -1,9 +1,4 @@
-import { _defineAssertGeometryPolygon } from "../internal";
-import Geometry from "./Geometry";
+import createGeometryPolygon from "../createGeometryPolygon";
+import GeometryLine from "./GeometryLine";
 
-export default class GeometryPolygon extends Geometry {
-  constructor() {
-    super();
-    _defineAssertGeometryPolygon(this);
-  }
-}
+export default /* @__PURE__ */ createGeometryPolygon(GeometryLine);

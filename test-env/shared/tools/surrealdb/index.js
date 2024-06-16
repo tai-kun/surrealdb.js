@@ -22,4 +22,10 @@ if (ENV === "Chrome" || ENV === "Firefox") {
   ready = import("./setup.js").then(({ setup }) => setup());
 }
 
+ready = ready.then(endpoint => {
+  console.log(`Using endpoint: ${endpoint.host}`);
+
+  return endpoint;
+});
+
 export { ready };

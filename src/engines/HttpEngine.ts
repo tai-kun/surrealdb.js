@@ -299,7 +299,7 @@ export default class HttpEngine extends EngineAbc {
       const rpc = {
         method: request.method,
         params: request.params,
-        result: this.v8n.parseRpcResult(rpcResp.result, {
+        result: rpcResp.result = this.v8n.parseRpcResult(rpcResp.result, {
           request,
           endpoint: new URL(this.conn.endpoint),
           engineName: "http",

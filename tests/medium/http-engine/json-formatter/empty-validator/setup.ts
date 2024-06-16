@@ -7,9 +7,6 @@ import { ready } from "@tools/surrealdb";
 
 async function getInitializedSurreal() {
   const endpoint = await ready;
-
-  console.log(`Using endpoint: ${endpoint.host}`);
-
   const surreal = initSurreal({
     Client,
     engines: {

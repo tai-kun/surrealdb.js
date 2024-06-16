@@ -1,7 +1,4 @@
-// import type { AnyTable, AnyThing, AnyUuid } from "./values/utils";
-type AnyTable = {};
-type AnyThing = {};
-type AnyUuid = {};
+import type { TableAny, ThingAny, UuidAny } from "./models/values";
 
 /******************************************************************************
  * Query Types
@@ -212,7 +209,7 @@ export type LiveAction = "CREATE" | "UPDATE" | "DELETE";
  */
 export interface LiveResult<
   T = Record<string, unknown> | Patch,
-  I = string | AnyUuid,
+  I = string | UuidAny,
 > {
   /**
    * 通知がトリガーされたアクションの種類。
@@ -400,7 +397,7 @@ export interface RpcLiveRequest extends
   RpcRequestBase<
     "live",
     readonly [
-      table: string | AnyTable,
+      table: string | TableAny,
       diff?: boolean | null | undefined,
     ]
   >
@@ -412,7 +409,7 @@ export interface RpcLiveRequest extends
 export interface RpcKillRequest extends
   RpcRequestBase<
     "kill",
-    readonly [queryUuid: string | AnyUuid]
+    readonly [queryUuid: string | UuidAny]
   >
 {}
 
@@ -438,7 +435,7 @@ export interface RpcQueryRequest extends
 export interface RpcSelectRequest extends
   RpcRequestBase<
     "select",
-    readonly [thing: string | AnyThing]
+    readonly [thing: string | ThingAny]
   >
 {}
 
@@ -449,7 +446,7 @@ export interface RpcCreateRequest extends
   RpcRequestBase<
     "create",
     readonly [
-      thing: string | AnyThing,
+      thing: string | ThingAny,
       data?: RecordInputData | null | undefined,
     ]
   >
@@ -462,7 +459,7 @@ export interface RpcInsertRequest extends
   RpcRequestBase<
     "insert",
     readonly [
-      thing: string | AnyThing,
+      thing: string | ThingAny,
       data?: RecordInputData | readonly RecordInputData[] | null | undefined,
     ]
   >
@@ -475,7 +472,7 @@ export interface RpcUpdateRequest extends
   RpcRequestBase<
     "update",
     readonly [
-      thing: string | AnyThing,
+      thing: string | ThingAny,
       data?: RecordInputData | null | undefined,
     ]
   >
@@ -488,7 +485,7 @@ export interface RpcMergeRequest extends
   RpcRequestBase<
     "merge",
     readonly [
-      thing: string | AnyThing,
+      thing: string | ThingAny,
       data: RecordInputData,
     ]
   >
@@ -501,7 +498,7 @@ export interface RpcPatchRequest extends
   RpcRequestBase<
     "patch",
     readonly [
-      thing: string | AnyThing,
+      thing: string | ThingAny,
       patches: readonly ReadonlyPatch[],
       diff?: boolean | null | undefined,
     ]
@@ -514,7 +511,7 @@ export interface RpcPatchRequest extends
 export interface RpcDeleteRequest extends
   RpcRequestBase<
     "delete",
-    readonly [thing: string | AnyThing]
+    readonly [thing: string | ThingAny]
   >
 {}
 
@@ -546,9 +543,9 @@ export interface RpcRelateRequest extends
   RpcRequestBase<
     "relate",
     readonly [
-      from: string | AnyThing | readonly AnyThing[],
-      thing: string | AnyThing,
-      to: string | AnyThing | readonly AnyThing[],
+      from: string | ThingAny | readonly ThingAny[],
+      thing: string | ThingAny,
+      to: string | ThingAny | readonly ThingAny[],
       data?: RecordInputData | null | undefined,
     ]
   >
@@ -602,7 +599,7 @@ export type RpcParams<M extends RpcMethod = RpcMethod> = Extract<
 
 type Arrayable<T> = T | T[];
 
-type TableRecord = { id: string | AnyThing } & RecordData;
+type TableRecord = { id: string | ThingAny } & RecordData;
 
 /**
  * RPC メソッドごとの結果のマッピング。
@@ -617,7 +614,7 @@ export interface RpcResultMapping {
   invalidate: void;
   let: void;
   unset: void;
-  live: string | AnyUuid;
+  live: string | UuidAny;
   kill: void;
   query: QueryResult[];
   select: Arrayable<TableRecord>;

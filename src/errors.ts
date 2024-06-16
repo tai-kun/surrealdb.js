@@ -334,13 +334,38 @@ export class RpcResponseError extends SurrealDbError {
    */
   code: BidirectionalRpcResponseErr["error"]["code"];
 
-  constructor(response: IdLessRpcResponseErr | BidirectionalRpcResponseErr) {
-    super(response.error.message);
+  /**
+   * @param response - RPC レスポンス。
+   * @param options - エラーオプション。
+   */
+  constructor(
+    response: IdLessRpcResponseErr | BidirectionalRpcResponseErr,
+    options?: ErrorOptions | undefined,
+  ) {
+    super(response.error.message, options);
     this.code = response.error.code;
 
     if ("id" in response) {
       this.id = response.id;
     }
+  }
+}
+
+/**
+ * このエラーは、クエリーが失敗した場合に投げられます。
+ */
+export class QueryFailure extends SurrealDbError {
+  static {
+    this.prototype.name = "QueryFailure";
+  }
+
+  /**
+   * @param errors - エラーメッセージ。
+   */
+  constructor(errors: readonly string[]) {
+    super(`Query failed with ${errors.length} error(s)`, {
+      cause: errors,
+    });
   }
 }
 

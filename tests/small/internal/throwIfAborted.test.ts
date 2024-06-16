@@ -19,7 +19,7 @@ test("中止されたシグナルを渡すと例外を投げる", () => {
 
 test("中止されたシグナルを渡すと指定された例外を投げる", () => {
   if (ENV === "Firefox") {
-    // TODO(tai-kun): Firefox でテストに失敗する。要調査。
+    // TODO(tai-kun): Firefox でエラー関連のテストに失敗する。要調査。
     return;
   }
 

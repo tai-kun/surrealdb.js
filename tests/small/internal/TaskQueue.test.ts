@@ -52,7 +52,7 @@ test("タスクを中断して拒否する", async () => {
 
 test("タスクを中断する", async () => {
   if (ENV === "Firefox") {
-    // TODO(tai-kun): Firefox でテストに失敗する。要調査。
+    // TODO(tai-kun): Firefox でエラー関連のテストに失敗する。要調査。
     return;
   }
 

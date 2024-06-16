@@ -1,4 +1,4 @@
-import type { SurqlValueSerializer } from "../../value";
+import type { SurqlValueSerializer } from "../Serializer";
 import Base from "../tiny/Duration";
 
 const SECONDS_PER_MINUTE = 60n;

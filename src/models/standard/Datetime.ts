@@ -1,4 +1,4 @@
-import type { SurqlValueSerializer } from "../../value";
+import type { SurqlValueSerializer } from "../Serializer";
 import Base from "../tiny/Datetime";
 
 export default class Datetime extends Base implements SurqlValueSerializer {

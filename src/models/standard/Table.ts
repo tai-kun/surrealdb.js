@@ -1,4 +1,5 @@
-import { BACKTICK, escapeIdent, type SurqlValueSerializer } from "../../value";
+import escapeIdent, { BACKTICK } from "../escapeIdent";
+import type { SurqlValueSerializer } from "../Serializer";
 import Base from "../tiny/Table";
 
 export default class Table extends Base implements SurqlValueSerializer {

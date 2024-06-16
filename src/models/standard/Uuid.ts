@@ -1,5 +1,5 @@
 import { unreachable } from "../../errors";
-import type { SurqlValueSerializer } from "../../value";
+import type { SurqlValueSerializer } from "../Serializer";
 import Base, { byteToHex } from "../tiny/Uuid";
 
 /**

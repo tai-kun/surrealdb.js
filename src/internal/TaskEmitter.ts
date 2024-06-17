@@ -128,6 +128,21 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
     const { promise, resolve, reject } = StatefulPromise.withResolvers<T[K]>();
 
     try {
+      // this.on を使うバージョンのメモ。
+      // const { signal } = options;
+      // throwIfAborted(signal);
+      // const taskListener: TaskListener<T[K]> = (_, ...args) => {
+      //   signal?.removeEventListener("abort", abortHandler);
+      //   this.off(event, taskListener);
+      //   resolve(args);
+      // };
+      // const abortHandler = () => {
+      //   this.off(event, taskListener);
+      //   reject(signal!.reason);
+      // };
+      // this.on(event, taskListener);
+      // signal?.addEventListener("abort", abortHandler, { once: true });
+
       if (this.disposed) {
         throw new ResourceAlreadyDisposed("TaskEmitter");
       }

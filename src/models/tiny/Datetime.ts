@@ -238,6 +238,7 @@ export default class Datetime extends Date {
   }
 
   override toISOString(): string {
+    super.toISOString(); // 例外を投げることがある。
     const Y = this.getUTCFullYear().toString(10);
     const M = (this.getUTCMonth() + 1).toString(10).padStart(2, "0");
     const D = this.getUTCDate().toString(10).padStart(2, "0");

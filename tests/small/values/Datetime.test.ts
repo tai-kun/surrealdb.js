@@ -2,7 +2,7 @@ import { isDatetime } from "@tai-kun/surrealdb";
 import { Datetime } from "@tai-kun/surrealdb/full";
 import { Datetime as DatetimeStandard } from "@tai-kun/surrealdb/standard";
 import { Datetime as DatetimeTiny } from "@tai-kun/surrealdb/tiny";
-import { assert, assertEquals } from "@tools/assert";
+import { assert, assertEquals, assertThrows } from "@tools/assert";
 import { test } from "@tools/test";
 
 test("現在時刻の Datetime を作成する", () => {
@@ -217,4 +217,13 @@ test("Datetime クラスであると判定できる", () => {
   assert(!isDatetime(new Date()));
   assert(!isDatetime({}));
   assert(!isDatetime("2024-06-01T12:34:56Z"));
+});
+
+test("無効な日時でありながら文字列にしようとするとエラーになる", () => {
+  assertThrows(
+    () => {
+      new Datetime(NaN).toISOString();
+    },
+    RangeError,
+  );
 });

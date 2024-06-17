@@ -128,9 +128,9 @@ export const isDuration: IsValue<DurationAny> = value =>
  *****************************************************************************/
 
 export type GeometryPointAny =
-  | typeof GeometryPoint
-  | typeof GeometryPointFull
-  | typeof GeometryPointTiny;
+  | InstanceType<typeof GeometryPoint>
+  | InstanceType<typeof GeometryPointFull>
+  | InstanceType<typeof GeometryPointTiny>;
 
 // @ts-expect-error
 export const isGeometryPoint: IsValue<GeometryPointAny> = value =>
@@ -141,9 +141,9 @@ export const isGeometryPoint: IsValue<GeometryPointAny> = value =>
  *****************************************************************************/
 
 export type GeometryLineAny =
-  | typeof GeometryLine
-  | typeof GeometryLineFull
-  | typeof GeometryLineTiny;
+  | InstanceType<typeof GeometryLine>
+  | InstanceType<typeof GeometryLineFull>
+  | InstanceType<typeof GeometryLineTiny>;
 
 // @ts-expect-error
 export const isGeometryLine: IsValue<GeometryLineAny> = value =>
@@ -154,9 +154,9 @@ export const isGeometryLine: IsValue<GeometryLineAny> = value =>
  *****************************************************************************/
 
 export type GeometryPolygonAny =
-  | typeof GeometryPolygon
-  | typeof GeometryPolygonFull
-  | typeof GeometryPolygonTiny;
+  | InstanceType<typeof GeometryPolygon>
+  | InstanceType<typeof GeometryPolygonFull>
+  | InstanceType<typeof GeometryPolygonTiny>;
 
 // @ts-expect-error
 export const isGeometryPolygon: IsValue<GeometryPolygonAny> = value =>
@@ -167,9 +167,9 @@ export const isGeometryPolygon: IsValue<GeometryPolygonAny> = value =>
  *****************************************************************************/
 
 export type GeometryMultiPointAny =
-  | typeof GeometryMultiPoint
-  | typeof GeometryMultiPointFull
-  | typeof GeometryMultiPointTiny;
+  | InstanceType<typeof GeometryMultiPoint>
+  | InstanceType<typeof GeometryMultiPointFull>
+  | InstanceType<typeof GeometryMultiPointTiny>;
 
 // @ts-expect-error
 export const isGeometryMultiPoint: IsValue<GeometryMultiPointAny> = value =>
@@ -180,9 +180,9 @@ export const isGeometryMultiPoint: IsValue<GeometryMultiPointAny> = value =>
  *****************************************************************************/
 
 export type GeometryMultiLineAny =
-  | typeof GeometryMultiLine
-  | typeof GeometryMultiLineFull
-  | typeof GeometryMultiLineTiny;
+  | InstanceType<typeof GeometryMultiLine>
+  | InstanceType<typeof GeometryMultiLineFull>
+  | InstanceType<typeof GeometryMultiLineTiny>;
 
 // @ts-expect-error
 export const isGeometryMultiLine: IsValue<GeometryMultiLineAny> = value =>
@@ -193,9 +193,9 @@ export const isGeometryMultiLine: IsValue<GeometryMultiLineAny> = value =>
  *****************************************************************************/
 
 export type GeometryMultiPolygonAny =
-  | typeof GeometryMultiPolygon
-  | typeof GeometryMultiPolygonFull
-  | typeof GeometryMultiPolygonTiny;
+  | InstanceType<typeof GeometryMultiPolygon>
+  | InstanceType<typeof GeometryMultiPolygonFull>
+  | InstanceType<typeof GeometryMultiPolygonTiny>;
 
 // @ts-expect-error
 export const isGeometryMultiPolygon: IsValue<GeometryMultiPolygonAny> = value =>
@@ -206,9 +206,9 @@ export const isGeometryMultiPolygon: IsValue<GeometryMultiPolygonAny> = value =>
  *****************************************************************************/
 
 export type GeometryCollectionAny =
-  | typeof GeometryCollection
-  | typeof GeometryCollectionFull
-  | typeof GeometryCollectionTiny;
+  | InstanceType<typeof GeometryCollection>
+  | InstanceType<typeof GeometryCollectionFull>
+  | InstanceType<typeof GeometryCollectionTiny>;
 
 // @ts-expect-error
 export const isGeometryCollection: IsValue<GeometryCollectionAny> = value =>

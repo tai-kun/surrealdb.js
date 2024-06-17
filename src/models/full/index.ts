@@ -45,37 +45,5 @@ export { default as Uuid } from "./Uuid";
 
 // re-exports
 
-// export type * from "../toSurql";
-// export { default as toSurql } from "../toSurql";
-
 export type * from "../ClientAbc";
 export { default as ClientAbc } from "../ClientAbc";
-
-// export {
-//   type DatetimeAny,
-//   type DecimalAny,
-//   type DurationAny,
-//   type GeometryCollectionAny,
-//   type GeometryLineAny,
-//   type GeometryMultiLineAny,
-//   type GeometryMultiPointAny,
-//   type GeometryMultiPolygonAny,
-//   type GeometryPointAny,
-//   type GeometryPolygonAny,
-//   isDatetime,
-//   isDecimal,
-//   isDuration,
-//   isGeometryCollection,
-//   isGeometryLine,
-//   isGeometryMultiLine,
-//   isGeometryMultiPoint,
-//   isGeometryMultiPolygon,
-//   isGeometryPoint,
-//   isGeometryPolygon,
-//   isTable,
-//   isThing,
-//   isUuid,
-//   type TableAny,
-//   type ThingAny,
-//   type UuidAny,
-// } from "../values";

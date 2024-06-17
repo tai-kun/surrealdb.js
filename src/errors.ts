@@ -411,3 +411,20 @@ export class EngineDisconnected extends SurrealDbError {
     super("The engine is disconnected.", options);
   }
 }
+
+/**
+ * このエラーは、CBOR タグが未知である場合に投げられます。
+ */
+export class UnknownCborTag extends SurrealDbError {
+  static {
+    this.prototype.name = "UnknownCborTag";
+  }
+
+  /**
+   * @param tag - 未知の CBOR タグ。
+   * @param options - エラーオプション。
+   */
+  constructor(tag: number | bigint, options?: ErrorOptions | undefined) {
+    super(`Unknown CBOR tag: ${tag}`, options);
+  }
+}

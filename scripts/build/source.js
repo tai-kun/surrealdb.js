@@ -20,5 +20,6 @@ await Promise.all(["esm", "cjs"].map(async format => {
     plugins: [
       resolve({ esm: format === "esm" }),
     ],
+    packages: "external",
   });
 }));

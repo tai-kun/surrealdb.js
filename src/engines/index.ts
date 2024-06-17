@@ -6,3 +6,9 @@ export { default as EngineHttp } from "./HttpEngine";
 
 export type * from "./createHttpEngine";
 export { default as httpEngine } from "./createHttpEngine";
+
+export type * from "./WebSocketEngine";
+export { default as EngineWebSocket } from "./WebSocketEngine";
+
+export type * from "./createWebSocketEngine";
+export { default as webSocketEngine } from "./createWebSocketEngine";

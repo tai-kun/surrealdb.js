@@ -1,5 +1,10 @@
 import type { Simplify } from "type-fest";
-import { type EngineError, StateTransitionError } from "../errors";
+import {
+  type EngineError,
+  type HttpEngineError,
+  StateTransitionError,
+  type WebSocketEngineError,
+} from "../errors";
 import type { FormatterAbc } from "../formatters";
 import {
   collectErrors,
@@ -67,7 +72,7 @@ export type EngineEvents =
   & {
     [_: `rpc/${BidirectionalRpcResponse["id"]}`]: [response: RpcResponse];
     [_: `live/${string}`]: [response: Simplify<Omit<LiveResult, "id">>];
-    error: [error: EngineError];
+    error: [error: EngineError | HttpEngineError | WebSocketEngineError];
   };
 
 /**

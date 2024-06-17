@@ -4,6 +4,8 @@
     "@tools/assert": "file:./tools/assert",
     "@tools/surrealdb": "file:./tools/surrealdb",
     "@tools/test": "file:./tools/test",
-    "@tai-kun/surrealdb": "file:../.."
+    "@tai-kun/surrealdb": "file:../..",
+    "decimal.js": "^10.4.3",
+    "decimal.js-light": "^2.5.1"
   }
 }

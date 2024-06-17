@@ -5,6 +5,7 @@ test("HTTP プロトコルではライブクエリーがサポートされてい
   const { endpoint, Surreal } = await getInitializedSurreal();
   await using db = new Surreal();
   await db.connect(endpoint);
+  await db.use("my_namespace", "my_database");
 
   await assertRejects(async () => {
     await db.live("person");

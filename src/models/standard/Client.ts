@@ -2,7 +2,8 @@ import { QueryFailure } from "../../errors";
 import type { TaskListener } from "../../internal";
 import type {
   Auth,
-  LiveAction,
+  LiveData,
+  LiveDiff,
   LiveResult,
   Patch,
   QueryResult,
@@ -30,27 +31,25 @@ export interface LiveOptions extends ClientRpcOptions {
  * @template T - 結果の型。
  * @param response - ライブクエリーの結果。
  */
-export type LiveHandler<T extends LiveResult["result"] = LiveResult["result"]> =
+export type LiveHandler<T extends LiveResult<any, any> = LiveResult> =
   TaskListener<
-    [
-      response: {
-        action: LiveAction;
-        result: T;
-      },
-    ]
+    [response: T]
   >;
 
 /**
  * ライブクエリーのの結果の型を推論します。
  *
  * @template I - ライブクエリーの UUID。
- * @template T - 結果の型。
  */
 // dprint-ignore
-export type InferLiveResult<I, T = unknown>
-  = I extends { __diff: true }  ? Patch<T>
-  : I extends { __diff: false } ? RecordData
-  : LiveResult["result"];
+export type InferLiveResult<
+  I extends string | UuidAny,
+  T extends Record<string, unknown> = Record<string, unknown>,
+  P extends readonly Patch<unknown>[] = Patch<unknown>[]
+>
+  = I extends { __diff: true }  ? LiveDiff<T, P>
+  : I extends { __diff: false } ? LiveData<T>
+  : LiveResult<T, P>
 
 export default class Client extends Base {
   /**
@@ -313,7 +312,9 @@ export default class Client extends Base {
    */
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
     table: string | TableAny,
-    options: ClientRpcOptions & { readonly diff?: false | null | undefined },
+    options?:
+      | (ClientRpcOptions & { readonly diff?: false | null | undefined })
+      | undefined,
   ): Promise<T & { __diff: false }>;
 
   /**
@@ -347,17 +348,19 @@ export default class Client extends Base {
   /**
    * ライブクエリーの結果を購読します。
    *
+   * @template I - ライブクエリーの UUID。
+   * @template T - ライブクエリーの結果の型。
    * @param queryUuid - ライブクエリーの UUID。
    * @param callback - ライブクエリーの結果を受け取るコールバック。
    */
   subscribe<
     I extends string | UuidAny,
-    T extends InferLiveResult<I> = InferLiveResult<I>,
+    T extends InferLiveResult<I, any, any> = InferLiveResult<I>,
   >(
     queryUuid: I,
     callback: LiveHandler<T>,
   ): void {
-    this.ee.on(`live/${queryUuid}`, callback as LiveHandler);
+    this.ee.on(`live/${queryUuid}`, callback as LiveHandler<any>);
   }
 
   /**

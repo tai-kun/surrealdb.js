@@ -59,14 +59,41 @@ export type RecordData = {
 };
 
 /******************************************************************************
- * JSON Patch Types
+ * Patch Types
+ * @see https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/operation.rs
  *****************************************************************************/
 
-interface PatchBase<K extends string, P extends string> {
+/**
+ * 値を追加するパッチ操作。
+ *
+ * @template T - 追加する値の型。
+ * @template P - パスの型。
+ */
+export interface AddPatch<T = unknown, P extends string = string> {
   /**
-   * JSON Patch の操作名。
+   * パッチの操作名。
    */
-  op: K;
+  op: "add";
+  /**
+   * 変更を加える値への JSON パス。
+   */
+  path: P;
+  /**
+   * 追加する/された値。
+   */
+  value: T;
+}
+
+/**
+ * 値を削除するパッチ操作。
+ *
+ * @template P - パスの型。
+ */
+export interface RemovePatch<P extends string = string> {
+  /**
+   * パッチの操作名。
+   */
+  op: "remove";
   /**
    * 変更を加える値への JSON パス。
    */
@@ -74,73 +101,68 @@ interface PatchBase<K extends string, P extends string> {
 }
 
 /**
- * 値を追加する JSON Patch 操作。
- *
- * @template T - 追加する値の型。
- * @template P - パスの型。
- * @see https://jsonpatch.com/#add
- */
-export interface AddPatch<T = unknown, P extends string = string>
-  extends PatchBase<"add", P>
-{
-  /**
-   * 追加する値。
-   */
-  value: T;
-}
-
-/**
- * 値を削除する JSON Patch 操作。
- *
- * @template P - パスの型。
- * @see https://jsonpatch.com/#remove
- */
-export interface RemovePatch<P extends string = string>
-  extends PatchBase<"remove", P>
-{}
-
-/**
- * 値を置換する JSON Patch 操作。
+ * 値を置換するパッチ操作。
  *
  * @template T - 置換する値の型。
  * @template P - パスの型。
- * @see https://jsonpatch.com/#replace
  */
-export interface ReplacePatch<T = unknown, P extends string = string>
-  extends PatchBase<"replace", P>
-{
+export interface ReplacePatch<T = unknown, P extends string = string> {
   /**
-   * 置換する値。
+   * パッチの操作名。
+   */
+  op: "replace";
+  /**
+   * 変更を加える値への JSON パス。
+   */
+  path: P;
+  /**
+   * 置換する/された値。
    */
   value: T;
 }
 
 /**
- * 値を移動する JSON Patch 操作。
+ * 値を変更するパッチ操作。
  *
- * @template F - 移動元のパスの型。
- * @template P - 移動先のパスの型。
- * @see https://jsonpatch.com/#move
+ * @template T - 変更する値の型。
+ * @template P - パスの型。
  */
-export interface MovePatch<F extends string = string, P extends string = string>
-  extends PatchBase<"move", P>
-{
+export interface ChangePatch<
+  T extends string = string,
+  P extends string = string,
+> {
   /**
-   * 移動元のパス。
+   * パッチの操作名。
    */
-  from: F;
+  op: "change";
+  /**
+   * 変更を加える値への JSON パス。
+   */
+  path: P;
+  /**
+   * 変更する/された値。
+   */
+  value: T;
 }
 
 /**
- * 値をコピーする JSON Patch 操作。
+ * 値をコピーするパッチ操作。
  *
  * @template F - コピー元のパスの型。
  * @template P - コピー先のパスの型。
- * @see https://jsonpatch.com/#copy
  */
-export interface CopyPatch<F extends string = string, P extends string = string>
-  extends PatchBase<"copy", P>
-{
+export interface CopyPatch<
+  F extends string = string,
+  P extends string = string,
+> {
+  /**
+   * パッチの操作名。
+   */
+  op: "copy";
+  /**
+   * 変更を加える値への JSON パス。
+   */
+  path: P;
   /**
    * コピー元のパス。
    */
@@ -148,15 +170,44 @@ export interface CopyPatch<F extends string = string, P extends string = string>
 }
 
 /**
- * 値が設定されているかテストする JSON Patch 操作。
+ * 値を移動するパッチ操作。
+ *
+ * @template F - 移動元のパスの型。
+ * @template P - 移動先のパスの型。
+ */
+export interface MovePatch<
+  F extends string = string,
+  P extends string = string,
+> {
+  /**
+   * パッチの操作名。
+   */
+  op: "move";
+  /**
+   * 変更を加える値への JSON パス。
+   */
+  path: P;
+  /**
+   * 移動元のパス。
+   */
+  from: F;
+}
+
+/**
+ * 値が設定されているかテストするパッチ操作。
  *
  * @template T - テストする値の型。
  * @template P - パスの型。
- * @see https://jsonpatch.com/#test
  */
-export interface TestPatch<T = unknown, P extends string = string>
-  extends PatchBase<"test", P>
-{
+export interface TestPatch<T = unknown, P extends string = string> {
+  /**
+   * パッチの操作名。
+   */
+  op: "test";
+  /**
+   * 変更を加える値への JSON パス。
+   */
+  path: P;
   /**
    * テストする値。
    */
@@ -164,29 +215,29 @@ export interface TestPatch<T = unknown, P extends string = string>
 }
 
 /**
- * JSON Patch 操作。
+ * パッチ操作。
  *
  * @template T - 値の型。
- * @see https://jsonpatch.com/
  */
 export type Patch<T = unknown> =
   | AddPatch<T>
   | RemovePatch
   | ReplacePatch<T>
+  | ChangePatch
   | MovePatch
   | CopyPatch
   | TestPatch<T>;
 
 /**
- * 読み取り専用の JSON Patch 操作。
+ * 読み取り専用のパッチ操作。
  *
  * @template T - 値の型。
- * @see https://jsonpatch.com/
  */
 export type ReadonlyPatch<T = unknown> =
   | Readonly<AddPatch<T>>
   | Readonly<RemovePatch>
   | Readonly<ReplacePatch<T>>
+  | Readonly<ChangePatch>
   | Readonly<MovePatch>
   | Readonly<CopyPatch>
   | Readonly<TestPatch<T>>;
@@ -204,12 +255,12 @@ export type LiveAction = "CREATE" | "UPDATE" | "DELETE";
  * ライブクエリーの結果。
  * このデータは双方向通信の {@link IdLessRpcResponseOk} の `result` プロパティに格納される。
  *
- * @template T - クエリーの結果の型。
+ * @template T - レコードのデータの型。
  * @template I - ライブクエリーの ID の型。
  */
-export interface LiveResult<
-  T = Record<string, unknown> | Patch,
-  I = string | UuidAny,
+export interface LiveData<
+  T extends Record<string, unknown> = Record<string, unknown>,
+  I extends string | UuidAny = string | UuidAny,
 > {
   /**
    * 通知がトリガーされたアクションの種類。
@@ -220,10 +271,66 @@ export interface LiveResult<
    */
   id: I;
   /**
-   * レコードのデータまたは JSON Patch 形式の変更内容。
+   * レコードのデータ。
    */
   result: T;
 }
+
+/**
+ * ライブクエリーの結果。
+ * このデータは双方向通信の {@link IdLessRpcResponseOk} の `result` プロパティに格納される。
+ *
+ * @template T - レコードのデータの型。
+ * @template P - パッチ形式の変更内容の型。
+ * @template I - ライブクエリーの ID の型。
+ */
+export type LiveDiff<
+  T extends Record<string, unknown> = Record<string, unknown>,
+  P extends readonly Patch[] = Patch[],
+  I extends string | UuidAny = string | UuidAny,
+> = {
+  /**
+   * 通知がトリガーされたアクションの種類。
+   */
+  action: "CREATE" | "UPDATE";
+  /**
+   * ライブクエリーの ID。
+   */
+  id: I;
+  /**
+   * パッチ形式の変更内容。
+   */
+  result: P;
+} | {
+  /**
+   * 通知がトリガーされたアクションの種類。
+   */
+  action: "DELETE";
+  /**
+   * ライブクエリーの ID。
+   */
+  id: I;
+  /**
+   * レコードのデータ。
+   */
+  result: T;
+};
+
+/**
+ * ライブクエリーの結果。
+ * このデータは双方向通信の {@link IdLessRpcResponseOk} の `result` プロパティに格納される。
+ *
+ * @template T - レコードのデータの型。
+ * @template P - パッチ形式の変更内容の型。
+ * @template I - ライブクエリーの ID の型。
+ */
+export type LiveResult<
+  T extends Record<string, unknown> = Record<string, unknown>,
+  P extends readonly Patch[] = Patch[],
+  I extends string | UuidAny = string | UuidAny,
+> =
+  | LiveData<T, I>
+  | LiveDiff<T, P, I>;
 
 /******************************************************************************
  * Authentication Types

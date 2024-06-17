@@ -186,7 +186,12 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
     event: K,
     ...args: T[K]
   ): undefined | StatefulPromise<unknown>[] {
-    return this.#listeners.get(event)?.map(({ emit }) => emit(args));
+    const listeners = this.#listeners.get(event);
+
+    return listeners
+      // コピーしないと .once() 内で this.off() が呼ばれたとき this.#listeners が変更される
+      // ので、一部のイベントリスナーが呼び出されなかったり、残留しなかったりする。
+      && [...listeners].map(({ emit }) => emit(args));
   }
 
   /**

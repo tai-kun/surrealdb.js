@@ -135,10 +135,20 @@ test("イベントを一度だけ補足する", async () => {
     emitter.once("foo").then(listener);
 
     await Promise.all(emitter.emit("foo", 1) || []);
+
+    emitter.once("foo").then(listener);
+    emitter.once("foo").then(listener);
+
     await Promise.all(emitter.emit("foo", 2) || []);
+
+    await Promise.all(emitter.emit("foo", 3) || []);
   }
 
-  assertDeepEquals(events, [[1]]);
+  assertDeepEquals(events, [
+    [1],
+    [2],
+    [2],
+  ]);
 });
 
 test("イベントを一度だけ補足する際、すでに中止されていたら例外を投げる", async () => {

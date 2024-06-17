@@ -6,6 +6,7 @@
     "@tools/surrealdb": "file:./tools/surrealdb",
     "@tools/test": "file:./tools/test",
     "@tai-kun/surrealdb": "file:../..",
+    "cbor-redux": "^1.0.0",
     "decimal.js": "^10.4.3",
     "decimal.js-light": "^2.5.1"
   }

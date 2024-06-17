@@ -1,5 +1,6 @@
 import isPlainObject from "is-plain-obj";
 import { TypeError } from "../../errors";
+import escape from "../../escape";
 import escapeRid, { BRACKETL, BRACKETR } from "../../escapeRid";
 import toSurql from "../../toSurql";
 import type { TableAny } from "../../values";
@@ -106,8 +107,8 @@ export default class Thing extends Base implements SurqlValueSerializer {
    * // tb:{"bigint":9007199254740992,"boolean":[true,false],"date":d"1970-01-01T00:00:00.000Z","null":NULL,"number":[123,3.14],"string":s"あいうえお😢","undefined":NONE}
    * ```
    */
-  toJSON(): `${string}:${any}` {
-    return `${Thing.escapeTb(this.tb)}:${Thing.escapeId(this.id)}`;
+  toJSON(): string {
+    return Thing.escapeTb(this.tb) + ":" + Thing.escapeId(this.id);
   }
 
   /**
@@ -132,13 +133,9 @@ export default class Thing extends Base implements SurqlValueSerializer {
    * // r"tb:{\"bigint\":9007199254740992,\"boolean\":[true,false],\"date\":d\"1970-01-01T00:00:00.000Z\",\"null\":NULL,\"number\":[123,3.14],\"string\":s\"あいうえお😢\",\"undefined\":NONE}"
    * ```
    */
-  toSurql(): `r"${string}:${any}"` {
-    return `r${
-      JSON.stringify(
-        Thing.escapeTb(this.tb)
-          + ":"
-          + Thing.escapeId(this.id),
-      )
-    }` as `r"${string}:${any}"`;
+  toSurql(): string {
+    return "r"
+      // dprint-ignore: \' が ' に変換されることを防ぐ。
+      + escape(this.toJSON(), "'", "'", "\'");
   }
 }

@@ -43,7 +43,7 @@ export default class Uuid extends Base implements SurqlValueSerializer {
    * ```
    */
   toSurql(): string {
-    return "u\"" + this.toString() + "\"";
+    return "u'" + this.toString() + "'";
   }
 
   /**

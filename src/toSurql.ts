@@ -1,5 +1,6 @@
 import isPlainObject from "is-plain-obj";
 import { TypeError } from "./errors";
+import escape from "./escape";
 
 export type SurqlPrimitive =
   | string
@@ -32,7 +33,10 @@ export default function toSurql(value: SurqlValue): string {
     },
   ): string {
     if (typeof x === "string") {
-      return "s" + JSON.stringify(x);
+      // s 接頭辞を付けることで、特定の形式を満たす文字列を別のデータ型に自動変換されないようにします。
+      return "s"
+        // dprint-ignore: \' が ' に変換されることを防ぐ。
+        + escape(x, "'", "'", "\'");
     }
 
     if (typeof x === "number" || typeof x === "bigint") {
@@ -75,14 +79,19 @@ export default function toSurql(value: SurqlValue): string {
       c.seen.add(x);
 
       if (x instanceof Date) {
-        s = "d\"" + x.toISOString() + "\"";
+        s = "d'" + x.toISOString() + "'";
       } else if (typeof x.toSurql === "function") {
-        s = inner(x.toSurql(), c);
+        s = x.toSurql();
       } else if (isPlainObject(x)) {
         s = "{"
           + Object.entries(x)
             .sort(([a], [b]) => a.localeCompare(b))
-            .map(([k, v]) => JSON.stringify(k) + ":" + inner(v, c))
+            .map(([k, v]) =>
+              // dprint-ignore: \' が ' に変換されることを防ぐ。
+              escape(k, "'", "'", "\'")
+              + ":"
+              + inner(v, c)
+            )
             .join(",")
           + "}";
       }

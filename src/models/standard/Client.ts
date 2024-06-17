@@ -10,9 +10,9 @@ import type {
   RpcResultMapping,
   ScopeAuth,
 } from "../../types";
+import type { TableAny, UuidAny } from "../../values";
 import type { ClientRpcOptions } from "../ClientAbc";
 import Base from "../tiny/Client";
-import type { TableAny, UuidAny } from "../values";
 
 /**
  * ライブクラリーのオプション。

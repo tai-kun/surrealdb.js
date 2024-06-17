@@ -1,8 +1,8 @@
 import { Simplify } from "type-fest";
 import type { Patch, ReadonlyPatch, RecordData } from "../../types";
+import type { ThingAny } from "../../values";
 import type { ClientRpcOptions } from "../ClientAbc";
 import Base from "../standard/Client";
-import type { ThingAny } from "../values";
 
 // dprint-ignore
 export type ActionResult<T extends RecordData = RecordData>

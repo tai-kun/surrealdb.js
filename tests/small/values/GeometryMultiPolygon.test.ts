@@ -1,9 +1,9 @@
+import { isGeometryMultiPolygon } from "@tai-kun/surrealdb";
 import {
   GeometryLine,
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
-  isGeometryMultiPolygon,
 } from "@tai-kun/surrealdb/full";
 import { GeometryMultiPolygon as GeometryMultiPolygonStandard } from "@tai-kun/surrealdb/standard";
 import { GeometryMultiPolygon as GeometryMultiPolygonTiny } from "@tai-kun/surrealdb/tiny";

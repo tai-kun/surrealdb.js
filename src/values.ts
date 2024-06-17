@@ -1,5 +1,5 @@
 import type { Primitive } from "type-fest";
-import { SurrealDbError } from "../errors";
+import { SurrealDbError } from "./errors";
 import type {
   Datetime as DatetimeFull,
   Decimal as DecimalFull,
@@ -14,7 +14,7 @@ import type {
   Table as TableFull,
   Thing as ThingFull,
   Uuid as UuidFull,
-} from "./full";
+} from "./models/full";
 import {
   ASSERT_VALUE,
   datetimeErrors,
@@ -30,7 +30,7 @@ import {
   tableErrors,
   thingErrors,
   uuidErrors,
-} from "./internal";
+} from "./models/internal";
 import type {
   Datetime,
   Decimal,
@@ -45,7 +45,7 @@ import type {
   Table,
   Thing,
   Uuid,
-} from "./standard";
+} from "./models/standard";
 import type {
   Datetime as DatetimeTiny,
   Decimal as DecimalTiny,
@@ -60,7 +60,7 @@ import type {
   Table as TableTiny,
   Thing as ThingTiny,
   Uuid as UuidTiny,
-} from "./tiny";
+} from "./models/tiny";
 
 type IsValue<T> = {
   /**

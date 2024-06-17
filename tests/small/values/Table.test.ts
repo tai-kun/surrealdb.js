@@ -1,4 +1,5 @@
-import { isTable, Table } from "@tai-kun/surrealdb/full";
+import { isTable } from "@tai-kun/surrealdb";
+import { Table } from "@tai-kun/surrealdb/full";
 import { Table as TableStandard } from "@tai-kun/surrealdb/standard";
 import { Table as TableTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertEquals } from "@tools/assert";

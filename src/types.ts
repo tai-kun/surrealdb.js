@@ -1,4 +1,4 @@
-import type { TableAny, ThingAny, UuidAny } from "./models/values";
+import type { TableAny, ThingAny, UuidAny } from "./values";
 
 /******************************************************************************
  * Query Types

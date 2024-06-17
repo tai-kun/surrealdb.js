@@ -1,5 +1,6 @@
+import { isUuid } from "@tai-kun/surrealdb";
 import { TypeError } from "@tai-kun/surrealdb/errors";
-import { isUuid, Uuid } from "@tai-kun/surrealdb/full";
+import { Uuid } from "@tai-kun/surrealdb/full";
 import { Uuid as UuidStandard } from "@tai-kun/surrealdb/standard";
 import { Uuid as UuidTiny } from "@tai-kun/surrealdb/tiny";
 import {

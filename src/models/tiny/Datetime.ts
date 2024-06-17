@@ -1,6 +1,6 @@
 import { TypeError } from "../../errors";
+import { isDatetime } from "../../values";
 import { _defineAssertDatetime } from "../internal";
-import { isDatetime } from "../values";
 
 export default class Datetime extends Date {
   #s: number;

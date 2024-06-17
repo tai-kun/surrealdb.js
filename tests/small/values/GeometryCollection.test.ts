@@ -1,8 +1,8 @@
+import { isGeometryCollection } from "@tai-kun/surrealdb";
 import {
   GeometryCollection,
   GeometryLine,
   GeometryPoint,
-  isGeometryCollection,
 } from "@tai-kun/surrealdb/full";
 import {
   GeometryCollection as GeometryCollectionStandard,

@@ -1,10 +1,10 @@
 import isPlainObject from "is-plain-obj";
 import { TypeError } from "../../errors";
-import escapeRid, { BRACKETL, BRACKETR } from "../escapeRid";
+import escapeRid, { BRACKETL, BRACKETR } from "../../escapeRid";
+import toSurql from "../../toSurql";
+import type { TableAny } from "../../values";
 import type { SurqlValueSerializer } from "../Serializer";
 import Base, { type ThingId } from "../tiny/Thing";
-import toSurql from "../toSurql";
-import type { TableAny } from "../values";
 
 const I64_MAX = 9223372036854775807n;
 const I64_MIN = -9223372036854775808n;

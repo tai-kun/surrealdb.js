@@ -1,8 +1,8 @@
+import { isGeometryPolygon } from "@tai-kun/surrealdb";
 import {
   GeometryLine,
   GeometryPoint,
   GeometryPolygon,
-  isGeometryPolygon,
 } from "@tai-kun/surrealdb/full";
 import {
   GeometryLine as GeometryLineStandard,

@@ -1,4 +1,5 @@
-import { Datetime, isDatetime } from "@tai-kun/surrealdb/full";
+import { isDatetime } from "@tai-kun/surrealdb";
+import { Datetime } from "@tai-kun/surrealdb/full";
 import { Datetime as DatetimeStandard } from "@tai-kun/surrealdb/standard";
 import { Datetime as DatetimeTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertEquals } from "@tools/assert";

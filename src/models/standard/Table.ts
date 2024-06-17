@@ -1,4 +1,4 @@
-import escapeIdent, { BACKTICK } from "../escapeIdent";
+import escapeIdent, { BACKTICK } from "../../escapeIdent";
 import type { SurqlValueSerializer } from "../Serializer";
 import Base from "../tiny/Table";
 

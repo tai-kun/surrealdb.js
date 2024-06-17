@@ -1,8 +1,8 @@
+import { isGeometryMultiLine } from "@tai-kun/surrealdb";
 import {
   GeometryLine,
   GeometryMultiLine,
   GeometryPoint,
-  isGeometryMultiLine,
 } from "@tai-kun/surrealdb/full";
 import { GeometryMultiLine as GeometryMultiLineStandard } from "@tai-kun/surrealdb/standard";
 import { GeometryMultiLine as GeometryMultiLineTiny } from "@tai-kun/surrealdb/tiny";

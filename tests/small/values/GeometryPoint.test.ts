@@ -1,8 +1,5 @@
-import {
-  Decimal,
-  GeometryPoint,
-  isGeometryPoint,
-} from "@tai-kun/surrealdb/full";
+import { isGeometryPoint } from "@tai-kun/surrealdb";
+import { Decimal, GeometryPoint } from "@tai-kun/surrealdb/full";
 import { GeometryPoint as GeometryPointStandard } from "@tai-kun/surrealdb/standard";
 import { GeometryPoint as GeometryPointTiny } from "@tai-kun/surrealdb/tiny";
 import {

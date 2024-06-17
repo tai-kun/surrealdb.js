@@ -1,5 +1,5 @@
 import { TypeError } from "../../errors";
-import { isDecimal } from "../full";
+import { isDecimal } from "../../values";
 import { _defineAssertDecimal } from "../internal";
 
 // https://github.com/MikeMcl/decimal.js/blob/master/decimal.mjs#L109-L112

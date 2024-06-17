@@ -1,4 +1,5 @@
-import { Decimal, isDecimal } from "@tai-kun/surrealdb/full";
+import { isDecimal } from "@tai-kun/surrealdb";
+import { Decimal } from "@tai-kun/surrealdb/full";
 import { Decimal as DecimalStandard } from "@tai-kun/surrealdb/standard";
 import { Decimal as DecimalTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertEquals, assertInstanceOf } from "@tools/assert";

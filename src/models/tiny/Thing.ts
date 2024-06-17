@@ -1,6 +1,6 @@
+import type { SurqlArray, SurqlValue } from "../../toSurql";
+import type { TableAny } from "../../values";
 import { _defineAssertThing } from "../internal";
-import type { SurqlArray, SurqlValue } from "../toSurql";
-import type { TableAny } from "../values";
 
 /**
  * ID には 64 ビット符号付き整数と文字列、配列、オオブジェクトが使えます。

@@ -31,7 +31,7 @@ jobs:
           curl -sSL http://localhost:4444/wd/hub/status | jq -e '.value.nodes'
 
       - name: Test
-        timeout-minutes: 1
+        timeout-minutes: 2 # 1 minute + overhead
         working-directory: test-env/firefox
         run: |
           bash scripts/test.sh

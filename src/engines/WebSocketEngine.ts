@@ -24,39 +24,53 @@ import EngineAbc, {
 } from "./Abc";
 
 /**
- * Creates a WebSocket connection.
- *
- * @param address - The URL for the WebSocket connection.
- * @param protocol - The protocol for the WebSocket connection.
- * @returns The WebSocket connection.
+ * WebSocket インスタンスを作成する関数。
  */
-export type CreateWebSocket = (
-  address: URL,
-  protocol: string | undefined,
-) => Promisable<WebSocket | WsWebSocket>;
+export interface CreateWebSocket {
+  /**
+   * WebSocket インスタンスを作成します。
+   *
+   * @param address - 接続先の URL。
+   * @param protocol - サブプロトコル。
+   * @returns WebSocket インスタンス。
+   */
+  (
+    address: URL,
+    protocol: string | undefined,
+  ): Promisable<WebSocket | WsWebSocket>;
+}
 
 /**
- * The WebSocket engine configuration.
+ * WebSocket エンジンの設定。
  */
 export interface WebSocketEngineConfig extends EngineConfig {
   /**
-   * The WebSocket connection creator.
+   * WebSocket インスタンスを作成する関数。
    */
   readonly createWebSocket: CreateWebSocket;
 }
 
 /**
- * The WebSocket engine for `Surreal`.
+ * WebSocket エンジン。
  */
 export default class WebSocketEngine extends EngineAbc {
+  /**
+   * 増分 ID を生成するためのインスタンス。
+   */
   protected id = new SerialId();
+
+  /**
+   * WebSocket インスタンス。
+   */
   protected ws: WebSocket | null = null;
+
+  /**
+   * WebSocket インスタンスを作成する関数。
+   */
   protected newWs: CreateWebSocket;
 
   /**
-   * Creates a new WebSocket engine.
-   *
-   * @param config - The configuration for the WebSocket engine.
+   * @param config - WebSocket エンジンの設定。
    */
   constructor(config: WebSocketEngineConfig) {
     super(config);
@@ -91,7 +105,7 @@ export default class WebSocketEngine extends EngineAbc {
         new WebSocketEngineError(
           3000,
           /**
-           * We are not certain if the event has a `message` property.
+           * イベントに message プロパティが含まれているかどうかは分かりません。
            *
            * - Mozilla: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/error_event#event_type
            * - Node.js:
@@ -118,7 +132,7 @@ export default class WebSocketEngine extends EngineAbc {
         case 1000: // Normal Closure
         case 1004: // Reserved (Not Used)
         case 1005: // No Status Received
-        // We do not treat connection codes resulting from early termination as errors.
+        // 早期切断に由来するエラーコードはエラーとして扱いません。
         case 1001: // Going Away
         case 1006: // Abnormal Closure
           break;
@@ -144,8 +158,8 @@ export default class WebSocketEngine extends EngineAbc {
         await this.setState(CLOSED, () => CLOSED);
       } catch {
         // Ignore
-        // Errors that occur within the `CLOSED` event are handled
-        // by `SurrealCore`, which uses this engine.
+        // CLOSED エベントのエラーハンドリングは、このエンジンを使用する Surreal クラス
+        // が行うことを期待します。
       }
     });
     ws.addEventListener("open", async () => {
@@ -161,6 +175,8 @@ export default class WebSocketEngine extends EngineAbc {
         this.ee.emit(
           "error",
           new WebSocketEngineError(
+            // open イベントハンドラー内で発生したエラーを、
+            // カスタムエラーコード 3001 として報告します。
             3001,
             "An error occurred within the handler for the \"open\" event.",
             {
@@ -204,6 +220,8 @@ export default class WebSocketEngine extends EngineAbc {
         this.ee.emit(
           "error",
           new WebSocketEngineError(
+            // message イベントハンドラー内で発生したエラーを、
+            // カスタムエラーコード 3002 として報告します。
             3002,
             "An error occurred within the handler for the \"message\" event.",
             {
@@ -328,7 +346,8 @@ export default class WebSocketEngine extends EngineAbc {
     const promise = this.ee.once(`rpc/${id}`, { signal });
     this.ws.send(body);
     const [rawResp] = await promise;
-    const rpcResp = rawResp as BidirectionalRpcResponse; // `rawResp` is validated in the "message" event listener
+    // `rawResp` は message イベントハンドラー内で検証済みなので、ここでは型でキャストするだけです。
+    const rpcResp = rawResp as BidirectionalRpcResponse;
 
     if ("result" in rpcResp) {
       const rpc = {

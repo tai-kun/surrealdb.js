@@ -16,7 +16,7 @@ import type {
 import EngineAbc, { type EngineConfig } from "./Abc";
 
 /**
- * fetch 関数に渡すリクエストの情報。
+ * HTTP エンジンが fetch 関数に渡すリクエストの情報。
  */
 export type HttpEngineFetchRequestInit = {
   method: "POST";
@@ -32,7 +32,7 @@ export type HttpEngineFetchRequestInit = {
 };
 
 /**
- * fetch 関数が返すべきレスポンス。
+ * fetch 関数が HTTP エンジンに返すべき HTTP レスポンス。
  */
 export type HttpEngineFetchResponse = {
   /**
@@ -52,11 +52,11 @@ export type HttpEngineFetchResponse = {
  */
 export interface HttpEngineFetcher {
   /**
-   * リクエストを送信し、レスポンスを取得します。
+   * リクエストを送信し、HTTP レスポンスを取得します。
    *
    * @param endpoint - リクエスト URL。
    * @param init - リクエスト情報。
-   * @returns レスポンス。
+   * @returns HTTP レスポンス。
    */
   (
     endpoint: string,

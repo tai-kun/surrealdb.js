@@ -33,7 +33,7 @@ import type { ValidatorAbc } from "../validators";
 export type ConnectionState = 0 | 1 | 2 | 3;
 
 /**
- * 接続情報
+ * 接続情報。
  */
 export interface Connection {
   /**
@@ -55,23 +55,25 @@ export interface Connection {
 }
 
 /**
- * 一般的なエンジンのエラー。
- */
-export interface GeneralEngineError<T extends string = string> {
-  name: T;
-  message: string;
-}
-
-/**
  * エンジンのイベント。
  */
 export type EngineEvents =
   & {
-    [S in ConnectionState]: [result: Ok<S> | Err<unknown, { value: S }>];
+    // 状態遷移に関するイベント。
+    [S in ConnectionState]: [
+      result:
+        // 状態遷移に成功した場合。
+        | Ok<S>
+        // 状態遷移に失敗した場合。
+        | Err<unknown, { value: S }>,
+    ];
   }
   & {
+    // 双方向通信における RPC レスポンスのイベント。
     [_: `rpc/${BidirectionalRpcResponse["id"]}`]: [response: RpcResponse];
+    // ライブクエリーの結果のイベント。
     [_: `live/${string}`]: [response: Simplify<Omit<LiveResult, "id">>];
+    // エンジン内エラーを通知するイベント。
     error: [error: EngineError | HttpEngineError | WebSocketEngineError];
   };
 
@@ -93,24 +95,48 @@ export interface EngineConfig {
   readonly validator: ValidatorAbc;
 }
 
+/**
+ * 現在の接続状態が、接続中であることを示します。
+ */
 export const CONNECTING = 0 as const satisfies ConnectionState;
 
+/**
+ * 現在の接続状態が、接続済みであることを示します。
+ */
 export const OPEN = 1 as const satisfies ConnectionState;
 
+/**
+ * 現在の接続状態が、切断中であることを示します。
+ */
 export const CLOSING = 2 as const satisfies ConnectionState;
 
+/**
+ * 現在の接続状態が、切断済みであることを示します。
+ */
 export const CLOSED = 3 as const satisfies ConnectionState;
 
 /**
  * クライアントエンジンの抽象クラス。
  */
 export default abstract class EngineAbc {
+  /**
+   * 現在の接続状態が、接続中であることを示します。
+   */
   static readonly CONNECTING = CONNECTING;
 
+  /**
+   * 現在の接続状態が、接続済みであることを示します。
+   */
   static readonly OPEN = OPEN;
 
+  /**
+   * 現在の接続状態が、切断中であることを示します。
+   */
   static readonly CLOSING = CLOSING;
 
+  /**
+   * 現在の接続状態が、切断済みであることを示します。
+   */
   static readonly CLOSED = CLOSED;
 
   /**
@@ -149,6 +175,16 @@ export default abstract class EngineAbc {
    *
    * @param state - 遷移先の状態。
    * @param fallback - 状態遷移に失敗した場合のフォールバック関数。
+   * @example
+   * ```typescript
+   * await this.setState(CONNECTING, () => {
+   *   console.error("接続に失敗しました。");
+   *
+   *   return CLOSED; // 失敗したため、現在の接続状態を切断済みとします。
+   * });
+   *
+   * console.log("接続に成功しました。");
+   * ```
    */
   protected async setState(
     state: ConnectionState,
@@ -181,6 +217,11 @@ export default abstract class EngineAbc {
 
   /**
    * 現在の接続状態。
+   *
+   * - `0` 接続中
+   * - `1` 接続済み
+   * - `2` 切断中
+   * - `3` 切断済み
    */
   get state(): ConnectionState {
     return this.#state;
@@ -189,6 +230,15 @@ export default abstract class EngineAbc {
   /**
    * 接続情報。この接続情報は参照されるたびにコピーされます。
    * そのため、実装されたメソッドを回避してこれを変更することはできません。
+   *
+   * @example
+   * ```typescript
+   * const conn = engine.connection;
+   * console.log(`接続先: ${conn.endpoint}`);
+   *
+   * // ⚠ この操作はエンジンの接続情報に影響を与えません。
+   * conn.endpoint = new URL("http://localhost:8080");
+   * ```
    */
   get connection(): Connection {
     const conn = { ...this.conn }; // copy
@@ -204,6 +254,10 @@ export default abstract class EngineAbc {
    * 指定されたエンドポイントに接続します。
    *
    * @param endpoint - 接続先のエンドポイント。
+   * @example
+   * ```typescript
+   * await engine.connect(new URL("ws://localhost:8080"));
+   * ```
    */
   abstract connect(endpoint: URL): Promise<void>;
 
@@ -211,6 +265,15 @@ export default abstract class EngineAbc {
    * サーバーとの接続を切断します。
    *
    * @returns　切断の結果。
+   * @example
+   * ```typescript
+   * const result = await engine.disconnect();
+   *
+   * if (result.ok) {
+   *   console.log(`成功の理由: ${result.value}`);
+   * } else {
+   *   throw result.error;
+   * }
    */
   abstract disconnect(): Promise<
     | Ok<"Disconnected">
@@ -224,6 +287,13 @@ export default abstract class EngineAbc {
    * @param request - 送信する RPC リクエスト。
    * @param signal - リクエストの中断に使用するシグナル。
    * @returns RPC レスポンス。
+   * @example
+   * ```typescript
+   * const response = await engine.rpc(
+   *   { mwthod: "ping", params: [] },
+   *   AbortSignal.timeout(5_000), // 5 秒でタイムアウト
+   * );
+   * ```
    */
   abstract rpc(request: RpcRequest, signal: AbortSignal): Promise<RpcResponse>;
 }

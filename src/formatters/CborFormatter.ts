@@ -42,6 +42,9 @@ const TAG_GEOMETRY_MULTILINE = 92;
 const TAG_GEOMETRY_MULTIPOLYGON = 93;
 const TAG_GEOMETRY_COLLECTION = 94;
 
+/**
+ * COBR でシリアライズ/デシリアライズする値。
+ */
 export type CborValues = {
   Datetime: new(value: any) => any;
   Table: new(value: any) => any;
@@ -64,6 +67,9 @@ export type CborValues = {
 export default class CborFormatter extends Abc {
   readonly #values: CborValues;
 
+  /**
+   * @param values - CBOR でシリアライズ/デシリアライズする値。
+   */
   constructor(values: Readonly<CborValues>) {
     super("application/cbor", "cbor");
     this.#values = { ...values };

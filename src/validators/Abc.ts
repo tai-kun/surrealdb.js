@@ -34,7 +34,7 @@ export interface ParseResponseContext extends ParseContext {
  */
 export default abstract class ValidatorAbc {
   /**
-   * RPC リクエストを解析する。
+   * RPC リクエストを解析します。
    *
    * @param input 入力データ。
    * @param context コンテキスト。
@@ -46,7 +46,7 @@ export default abstract class ValidatorAbc {
   ): RpcRequest;
 
   /**
-   * `id` 無しの RPC レスポンスを解析する。
+   * `id` 無しの RPC レスポンスを解析します。
    *
    * @param input 入力データ。
    * @param context コンテキスト。
@@ -58,7 +58,7 @@ export default abstract class ValidatorAbc {
   ): IdLessRpcResponse;
 
   /**
-   * RPC の結果を解析する。
+   * RPC の結果を解析します。
    *
    * @param input 入力データ。
    * @param context コンテキスト。
@@ -70,7 +70,7 @@ export default abstract class ValidatorAbc {
   ): unknown;
 
   /**
-   * RPC レスポンスを解析する。
+   * RPC レスポンスを解析します。
    *
    * @param input 入力データ。
    * @param context コンテキスト。
@@ -82,7 +82,7 @@ export default abstract class ValidatorAbc {
   ): RpcResponse;
 
   /**
-   * ライブクエリーの結果を解析する。
+   * ライブクエリーの結果を解析します。
    *
    * @param input 入力データ。
    * @param context コンテキスト。

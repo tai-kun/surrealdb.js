@@ -60,6 +60,16 @@ export default class TaskQueue {
    * @param runner - タスクランナー。
    * @param options - タスクランナーの実行オプション。
    * @returns タスクランナーの結果を取得するための `StatefulPromise` インスタンス。
+   * @example
+   * ```typescript
+   * const queue = new TaskQueue();
+   * const task = queue.add(async ({ signal }) => {
+   *   const response = await fetch("https://localhost:8000/data", { signal });
+   *   return await response.json();
+   * });
+   * const data = await task;
+   * await queue.dispose();
+   * ```
    */
   add<T>(
     runner: (args: TaskRunnerArgs) => Promisable<T>,
@@ -120,6 +130,7 @@ export default class TaskQueue {
 
   /**
    * このインスタンスが破棄されているかどうか。
+   * 破棄されている場合は `true`、そうでない場合は `false` です。
    */
   get disposed(): boolean {
     return this.#disposed;
@@ -129,6 +140,23 @@ export default class TaskQueue {
    * このインスタンスを破棄し、すべてのタスクが終了するまで待機します。
    *
    * @returns タスクがすべて成功した場合は `Ok`、そうでない場合は `Err` を返します。
+   * @example
+   * ```typescript
+   * const queue = new TaskQueue();
+   * queue.add(async ({ signal }) => {
+   *   // 時間のかかる処理
+   * });
+   * queue.add(async ({ signal }) => {
+   *   // 時間のかかる処理
+   * });
+   * const result = await queue.dispose();
+   *
+   * if (result.ok) {
+   *   console.log("全てのタスクが正常に終了しました。");
+   * } else {
+   *   throw result.error; // AggregateTasksError を投げる。
+   * }
+   * ```
    */
   async dispose(): Promise<Ok | Err<AggregateTasksError>> {
     if (!this.#disposed) {
@@ -149,6 +177,29 @@ export default class TaskQueue {
    * すべてのタスクを中止します。
    *
    * @param reason - 中止の理由。
+   * @example
+   * ```typescript
+   * const queue = new TaskQueue();
+   * const task = queue.add(({ signal }) => {
+   *   return new Promise((_, reject) => {
+   *     signal.addEventListener("abort", () => {
+   *       reject(signal.reason);
+   *     });
+   *   });
+   * });
+   * const timeout = setTimeout(() => {
+   *   queue.abort(new Error("タイムアウト"));
+   * }, 1_000);
+   *
+   * try {
+   *   await task;
+   * } catch (error) {
+   *   console.error(error); // 「タイムアウト」エラーが表示される。
+   * } finally {
+   *   clearTimeout(timeout);
+   *   await queue.dispose();
+   * }
+   * ```
    */
   abort(reason?: unknown): void {
     for (const task of this.#tasks) {

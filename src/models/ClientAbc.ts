@@ -4,6 +4,7 @@ import {
   type Connection,
   type ConnectionState,
   type EngineAbc,
+  type EngineConfig,
   type EngineEvents,
 } from "../engines";
 import {
@@ -29,19 +30,19 @@ import type { ValidatorAbc } from "../validators";
  */
 export interface CreateEngine {
   /**
-   * クライアントエンジンを作成する。
+   * クライアントエンジンを作成します。
    *
    * @param config - エンジンの設定。
    * @returns クライアントエンジン。
    */
-  (...args: ConstructorParameters<typeof EngineAbc>): Promisable<EngineAbc>;
+  (config: EngineConfig): Promisable<EngineAbc>;
 }
 
 /**
  * クライアントエンジンのマッピング。
  *
- * エンジンのプロトコルをキーとし、エンジンを作成する関数またはエンジンのプロトコルを値とする。
- * プロトコルは例えば `http` や `ws` など `://` の前にくる文字列である。
+ * エンジンのプロトコルをキーとし、エンジンを作成する関数またはエンジンのプロトコルを値とします。
+ * プロトコルは例えば `http` や `ws` など `://` の前にくる文字列です。
  */
 export type ClientEngines = {
   readonly [P in string]?: CreateEngine | string | undefined;
@@ -133,10 +134,16 @@ export default abstract class ClientAbc {
   }
 
   /**
-   * クライアントエンジンを作成する。
+   * クライアントエンジンを作成します。
    *
    * @param protocol - 接続を試みるエンドポイントのプロトコル。
    * @returns クライアントエンジン。
+   * @example
+   * ```typescript
+   * const url = new URL(endpoint);
+   * const protocol = url.protocol.replace(/:$/, "");
+   * const engine = await this.createEngine(protocol);
+   * ```
    */
   protected async createEngine(protocol: string): Promise<EngineAbc> {
     let engine = this.#engines[protocol];
@@ -182,6 +189,14 @@ export default abstract class ClientAbc {
    * @template K - イベントの型。
    * @param event - リスナーを追加するイベント。
    * @param listener - 追加するリスナー。
+   * @example
+   * ```typescript
+   * import { OPEN } from "@tai-kun/surrealdb/engines";
+   *
+   * const db = (省略);
+   * db.on(OPEN, () => {
+   *   console.log("接続が確立されました。");
+   * });
    */
   on<K extends keyof EngineEvents>(
     event: K,
@@ -196,6 +211,17 @@ export default abstract class ClientAbc {
    * @template K - イベントの型。
    * @param event - リスナーを削除するイベント。
    * @param listener - 削除するリスナー。
+   * @example
+   * ```typescript
+   * import { CLOSED } from "@tai-kun/surrealdb/engines";
+   *
+   * const db = (省略);
+   * const listener = () => {
+   *   console.log("切断されました。");
+   * };
+   * db.on(CLOSED, listener);
+   * db.off(CLOSED, listener);
+   * ```
    */
   off<K extends keyof EngineEvents>(
     event: K,
@@ -219,6 +245,16 @@ export default abstract class ClientAbc {
    * @param event - 待機するイベント。
    * @param options - タスクリスナーのオプション。
    * @returns イベントリスナーに渡された引数。
+   * @example
+   * ```typescript
+   * import { OPEN } from "@tai-kun/surrealdb/engines";
+   *
+   * const db = (省略);
+   * const promise = db.once(OPEN);
+   * db.connect("https://localhost:8000");
+   * await promise;
+   * console.log("接続が確立されました。");
+   * ```
    */
   once<K extends keyof EngineEvents>(
     event: K,
@@ -231,6 +267,11 @@ export default abstract class ClientAbc {
    * 指定されたエンドポイントに接続します。
    *
    * @param endpoint - 接続先のエンドポイント。
+   * @example
+   * ```typescript
+   * const db = (省略);
+   * await db.connect("https://localhost:8000");
+   * ```
    */
   abstract connect(endpoint: string | URL): Promise<void>;
 
@@ -238,6 +279,23 @@ export default abstract class ClientAbc {
    * サーバーとの接続を切断します。
    *
    * @returns　切断の結果。
+   * @example
+   * ```typescript
+   * const db = (省略);
+   * await db.connect("https://localhost:8000");
+   * const result = await db.disconnect();
+   *
+   * if (result.ok) {
+   *   console.log(`正常に切断されました: ${result.value}`);
+   * } else {
+   *   if ("disconnect" in result.error) {
+   *      console.error("切断に失敗しました:", result.error.disconnect);
+   *   }
+   *
+   *   if ("dispose" in result.error) {
+   *      console.error("タスクの終了に失敗しました:", result.error.dispose);
+   *   }
+   * }
    */
   abstract disconnect(options?: ClientDisconnectOptions | undefined): Promise<
     | Ok
@@ -256,6 +314,16 @@ export default abstract class ClientAbc {
    * @param params - RPC メソッドのパラメータ。
    * @param options - リクエストのオプション。
    * @returns RPC の結果。
+   * @example
+   * ```typescript
+   * const db = (省略);
+   * await db.connect("https://localhost:8000");
+   *
+   * const result = await db.rpc("ping", []);
+   * console.log(result);
+   *
+   * await db.disconnect();
+   * ```
    */
   abstract rpc<M extends RpcMethod, T extends RpcResult<M>>(
     method: M,

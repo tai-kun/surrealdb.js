@@ -29,6 +29,10 @@ export default class Payload {
    * レスポンスデータを UTF-8 文字列として返します。
    *
    * @returns UTF-8 文字列に変換されたレスポンスデータ。
+   * @example
+   * ```typescript
+   * const responseBodyAsText = await payload.text();
+   * ```
    */
   async text(): Promise<string> {
     if (this.#text === null) {
@@ -48,6 +52,10 @@ export default class Payload {
    * レスポンスデータを ArrayBuffer として返します。
    *
    * @returns ArrayBuffer に変換されたレスポンスデータ。
+   * @example
+   * ```typescript
+   * const responseBodyAsArrayBuffer = await payload.arrayBuffer();
+   * ```
    */
   async arrayBuffer(): Promise<ArrayBuffer> {
     if (this.#buff === null) {

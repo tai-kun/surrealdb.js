@@ -2,6 +2,20 @@ import type { CreateEngine } from "../models/ClientAbc";
 import WebSocketEngine from "./WebSocketEngine";
 
 export default (
+  /**
+   * WebSocket で通信するクライアントエンジンを作成します。
+   * 使用する WebSocket クラスは次に示す基準で選択されます:
+   *
+   * - Node.js で実行されている場合:
+   *     - undici のバージョンが 6.18.0 以上の場合、グローバルオブジェクトの WebSocket を使用します。
+   *     - undici のバージョンが 6.18.0 未満の場合、ws パッケージを動的インポートして WebSocket を使用します。
+   * - Node.js でない環境で実行されている場合:
+   *     - グローバルオブジェクトの WebSocket を使用します。
+   *     - グローバルオブジェクトに WebSocket が存在しない場合、ws パッケージを動的インポートして WebSocket を使用します。
+   *
+   * @param config - エンジンの設定。
+   * @returns クライアントエンジン。
+   */
   function webSocketEngine(config) {
     return new WebSocketEngine({
       ...config,

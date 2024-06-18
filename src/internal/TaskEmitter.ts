@@ -17,13 +17,16 @@ interface TypedMap<T> {
  * タスクのイベントリスナー。
  *
  * @template A - イベントリスナーの引数の型。
- * @param runnerArgs - タスクランナーに渡される引数。
- * @param args - イベントリスナーの引数。
  */
-export type TaskListener<A extends unknown[]> = (
-  runnerArgs: TaskRunnerArgs,
-  ...args: A
-) => Promisable<void>;
+export interface TaskListener<A extends unknown[]> {
+  /**
+   * タスクを実行します。
+   *
+   * @param runnerArgs - タスクランナーに渡される引数。
+   * @param args - イベントリスナーの引数。
+   */
+  (runnerArgs: TaskRunnerArgs, ...args: A): Promisable<void>;
+}
 
 /**
  * タスクのイベントリスナーのオプション。
@@ -53,6 +56,15 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * @template K - イベントの型。
    * @param event - リスナーを追加するイベント。
    * @param listener - 追加するリスナー。
+   * @example
+   * ```typescript
+   * const taskEmitter = new TaskEmitter();
+   * taskEmitter.on("event", async ({ signal }, arg0) => {
+   *   awiat doSomething(arg0, { signal });
+   * });
+   * taskEmitter.emit("event", 1);
+   * await taskEmitter.dispose();
+   * ```
    */
   on<K extends keyof T>(
     event: K,
@@ -83,6 +95,20 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * @template K - イベントの型。
    * @param event - リスナーを削除するイベント。
    * @param listener - 削除するリスナー。
+   * @example
+   * ```typescript
+   * const taskEmitter = new TaskEmitter();
+   * const listener = async ({ signal }, arg0) => {
+   *   awiat doSomething(arg0, { signal });
+   * };
+   * taskEmitter.on("event", listener);
+   *
+   * taskEmitter.off("event", listener);
+   * // または
+   * taskEmitter.off("event");
+   *
+   * await taskEmitter.dispose();
+   * ```
    */
   off<K extends keyof T>(event: K, listener?: TaskListener<T[K]>): void {
     const listeners = this.#listeners.get(event);
@@ -188,11 +214,11 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * @param args - イベントリスナーに渡される引数。
    * @returns このイベントによってトリガーされたイベントリスナーの Promise のリスト。
    * @example
-   * ```ts
+   * ```typescript
    * taskEmitter.emit("event", 1);
    * ```
    * @example
-   * ```ts
+   * ```typescript
    * const promises = taskEmitter.emit("event", 1);
    * const results = await Promise.all(promises || []);
    * ```
@@ -211,6 +237,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
 
   /**
    * このインスタンスが破棄されているかどうか。
+   * 破棄されている場合は `true`、そうでない場合は `false` です。
    */
   get disposed(): boolean {
     return this.#tasks.disposed;
@@ -220,6 +247,22 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * このインスタンスを破棄し、すべてのタスクが終了するまで待機します。
    *
    * @returns タスクがすべて成功した場合は `Ok`、そうでない場合は `Err` を返します。
+   * @example
+   * ```typescript
+   * const taskEmitter = new TaskEmitter();
+   * taskEmitter.on("event", async ({ signal }, ...args) => {
+   *   // 時間のかかる処理
+   * });
+   * taskEmitter.on("event", async ({ signal }, ...args) => {
+   *   // 時間のかかる処理
+   * });
+   * const result = await taskEmitter.dispose();
+   *
+   * if (result.ok) {
+   *   console.log("全てのタスクが正常に終了しました。");
+   * } else {
+   *   throw result.error; // AggregateTasksError を投げる。
+   * }
    */
   async dispose(): Promise<Ok | Err<AggregateTasksError>> {
     return await this.#tasks.dispose();
@@ -229,6 +272,10 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * すべてのタスクを中止します。
    *
    * @param reason - 中止の理由。
+   * @example
+   * ```typescript
+   * taskEmitter.abort();
+   * ```
    */
   abort(reason?: unknown): void {
     this.#tasks.abort(reason);

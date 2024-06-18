@@ -19,6 +19,11 @@ export default abstract class FormatterAbc {
    *
    * @param data - エンコードするデータ。
    * @returns エンコードされたデータ。
+   * @example
+   * ```typescript
+   * const data = { foo: "bar" };
+   * const encoded = await formatter.encode(data);
+   * ```
    */
   abstract encode(data: unknown): Promisable<string | ArrayBuffer>;
 
@@ -27,14 +32,23 @@ export default abstract class FormatterAbc {
    *
    * @param data - RPC リクエストのレスポンスデータ。
    * @returns デコードされたデータ。
+   * @example
+   * ```typescript
+   * const data = await formatter.decode(response);
+   * ```
    */
   abstract decode(payload: Payload): Promisable<unknown>;
 
   /**
-   * データをコピーします。
+   * 与えられたデータを一度エンコードしてからデコードすることで、データのコピーを行います。
    *
    * @param data - コピーするデータ。
    * @returns コピーされたデータ。
+   * @example
+   * ```typescript
+   * const data = { foo: "bar" };
+   * const copied = await formatter.copy(data);
+   * ```
    */
   async copy<T>(data: T): Promise<T> {
     const rawData = await this.encode(data);

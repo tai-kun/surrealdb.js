@@ -81,3 +81,13 @@ jobs:
         if: always()
         run: |
           docker stop ${{ steps.prepare.outputs.selenium_container_name }} || true
+
+  action-timeline:
+    needs:
+      - small
+      - medium
+    permissions:
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v2

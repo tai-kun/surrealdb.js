@@ -59,3 +59,13 @@ jobs:
         timeout-minutes: 5
         working-directory: test-env/bun
         run: bash scripts/test.sh
+
+  action-timeline:
+    needs:
+      - small
+      - medium
+    permissions:
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: Kesin11/actions-timeline@v2

@@ -76,6 +76,7 @@
     "esbuild": "^0.21.4",
     "tar": "^7.2.0",
     "type-fest": "^4.20.0",
+    "typedoc": "^0.25.13",
     "typescript": "^5.4.5",
     "unzipper": "^0.12.1",
     "uuid": "^10.0.0"
@@ -89,6 +90,7 @@
     "url": "https://github.com/tai-kun/"
   },
   "scripts": {
+    "docs": "typedoc src src/models/full src/models/standard src/models/tiny src/engines src/formatters src/validators src/errors.ts src/internal --out docs",
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
     "test:sm:bun": "node scripts/test.js bun small",

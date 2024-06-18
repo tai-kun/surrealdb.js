@@ -265,10 +265,22 @@ export default class HttpEngine extends EngineAbc {
           : {}),
       },
     });
+    const cause = {
+      request,
+      endpoint: this.conn.endpoint.href,
+      database: this.conn.db,
+      namespace: this.conn.ns,
+    };
 
     if (!isFetchResponse(resp)) {
       throw new InvalidResponse(
         "The response of the fetch function is an invalid interface.",
+        {
+          cause: {
+            ...cause,
+            response: resp,
+          },
+        },
       );
     }
 
@@ -278,6 +290,12 @@ export default class HttpEngine extends EngineAbc {
       throw new InvalidResponse(
         "The arrayBuffer method of the fetch function response "
           + "did not return an ArrayBuffer.",
+        {
+          cause: {
+            ...cause,
+            buffer: buff,
+          },
+        },
       );
     }
 
@@ -285,7 +303,13 @@ export default class HttpEngine extends EngineAbc {
 
     if (resp.status !== 200) {
       const message = await data.text();
-      throw new InvalidResponse(message, { cause: buff });
+      throw new InvalidResponse(message, {
+        cause: {
+          ...cause,
+          status: resp.status,
+          buffer: buff,
+        },
+      });
     }
 
     const decoded = await this.fmt.decode(data);

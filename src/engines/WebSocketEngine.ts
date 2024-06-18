@@ -192,7 +192,13 @@ export default class WebSocketEngine extends EngineAbc {
           });
           this.ee.emit(`live/${id}`, liveResult);
         } else {
-          throw new RpcResponseError(rpcResp);
+          throw new RpcResponseError(rpcResp, {
+            cause: {
+              endpoint: this.conn.endpoint?.href,
+              database: this.conn.db,
+              namespace: this.conn.ns,
+            },
+          });
         }
       } catch (error) {
         this.ee.emit(

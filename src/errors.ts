@@ -314,6 +314,14 @@ export class InvalidResponse extends SurrealDbError {
   static {
     this.prototype.name = "InvalidResponse";
   }
+
+  /**
+   * @param message - エラーメッセージ。
+   * @param options - エラーオプション。
+   */
+  constructor(message: string, options?: ErrorOptions | undefined) {
+    super(message, options);
+  }
 }
 
 /**

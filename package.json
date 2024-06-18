@@ -68,12 +68,14 @@
     "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.1.4",
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "^20.14.2",
     "@types/unzipper": "^0.10.9",
     "@types/ws": "^8.5.10",
     "dprint": "^0.46.2",
     "esbuild": "^0.21.4",
+    "size-limit": "^11.1.4",
     "tar": "^7.2.0",
     "type-fest": "^4.20.0",
     "typedoc": "^0.25.13",
@@ -90,7 +92,6 @@
     "url": "https://github.com/tai-kun/"
   },
   "scripts": {
-    "docs": "typedoc src src/models/full src/models/standard src/models/tiny src/engines src/formatters src/validators src/errors.ts src/internal --out docs",
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
     "test:sm:bun": "node scripts/test.js bun small",
@@ -102,8 +103,43 @@
     "test:sm:chrome": "node scripts/test.js chrome small",
     "test:md:chrome": "node scripts/test.js chrome medium",
     "test:sm:firefox": "node scripts/test.js firefox small",
-    "test:md:firefox": "node scripts/test.js firefox medium"
+    "test:md:firefox": "node scripts/test.js firefox medium",
+    "docs": "typedoc src src/models/full src/models/standard src/models/tiny src/engines src/formatters src/validators src/errors.ts src/internal --out docs",
+    "size": "npm run build && size-limit"
   },
+  "size-limit": [
+    {
+      "import": {
+        "dist/index.mjs": "{ initSurreal }",
+        "dist/engines/index.mjs": "{ httpEngine }",
+        "dist/formatters/index.mjs": "{ JsonFormatter }",
+        "dist/validators/index.mjs": "{ EmptyValidator }",
+        "dist/models/standard/index.mjs": "{ Client }"
+      },
+      "gzip": true
+    },
+    {
+      "import": {
+        "dist/index.mjs": "{ initSurreal }",
+        "dist/engines/index.mjs": "{ httpEngine }",
+        "dist/formatters/index.mjs": "{ CborFormatter }",
+        "dist/validators/index.mjs": "{ EmptyValidator }",
+        "dist/models/standard/index.mjs": "{ Client }",
+        "dist/models/tiny/index.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
+      },
+      "gzip": true
+    },
+    {
+      "import": {
+        "dist/index.mjs": "{ initSurreal }",
+        "dist/engines/index.mjs": "{ httpEngine, webSocketEngine }",
+        "dist/formatters/index.mjs": "{ CborFormatter }",
+        "dist/validators/index.mjs": "{ EmptyValidator }",
+        "dist/models/full/index.mjs": "{ Client, Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
+      },
+      "gzip": true
+    }
+  ],
   "volta": {
     "node": "22.2.0"
   }

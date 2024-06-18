@@ -1,4 +1,6 @@
 import createGeometryPolygon from "../createGeometryPolygon";
 import GeometryLine from "./GeometryLine";
 
-export default /* @__PURE__ */ createGeometryPolygon(GeometryLine);
+export default class GeometryPolygon
+  extends /* @__PURE__ */ createGeometryPolygon(GeometryLine)
+{}

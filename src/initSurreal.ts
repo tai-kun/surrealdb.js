@@ -172,7 +172,7 @@ export default function initSurreal<T extends ClientConstructor>(
             ? value.toString(10)
             : value.toSurql();
         } else {
-          j = values.indexOf(values[i]);
+          j = values.findIndex(v => Object.is(v, values[i]));
           text += `$${prefix}${j}`;
           vars[`${prefix}${j}`] = values[j];
         }

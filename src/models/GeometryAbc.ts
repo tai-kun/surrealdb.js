@@ -1,5 +1,5 @@
-import { unreachable } from "@tai-kun/surrealdb/errors";
-import type { Simplify } from "type-fest";
+import type { Jsonifiable, Simplify } from "type-fest";
+import { unreachable } from "../errors";
 import {
   _defineAssertGeometryCollection,
   _defineAssertGeometryLine,
@@ -10,6 +10,7 @@ import {
   _defineAssertGeometryPolygon,
 } from "./internal";
 
+// https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/geometry.rs#L67-L78
 type GeometryType =
   | "Point"
   | "LineString"
@@ -21,7 +22,7 @@ type GeometryType =
 
 export default abstract class GeometryAbc<
   T extends GeometryType,
-  U extends Record<string, unknown>,
+  U extends { readonly [_ in string | number]: Jsonifiable },
 > {
   readonly #type: T;
 

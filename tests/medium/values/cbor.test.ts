@@ -108,16 +108,47 @@ test("JavaScript ネイティブ", async () => {
 test("SurrealQL 独自の値", async () => {
   const { connect, surql } = await surreal;
   await using db = await connect();
+  const geometryPoint = new GeometryPoint([1, "3.14"]);
+  const geometryLine = new GeometryLine([new GeometryPoint([1, 2])]);
+  const geometryPolygon = new GeometryPolygon([
+    new GeometryLine([new GeometryPoint([1, 1])]),
+    new GeometryLine([new GeometryPoint([4, 1])]),
+    new GeometryLine([new GeometryPoint([4, 4])]),
+    new GeometryLine([new GeometryPoint([1, 4])]),
+    new GeometryLine([new GeometryPoint([1, 1])]),
+  ]);
+  const geometryMultiPoint = new GeometryMultiPoint([
+    new GeometryPoint([1, 2]),
+  ]);
+  const geometryMultiLine = new GeometryMultiLine([
+    new GeometryLine([
+      new GeometryPoint([1, 2]),
+    ]),
+  ]);
+  const geometryMultiPolygon = new GeometryMultiPolygon([
+    geometryPolygon,
+  ]);
   const input = {
     datetime: new Datetime([
       Date.UTC(2024, 6 - 1, 1, 12, 34, 56) / 1_000,
       123_456_789,
     ]),
-    // decimal: new Decimal("3.1415926"),
+    decimal: new Decimal("3.1415926"),
     duration: new Duration("1y2w3d4h5m6s7ms8us9ns"),
-    // geometries: new GeometryCollection([
-    //   new GeometryPoint([1, "3.14"]),
-    // ]),
+    geometryPoint,
+    geometryLine,
+    geometryPolygon,
+    geometryMultiPoint,
+    geometryMultiLine,
+    geometryMultiPolygon,
+    geometryCollection: new GeometryCollection([
+      geometryPoint,
+      geometryLine,
+      geometryPolygon,
+      geometryMultiPoint,
+      geometryMultiLine,
+      geometryMultiPolygon,
+    ]),
     thing: new Thing(new Table("user"), { name: "tai-kun" }),
     uuidv1: new Uuid("ad7aea20-2c9b-11ef-9454-0242ac120002"),
     uuidv4: new Uuid("e1edeaeb-6413-469a-8e5f-cfbc085a5584"),

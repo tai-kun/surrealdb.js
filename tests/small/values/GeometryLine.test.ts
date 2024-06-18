@@ -6,10 +6,10 @@ import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryLine を作成する", () => {
-  const point = new GeometryLine([new GeometryPoint([1, 2])]);
+  const line = new GeometryLine([new GeometryPoint([1, 2])]);
 
-  assertInstanceOf(point, GeometryLine);
-  assertJsonEquals(point, {
+  assertInstanceOf(line, GeometryLine);
+  assertJsonEquals(line, {
     type: "LineString",
     coordinates: [
       // Point

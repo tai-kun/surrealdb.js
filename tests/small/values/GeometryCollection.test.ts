@@ -16,13 +16,13 @@ import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryCollection を作成する", () => {
-  const point = new GeometryCollection([
+  const collection = new GeometryCollection([
     new GeometryPoint([1, 2]),
     new GeometryLine([]),
   ]);
 
-  assertInstanceOf(point, GeometryCollection);
-  assertJsonEquals(point, {
+  assertInstanceOf(collection, GeometryCollection);
+  assertJsonEquals(collection, {
     type: "GeometryCollection",
     geometries: [
       {

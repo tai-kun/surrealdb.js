@@ -18,22 +18,22 @@ import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryPolygon を作成する", () => {
-  const point = new GeometryPolygon([
+  const polygon = new GeometryPolygon([
     // 本来はリングを閉じるために 2 つ以上の点があること、最初と最後が同じ点であることが必要だが、
     // このテストでは省略する。
     new GeometryLine([new GeometryPoint([1, 2])]),
     new GeometryLine([new GeometryPoint([3, 4])]),
   ]);
 
-  assertInstanceOf(point, GeometryPolygon);
-  assertJsonEquals(point.exteriorRing, {
+  assertInstanceOf(polygon, GeometryPolygon);
+  assertJsonEquals(polygon.exteriorRing, {
     type: "LineString",
     coordinates: [
       // Point
       ["1", "2"],
     ],
   });
-  assertJsonEquals(point.interiorRings, [
+  assertJsonEquals(polygon.interiorRings, [
     {
       type: "LineString",
       coordinates: [
@@ -42,7 +42,7 @@ test("GeometryPolygon を作成する", () => {
       ],
     },
   ]);
-  assertJsonEquals(point, {
+  assertJsonEquals(polygon, {
     type: "Polygon",
     coordinates: [
       // LineString

@@ -10,14 +10,14 @@ import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryMultiLine を作成する", () => {
-  const point = new GeometryMultiLine([
+  const multiLine = new GeometryMultiLine([
     new GeometryLine([
       new GeometryPoint([1, 2]),
     ]),
   ]);
 
-  assertInstanceOf(point, GeometryMultiLine);
-  assertJsonEquals(point, {
+  assertInstanceOf(multiLine, GeometryMultiLine);
+  assertJsonEquals(multiLine, {
     type: "MultiLineString",
     coordinates: [
       // LineString

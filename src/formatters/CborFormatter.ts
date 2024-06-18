@@ -135,7 +135,7 @@ export default class CborFormatter extends Abc {
           return new TaggedValue(v.polygons, TAG_GEOMETRY_MULTIPOLYGON);
 
         case isGeometryCollection(v):
-          return new TaggedValue(v.geometries, TAG_GEOMETRY_COLLECTION);
+          return new TaggedValue(v.collection, TAG_GEOMETRY_COLLECTION);
 
         default:
           return v;

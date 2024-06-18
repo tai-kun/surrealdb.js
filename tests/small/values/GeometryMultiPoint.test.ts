@@ -6,10 +6,10 @@ import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryMultiPoint を作成する", () => {
-  const point = new GeometryMultiPoint([new GeometryPoint([1, 2])]);
+  const multiPoint = new GeometryMultiPoint([new GeometryPoint([1, 2])]);
 
-  assertInstanceOf(point, GeometryMultiPoint);
-  assertJsonEquals(point, {
+  assertInstanceOf(multiPoint, GeometryMultiPoint);
+  assertJsonEquals(multiPoint, {
     type: "MultiPoint",
     coordinates: [
       // Point

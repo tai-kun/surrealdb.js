@@ -6,11 +6,14 @@ import type GeometryMultiPolygon from "./GeometryMultiPolygon";
 import type GeometryPoint from "./GeometryPoint";
 import type GeometryPolygon from "./GeometryPolygon";
 
-export default /* @__PURE__ */ createGeometryCollection<
-  typeof GeometryPoint,
-  typeof GeometryLine,
-  typeof GeometryPolygon,
-  typeof GeometryMultiPoint,
-  typeof GeometryMultiLine,
-  typeof GeometryMultiPolygon
->();
+type Geometry =
+  | GeometryPoint
+  | GeometryLine
+  | GeometryPolygon
+  | GeometryMultiPoint
+  | GeometryMultiLine
+  | GeometryMultiPolygon;
+
+export default class GeometryCollection<
+  T extends readonly [Geometry, ...Geometry[]] = [Geometry, ...Geometry[]],
+> extends /* @__PURE__ */ createGeometryCollection<Geometry>()<T> {}

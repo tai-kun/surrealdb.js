@@ -1,7 +1,6 @@
 import isPlainObject from "is-plain-obj";
 import { TypeError } from "../../errors";
-import escape from "../../escape";
-import escapeRid, { BRACKETL, BRACKETR } from "../../escapeRid";
+import { BRACKETL, BRACKETR, escapeRid, quoteStr } from "../../escape";
 import toSurql from "../../toSurql";
 import type { TableAny } from "../../values";
 import type { SurqlValueSerializer } from "../Serializer";
@@ -134,8 +133,6 @@ export default class Thing extends Base implements SurqlValueSerializer {
    * ```
    */
   toSurql(): string {
-    return "r"
-      // dprint-ignore: \' が ' に変換されることを防ぐ。
-      + escape(this.toJSON(), "'", "'", "\'");
+    return "r" + quoteStr(this.toJSON());
   }
 }

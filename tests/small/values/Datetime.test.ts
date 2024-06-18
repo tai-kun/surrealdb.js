@@ -16,7 +16,7 @@ test("ミリ秒数を指定して Datetime を作成する", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(dt.getTime(), 1717245296_780);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.780000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.780000000Z'`);
   assertEquals(dt.getMilliseconds(), 780);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);
@@ -27,7 +27,7 @@ test("文字列を指定して Datetime を作成する", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(dt.getTime(), 1717245296_780);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.780000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.780000000Z'`);
   assertEquals(dt.getMilliseconds(), 780);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);
@@ -39,7 +39,7 @@ test("Date オブジェクトを指定して Datetime を作成する", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(dt.getTime(), 1717245296_780);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.780000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.780000000Z'`);
   assertEquals(dt.getMilliseconds(), 780);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);
@@ -50,7 +50,7 @@ test("秒と範囲内のナノ秒を指定して Datetime を作成する", () =
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(dt.getTime(), 1717245296_780);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.780123456Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.780123456Z'`);
   assertEquals(dt.getMilliseconds(), 780);
   assertEquals(dt.getMicroseconds(), 123);
   assertEquals(dt.getNanoseconds(), 456);
@@ -61,7 +61,7 @@ test("秒と範囲外のナノ秒を指定して Datetime を作成する", () =
 
   assertEquals(dt.seconds, 1717245300);
   assertEquals(dt.getTime(), 1717245300_123);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:35:00.123456789Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:35:00.123456789Z'`);
   assertEquals(dt.getMilliseconds(), 123);
   assertEquals(dt.getMicroseconds(), 456);
   assertEquals(dt.getNanoseconds(), 789);
@@ -72,7 +72,7 @@ test("各種範囲内のパラメーターを指定して Datetime を作成す�
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(dt.getTime(), 1717245296_780);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.780123456Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.780123456Z'`);
   assertEquals(dt.getMilliseconds(), 780);
   assertEquals(dt.getMicroseconds(), 123);
   assertEquals(dt.getNanoseconds(), 456);
@@ -83,7 +83,7 @@ test("各種範囲外のパラメーターを指定して Datetime を作成す�
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(dt.getTime(), 1717245296_781);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.781023789Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.781023789Z'`);
   assertEquals(dt.getMilliseconds(), 781);
   assertEquals(dt.getMicroseconds(), 23);
   assertEquals(dt.getNanoseconds(), 789);
@@ -95,7 +95,7 @@ test("秒で時刻を更新できる", () => {
 
   assertEquals(dt.seconds, 1717245297);
   assertEquals(dt.getTime(), 1717245297_780);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:57.780000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:57.780000000Z'`);
   assertEquals(dt.getMilliseconds(), 780);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);
@@ -107,7 +107,7 @@ test("範囲内のナノ秒で時刻を更新できる", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(dt.getTime(), 1717245296_123);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.123456789Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.123456789Z'`);
   assertEquals(dt.getMilliseconds(), 123);
   assertEquals(dt.getMicroseconds(), 456);
   assertEquals(dt.getNanoseconds(), 789);
@@ -119,7 +119,7 @@ test("範囲外のナノ秒で時刻を更新できる", () => {
 
   assertEquals(dt.seconds, 1717245297);
   assertEquals(dt.getTime(), 1717245297_123);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:57.123456789Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:57.123456789Z'`);
   assertEquals(dt.getMilliseconds(), 123);
   assertEquals(dt.getMicroseconds(), 456);
   assertEquals(dt.getNanoseconds(), 789);
@@ -131,7 +131,7 @@ test("範囲内の正のナノ秒で Datetime を更新する", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(ms, 1717245296_781);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.781123456Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.781123456Z'`);
   assertEquals(dt.getMilliseconds(), 781);
   assertEquals(dt.getMicroseconds(), 123);
   assertEquals(dt.getNanoseconds(), 456);
@@ -143,7 +143,7 @@ test("範囲外の正のナノ秒で Datetime を更新する", () => {
 
   assertEquals(dt.seconds, 1717245297);
   assertEquals(ms, 1717245297_903);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:57.903456789Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:57.903456789Z'`);
   assertEquals(dt.getMilliseconds(), 903);
   assertEquals(dt.getMicroseconds(), 456);
   assertEquals(dt.getNanoseconds(), 789);
@@ -155,7 +155,7 @@ test("範囲内の負のナノ秒で Datetime を更新する", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(ms, 1717245296_779);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.779999999Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.779999999Z'`);
   assertEquals(dt.getMilliseconds(), 779);
   assertEquals(dt.getMicroseconds(), 999);
   assertEquals(dt.getNanoseconds(), 999);
@@ -167,7 +167,7 @@ test("範囲外の負のナノ秒で Datetime を更新する", () => {
 
   assertEquals(dt.seconds, 1717245291);
   assertEquals(ms, 1717245291_780);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:51.780000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:51.780000000Z'`);
   assertEquals(dt.getMilliseconds(), 780);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);
@@ -179,7 +179,7 @@ test("ミリ秒時刻で Datetime を更新する", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(ms, 1717245296_123);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.123000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.123000000Z'`);
   assertEquals(dt.getMilliseconds(), 123);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);
@@ -191,7 +191,7 @@ test("範囲内のミリ秒を指定して Datetime を更新する", () => {
 
   assertEquals(dt.seconds, 1717245296);
   assertEquals(ms, 1717245296_456);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:56.456000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:56.456000000Z'`);
   assertEquals(dt.getMilliseconds(), 456);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);
@@ -203,7 +203,7 @@ test("範囲外のミリ秒を指定して Datetime を更新する", () => {
 
   assertEquals(dt.seconds, 1717245297);
   assertEquals(ms, 1717245297_000);
-  assertEquals(dt.toSurql(), `d"2024-06-01T12:34:57.000000000Z"`);
+  assertEquals(dt.toSurql(), `d'2024-06-01T12:34:57.000000000Z'`);
   assertEquals(dt.getMilliseconds(), 0);
   assertEquals(dt.getMicroseconds(), 0);
   assertEquals(dt.getNanoseconds(), 0);

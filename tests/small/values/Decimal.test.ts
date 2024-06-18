@@ -13,6 +13,8 @@ test("文字列から Decimal を作成する", () => {
   assertEquals(d1.valueOf(), "3.14");
   assertEquals(d2.valueOf(), "3.14");
   assertEquals(d3.valueOf(), "3.14");
+  assertEquals(d1.toSurql(), "3.14dec");
+  assertEquals(d2.toSurql(), "3.14dec");
 });
 
 test("数値から Decimal を作成する", () => {
@@ -23,6 +25,8 @@ test("数値から Decimal を作成する", () => {
   assertEquals(d1.valueOf(), "3.14");
   assertEquals(d2.valueOf(), "3.14");
   assertEquals(d3.valueOf(), "3.14");
+  assertEquals(d1.toSurql(), "3.14dec");
+  assertEquals(d2.toSurql(), "3.14dec");
 });
 
 test("Decimal クラスであると判定できる", () => {

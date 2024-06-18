@@ -1,14 +1,21 @@
 export type * from "./escape";
-export { default as escape } from "./escape";
-
-export type * from "./escapeIdent";
-export { default as escapeIdent } from "./escapeIdent";
-
-export type * from "./escapeNumeric";
-export { default as escapeNumeric } from "./escapeNumeric";
-
-export type * from "./escapeRid";
-export { default as escapeRid } from "./escapeRid";
+export {
+  BACKTICK,
+  BACKTICK_ESC,
+  BRACKET_ESC,
+  BRACKETL,
+  BRACKETR,
+  DOUBLE,
+  DOUBLE_ESC,
+  escape,
+  escapeIdent,
+  escapeKey,
+  escapeNormal,
+  escapeNumeric,
+  escapeRid,
+  quoteStr,
+  SINGLE,
+} from "./escape";
 
 export type * from "./initSurreal";
 export { default as initSurreal } from "./initSurreal";

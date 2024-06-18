@@ -1,4 +1,5 @@
 import { unreachable } from "../../errors";
+import { quoteStr } from "../../escape";
 import type { SurqlValueSerializer } from "../Serializer";
 import Base, { byteToHex } from "../tiny/Uuid";
 
@@ -43,7 +44,7 @@ export default class Uuid extends Base implements SurqlValueSerializer {
    * ```
    */
   toSurql(): string {
-    return "u'" + this.toString() + "'";
+    return "u" + quoteStr(this.toString());
   }
 
   /**

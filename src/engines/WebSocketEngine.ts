@@ -7,7 +7,7 @@ import {
   WebSocketEngineError,
 } from "../errors";
 import { isArrayBuffer, Payload } from "../formatters";
-import { makeAbortApi, timeoutSignal } from "../internal";
+import { makeAbortApi } from "../internal";
 import { type Err, err, mutex, type Ok, ok, SerialId } from "../internal";
 import type {
   BidirectionalRpcResponse,
@@ -78,7 +78,7 @@ export default class WebSocketEngine extends EngineAbc {
   }
 
   @mutex
-  async connect(endpoint: URL): Promise<void> {
+  async connect(endpoint: URL, timeoutSignal: AbortSignal): Promise<void> {
     if (this.state === OPEN) {
       return;
     }
@@ -90,7 +90,7 @@ export default class WebSocketEngine extends EngineAbc {
       return CLOSED;
     });
 
-    const [signal, abort] = makeAbortApi(timeoutSignal(15_000));
+    const [signal, abort] = makeAbortApi(timeoutSignal);
     const promise = Promise.race([
       this.ee.once(OPEN, { signal }),
       this.ee.once("error", { signal }),
@@ -251,16 +251,20 @@ export default class WebSocketEngine extends EngineAbc {
   }
 
   @mutex
-  async disconnect(): Promise<
+  async disconnect(signal: AbortSignal): Promise<
     | Ok<"Disconnected", { warning?: unknown }>
     | Ok<"AlreadyDisconnected">
     | Err<unknown, { warning?: unknown }>
   > {
+    const warning: { warning?: unknown } = {};
+
+    if (signal.aborted) {
+      return err(signal.reason as unknown, warning);
+    }
+
     if (this.state === CLOSED) {
       return ok("AlreadyDisconnected");
     }
-
-    const warning: { warning?: unknown } = {};
 
     try {
       await this.setState(CLOSING, () => CLOSING);
@@ -268,20 +272,34 @@ export default class WebSocketEngine extends EngineAbc {
       warning.warning = error;
     }
 
+    if (signal.aborted) {
+      return err(signal.reason as unknown, warning);
+    }
+
     try {
       const promise = this.ee.once(CLOSED);
+      const abortHandler = () => {
+        this.ee.emit(
+          CLOSED,
+          err(signal.reason as unknown, {
+            value: CLOSED,
+          }),
+        );
+      };
 
       if (
         this.ws
         && this.ws.readyState !== CLOSED
         && this.ws.readyState !== CLOSING
       ) {
+        signal.addEventListener("abort", abortHandler, { once: true });
         this.ws.close();
       } else {
         this.ee.emit(CLOSED, ok(CLOSED));
       }
 
       const [result] = await promise;
+      signal.removeEventListener("abort", abortHandler);
 
       return result.ok
         ? ok("Disconnected", warning)

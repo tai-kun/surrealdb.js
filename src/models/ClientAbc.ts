@@ -73,6 +73,16 @@ export interface ClientConfig {
 }
 
 /**
+ * クライアントの接続オプション。
+ */
+export interface ClientConnectOptions {
+  /**
+   * 接続の中断に使用するシグナル。
+   */
+  readonly signal?: AbortSignal | undefined;
+}
+
+/**
  * サーバーとの接続を切断する際のオプション。
  */
 export interface ClientDisconnectOptions {
@@ -81,6 +91,10 @@ export interface ClientDisconnectOptions {
    * true にすると、実行中のタスクに対して中止シグナルが送信されます。
    */
   readonly force?: boolean | undefined;
+  /**
+   * 切断の中断に使用するシグナル。
+   */
+  readonly signal?: AbortSignal | undefined;
 }
 
 /**
@@ -267,17 +281,22 @@ export default abstract class ClientAbc {
    * 指定されたエンドポイントに接続します。
    *
    * @param endpoint - 接続先のエンドポイント。
+   * @param options - 接続のオプション。
    * @example
    * ```typescript
    * const db = (省略);
    * await db.connect("https://localhost:8000");
    * ```
    */
-  abstract connect(endpoint: string | URL): Promise<void>;
+  abstract connect(
+    endpoint: string | URL,
+    options?: ClientConnectOptions | undefined,
+  ): Promise<void>;
 
   /**
    * サーバーとの接続を切断します。
    *
+   * @param options - 切断のオプション。
    * @returns　切断の結果。
    * @example
    * ```typescript

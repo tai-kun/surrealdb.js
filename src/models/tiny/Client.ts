@@ -1,10 +1,11 @@
-import { CLOSED, OPEN } from "../../engines";
+import { CLOSED, CONNECTING, OPEN } from "../../engines";
 import {
   type AggregateTasksError,
   ConnectionConflict,
   ConnectionUnavailable,
   EngineDisconnected,
   RpcResponseError,
+  unreachable,
 } from "../../errors";
 import {
   type Err,
@@ -17,13 +18,17 @@ import {
 } from "../../internal";
 import type { RpcMethod, RpcParams, RpcResponse, RpcResult } from "../../types";
 import Abc, {
+  type ClientConnectOptions,
   type ClientDisconnectOptions,
   ClientRpcOptions,
 } from "../ClientAbc";
 
 export default class Client extends Abc {
   @mutex
-  async connect(endpoint: string | URL): Promise<void> {
+  async connect(
+    endpoint: string | URL,
+    options: ClientConnectOptions | undefined = {},
+  ): Promise<void> {
     endpoint = new URL(endpoint); // copy
 
     if (!endpoint.pathname.endsWith("/rpc")) {
@@ -35,7 +40,11 @@ export default class Client extends Abc {
     }
 
     if (this.state === OPEN) {
-      if (this.conn?.connection.endpoint?.href === endpoint.href) {
+      if (!this.conn?.connection.endpoint) {
+        unreachable();
+      }
+
+      if (this.conn.connection.endpoint.href === endpoint.href) {
         return;
       }
 
@@ -52,7 +61,8 @@ export default class Client extends Abc {
     });
     const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
     const engine = this.conn = await this.createEngine(protocol);
-    await engine.connect(endpoint);
+    const { signal = timeoutSignal(15_000) } = options;
+    await engine.connect(endpoint, signal);
   }
 
   @mutex
@@ -71,11 +81,16 @@ export default class Client extends Abc {
         return ok("AlreadyDisconnected");
       }
 
-      if (options.force) {
+      const {
+        force = false,
+        signal = timeoutSignal(15_000),
+      } = options;
+
+      if (force) {
         this.ee.abort(new EngineDisconnected());
       }
 
-      const disconnResult = await this.conn.disconnect();
+      const disconnResult = await this.conn.disconnect(signal);
       const disposeResult = await this.ee.dispose();
 
       if (!disconnResult.ok || !disposeResult.ok) {
@@ -107,6 +122,12 @@ export default class Client extends Abc {
     params: RpcParams<M>,
     options: ClientRpcOptions | undefined = {},
   ): Promise<T> {
+    const { signal = timeoutSignal(5_000) } = options;
+
+    if (this.state === CONNECTING) {
+      await this.ee.once(OPEN, { signal });
+    }
+
     if (!this.conn) {
       throw new ConnectionUnavailable();
     }
@@ -114,7 +135,7 @@ export default class Client extends Abc {
     const resp: RpcResponse<any> = await this.conn.rpc(
       // @ts-expect-error
       { method, params },
-      options.signal || timeoutSignal(5_000),
+      signal,
     );
 
     if ("result" in resp) {

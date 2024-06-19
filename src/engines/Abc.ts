@@ -254,16 +254,18 @@ export default abstract class EngineAbc {
    * 指定されたエンドポイントに接続します。
    *
    * @param endpoint - 接続先のエンドポイント。
+   * @param signal - 接続の中断に使用するシグナル。
    * @example
    * ```typescript
    * await engine.connect(new URL("ws://localhost:8080"));
    * ```
    */
-  abstract connect(endpoint: URL): Promise<void>;
+  abstract connect(endpoint: URL, signal: AbortSignal): Promise<void>;
 
   /**
-   * サーバーとの接続を切断します。
+   * サーバーとの接続を切ります。
    *
+   * @param signal - 切断の中断に使用するシグナル。
    * @returns　切断の結果。
    * @example
    * ```typescript
@@ -275,7 +277,7 @@ export default abstract class EngineAbc {
    *   throw result.error;
    * }
    */
-  abstract disconnect(): Promise<
+  abstract disconnect(signal: AbortSignal): Promise<
     | Ok<"Disconnected">
     | Ok<"AlreadyDisconnected">
     | Err<unknown>

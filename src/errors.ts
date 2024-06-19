@@ -175,7 +175,7 @@ export interface EngineErrorOptions extends ErrorOptions {
   /**
    * このエラーが致命的であるかどうか。
    */
-  readonly critical?: boolean | undefined;
+  readonly fatal?: boolean | undefined;
 }
 
 /**
@@ -189,7 +189,7 @@ export class EngineError extends SurrealDbError {
   /**
    * このエラーが致命的であるかどうか。
    */
-  critical: boolean | undefined;
+  fatal: boolean | undefined;
 
   /**
    * @param message - エラーメッセージ。
@@ -197,7 +197,7 @@ export class EngineError extends SurrealDbError {
    */
   constructor(message: string, options?: EngineErrorOptions | undefined) {
     super(message, options);
-    this.critical = options?.critical;
+    this.fatal = options?.fatal;
   }
 }
 

@@ -118,7 +118,7 @@ export default class WebSocketEngine extends EngineAbc {
             : "The \"error\" event was caught.",
           {
             ...("error" in evt ? { cause: evt.error } : {}),
-            critical: true,
+            fatal: true,
           },
         ),
       );
@@ -181,7 +181,7 @@ export default class WebSocketEngine extends EngineAbc {
             "An error occurred within the handler for the \"open\" event.",
             {
               cause: error,
-              critical: true,
+              fatal: true,
             },
           ),
         );
@@ -226,7 +226,7 @@ export default class WebSocketEngine extends EngineAbc {
             "An error occurred within the handler for the \"message\" event.",
             {
               cause: error,
-              critical: false,
+              fatal: false,
             },
           ),
         );

@@ -95,14 +95,11 @@ console.log(thing.toSurql());
 
 ## インストール
 
-
-今のところ安定版あありませんが、カナリアリリースされたバージョンをインストールするには次のようにします:
-
 ```bash
-npm i @tai-kun/surrealdb@canary
-bun i @tai-kun/surrealdb@canary
-pnpm i @tai-kun/surrealdb@canary
-yarn add @tai-kun/surrealdb@canary
+npm i @tai-kun/surrealdb
+bun i @tai-kun/surrealdb
+pnpm i @tai-kun/surrealdb
+yarn add @tai-kun/surrealdb
 ```
 
 ## 使い方
@@ -148,7 +145,7 @@ async function main() {
 ```
 
 `Surreal` インスタンスは `Symbol.asyncDispose` に対応しているため、次のように書くこともできます:
-  
+
 ```typescript
 async function main() {
   await using db = new Surreal();

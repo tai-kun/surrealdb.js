@@ -4,7 +4,14 @@
 [![Chrome](https://github.com/tai-kun/surrealdb-js/actions/workflows/chrome.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/chrome.yml)
 [![Firefox](https://github.com/tai-kun/surrealdb-js/actions/workflows/firefox.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/firefox.yml)
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![npm version](https://img.shields.io/npm/v/@tai-kun/surrealdb)](https://www.npmjs.com/package/@tai-kun/surrealdb)
+
 [SurrealDB](https://github.com/surrealdb/surrealdb) の JavaScript/TypeScript クライアントライブラリです。公式の SDK がすでに [surrealdb.js](https://github.com/surrealdb/surrealdb.js) にありますが、こちらは個人的な用途が考慮された設計になっています。
+
+- [API リファレンス](https://tai-kun.github.io/surrealdb-js/)
+- [GitHub リポジトリ](https://github.com/tai-kun/surrealdb-js)
+- [NPM パッケージ](https://www.npmjs.com/package/@tai-kun/surrealdb)
 
 ## 公式 SDK との相違点
 
@@ -360,3 +367,7 @@ import {
     * `AbortSignal.timeout()` がリソースリークするバグが修正されるまで、一部のスモールテストと全ミディアムテストがスキップします。Issue: [#20663](https://github.com/denoland/deno/issues/20663)
 * Firefox
     * Selenium からスタックトレースをうまく取れないので、一部のエラー関連のテストがスキップされています。
+
+## License
+
+[Apache-2.0](https://github.com/tai-kun/surrealdb-js/blob/main/LICENSE)

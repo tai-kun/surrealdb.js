@@ -65,6 +65,7 @@
     "cbor-redux": "^1.0.0",
     "decimal.js": "^10.4.3",
     "decimal.js-light": "^2.5.1",
+    "zod": "^3.23.8",
     "ws": "^8.17.1"
   },
   "devDependencies": {
@@ -134,7 +135,7 @@
         "dist/index.mjs": "{ initSurreal }",
         "dist/engines/index.mjs": "{ httpEngine, webSocketEngine }",
         "dist/formatters/index.mjs": "{ CborFormatter }",
-        "dist/validators/index.mjs": "{ EmptyValidator }",
+        "dist/validators/index.mjs": "{ ZodValidator }",
         "dist/models/full/index.mjs": "{ Client, Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
       },
       "gzip": true

@@ -259,7 +259,7 @@ export type LiveAction = "CREATE" | "UPDATE" | "DELETE";
  * @template I - ライブクエリーの ID の型。
  */
 export interface LiveData<
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends RecordData = RecordData,
   I extends string | UuidAny = string | UuidAny,
 > {
   /**
@@ -285,7 +285,7 @@ export interface LiveData<
  * @template I - ライブクエリーの ID の型。
  */
 export type LiveDiff<
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends RecordData = RecordData,
   P extends readonly Patch[] = Patch[],
   I extends string | UuidAny = string | UuidAny,
 > = {
@@ -325,7 +325,7 @@ export type LiveDiff<
  * @template I - ライブクエリーの ID の型。
  */
 export type LiveResult<
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends RecordData = RecordData,
   P extends readonly Patch[] = Patch[],
   I extends string | UuidAny = string | UuidAny,
 > =

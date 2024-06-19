@@ -304,15 +304,15 @@ import {
 * WebSocket と HTTP で通信します。
 * CBOR による豊かなデータ表現が必要です。
 * SurrealQL のデータ型の表現が必要です。
-* バリデーションを行いません。
+* バリデーションを行います。
 * 全機能を持つクライアントを利用します。
 
 ```typescript
-// 約 32 KB (minify + gzip)
+// 約 47 KB (minify + gzip)
 import { initSurreal } from "@tai-kun/surrealdb";
 import { httpEngine, webSocketEngine } from "@tai-kun/surrealdb/engines";
 import { CborFormatter } from "@tai-kun/surrealdb/formatters";
-import { EmptyValidator } from "@tai-kun/surrealdb/validators";
+import { ZodValidator } from "@tai-kun/surrealdb/validators";
 import {
   Client,
   Datetime,

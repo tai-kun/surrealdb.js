@@ -779,22 +779,27 @@ export default class ZodValidator extends Abc {
     .catchall(z.unknown());
 
   RpcResultMapping: {
-    [M in keyof RpcResultMapping]: ZodType<RpcResultMapping[M]>;
+    [M in keyof RpcResultMapping]: ZodType<
+      // dprint-ignore
+      RpcResultMapping[M] extends void
+        ? void | null | undefined
+        : RpcResultMapping[M]
+    >;
   } = {
-    ping: z.void(),
-    use: z.void(),
+    ping: z.void().nullish(),
+    use: z.void().nullish(),
     info: this.TableRecord,
     signup: this.JwtLike,
     signin: this.JwtLike,
-    authenticate: z.void(),
-    invalidate: z.void(),
-    let: z.void(),
-    unset: z.void(),
+    authenticate: z.void().nullish(),
+    invalidate: z.void().nullish(),
+    let: z.void().nullish(),
+    unset: z.void().nullish(),
     live: z.union([
       z.string().uuid(),
       this.Uuid,
     ]),
-    kill: z.void(),
+    kill: z.void().nullish(),
     query: z.array(this.QueryResult(z.unknown())),
     select: z.union([
       this.TableRecord,

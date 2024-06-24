@@ -1,28 +1,70 @@
-import { execSync, spawn } from "node:child_process";
+import { exec, spawn } from "node:child_process";
+import { promisify } from "node:util";
 
-export async function setup() {
-  const portStr = execSync(
-    // 利用可能なポート番号が列挙されているファイルからポート番号を取得する。
-    // 競合しないように flock でロックを取ってからポート番号を取得し、
-    // 取得したポート番号をファイルから削除する。
-    "flock /tmp/lock head -n 1 /tmp/ports && sed -i '1d' /tmp/ports",
-    { encoding: "utf8" },
-  );
-  const port = parseInt(portStr.trim(), 10);
+async function getPort() {
+  let port;
 
-  if (port < 49152 || 65535 < port) {
-    throw new Error(`Port number out of range: ${portStr}`);
+  if ("Deno" in globalThis) {
+    const command = new Deno.Command("bash", {
+      args: [
+        "-c",
+        "flock /tmp/lock head -n 1 /tmp/ports && sed -i '1d' /tmp/ports",
+      ],
+    });
+    const { stdout } = await command.output();
+    const string = new TextDecoder().decode(stdout);
+    port = parseInt(string.trim(), 10);
+  } else {
+    const { stdout } = await promisify(exec)(
+      // 利用可能なポート番号が列挙されているファイルからポート番号を取得する。
+      // 競合しないように flock でロックを取ってからポート番号を取得し、
+      // 取得したポート番号をファイルから削除する。
+      "flock /tmp/lock head -n 1 /tmp/ports && sed -i '1d' /tmp/ports",
+      { encoding: "utf8" },
+    );
+    port = parseInt(stdout.trim(), 10);
   }
 
-  spawn("surreal", [
-    "start",
-    ...["--bind", `0.0.0.0:${port}`],
-    ...["--username", "root"],
-    ...["--password", "root"],
-  ], {
-    detached: true,
-    stdio: "ignore",
-  }).unref();
+  if (port < 49152 || 65535 < port) {
+    throw new Error(`Port number out of range: ${stdout}`);
+  }
+
+  return port;
+}
+
+async function spawnSurreal(port) {
+  if ("Deno" in globalThis) {
+    // TODO(tai-kun): バックグラウンドで実行する方法を調査する。
+    // const { afterAll } = await import("jsr:@std/testing/bdd");
+    // const command = new Deno.Command("surreal", {
+    //   args: [
+    //     "start",
+    //     ...["--bind", `0.0.0.0:${port}`],
+    //     ...["--username", "root"],
+    //     ...["--password", "root"],
+    //   ],
+    // });
+    // const cp = command.spawn();
+    // afterAll(async () => {
+    //   cp.kill();
+    //   await cp.status;
+    // });
+  } else {
+    spawn("surreal", [
+      "start",
+      ...["--bind", `0.0.0.0:${port}`],
+      ...["--username", "root"],
+      ...["--password", "root"],
+    ], {
+      detached: true,
+      stdio: "ignore",
+    }).unref();
+  }
+}
+
+export async function setup() {
+  const port = await getPort();
+  await spawnSurreal(port);
 
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   await sleep(100);
@@ -30,9 +72,10 @@ export async function setup() {
 
   for (;;) {
     try {
-      const { status } = await fetch(`http://localhost:${port}/health`);
+      const resp = await fetch(`http://localhost:${port}/health`);
+      await resp.body.cancel();
 
-      if (status === 200) {
+      if (resp.status === 200) {
         break;
       }
     } catch (error) {

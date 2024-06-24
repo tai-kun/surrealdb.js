@@ -14,7 +14,7 @@ export async function browserify({ target }) {
     target,
     write: false,
     define: {
-      "process.env.BROWSERIFY": JSON.stringify("true"),
+      "globalThis.BROWSERIFY": JSON.stringify("true"),
     },
     minifySyntax: true, // define による置換を行うため、シンタックスの最小化を行う。
     external: [

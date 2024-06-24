@@ -17,7 +17,7 @@ if (ENV === "Chrome" || ENV === "Firefox") {
   });
 } else if (
   // ブラウザ向けのビルドでは、Node.js 向けのスクリプトを読み込まないようにする。
-  process.env.BROWSERIFY !== "true"
+  globalThis.BROWSERIFY !== "true"
 ) {
   ready = import("./setup.js").then(({ setup }) => setup());
 }

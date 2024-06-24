@@ -12,6 +12,7 @@
 - [API リファレンス](https://tai-kun.github.io/surrealdb-js/)
 - [GitHub リポジトリ](https://github.com/tai-kun/surrealdb-js)
 - [NPM パッケージ](https://www.npmjs.com/package/@tai-kun/surrealdb)
+- [互換性](#互換性)
 
 ## 公式 SDK との相違点
 
@@ -96,7 +97,7 @@ console.log(thing.toSurql());
 * Deno (※1)
 * Firefox (※2)
 
-非推奨環境:
+**非推奨環境**:
 
 * Node.js v18.x (※1)
 * Node.js v22.x (※3)
@@ -111,7 +112,7 @@ console.log(thing.toSurql());
 
 ※1: 一部のテストがランタイムの問題でスキップされています。<br/>
 ※2: 一部のテストが実装上の問題でスキップされています。<br/>
-※3: テストはクリアしていますが、ランタイムの問題により、WebSocket が機能しなかったりプロセスメモリーが流出したりすることがあります。
+※3: ランタイムの問題により、WebSocket が機能しなかったりプロセスメモリーが流出したりすることがあります。
 
 ## インストール
 

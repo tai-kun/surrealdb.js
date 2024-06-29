@@ -97,146 +97,146 @@ function isValue(errors: Map<object, object>, value: any): boolean {
  * Datetime
  *****************************************************************************/
 
-export type DatetimeAny = Datetime | DatetimeFull | DatetimeTiny;
+export type DatetimeType = Datetime | DatetimeFull | DatetimeTiny;
 
 // @ts-expect-error
-export const isDatetime: IsValue<DatetimeAny> = value =>
+export const isDatetime: IsValue<DatetimeType> = value =>
   isValue(datetimeErrors, value);
 
 /******************************************************************************
  * Decimal
  *****************************************************************************/
 
-export type DecimalAny = Decimal | DecimalFull | DecimalTiny;
+export type DecimalType = Decimal | DecimalFull | DecimalTiny;
 
 // @ts-expect-error
-export const isDecimal: IsValue<DecimalAny> = value =>
+export const isDecimal: IsValue<DecimalType> = value =>
   isValue(decimalErrors, value);
 
 /******************************************************************************
  * Duration
  *****************************************************************************/
 
-export type DurationAny = Duration | DurationFull | DurationTiny;
+export type DurationType = Duration | DurationFull | DurationTiny;
 
 // @ts-expect-error
-export const isDuration: IsValue<DurationAny> = value =>
+export const isDuration: IsValue<DurationType> = value =>
   isValue(durationErrors, value);
 
 /******************************************************************************
  * GeometryPoint
  *****************************************************************************/
 
-export type GeometryPointAny =
+export type GeometryPointType =
   | GeometryPoint
   | GeometryPointFull
   | GeometryPointTiny;
 
 // @ts-expect-error
-export const isGeometryPoint: IsValue<GeometryPointAny> = value =>
+export const isGeometryPoint: IsValue<GeometryPointType> = value =>
   isValue(geometryPointErrors, value);
 
 /******************************************************************************
  * GeometryLine
  *****************************************************************************/
 
-export type GeometryLineAny =
+export type GeometryLineType =
   | GeometryLine
   | GeometryLineFull
   | GeometryLineTiny;
 
 // @ts-expect-error
-export const isGeometryLine: IsValue<GeometryLineAny> = value =>
+export const isGeometryLine: IsValue<GeometryLineType> = value =>
   isValue(geometryLineErrors, value);
 
 /******************************************************************************
  * GeometryPolygon
  *****************************************************************************/
 
-export type GeometryPolygonAny =
+export type GeometryPolygonType =
   | GeometryPolygon
   | GeometryPolygonFull
   | GeometryPolygonTiny;
 
 // @ts-expect-error
-export const isGeometryPolygon: IsValue<GeometryPolygonAny> = value =>
+export const isGeometryPolygon: IsValue<GeometryPolygonType> = value =>
   isValue(geometryPolygonErrors, value);
 
 /******************************************************************************
  * GeometryMultiPoint
  *****************************************************************************/
 
-export type GeometryMultiPointAny =
+export type GeometryMultiPointType =
   | GeometryMultiPoint
   | GeometryMultiPointFull
   | GeometryMultiPointTiny;
 
 // @ts-expect-error
-export const isGeometryMultiPoint: IsValue<GeometryMultiPointAny> = value =>
+export const isGeometryMultiPoint: IsValue<GeometryMultiPointType> = value =>
   isValue(geometryMultiPointErrors, value);
 
 /******************************************************************************
  * GeometryMultiLine
  *****************************************************************************/
 
-export type GeometryMultiLineAny =
+export type GeometryMultiLineType =
   | GeometryMultiLine
   | GeometryMultiLineFull
   | GeometryMultiLineTiny;
 
 // @ts-expect-error
-export const isGeometryMultiLine: IsValue<GeometryMultiLineAny> = value =>
+export const isGeometryMultiLine: IsValue<GeometryMultiLineType> = value =>
   isValue(geometryMultiLineErrors, value);
 
 /******************************************************************************
  * GeometryMultiPolygon
  *****************************************************************************/
 
-export type GeometryMultiPolygonAny =
+export type GeometryMultiPolygonType =
   | GeometryMultiPolygon
   | GeometryMultiPolygonFull
   | GeometryMultiPolygonTiny;
 
 // @ts-expect-error
-export const isGeometryMultiPolygon: IsValue<GeometryMultiPolygonAny> = value =>
-  isValue(geometryMultiPolygonErrors, value);
+export const isGeometryMultiPolygon: IsValue<GeometryMultiPolygonType> =
+  value => isValue(geometryMultiPolygonErrors, value);
 
 /******************************************************************************
  * GeometryCollection
  *****************************************************************************/
 
-export type GeometryCollectionAny =
+export type GeometryCollectionType =
   | GeometryCollection
   | GeometryCollectionFull
   | GeometryCollectionTiny;
 
 // @ts-expect-error
-export const isGeometryCollection: IsValue<GeometryCollectionAny> = value =>
+export const isGeometryCollection: IsValue<GeometryCollectionType> = value =>
   isValue(geometryCollectionErrors, value);
 
 /******************************************************************************
  * Table
  *****************************************************************************/
 
-export type TableAny = Table | TableFull | TableTiny;
+export type TableType = Table | TableFull | TableTiny;
 
 // @ts-expect-error
-export const isTable: IsValue<TableAny> = value => isValue(tableErrors, value);
+export const isTable: IsValue<TableType> = value => isValue(tableErrors, value);
 
 /******************************************************************************
  * Thing
  *****************************************************************************/
 
-export type ThingAny = Thing | ThingFull | ThingTiny;
+export type ThingType = Thing | ThingFull | ThingTiny;
 
 // @ts-expect-error
-export const isThing: IsValue<ThingAny> = value => isValue(thingErrors, value);
+export const isThing: IsValue<ThingType> = value => isValue(thingErrors, value);
 
 /******************************************************************************
  * Uuid
  *****************************************************************************/
 
-export type UuidAny = Uuid | UuidFull | UuidTiny;
+export type UuidType = Uuid | UuidFull | UuidTiny;
 
 // @ts-expect-error
-export const isUuid: IsValue<UuidAny> = value => isValue(uuidErrors, value);
+export const isUuid: IsValue<UuidType> = value => isValue(uuidErrors, value);

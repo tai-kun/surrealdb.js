@@ -62,9 +62,9 @@ import {
   isTable,
   isThing,
   isUuid,
-  type TableAny,
-  type ThingAny,
-  type UuidAny,
+  type TableType,
+  type ThingType,
+  type UuidType,
 } from "../common/values";
 import Abc, { type ParseResponseContext } from "./Abc";
 
@@ -128,9 +128,9 @@ export default class ZodValidator extends Abc {
   ReadonlyEmptyArray = z.tuple([])
     .readonly() as unknown as ZodType<readonly []>;
 
-  Table = z.custom<TableAny>(isTable);
-  Thing = z.custom<ThingAny>(isThing);
-  Uuid = z.custom<UuidAny>(isUuid);
+  Table = z.custom<TableType>(isTable);
+  Thing = z.custom<ThingType>(isThing);
+  Uuid = z.custom<UuidType>(isUuid);
 
   /****************************************************************************
    * Query Types
@@ -280,7 +280,7 @@ export default class ZodValidator extends Abc {
     "DELETE",
   ]);
 
-  LiveData = <T extends RecordData, I extends string | UuidAny>(
+  LiveData = <T extends RecordData, I extends string | UuidType>(
     data: ZodType<T>,
     id: ZodType<I>,
   ): ZodType<LiveData<T, I>> =>
@@ -295,7 +295,7 @@ export default class ZodValidator extends Abc {
   LiveDiff = <
     T extends RecordData,
     P extends readonly Patch[],
-    I extends string | UuidAny,
+    I extends string | UuidType,
   >(
     data: ZodType<T>,
     patch: ZodType<P>,
@@ -321,7 +321,7 @@ export default class ZodValidator extends Abc {
   LiveResult = <
     T extends RecordData,
     P extends readonly Patch[],
-    I extends string | UuidAny,
+    I extends string | UuidType,
   >(
     data: ZodType<T>,
     patch: ZodType<P>,

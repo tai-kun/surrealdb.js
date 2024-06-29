@@ -11,7 +11,7 @@ import type {
   RpcResultMapping,
   ScopeAuth,
 } from "../../../common/types";
-import type { TableAny, UuidAny } from "../../../common/values";
+import type { TableType, UuidType } from "../../../common/values";
 import type { ClientRpcOptions } from "../../_client/Abc";
 import Base from "../../tiny/client/Client";
 
@@ -43,7 +43,7 @@ export type LiveHandler<T extends LiveResult<any, any> = LiveResult> =
  */
 // dprint-ignore
 export type InferLiveResult<
-  I extends string | UuidAny,
+  I extends string | UuidType,
   T extends Record<string, unknown> = Record<string, unknown>,
   P extends readonly Patch<unknown>[] = Patch<unknown>[]
 >
@@ -298,7 +298,7 @@ export default class Client extends Base {
    * @returns ライブクエリーの UUID。
    */
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
-    table: string | TableAny,
+    table: string | TableType,
     options: ClientRpcOptions & { readonly diff: true },
   ): Promise<T & { __diff: true }>;
 
@@ -311,7 +311,7 @@ export default class Client extends Base {
    * @returns ライブクエリーの UUID。
    */
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
-    table: string | TableAny,
+    table: string | TableType,
     options?:
       | (ClientRpcOptions & { readonly diff?: false | null | undefined })
       | undefined,
@@ -326,7 +326,7 @@ export default class Client extends Base {
    * @returns ライブクエリーの UUID。
    */
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
-    table: string | TableAny,
+    table: string | TableType,
     options?:
       | (ClientRpcOptions & { readonly diff?: boolean | null | undefined })
       | undefined,
@@ -334,7 +334,7 @@ export default class Client extends Base {
 
   // TODO(tai-kun): バッファリングオプションを追加します。
   async live(
-    table: string | TableAny,
+    table: string | TableType,
     options:
       | (ClientRpcOptions & { readonly diff?: boolean | null | undefined })
       | undefined = {},
@@ -354,7 +354,7 @@ export default class Client extends Base {
    * @param callback - ライブクエリーの結果を受け取るコールバック。
    */
   subscribe<
-    I extends string | UuidAny,
+    I extends string | UuidType,
     T extends InferLiveResult<I, any, any> = InferLiveResult<I>,
   >(
     queryUuid: I,
@@ -370,7 +370,7 @@ export default class Client extends Base {
    * @param callback - ライブクエリーの結果を受け取るコールバック。
    */
   unsubscribe(
-    queryUuid: string | UuidAny,
+    queryUuid: string | UuidType,
     callback: LiveHandler<any>,
   ): void {
     this.ee.off(`live/${queryUuid}`, callback);
@@ -383,7 +383,7 @@ export default class Client extends Base {
    * @param options - RPC 呼び出しのオプション。
    */
   async kill(
-    queryUuid: string | UuidAny | readonly (string | UuidAny)[],
+    queryUuid: string | UuidType | readonly (string | UuidType)[],
     options?: ClientRpcOptions | undefined,
   ): Promise<void> {
     if (Array.isArray(queryUuid)) {

@@ -7,7 +7,7 @@ import {
   quoteStr,
 } from "../../../common/escape";
 import toSurql from "../../../common/toSurql";
-import type { TableAny } from "../../../common/values";
+import type { TableType } from "../../../common/values";
 import type { SurqlValueSerializer } from "../../_values/Serializer";
 import Base, { type ThingId } from "../../tiny/values/Thing";
 
@@ -21,7 +21,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
    * @param tb - テーブル名またはテーブル。
    * @returns エスケープされたテーブル名。
    */
-  static escapeTb(tb: string | TableAny): string {
+  static escapeTb(tb: string | TableType): string {
     // SurrealDB では String を escape_rid でエスケープしている:
     // https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/thing.rs#L96
 

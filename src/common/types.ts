@@ -1,4 +1,4 @@
-import type { TableAny, ThingAny, UuidAny } from "./values";
+import type { TableType, ThingType, UuidType } from "./values";
 
 /******************************************************************************
  * Query Types
@@ -260,7 +260,7 @@ export type LiveAction = "CREATE" | "UPDATE" | "DELETE";
  */
 export interface LiveData<
   T extends RecordData = RecordData,
-  I extends string | UuidAny = string | UuidAny,
+  I extends string | UuidType = string | UuidType,
 > {
   /**
    * 通知がトリガーされたアクションの種類。
@@ -287,7 +287,7 @@ export interface LiveData<
 export type LiveDiff<
   T extends RecordData = RecordData,
   P extends readonly Patch[] = Patch[],
-  I extends string | UuidAny = string | UuidAny,
+  I extends string | UuidType = string | UuidType,
 > = {
   /**
    * 通知がトリガーされたアクションの種類。
@@ -327,7 +327,7 @@ export type LiveDiff<
 export type LiveResult<
   T extends RecordData = RecordData,
   P extends readonly Patch[] = Patch[],
-  I extends string | UuidAny = string | UuidAny,
+  I extends string | UuidType = string | UuidType,
 > =
   | LiveData<T, I>
   | LiveDiff<T, P, I>;
@@ -504,7 +504,7 @@ export interface RpcLiveRequest extends
   RpcRequestBase<
     "live",
     readonly [
-      table: string | TableAny,
+      table: string | TableType,
       diff?: boolean | null | undefined,
     ]
   >
@@ -516,7 +516,7 @@ export interface RpcLiveRequest extends
 export interface RpcKillRequest extends
   RpcRequestBase<
     "kill",
-    readonly [queryUuid: string | UuidAny]
+    readonly [queryUuid: string | UuidType]
   >
 {}
 
@@ -542,7 +542,7 @@ export interface RpcQueryRequest extends
 export interface RpcSelectRequest extends
   RpcRequestBase<
     "select",
-    readonly [thing: string | ThingAny]
+    readonly [thing: string | ThingType]
   >
 {}
 
@@ -553,7 +553,7 @@ export interface RpcCreateRequest extends
   RpcRequestBase<
     "create",
     readonly [
-      thing: string | ThingAny,
+      thing: string | ThingType,
       data?: RecordInputData | null | undefined,
     ]
   >
@@ -566,7 +566,7 @@ export interface RpcInsertRequest extends
   RpcRequestBase<
     "insert",
     readonly [
-      thing: string | ThingAny,
+      thing: string | ThingType,
       data?: RecordInputData | readonly RecordInputData[] | null | undefined,
     ]
   >
@@ -579,7 +579,7 @@ export interface RpcUpdateRequest extends
   RpcRequestBase<
     "update",
     readonly [
-      thing: string | ThingAny,
+      thing: string | ThingType,
       data?: RecordInputData | null | undefined,
     ]
   >
@@ -592,7 +592,7 @@ export interface RpcMergeRequest extends
   RpcRequestBase<
     "merge",
     readonly [
-      thing: string | ThingAny,
+      thing: string | ThingType,
       data: RecordInputData,
     ]
   >
@@ -605,7 +605,7 @@ export interface RpcPatchRequest extends
   RpcRequestBase<
     "patch",
     readonly [
-      thing: string | ThingAny,
+      thing: string | ThingType,
       patches: readonly ReadonlyPatch[],
       diff?: boolean | null | undefined,
     ]
@@ -618,7 +618,7 @@ export interface RpcPatchRequest extends
 export interface RpcDeleteRequest extends
   RpcRequestBase<
     "delete",
-    readonly [thing: string | ThingAny]
+    readonly [thing: string | ThingType]
   >
 {}
 
@@ -650,9 +650,9 @@ export interface RpcRelateRequest extends
   RpcRequestBase<
     "relate",
     readonly [
-      from: string | ThingAny | readonly ThingAny[],
-      thing: string | ThingAny,
-      to: string | ThingAny | readonly ThingAny[],
+      from: string | ThingType | readonly ThingType[],
+      thing: string | ThingType,
+      to: string | ThingType | readonly ThingType[],
       data?: RecordInputData | null | undefined,
     ]
   >
@@ -706,7 +706,7 @@ export type RpcParams<M extends RpcMethod = RpcMethod> = Extract<
 
 type Arrayable<T> = T | T[];
 
-type TableRecord = { id: string | ThingAny } & RecordData;
+type TableRecord = { id: string | ThingType } & RecordData;
 
 /**
  * RPC メソッドごとの結果のマッピング。
@@ -721,7 +721,7 @@ export interface RpcResultMapping {
   invalidate: void;
   let: void;
   unset: void;
-  live: string | UuidAny;
+  live: string | UuidType;
   kill: void;
   query: QueryResult[];
   select: Arrayable<TableRecord>;

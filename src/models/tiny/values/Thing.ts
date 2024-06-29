@@ -1,5 +1,5 @@
 import type { SurqlArray, SurqlValue } from "../../../common/toSurql";
-import type { TableAny } from "../../../common/values";
+import type { TableType } from "../../../common/values";
 import { _defineAssertThing } from "../../_values/internal";
 
 /**
@@ -23,7 +23,7 @@ export default class Thing {
    * @param tb - テーブル名。
    * @param id - テーブル内のレコードの識別子。
    */
-  constructor(public tb: string | TableAny, public id: ThingId) {
+  constructor(public tb: string | TableType, public id: ThingId) {
     _defineAssertThing(this);
   }
 }

@@ -3,7 +3,7 @@ import type {
   LiveResult,
   RpcRequest,
   RpcResponse,
-} from "../types";
+} from "../common/types";
 import Abc from "./Abc";
 
 export default class EmptyValidator extends Abc {

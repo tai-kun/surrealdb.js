@@ -20,8 +20,8 @@
       "@tai-kun/surrealdb/engines": ["./src/engines/index.ts"],
       "@tai-kun/surrealdb/formatters": ["./src/formatters/index.ts"],
       "@tai-kun/surrealdb/validators": ["./src/validators/index.ts"],
-      "@tai-kun/surrealdb/errors": ["./src/errors.ts"],
-      "@tai-kun/surrealdb/_internal": ["./src/internal/index.ts"]
+      "@tai-kun/surrealdb/errors": ["src/common/errors.ts"],
+      "@tai-kun/surrealdb/_internal": ["src/_internal/index.ts"]
     }
   }
 }

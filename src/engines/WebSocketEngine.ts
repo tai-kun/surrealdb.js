@@ -1,20 +1,20 @@
 import type { Promisable, ValueOf } from "type-fest";
 import type { WebSocket as WsWebSocket } from "ws";
+import { makeAbortApi } from "../_internal";
+import { type Err, err, mutex, type Ok, ok, SerialId } from "../_internal";
 import {
   ConnectionUnavailable,
   MissingNamespace,
   RpcResponseError,
   WebSocketEngineError,
-} from "../errors";
-import { isArrayBuffer, Payload } from "../formatters";
-import { makeAbortApi } from "../internal";
-import { type Err, err, mutex, type Ok, ok, SerialId } from "../internal";
+} from "../common/errors";
 import type {
   BidirectionalRpcResponse,
   RpcParams,
   RpcRequest,
   RpcResult,
-} from "../types";
+} from "../common/types";
+import { isArrayBuffer, Payload } from "../formatters";
 import EngineAbc, {
   CLOSED,
   CLOSING,

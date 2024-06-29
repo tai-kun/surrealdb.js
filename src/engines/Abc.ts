@@ -1,25 +1,25 @@
 import type { Simplify } from "type-fest";
 import {
-  type EngineError,
-  type HttpEngineError,
-  StateTransitionError,
-  type WebSocketEngineError,
-} from "../errors";
-import type { FormatterAbc } from "../formatters";
-import {
   collectErrors,
   type Err,
   err,
   type Ok,
   ok,
   type TaskEmitter,
-} from "../internal";
+} from "../_internal";
+import {
+  type EngineError,
+  type HttpEngineError,
+  StateTransitionError,
+  type WebSocketEngineError,
+} from "../common/errors";
 import type {
   BidirectionalRpcResponse,
   LiveResult,
   RpcRequest,
   RpcResponse,
-} from "../types";
+} from "../common/types";
+import type { FormatterAbc } from "../formatters";
 import type { ValidatorAbc } from "../validators";
 
 /**

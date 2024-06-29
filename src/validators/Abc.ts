@@ -3,7 +3,7 @@ import type {
   LiveResult,
   RpcRequest,
   RpcResponse,
-} from "../types";
+} from "../common/types";
 
 /**
  * RPC に関連する値を検証する際のコンテキスト。

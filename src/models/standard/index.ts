@@ -1,49 +1,49 @@
 import DecimalJs from "decimal.js-light";
-import DecimalClass from "./Decimal";
+import DecimalClass from "./values/Decimal";
 
-export type * from "./Client";
-export { default as Client } from "./Client";
+export type * from "./client/Client";
+export { default as Client } from "./client/Client";
 
-export type * from "./Datetime";
-export { default as Datetime } from "./Datetime";
+export type * from "./values/Datetime";
+export { default as Datetime } from "./values/Datetime";
 
 export const Decimal = DecimalClass;
 export type Decimal = DecimalJs;
 
-export type * from "./Duration";
-export { default as Duration } from "./Duration";
+export type * from "./values/Duration";
+export { default as Duration } from "./values/Duration";
 
-export type * from "./GeometryCollection";
-export { default as GeometryCollection } from "./GeometryCollection";
+export type * from "./values/gemetory/GeometryCollection";
+export { default as GeometryCollection } from "./values/gemetory/GeometryCollection";
 
-export type * from "./GeometryLine";
-export { default as GeometryLine } from "./GeometryLine";
+export type * from "./values/gemetory/GeometryLine";
+export { default as GeometryLine } from "./values/gemetory/GeometryLine";
 
-export type * from "./GeometryMultiLine";
-export { default as GeometryMultiLine } from "./GeometryMultiLine";
+export type * from "./values/gemetory/GeometryMultiLine";
+export { default as GeometryMultiLine } from "./values/gemetory/GeometryMultiLine";
 
-export type * from "./GeometryMultiPoint";
-export { default as GeometryMultiPoint } from "./GeometryMultiPoint";
+export type * from "./values/gemetory/GeometryMultiPoint";
+export { default as GeometryMultiPoint } from "./values/gemetory/GeometryMultiPoint";
 
-export type * from "./GeometryMultiPolygon";
-export { default as GeometryMultiPolygon } from "./GeometryMultiPolygon";
+export type * from "./values/gemetory/GeometryMultiPolygon";
+export { default as GeometryMultiPolygon } from "./values/gemetory/GeometryMultiPolygon";
 
-export type * from "./GeometryPoint";
-export { default as GeometryPoint } from "./GeometryPoint";
+export type * from "./values/gemetory/GeometryPoint";
+export { default as GeometryPoint } from "./values/gemetory/GeometryPoint";
 
-export type * from "./GeometryPolygon";
-export { default as GeometryPolygon } from "./GeometryPolygon";
+export type * from "./values/gemetory/GeometryPolygon";
+export { default as GeometryPolygon } from "./values/gemetory/GeometryPolygon";
 
-export type * from "./Table";
-export { default as Table } from "./Table";
+export type * from "./values/Table";
+export { default as Table } from "./values/Table";
 
-export type * from "./Thing";
-export { default as Thing } from "./Thing";
+export type * from "./values/Thing";
+export { default as Thing } from "./values/Thing";
 
-export type * from "./Uuid";
-export { default as Uuid } from "./Uuid";
+export type * from "./values/Uuid";
+export { default as Uuid } from "./values/Uuid";
 
 // re-exports
 
-export type * from "../ClientAbc";
-export { default as ClientAbc } from "../ClientAbc";
+export type * from "../_client/Abc";
+export { default as ClientAbc } from "../_client/Abc";

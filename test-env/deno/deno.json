@@ -13,7 +13,7 @@
     "@tai-kun/surrealdb/engines": "__ROOT__/dist/engines/index.mjs",
     "@tai-kun/surrealdb/formatters": "__ROOT__/dist/formatters/index.mjs",
     "@tai-kun/surrealdb/validators": "__ROOT__/dist/validators/index.mjs",
-    "@tai-kun/surrealdb/errors": "__ROOT__/dist/errors.mjs",
-    "@tai-kun/surrealdb/_internal": "__ROOT__/dist/internal/index.mjs"
+    "@tai-kun/surrealdb/errors": "__ROOT__/dist/common/errors.mjs",
+    "@tai-kun/surrealdb/_internal": "__ROOT__/dist/_internal/index.mjs"
   }
 }

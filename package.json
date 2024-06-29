@@ -105,7 +105,7 @@
     "test:md:chrome": "node scripts/test.js chrome medium",
     "test:sm:firefox": "node scripts/test.js firefox small",
     "test:md:firefox": "node scripts/test.js firefox medium",
-    "docs": "typedoc src src/models/full src/models/standard src/models/tiny src/engines src/formatters src/validators src/errors.ts src/internal --out docs",
+    "docs": "typedoc src src/models/full src/models/standard src/models/tiny src/engines src/formatters src/validators src/errors.ts src/internal --out docs --lang jp",
     "size": "npm run build && size-limit"
   },
   "size-limit": [

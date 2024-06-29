@@ -1,5 +1,5 @@
-import { unreachable } from "../../../common/errors";
-import { quoteStr } from "../../../common/escape";
+import { unreachable } from "~/common/errors";
+import { quoteStr } from "~/common/escape";
 import type { SurqlValueSerializer } from "../../_values/Serializer";
 import Base, { byteToHex } from "../../tiny/values/Uuid";
 

@@ -1,5 +1,5 @@
 import type { Promisable } from "type-fest";
-import { AggregateTasksError, ResourceAlreadyDisposed } from "../common/errors";
+import { AggregateTasksError, ResourceAlreadyDisposed } from "~/common/errors";
 import collectErrors from "./collectErrors";
 import makeAbortApi from "./makeAbortApi";
 import { type Err, err, type Ok, ok } from "./result";

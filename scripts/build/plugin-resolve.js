@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 /**
  * @param {{ esm: boolean }} options
@@ -85,6 +86,9 @@ export function resolve(options) {
         "/index.js": `/index${defaultExt}`,
       });
       const getBuiltPath = createGetBuiltPath(resolvers);
+      const __filename = fileURLToPath(import.meta.url);
+      const __dirname = path.dirname(__filename);
+      const srcDir = path.join(__dirname, "..", "..", "src");
 
       build.onResolve({ filter: /.*/ }, async args => {
         const { namespace, kind, path: pkg, resolveDir } = args;
@@ -92,6 +96,25 @@ export function resolve(options) {
         switch (true) {
           case namespace !== "file" || kind !== "import-statement":
             return null;
+
+          case pkg.startsWith("~/"): {
+            const builtPath = getBuiltPath(srcDir, pkg.slice(2));
+
+            if (builtPath) {
+              return {
+                path: toOutFilePath(srcDir, builtPath),
+                external: true,
+              };
+            }
+
+            return {
+              errors: [
+                {
+                  text: `Cannot resolve "${pkg}"`,
+                },
+              ],
+            };
+          }
 
           case pkg.startsWith("."): {
             const builtPath = getBuiltPath(resolveDir, pkg);

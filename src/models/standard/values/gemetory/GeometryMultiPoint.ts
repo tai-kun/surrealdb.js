@@ -1,4 +1,4 @@
-import toSurql from "../../../../common/toSurql";
+import toSurql from "~/common/toSurql";
 import createGeometryMultiPoint from "../../../_values/geometry/createGeometryMultiPoint";
 import type { SurqlValueSerializer } from "../../../_values/Serializer";
 import GeometryPoint from "./GeometryPoint";

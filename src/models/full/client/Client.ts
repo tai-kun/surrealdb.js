@@ -1,6 +1,6 @@
 import { Simplify } from "type-fest";
-import type { Patch, ReadonlyPatch, RecordData } from "../../../common/types";
-import type { ThingType } from "../../../common/values";
+import type { Patch, ReadonlyPatch, RecordData } from "~/common/types";
+import type { ThingType } from "~/common/values";
 import type { ClientRpcOptions } from "../../_client/Abc";
 import Base from "../../standard/client/Client";
 

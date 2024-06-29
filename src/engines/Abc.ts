@@ -6,21 +6,21 @@ import {
   type Ok,
   ok,
   type TaskEmitter,
-} from "../_internal";
+} from "~/_internal";
 import {
   type EngineError,
   type HttpEngineError,
   StateTransitionError,
   type WebSocketEngineError,
-} from "../common/errors";
+} from "~/common/errors";
 import type {
   BidirectionalRpcResponse,
   LiveResult,
   RpcRequest,
   RpcResponse,
-} from "../common/types";
-import type { FormatterAbc } from "../formatters";
-import type { ValidatorAbc } from "../validators";
+} from "~/common/types";
+import type { FormatterAbc } from "~/formatters";
+import type { ValidatorAbc } from "~/validators";
 
 /**
  * 現在の接続状態。

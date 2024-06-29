@@ -6,7 +6,7 @@ import {
   ok,
   TaskEmitter,
   timeoutSignal,
-} from "../../../_internal";
+} from "~/_internal";
 import {
   type AggregateTasksError,
   ConnectionConflict,
@@ -14,14 +14,14 @@ import {
   EngineDisconnected,
   RpcResponseError,
   unreachable,
-} from "../../../common/errors";
+} from "~/common/errors";
 import type {
   RpcMethod,
   RpcParams,
   RpcResponse,
   RpcResult,
-} from "../../../common/types";
-import { CLOSED, CONNECTING, OPEN } from "../../../engines";
+} from "~/common/types";
+import { CLOSED, CONNECTING, OPEN } from "~/engines";
 import Abc, {
   type ClientConnectOptions,
   type ClientDisconnectOptions,

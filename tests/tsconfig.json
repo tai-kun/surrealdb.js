@@ -1,0 +1,20 @@
+{
+  "extends": "../tsconfig.json",
+  "include": [
+    "./**/*"
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@tai-kun/surrealdb": ["../src/index.ts"],
+      "@tai-kun/surrealdb/standard": ["../src/models/standard/index.ts"],
+      "@tai-kun/surrealdb/tiny": ["../src/models/tiny/index.ts"],
+      "@tai-kun/surrealdb/full": ["../src/models/full/index.ts"],
+      "@tai-kun/surrealdb/engines": ["../src/engines/index.ts"],
+      "@tai-kun/surrealdb/formatters": ["../src/formatters/index.ts"],
+      "@tai-kun/surrealdb/validators": ["../src/validators/index.ts"],
+      "@tai-kun/surrealdb/errors": ["../src/common/errors.ts"],
+      "@tai-kun/surrealdb/_internal": ["../src/_internal/index.ts"]
+    }
+  }
+}

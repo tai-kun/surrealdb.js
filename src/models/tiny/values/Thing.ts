@@ -1,5 +1,5 @@
-import type { SurqlArray, SurqlValue } from "../../../common/toSurql";
-import type { TableType } from "../../../common/values";
+import type { SurqlArray, SurqlValue } from "~/common/toSurql";
+import type { TableType } from "~/common/values";
 import { _defineAssertThing } from "../../_values/internal";
 
 /**

@@ -1,18 +1,18 @@
 import type { ValueOf } from "type-fest";
-import { type Err, err, isBrowser, mutex, type Ok, ok } from "../_internal";
+import { type Err, err, isBrowser, mutex, type Ok, ok } from "~/_internal";
 import {
   ConnectionUnavailable,
   InvalidResponse,
   MissingNamespace,
   TypeError,
-} from "../common/errors";
+} from "~/common/errors";
 import type {
   IdLessRpcResponse,
   RpcParams,
   RpcRequest,
   RpcResult,
-} from "../common/types";
-import { isArrayBuffer, Payload } from "../formatters";
+} from "~/common/types";
+import { isArrayBuffer, Payload } from "~/formatters";
 import EngineAbc, { type EngineConfig } from "./Abc";
 
 /**

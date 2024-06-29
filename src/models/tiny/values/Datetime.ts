@@ -1,5 +1,5 @@
-import { TypeError } from "../../../common/errors";
-import { isDatetime } from "../../../common/values";
+import { TypeError } from "~/common/errors";
+import { isDatetime } from "~/common/values";
 import { _defineAssertDatetime } from "../../_values/internal";
 
 export default class Datetime extends Date {

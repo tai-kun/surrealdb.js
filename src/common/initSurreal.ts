@@ -1,5 +1,5 @@
 import type { Constructor } from "type-fest";
-import type { ClientConfig, default as ClientAbc } from "../models/_client/Abc";
+import type { ClientConfig, default as ClientAbc } from "~/models/_client/Abc";
 import { TypeError } from "./errors";
 import type { RecordData } from "./types";
 

@@ -1,4 +1,4 @@
-import toSurql from "../../../../common/toSurql";
+import toSurql from "~/common/toSurql";
 import createGeometryPoint from "../../../_values/geometry/createGeometryPoint";
 import type { SurqlValueSerializer } from "../../../_values/Serializer";
 import Decimal from "../Decimal";

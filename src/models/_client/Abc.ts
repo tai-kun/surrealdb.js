@@ -6,14 +6,14 @@ import {
   TaskEmitter,
   type TaskListener,
   type TaskListenerOptions,
-} from "../../_internal";
+} from "~/_internal";
 import {
   type AggregateTasksError,
   CircularEngineReference,
   TypeError,
   UnsupportedProtocol,
-} from "../../common/errors";
-import type { RpcMethod, RpcParams, RpcResult } from "../../common/types";
+} from "~/common/errors";
+import type { RpcMethod, RpcParams, RpcResult } from "~/common/types";
 import {
   CLOSED,
   type Connection,
@@ -21,9 +21,9 @@ import {
   type EngineAbc,
   type EngineConfig,
   type EngineEvents,
-} from "../../engines";
-import type { FormatterAbc } from "../../formatters";
-import type { ValidatorAbc } from "../../validators";
+} from "~/engines";
+import type { FormatterAbc } from "~/formatters";
+import type { ValidatorAbc } from "~/validators";
 
 /**
  * クライアントエンジンを作成する関数。

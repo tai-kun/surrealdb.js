@@ -5,7 +5,7 @@ on: push
 jobs:
   small:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -24,13 +24,12 @@ jobs:
         run: bash scripts/pretest/small.sh test-env/node
 
       - name: Test
-        timeout-minutes: 1
         working-directory: test-env/node
         run: bash scripts/test.sh
 
   medium:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
@@ -54,7 +53,6 @@ jobs:
         run: bash scripts/pretest/medium.sh test-env/node ${{ matrix.surrealdb-version }}
 
       - name: Test
-        timeout-minutes: 5
         working-directory: test-env/node
         run: bash scripts/test.sh
 

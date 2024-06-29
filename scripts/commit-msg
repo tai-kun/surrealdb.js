@@ -72,7 +72,7 @@ match "^$KIND: ."
 match "^$KIND\(ci\): ."
 match '^chore\(deps\): .'
 match '^chore\(deps-dev\): .'
-check "$(listup . -m 1)"
+check "$(listup . -m 3)"
 check "$(listup src)"
 check "$(listup tests)"
 

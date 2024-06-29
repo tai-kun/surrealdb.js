@@ -102,7 +102,7 @@ export function resolve(options) {
 
             if (builtPath) {
               return {
-                path: toOutFilePath(srcDir, builtPath),
+                path: toOutFilePath(resolveDir, builtPath),
                 external: true,
               };
             }

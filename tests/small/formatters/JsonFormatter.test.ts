@@ -1,15 +1,11 @@
 import {
-  FormatterAbc,
-  JsonFormatter,
-  Payload,
-} from "@tai-kun/surrealdb/formatters";
-import {
   assertDeepEquals,
   assertEquals,
   assertInstanceOf,
   assertNotEquals,
 } from "@tools/assert";
 import { test } from "@tools/test";
+import { FormatterAbc, JsonFormatter, Payload } from "surrealjs/formatters";
 
 test("抽象クラスを拡張している", () => {
   assertInstanceOf(new JsonFormatter(), FormatterAbc);

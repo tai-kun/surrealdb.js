@@ -1,9 +1,9 @@
-import { initSurreal } from "@tai-kun/surrealdb";
-import { httpEngine } from "@tai-kun/surrealdb/engines";
-import { JsonFormatter } from "@tai-kun/surrealdb/formatters";
-import { Client } from "@tai-kun/surrealdb/full";
-import { EmptyValidator } from "@tai-kun/surrealdb/validators";
 import { ready } from "@tools/surrealdb";
+import { initSurreal } from "surrealjs";
+import { httpEngine } from "surrealjs/engines";
+import { JsonFormatter } from "surrealjs/formatters";
+import { Client } from "surrealjs/full";
+import { EmptyValidator } from "surrealjs/validators";
 
 async function getInitializedSurreal() {
   const endpoint = await ready;

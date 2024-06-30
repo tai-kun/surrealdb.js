@@ -1,9 +1,9 @@
-import { isTable } from "@tai-kun/surrealdb";
-import { Table } from "@tai-kun/surrealdb/full";
-import { Table as TableStandard } from "@tai-kun/surrealdb/standard";
-import { Table as TableTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertEquals } from "@tools/assert";
 import { test } from "@tools/test";
+import { isTable } from "surrealjs";
+import { Table } from "surrealjs/full";
+import { Table as TableStandard } from "surrealjs/standard";
+import { Table as TableTiny } from "surrealjs/tiny";
 
 test("半角英数字とアンダースコアのみで構成される", async () => {
   for (

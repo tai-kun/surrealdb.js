@@ -1,7 +1,7 @@
-import { isUuid, type LiveResult } from "@tai-kun/surrealdb";
-import { Thing } from "@tai-kun/surrealdb/full";
 import { assert, assertDeepEquals, assertMatch } from "@tools/assert";
 import { test } from "@tools/test";
+import { isUuid, type LiveResult } from "surrealjs";
+import { Thing } from "surrealjs/full";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;

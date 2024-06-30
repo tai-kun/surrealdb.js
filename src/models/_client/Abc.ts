@@ -205,7 +205,7 @@ export default abstract class ClientAbc {
    * @param listener - 追加するリスナー。
    * @example
    * ```ts
-   * import { OPEN } from "@tai-kun/surrealdb/engines";
+   * import { OPEN } from "surrealjs/engines";
    *
    * const db = (省略);
    * db.on(OPEN, () => {
@@ -227,7 +227,7 @@ export default abstract class ClientAbc {
    * @param listener - 削除するリスナー。
    * @example
    * ```ts
-   * import { CLOSED } from "@tai-kun/surrealdb/engines";
+   * import { CLOSED } from "surrealjs/engines";
    *
    * const db = (省略);
    * const listener = () => {
@@ -261,7 +261,7 @@ export default abstract class ClientAbc {
    * @returns イベントリスナーに渡された引数。
    * @example
    * ```ts
-   * import { OPEN } from "@tai-kun/surrealdb/engines";
+   * import { OPEN } from "surrealjs/engines";
    *
    * const db = (省略);
    * const promise = db.once(OPEN);

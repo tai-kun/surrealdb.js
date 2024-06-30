@@ -1,9 +1,9 @@
-import { isDecimal } from "@tai-kun/surrealdb";
-import { Decimal } from "@tai-kun/surrealdb/full";
-import { Decimal as DecimalStandard } from "@tai-kun/surrealdb/standard";
-import { Decimal as DecimalTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertEquals, assertInstanceOf } from "@tools/assert";
 import { test } from "@tools/test";
+import { isDecimal } from "surrealjs";
+import { Decimal } from "surrealjs/full";
+import { Decimal as DecimalStandard } from "surrealjs/standard";
+import { Decimal as DecimalTiny } from "surrealjs/tiny";
 
 test("文字列から Decimal を作成する", () => {
   const d1 = new Decimal("3.14");

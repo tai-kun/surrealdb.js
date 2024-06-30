@@ -1,9 +1,9 @@
-import { isGeometryLine } from "@tai-kun/surrealdb";
-import { GeometryLine, GeometryPoint } from "@tai-kun/surrealdb/full";
-import { GeometryLine as GeometryLineStandard } from "@tai-kun/surrealdb/standard";
-import { GeometryLine as GeometryLineTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
+import { isGeometryLine } from "surrealjs";
+import { GeometryLine, GeometryPoint } from "surrealjs/full";
+import { GeometryLine as GeometryLineStandard } from "surrealjs/standard";
+import { GeometryLine as GeometryLineTiny } from "surrealjs/tiny";
 
 test("GeometryLine を作成する", () => {
   const line = new GeometryLine([new GeometryPoint([1, 2])]);

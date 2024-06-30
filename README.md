@@ -7,13 +7,13 @@
 [![WebKit](https://github.com/tai-kun/surrealdb-js/actions/workflows/webkit.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/webkit.yml)
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![npm version](https://img.shields.io/npm/v/@tai-kun/surrealdb)](https://www.npmjs.com/package/@tai-kun/surrealdb)
+[![npm version](https://img.shields.io/npm/v/surrealjs)](https://www.npmjs.com/package/surrealjs)
 
 [SurrealDB](https://github.com/surrealdb/surrealdb) の JavaScript/TypeScript クライアントライブラリです。公式の SDK がすでに [surrealdb.js](https://github.com/surrealdb/surrealdb.js) にありますが、こちらは個人的な用途が考慮された設計になっています。
 
 - [API リファレンス](https://tai-kun.github.io/surrealdb-js/)
 - [GitHub リポジトリ](https://github.com/tai-kun/surrealdb-js)
-- [NPM パッケージ](https://www.npmjs.com/package/@tai-kun/surrealdb)
+- [NPM パッケージ](https://www.npmjs.com/package/surrealjs)
 - [互換性](#互換性)
 
 ## 公式 SDK との相違点
@@ -48,7 +48,7 @@ SurrealQL のデータ型に可能な限り対応しています:
 上記のデータ型は、バンドルサイズの微増を許容すれば `.toSurql()` メソッドを利用することができます。これは例えば次のように、データ型から直接 SurrealQL に埋め込める文字列を作成することができます:
 
 ```ts
-import { Datetime, Thing } from "@tai-kun/surrealdb";
+import { Datetime, Thing } from "surrealjs";
 
 const id = {
   string: "あいうえお😢",
@@ -119,10 +119,10 @@ console.log(thing.toSurql());
 ## インストール
 
 ```bash
-npm i @tai-kun/surrealdb
-bun i @tai-kun/surrealdb
-pnpm i @tai-kun/surrealdb
-yarn add @tai-kun/surrealdb
+npm i surrealjs
+bun i surrealjs
+pnpm i surrealjs
+yarn add surrealjs
 ```
 
 ## 使い方
@@ -132,13 +132,13 @@ yarn add @tai-kun/surrealdb
 例えば、HTTP エンジン、JSON フォーマッター、バリデーターなし、一般的なクライアントで作成するには次のようにします:
 
 ```ts
-import { initSurreal } from "@tai-kun/surrealdb";
-import { httpEngine } from "@tai-kun/surrealdb/engines";
-import { JsonFormatter } from "@tai-kun/surrealdb/formatters";
+import { initSurreal } from "surrealjs";
+import { httpEngine } from "surrealjs/engines";
+import { JsonFormatter } from "surrealjs/formatters";
 import {
   Client
-} from "@tai-kun/surrealdb/stardard"; // standard を選択することで、基本的な機能を利用できます。
-import { EmptyValidator } from "@tai-kun/surrealdb/validators";
+} from "surrealjs/stardard"; // standard を選択することで、基本的な機能を利用できます。
+import { EmptyValidator } from "surrealjs/validators";
 
 const {
   Surreal,
@@ -214,9 +214,9 @@ async function main() {
 次に、WebSocket エンジン、CBOR フォーマッター、バリデーターなし、全機能付きクライアントで作成するには次のようにします:
 
 ```ts
-import { initSurreal } from "@tai-kun/surrealdb";
-import { webSocketEngine } from "@tai-kun/surrealdb/engines";
-import { CborFormatter } from "@tai-kun/surrealdb/formatters";
+import { initSurreal } from "surrealjs";
+import { webSocketEngine } from "surrealjs/engines";
+import { CborFormatter } from "surrealjs/formatters";
 import {
   Client,
   Datetime,
@@ -232,8 +232,8 @@ import {
   Table,
   Thing,
   Uuid,
-} from "@tai-kun/surrealdb/full"; // full を選択することで、全機能を利用できます。
-import { EmptyValidator } from "@tai-kun/surrealdb/validators";
+} from "surrealjs/full"; // full を選択することで、全機能を利用できます。
+import { EmptyValidator } from "surrealjs/validators";
 
 class Formatter extends CborFormatter {
   constructor() {
@@ -282,11 +282,11 @@ const {
 
 ```ts
 // 約 7 KB (minify + gzip)
-import { initSurreal } from "@tai-kun/surrealdb";
-import { httpEngine } from "@tai-kun/surrealdb/engines";
-import { JsonFormatter } from "@tai-kun/surrealdb/formatters";
-import { Client } from "@tai-kun/surrealdb/stardard";
-import { EmptyValidator } from "@tai-kun/surrealdb/validators";。
+import { initSurreal } from "surrealjs";
+import { httpEngine } from "surrealjs/engines";
+import { JsonFormatter } from "surrealjs/formatters";
+import { Client } from "surrealjs/stardard";
+import { EmptyValidator } from "surrealjs/validators";。
 ```
 
 ### 中規模
@@ -302,11 +302,11 @@ import { EmptyValidator } from "@tai-kun/surrealdb/validators";。
 
 ```ts
 // 約 14.5 KB (minify + gzip)
-import { initSurreal } from "@tai-kun/surrealdb";
-import { httpEngine } from "@tai-kun/surrealdb/engines";
-import { CborFormatter } from "@tai-kun/surrealdb/formatters";
-import { Client } from "@tai-kun/surrealdb/stardard";
-import { EmptyValidator } from "@tai-kun/surrealdb/validators";
+import { initSurreal } from "surrealjs";
+import { httpEngine } from "surrealjs/engines";
+import { CborFormatter } from "surrealjs/formatters";
+import { Client } from "surrealjs/stardard";
+import { EmptyValidator } from "surrealjs/validators";
 import {
   // tiny のクライアントを使わず、standard のクライアントを使うこともできます。
   // Client,
@@ -323,7 +323,7 @@ import {
   Table,
   Thing,
   Uuid,
-} from "@tai-kun/surrealdb/tiny"; // tiny を選択することで、ごく基本的な機能を利用できます
+} from "surrealjs/tiny"; // tiny を選択することで、ごく基本的な機能を利用できます
 ```
 
 ### 大規模
@@ -339,10 +339,10 @@ import {
 
 ```ts
 // 約 47 KB (minify + gzip)
-import { initSurreal } from "@tai-kun/surrealdb";
-import { httpEngine, webSocketEngine } from "@tai-kun/surrealdb/engines";
-import { CborFormatter } from "@tai-kun/surrealdb/formatters";
-import { ZodValidator } from "@tai-kun/surrealdb/validators";
+import { initSurreal } from "surrealjs";
+import { httpEngine, webSocketEngine } from "surrealjs/engines";
+import { CborFormatter } from "surrealjs/formatters";
+import { ZodValidator } from "surrealjs/validators";
 import {
   Client,
   Datetime,
@@ -358,7 +358,7 @@ import {
   Table,
   Thing,
   Uuid,
-} from "@tai-kun/surrealdb/full";
+} from "surrealjs/full";
 ```
 
 ## API リファレンス

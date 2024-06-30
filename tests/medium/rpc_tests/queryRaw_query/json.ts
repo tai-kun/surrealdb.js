@@ -1,6 +1,6 @@
-import { QueryFailure, RpcResponseError } from "@tai-kun/surrealdb/errors";
 import { assertDeepEquals, assertRejects } from "@tools/assert";
 import { test } from "@tools/test";
+import { QueryFailure, RpcResponseError } from "surrealjs/errors";
 
 test("クエリーを実行し、RPC のレスポンスをそのまま取得する", async () => {
   const { endpoint, Surreal } = await getInitializedSurreal();

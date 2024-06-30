@@ -1,19 +1,19 @@
-import { isGeometryCollection } from "@tai-kun/surrealdb";
+import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
+import { test } from "@tools/test";
+import { isGeometryCollection } from "surrealjs";
 import {
   GeometryCollection,
   GeometryLine,
   GeometryPoint,
-} from "@tai-kun/surrealdb/full";
+} from "surrealjs/full";
 import {
   GeometryCollection as GeometryCollectionStandard,
   GeometryPoint as GeometryPointStandard,
-} from "@tai-kun/surrealdb/standard";
+} from "surrealjs/standard";
 import {
   GeometryCollection as GeometryCollectionTiny,
   GeometryPoint as GeometryPointTiny,
-} from "@tai-kun/surrealdb/tiny";
-import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
-import { test } from "@tools/test";
+} from "surrealjs/tiny";
 
 test("GeometryCollection を作成する", () => {
   const collection = new GeometryCollection([

@@ -4,7 +4,7 @@
     "@tools/assert": "file:./tools/assert",
     "@tools/surrealdb": "file:./tools/surrealdb",
     "@tools/test": "file:./tools/test",
-    "@tai-kun/surrealdb": "file:../..",
+    "surrealjs": "file:../..",
     "@web/test-runner": "^0.18.2",
     "@web/test-runner-selenium": "^0.7.0",
     "cbor-redux": "^1.0.0",

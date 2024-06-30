@@ -1,6 +1,6 @@
-import { Thing } from "@tai-kun/surrealdb/full";
 import { assertDeepEquals } from "@tools/assert";
 import { test } from "@tools/test";
+import { Thing } from "surrealjs/full";
 
 test("クエリーを実行し、RPC のレスポンスをそのまま取得する", async () => {
   const { endpoint, Surreal } = await getInitializedSurreal();

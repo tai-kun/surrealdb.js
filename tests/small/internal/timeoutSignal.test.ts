@@ -1,6 +1,6 @@
-import { timeoutSignal } from "@tai-kun/surrealdb/_internal";
 import { assertInstanceOf } from "@tools/assert";
 import { test } from "@tools/test";
+import { timeoutSignal } from "surrealjs/_internal";
 
 test("AbortSignal を返す", () => {
   const signal = timeoutSignal(1);

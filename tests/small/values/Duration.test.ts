@@ -1,10 +1,10 @@
-import { isDuration } from "@tai-kun/surrealdb";
-import { SurrealDbTypeError } from "@tai-kun/surrealdb/errors";
-import { Duration } from "@tai-kun/surrealdb/full";
-import { Duration as DurationStandard } from "@tai-kun/surrealdb/standard";
-import { Duration as DurationTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertEquals, assertThrows } from "@tools/assert";
 import { test } from "@tools/test";
+import { isDuration } from "surrealjs";
+import { SurrealDbTypeError } from "surrealjs/errors";
+import { Duration } from "surrealjs/full";
+import { Duration as DurationStandard } from "surrealjs/standard";
+import { Duration as DurationTiny } from "surrealjs/tiny";
 
 for (
   const [input, expected, string] of [

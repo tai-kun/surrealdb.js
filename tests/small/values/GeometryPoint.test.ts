@@ -1,7 +1,3 @@
-import { isGeometryPoint } from "@tai-kun/surrealdb";
-import { Decimal, GeometryPoint } from "@tai-kun/surrealdb/full";
-import { GeometryPoint as GeometryPointStandard } from "@tai-kun/surrealdb/standard";
-import { GeometryPoint as GeometryPointTiny } from "@tai-kun/surrealdb/tiny";
 import {
   assert,
   assertInstanceOf,
@@ -9,6 +5,10 @@ import {
   assertNotEquals,
 } from "@tools/assert";
 import { test } from "@tools/test";
+import { isGeometryPoint } from "surrealjs";
+import { Decimal, GeometryPoint } from "surrealjs/full";
+import { GeometryPoint as GeometryPointStandard } from "surrealjs/standard";
+import { GeometryPoint as GeometryPointTiny } from "surrealjs/tiny";
 
 test("GeometryPoint を作成する", () => {
   const point = new GeometryPoint([1, 2]);

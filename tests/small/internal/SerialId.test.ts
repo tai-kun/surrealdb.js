@@ -1,6 +1,6 @@
-import { SerialId } from "@tai-kun/surrealdb/_internal";
 import { assertEquals } from "@tools/assert";
 import { test } from "@tools/test";
+import { SerialId } from "surrealjs/_internal";
 
 test("増分 ID を生成する", () => {
   const id = new SerialId();

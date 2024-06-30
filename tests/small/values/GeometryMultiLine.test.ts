@@ -1,13 +1,9 @@
-import { isGeometryMultiLine } from "@tai-kun/surrealdb";
-import {
-  GeometryLine,
-  GeometryMultiLine,
-  GeometryPoint,
-} from "@tai-kun/surrealdb/full";
-import { GeometryMultiLine as GeometryMultiLineStandard } from "@tai-kun/surrealdb/standard";
-import { GeometryMultiLine as GeometryMultiLineTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
+import { isGeometryMultiLine } from "surrealjs";
+import { GeometryLine, GeometryMultiLine, GeometryPoint } from "surrealjs/full";
+import { GeometryMultiLine as GeometryMultiLineStandard } from "surrealjs/standard";
+import { GeometryMultiLine as GeometryMultiLineTiny } from "surrealjs/tiny";
 
 test("GeometryMultiLine を作成する", () => {
   const multiLine = new GeometryMultiLine([

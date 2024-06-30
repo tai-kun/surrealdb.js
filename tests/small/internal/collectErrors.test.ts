@@ -1,6 +1,6 @@
-import { collectErrors } from "@tai-kun/surrealdb/_internal";
 import { assertDeepEquals } from "@tools/assert";
 import { test } from "@tools/test";
+import { collectErrors } from "surrealjs/_internal";
 
 test("Promise のエラーを収集する", async () => {
   const error = new Error("error");

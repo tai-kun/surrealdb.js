@@ -1,9 +1,9 @@
-import { isGeometryMultiPoint } from "@tai-kun/surrealdb";
-import { GeometryMultiPoint, GeometryPoint } from "@tai-kun/surrealdb/full";
-import { GeometryMultiPoint as GeometryMultiPointStandard } from "@tai-kun/surrealdb/standard";
-import { GeometryMultiPoint as GeometryMultiPointTiny } from "@tai-kun/surrealdb/tiny";
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
+import { isGeometryMultiPoint } from "surrealjs";
+import { GeometryMultiPoint, GeometryPoint } from "surrealjs/full";
+import { GeometryMultiPoint as GeometryMultiPointStandard } from "surrealjs/standard";
+import { GeometryMultiPoint as GeometryMultiPointTiny } from "surrealjs/tiny";
 
 test("GeometryMultiPoint を作成する", () => {
   const multiPoint = new GeometryMultiPoint([new GeometryPoint([1, 2])]);

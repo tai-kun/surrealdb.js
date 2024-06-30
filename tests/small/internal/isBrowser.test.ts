@@ -8,13 +8,13 @@ test("ブラウザかどうかを判定する", () => {
   switch (ENV) {
     case "Chrome":
     case "Firefox":
+    case "WebKit":
       browser = true;
       break;
 
     case "Bun":
     case "Deno":
     case "Node":
-    case "CloudflareWorkers":
       browser = false;
       break;
   }

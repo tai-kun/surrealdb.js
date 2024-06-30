@@ -1,4 +1,4 @@
-export const ENV = "Chrome";
+export const ENV = "WebKit";
 
 export function test(name, fn) {
   return it(name, function() {

@@ -3,7 +3,7 @@ import {
   type TaskListener,
 } from "@tai-kun/surrealdb/_internal";
 import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
-import { ENV, test } from "@tools/test";
+import { test } from "@tools/test";
 
 // @ts-expect-error
 Symbol.asyncDispose ||= Symbol.for("Symbol.asyncDispose");

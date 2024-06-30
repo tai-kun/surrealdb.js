@@ -12,8 +12,7 @@ declare module "@tools/test" {
     // Browsers
     | "Chrome"
     | "Firefox"
-    // Edge cases
-    | "CloudflareWorkers";
+    | "WebKit";
 
   /**
    * Defines a test case with the given name and function.

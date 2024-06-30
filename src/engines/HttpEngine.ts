@@ -1,11 +1,5 @@
 import type { ValueOf } from "type-fest";
 import { type Err, err, isBrowser, mutex, type Ok, ok } from "~/_internal";
-import type {
-  IdLessRpcResponse,
-  RpcParams,
-  RpcRequest,
-  RpcResult,
-} from "~/common/types";
 import {
   ConnectionUnavailable,
   InvalidResponse,
@@ -13,6 +7,12 @@ import {
   SurrealDbTypeError,
 } from "~/errors";
 import { isArrayBuffer, Payload } from "~/formatters";
+import type {
+  IdLessRpcResponse,
+  RpcParams,
+  RpcRequest,
+  RpcResult,
+} from "~/index/types";
 import EngineAbc, {
   CLOSED,
   CLOSING,

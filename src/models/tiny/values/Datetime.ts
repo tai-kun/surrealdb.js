@@ -1,5 +1,5 @@
-import { isDatetime } from "~/common/values";
 import { SurrealDbTypeError } from "~/errors";
+import { isDatetime } from "~/index/values";
 import { _defineAssertDatetime } from "../../_values/internal";
 
 export default class Datetime extends Date {

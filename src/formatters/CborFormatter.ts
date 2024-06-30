@@ -1,4 +1,5 @@
 import { decode, encode, TaggedValue } from "cbor-redux";
+import { UnknownCborTag } from "~/errors";
 import {
   isDatetime,
   isDecimal,
@@ -13,8 +14,7 @@ import {
   isTable,
   isThing,
   isUuid,
-} from "~/common/values";
-import { UnknownCborTag } from "~/errors";
+} from "~/index/values";
 import Abc from "./Abc";
 import type Payload from "./Payload";
 

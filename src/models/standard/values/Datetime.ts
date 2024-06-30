@@ -1,4 +1,4 @@
-import { quoteStr } from "~/common/escape";
+import { quoteStr } from "~/index/escape";
 import type { SurqlValueSerializer } from "../../_values/Serializer";
 import Base from "../../tiny/values/Datetime";
 

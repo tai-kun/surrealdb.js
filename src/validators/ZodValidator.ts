@@ -57,7 +57,7 @@ import type {
   ScopeAuth,
   SystemAuth,
   TestPatch,
-} from "~/common/types";
+} from "~/index/types";
 import {
   isTable,
   isThing,
@@ -65,7 +65,7 @@ import {
   type TableType,
   type ThingType,
   type UuidType,
-} from "~/common/values";
+} from "~/index/values";
 import Abc, { type ParseResponseContext } from "./Abc";
 
 type ZodType<T> = z.ZodType<T, any, any>;

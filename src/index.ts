@@ -1,4 +1,4 @@
-export type * from "./common/escape";
+export type * from "./index/escape";
 export {
   BACKTICK,
   BACKTICK_ESC,
@@ -15,15 +15,15 @@ export {
   escapeRid,
   quoteStr,
   SINGLE,
-} from "./common/escape";
+} from "./index/escape";
 
-export type * from "./common/initSurreal";
-export { default as initSurreal } from "./common/initSurreal";
+export type * from "./index/initSurreal";
+export { default as initSurreal } from "./index/initSurreal";
 
-export type * from "./common/toSurql";
-export { default as toSurql } from "./common/toSurql";
+export type * from "./index/toSurql";
+export { default as toSurql } from "./index/toSurql";
 
-export type * from "./common/types";
+export type * from "./index/types";
 
 export {
   type DatetimeType,
@@ -52,4 +52,4 @@ export {
   type TableType,
   type ThingType,
   type UuidType,
-} from "./common/values";
+} from "./index/values";

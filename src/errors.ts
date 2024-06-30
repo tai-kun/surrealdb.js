@@ -1,7 +1,7 @@
 import type {
   BidirectionalRpcResponseErr,
   IdLessRpcResponseErr,
-} from "./common/types";
+} from "./index/types";
 
 /**
  * このパッケージがハンドリングするエラーが継承するエラークラス。

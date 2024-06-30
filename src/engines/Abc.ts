@@ -7,12 +7,6 @@ import {
   ok,
   type TaskEmitter,
 } from "~/_internal";
-import type {
-  BidirectionalRpcResponse,
-  LiveResult,
-  RpcRequest,
-  RpcResponse,
-} from "~/common/types";
 import {
   type EngineError,
   type HttpEngineError,
@@ -20,6 +14,12 @@ import {
   type WebSocketEngineError,
 } from "~/errors";
 import type { FormatterAbc } from "~/formatters";
+import type {
+  BidirectionalRpcResponse,
+  LiveResult,
+  RpcRequest,
+  RpcResponse,
+} from "~/index/types";
 import type { ValidatorAbc } from "~/validators";
 
 /**

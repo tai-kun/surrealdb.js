@@ -7,7 +7,6 @@ import {
   type TaskListener,
   type TaskListenerOptions,
 } from "~/_internal";
-import type { RpcMethod, RpcParams, RpcResult } from "~/common/types";
 import {
   CLOSED,
   type Connection,
@@ -23,6 +22,7 @@ import {
   UnsupportedProtocol,
 } from "~/errors";
 import type { FormatterAbc } from "~/formatters";
+import type { RpcMethod, RpcParams, RpcResult } from "~/index/types";
 import type { ValidatorAbc } from "~/validators";
 
 /**

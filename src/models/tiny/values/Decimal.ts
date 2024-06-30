@@ -1,5 +1,5 @@
-import { isDecimal } from "~/common/values";
 import { SurrealDbTypeError } from "~/errors";
+import { isDecimal } from "~/index/values";
 import { _defineAssertDecimal } from "../../_values/internal";
 
 // https://github.com/MikeMcl/decimal.js/blob/master/decimal.mjs#L109-L112

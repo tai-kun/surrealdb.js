@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         browser-version:
-          - "100"
+          - "100.0"
           - "latest"
     steps:
       - uses: actions/checkout@v4
@@ -39,9 +39,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # https://hub.docker.com/r/selenium/standalone-firefox/tags
         browser-version:
-          - "100"
+          - "100.0"
           - "latest"
         surrealdb-version:
           - "v1.5.0"

@@ -71,10 +71,10 @@ test("タスクを中断する", async () => {
   const result = await queue.dispose();
 
   assertEquals(result.ok, false);
-  assertMatch(
+  assertEquals(
     // @ts-expect-error
-    result.error.stack,
-    /AggregateTasksError: 2 task\(s\) failed\./,
+    String(result.error),
+    "AggregateTasksError: 2 task(s) failed.",
   );
   await assertRejects(
     async () => {

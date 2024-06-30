@@ -1,0 +1,5 @@
+{
+  "name": "@tools/test",
+  "type": "module",
+  "main": "index.js"
+}

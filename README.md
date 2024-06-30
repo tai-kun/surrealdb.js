@@ -3,6 +3,7 @@
 [![Bun](https://github.com/tai-kun/surrealdb-js/actions/workflows/bun.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/bun.yml)
 [![Chrome](https://github.com/tai-kun/surrealdb-js/actions/workflows/chrome.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/chrome.yml)
 [![Firefox](https://github.com/tai-kun/surrealdb-js/actions/workflows/firefox.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/firefox.yml)
+[![WebKit](https://github.com/tai-kun/surrealdb-js/actions/workflows/webkit.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/webkit.yml)
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![npm version](https://img.shields.io/npm/v/@tai-kun/surrealdb)](https://www.npmjs.com/package/@tai-kun/surrealdb)

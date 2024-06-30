@@ -103,6 +103,8 @@
     "test:md:node": "node scripts/test.js nodejs medium",
     "test:sm:chrome": "node scripts/test.js chrome small",
     "test:md:chrome": "node scripts/test.js chrome medium",
+    "test:sm:webkit": "node scripts/test.js webkit small",
+    "test:md:webkit": "node scripts/test.js webkit medium",
     "test:sm:firefox": "node scripts/test.js firefox small",
     "test:md:firefox": "node scripts/test.js firefox medium",
     "docs": "typedoc src src/models/full src/models/standard src/models/tiny src/engines src/formatters src/validators src/errors.ts --out docs --lang jp",

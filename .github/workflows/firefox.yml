@@ -21,11 +21,11 @@ jobs:
 
       - name: Set up Firefox
         run: |
-          apt-get install libgtk2.0-0
+          sudo apt-get install libgtk2.0-0
           wget https://ftp.mozilla.org/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
           tar xvf firefox-${{ matrix.browser-version }}.tar.bz2
-          mv firefox/ /usr/lib/firefox
-          ln -s /usr/lib/firefox /usr/bin/firefox
+          sudo mv firefox/ /usr/lib/firefox
+          sudo ln -s /usr/lib/firefox /usr/bin/firefox
           echo -n 'firefox-path=/usr/bin/firefox' >> $GITHUB_OUTPUT
         id: setup-firefox
 
@@ -59,11 +59,11 @@ jobs:
 
       - name: Set up Firefox
         run: |
-          apt-get install libgtk2.0-0
+          sudo apt-get install libgtk2.0-0
           wget https://ftp.mozilla.org/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
           tar xvf firefox-${{ matrix.browser-version }}.tar.bz2
-          mv firefox/ /usr/lib/firefox
-          ln -s /usr/lib/firefox /usr/bin/firefox
+          sudo mv firefox/ /usr/lib/firefox
+          sudo ln -s /usr/lib/firefox /usr/bin/firefox
           echo -n 'firefox-path=/usr/bin/firefox' >> $GITHUB_OUTPUT
         id: setup-firefox
 

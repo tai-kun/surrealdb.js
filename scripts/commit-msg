@@ -15,7 +15,7 @@ EXCLUDES=(
 function listup() {
     local dir="$1"
     local pfx=''
-    local max=4
+    local max=3
     local EXD
     local OPT
     local OPTARG
@@ -74,9 +74,9 @@ match '^chore\(deps\): .'
 match '^chore\(deps-dev\): .'
 check "$(listup . -m 1)"
 check "$(listup src)"
-check "$(listup tests)"
-check "$(listup scripts)"
-check "$(listup test-env)"
+check "$(listup tests -p tests/)"
+check "$(listup scripts -p scripts/)"
+check "$(listup test-env -p test-env/)"
 
 echo 'Invalid Commit Message Format'
 exit 1

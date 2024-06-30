@@ -1,4 +1,5 @@
 import { throwIfAborted } from "@tai-kun/surrealdb/_internal";
+import { SurrealDbTypeError } from "@tai-kun/surrealdb/errors";
 import { assertThrows } from "@tools/assert";
 import { ENV, test } from "@tools/test";
 

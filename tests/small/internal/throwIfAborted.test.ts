@@ -1,7 +1,7 @@
 import { throwIfAborted } from "@tai-kun/surrealdb/_internal";
 import { SurrealDbTypeError } from "@tai-kun/surrealdb/errors";
 import { assertThrows } from "@tools/assert";
-import { ENV, test } from "@tools/test";
+import { test } from "@tools/test";
 
 test("中止されていないシグナルを渡すと例外を投げない", () => {
   const controller = new AbortController();

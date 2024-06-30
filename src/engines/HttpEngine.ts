@@ -10,10 +10,16 @@ import {
   ConnectionUnavailable,
   InvalidResponse,
   MissingNamespace,
-  TypeError,
+  SurrealDbTypeError,
 } from "~/errors";
 import { isArrayBuffer, Payload } from "~/formatters";
-import EngineAbc, { type EngineConfig } from "./Abc";
+import EngineAbc, {
+  CLOSED,
+  CLOSING,
+  CONNECTING,
+  type EngineConfig,
+  OPEN,
+} from "./Abc";
 
 /**
  * HTTP エンジンが fetch 関数に渡すリクエストの情報。
@@ -118,21 +124,21 @@ export default class HttpEngine extends EngineAbc {
 
   @mutex
   async connect(endpoint: URL): Promise<void> {
-    if (this.state === HttpEngine.OPEN) {
+    if (this.state === OPEN) {
       return;
     }
 
     this.conn.endpoint = new URL(endpoint); // copy
-    await this.setState(HttpEngine.CONNECTING, () => {
+    await this.setState(CONNECTING, () => {
       this.conn = {};
 
-      return HttpEngine.CLOSED;
+      return CLOSED;
     });
 
-    await this.setState(HttpEngine.OPEN, () => {
+    await this.setState(OPEN, () => {
       this.conn = {};
 
-      return HttpEngine.CLOSED;
+      return CLOSED;
     });
   }
 
@@ -142,12 +148,12 @@ export default class HttpEngine extends EngineAbc {
     | Ok<"AlreadyDisconnected">
     | Err<unknown>
   > {
-    if (this.state === HttpEngine.CLOSED) {
+    if (this.state === CLOSED) {
       return ok("AlreadyDisconnected");
     }
 
     try {
-      await this.setState(HttpEngine.CLOSING, () => HttpEngine.CLOSING);
+      await this.setState(CLOSING, () => CLOSING);
 
       return ok("Disconnected");
     } catch (error) {
@@ -157,7 +163,7 @@ export default class HttpEngine extends EngineAbc {
       this.vars = {};
 
       try {
-        await this.setState(HttpEngine.CLOSED, () => HttpEngine.CLOSED);
+        await this.setState(CLOSED, () => CLOSED);
       } catch {
         // 無視: `CLOSED` イベント内で発生したエラーは、
         // このエンジンを使用する `Surreal` が対処します。
@@ -169,8 +175,8 @@ export default class HttpEngine extends EngineAbc {
     request: RpcRequest,
     signal: AbortSignal,
   ): Promise<IdLessRpcResponse> {
-    if (this.state === HttpEngine.CONNECTING) {
-      await this.ee.once(HttpEngine.OPEN);
+    if (this.state === CONNECTING) {
+      await this.ee.once(OPEN);
     }
 
     if (!this.conn.endpoint) {
@@ -240,13 +246,13 @@ export default class HttpEngine extends EngineAbc {
     }
 
     if (!this.fmt.mimeType) {
-      throw new TypeError("Formatter must have a MIME type");
+      throw new SurrealDbTypeError("Formatter must have a MIME type");
     }
 
     const body: unknown = await this.fmt.encode(request);
 
     if (typeof body !== "string" && !isArrayBuffer(body)) {
-      throw new TypeError(
+      throw new SurrealDbTypeError(
         "The formatter encoded a non-string, non-ArrayBuffer value",
       );
     }

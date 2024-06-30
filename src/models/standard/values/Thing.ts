@@ -2,7 +2,7 @@ import isPlainObject from "is-plain-obj";
 import { BRACKETL, BRACKETR, escapeRid, quoteStr } from "~/common/escape";
 import toSurql from "~/common/toSurql";
 import type { TableType } from "~/common/values";
-import { TypeError } from "~/errors";
+import { SurrealDbTypeError } from "~/errors";
 import type { SurqlValueSerializer } from "../../_values/Serializer";
 import Base, { type ThingId } from "../../tiny/values/Thing";
 
@@ -55,7 +55,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
 
     if (typeof id === "number") {
       if (Number.isNaN(id) || !Number.isFinite(id)) {
-        throw new TypeError("Invalid ID", { cause: id });
+        throw new SurrealDbTypeError("Invalid ID", { cause: id });
       }
 
       if (Number.isInteger(id)) {
@@ -81,12 +81,12 @@ export default class Thing extends Base implements SurqlValueSerializer {
       return toSurql(id);
     }
 
-    throw new TypeError("Invalid ID", { cause: id });
+    throw new SurrealDbTypeError("Invalid ID", { cause: id });
   }
 
   /**
    * @example
-   * ```typescript
+   * ```ts
    * const thing = new Thing("tb", {
    *   string: "あいうえお😢",
    *   number: [
@@ -112,7 +112,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
 
   /**
    * @example
-   * ```typescript
+   * ```ts
    * const thing = new Thing("tb", {
    *   string: "あいうえお😢",
    *   number: [

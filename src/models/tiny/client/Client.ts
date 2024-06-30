@@ -57,12 +57,16 @@ export default class Client extends Abc {
     }
 
     this.ee.on("error", (_, error) => {
-      console.error(error);
-      this.disconnect({ force: true }).then(result => {
-        if (!result.ok) {
-          console.error(result.error);
-        }
-      });
+      if (error.fatal) {
+        console.error(error);
+        this.disconnect({ force: true }).then(result => {
+          if (!result.ok) {
+            console.error(result.error);
+          }
+        });
+      } else {
+        console.warn(error);
+      }
     });
     const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
     const engine = this.conn = await this.createEngine(protocol);

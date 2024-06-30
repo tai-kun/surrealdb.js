@@ -1,4 +1,4 @@
-import { TypeError } from "~/errors";
+import { SurrealDbTypeError } from "~/errors";
 import { _defineAssertTable } from "../../_values/internal";
 
 /**
@@ -17,7 +17,7 @@ export default class Table {
     _defineAssertTable(this);
 
     if (typeof name !== "string") {
-      throw new TypeError("Expected string, but got: " + typeof name);
+      throw new SurrealDbTypeError("Expected string, but got: " + typeof name);
     }
 
     this.name = name;

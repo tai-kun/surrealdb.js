@@ -9,7 +9,7 @@ import isBrowser from "./isBrowser";
  * @see https://caniuse.com/mdn-api_abortsignal_timeout_static
  * @see https://github.com/nodejs/node/blob/v22.2.0/lib/internal/abort_controller.js#L209-L221
  * @example
- * ```typescript
+ * ```ts
  * const resp = await fetch("https://localhost:8000/data", {
  *   signal: timeoutSignal(5_000),
  * });

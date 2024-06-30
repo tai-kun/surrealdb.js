@@ -1,5 +1,5 @@
 import { isDecimal } from "~/common/values";
-import { TypeError } from "~/errors";
+import { SurrealDbTypeError } from "~/errors";
 import { _defineAssertDecimal } from "../../_values/internal";
 
 // https://github.com/MikeMcl/decimal.js/blob/master/decimal.mjs#L109-L112
@@ -27,14 +27,16 @@ export default class Decimal {
       } else if (DECIMAL_REGEX.test(value)) {
         this.#value = value;
       } else {
-        throw new TypeError("Invalid Decimal string", { cause: value });
+        throw new SurrealDbTypeError("Invalid Decimal string", {
+          cause: value,
+        });
       }
     } else if (typeof value === "number") {
       this.#value = value.toString(10);
     } else if (isDecimal(value)) {
       this.#value = value.valueOf();
     } else {
-      throw new TypeError("Invalid Decimal value", { cause: value });
+      throw new SurrealDbTypeError("Invalid Decimal value", { cause: value });
     }
   }
 

@@ -1,4 +1,4 @@
-import { TypeError } from "~/errors";
+import { SurrealDbTypeError } from "~/errors";
 import { _defineAssertUuid } from "../../_values/internal";
 
 const UUID_36_REGEX =
@@ -86,7 +86,7 @@ function parseUuid36(uuid: string): Uint8Array {
       return new Uint8Array(16).fill(0xff);
     }
 
-    throw new TypeError(`Invalid UUID: ${uuid}`);
+    throw new SurrealDbTypeError(`Invalid UUID: ${uuid}`);
   }
 
   const bytes = new Uint8Array(16);
@@ -151,12 +151,12 @@ export default class Uuid {
       this.#bytes = parseUuid36(uuid);
     } else if (uuid instanceof Uint8Array) {
       if (!isValidBytes(uuid)) {
-        throw new TypeError(`Invalid UUID: [${Array.from(uuid)}]`);
+        throw new SurrealDbTypeError(`Invalid UUID: [${Array.from(uuid)}]`);
       }
 
       this.#bytes = uuid.slice(); // Copy
     } else {
-      throw new TypeError(
+      throw new SurrealDbTypeError(
         "Expected string or Uint8Array, but got: " + typeof uuid,
       );
     }
@@ -171,7 +171,7 @@ export default class Uuid {
 
   /**
    * @example
-   * ```typescript
+   * ```ts
    * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
    * uuid.toString();
    * // 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee

@@ -6,7 +6,7 @@ const toString = Object.prototype.toString;
  * @param value 判定する値。
  * @returns ArrayBuffer であれば true、それ以外は false。
  * @example
- * ```typescript
+ * ```ts
  * const response = await fetch("https://localhost:8000/data");
  * const buffer = await response.arrayBuffer();
  *

@@ -1,3 +1,5 @@
+import { SurrealDbTypeError } from "~/errors";
+
 const MUTEX_QUEUE = Symbol();
 
 /**
@@ -48,7 +50,7 @@ export default function mutex<T extends (...args: any) => PromiseLike<any>>(
   context: ClassMethodDecoratorContext,
 ): (this: any, ...args: Parameters<T>) => Promise<Awaited<ReturnType<T>>> {
   if (typeof context.addInitializer !== "function") {
-    throw new TypeError("Requires Stage 3 decorator support.");
+    throw new SurrealDbTypeError("Requires Stage 3 decorator support.");
   }
 
   context.addInitializer(function(this: any) {

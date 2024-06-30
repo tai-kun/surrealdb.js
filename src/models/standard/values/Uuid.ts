@@ -25,7 +25,7 @@ export default class Uuid extends Base implements SurqlValueSerializer {
 
   /**
    * @example
-   * ```typescript
+   * ```ts
    * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
    * uuid.toString();
    * // 8f3c721e-439a-4fc0-963c-8dbedf5cc7ee
@@ -37,7 +37,7 @@ export default class Uuid extends Base implements SurqlValueSerializer {
 
   /**
    * @example
-   * ```typescript
+   * ```ts
    * const uuid = new Uuid("8f3c721e-439a-4fc0-963c-8dbedf5cc7ee");
    * uuid.toSurql();
    * // u"8f3c721e-439a-4fc0-963c-8dbedf5cc7ee"

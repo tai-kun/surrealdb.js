@@ -30,7 +30,7 @@ export default class Payload {
    *
    * @returns UTF-8 文字列に変換されたレスポンスデータ。
    * @example
-   * ```typescript
+   * ```ts
    * const responseBodyAsText = await payload.text();
    * ```
    */
@@ -53,7 +53,7 @@ export default class Payload {
    *
    * @returns ArrayBuffer に変換されたレスポンスデータ。
    * @example
-   * ```typescript
+   * ```ts
    * const responseBodyAsArrayBuffer = await payload.arrayBuffer();
    * ```
    */

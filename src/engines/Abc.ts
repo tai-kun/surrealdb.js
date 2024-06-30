@@ -176,7 +176,7 @@ export default abstract class EngineAbc {
    * @param state - 遷移先の状態。
    * @param fallback - 状態遷移に失敗した場合のフォールバック関数。
    * @example
-   * ```typescript
+   * ```ts
    * await this.setState(CONNECTING, () => {
    *   console.error("接続に失敗しました。");
    *
@@ -232,7 +232,7 @@ export default abstract class EngineAbc {
    * そのため、実装されたメソッドを回避してこれを変更することはできません。
    *
    * @example
-   * ```typescript
+   * ```ts
    * const conn = engine.connection;
    * console.log(`接続先: ${conn.endpoint}`);
    *
@@ -256,7 +256,7 @@ export default abstract class EngineAbc {
    * @param endpoint - 接続先のエンドポイント。
    * @param signal - 接続の中断に使用するシグナル。
    * @example
-   * ```typescript
+   * ```ts
    * await engine.connect(new URL("ws://localhost:8080"));
    * ```
    */
@@ -268,7 +268,7 @@ export default abstract class EngineAbc {
    * @param signal - 切断の中断に使用するシグナル。
    * @returns　切断の結果。
    * @example
-   * ```typescript
+   * ```ts
    * const result = await engine.disconnect();
    *
    * if (result.ok) {
@@ -290,7 +290,7 @@ export default abstract class EngineAbc {
    * @param signal - リクエストの中断に使用するシグナル。
    * @returns RPC レスポンス。
    * @example
-   * ```typescript
+   * ```ts
    * const response = await engine.rpc(
    *   { mwthod: "ping", params: [] },
    *   AbortSignal.timeout(5_000), // 5 秒でタイムアウト

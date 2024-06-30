@@ -45,7 +45,7 @@ SurrealQL のデータ型に可能な限り対応しています:
 
 上記のデータ型は、バンドルサイズの微増を許容すれば `.toSurql()` メソッドを利用することができます。これは例えば次のように、データ型から直接 SurrealQL に埋め込める文字列を作成することができます:
 
-```typescript
+```ts
 import { Datetime, Thing } from "@tai-kun/surrealdb";
 
 const id = {
@@ -129,7 +129,7 @@ yarn add @tai-kun/surrealdb
 
 例えば、HTTP エンジン、JSON フォーマッター、バリデーターなし、一般的なクライアントで作成するには次のようにします:
 
-```typescript
+```ts
 import { initSurreal } from "@tai-kun/surrealdb";
 import { httpEngine } from "@tai-kun/surrealdb/engines";
 import { JsonFormatter } from "@tai-kun/surrealdb/formatters";
@@ -167,7 +167,7 @@ async function main() {
 
 `Surreal` インスタンスは `Symbol.asyncDispose` に対応しているため、次のように書くこともできます:
 
-```typescript
+```ts
 async function main() {
   await using db = new Surreal();
   await db.connect("http://localhost:8080");
@@ -181,7 +181,7 @@ async function main() {
 
 `initSurreal` は SurrealQL を記述するためのユーティリティを提供しています:
 
-```typescript
+```ts
 const {
   Surreal,
   surql,
@@ -211,7 +211,7 @@ async function main() {
 
 次に、WebSocket エンジン、CBOR フォーマッター、バリデーターなし、全機能付きクライアントで作成するには次のようにします:
 
-```typescript
+```ts
 import { initSurreal } from "@tai-kun/surrealdb";
 import { webSocketEngine } from "@tai-kun/surrealdb/engines";
 import { CborFormatter } from "@tai-kun/surrealdb/formatters";
@@ -278,7 +278,7 @@ const {
 * バリデーションは行いません。
 * 基本的な機能を持つクライアントを利用します。
 
-```typescript
+```ts
 // 約 7 KB (minify + gzip)
 import { initSurreal } from "@tai-kun/surrealdb";
 import { httpEngine } from "@tai-kun/surrealdb/engines";
@@ -298,7 +298,7 @@ import { EmptyValidator } from "@tai-kun/surrealdb/validators";。
 * バリデーションは行いません。
 * 基本的な機能を持つクライアントを利用します。
 
-```typescript
+```ts
 // 約 14.5 KB (minify + gzip)
 import { initSurreal } from "@tai-kun/surrealdb";
 import { httpEngine } from "@tai-kun/surrealdb/engines";
@@ -335,7 +335,7 @@ import {
 * バリデーションを行います。
 * 全機能を持つクライアントを利用します。
 
-```typescript
+```ts
 // 約 47 KB (minify + gzip)
 import { initSurreal } from "@tai-kun/surrealdb";
 import { httpEngine, webSocketEngine } from "@tai-kun/surrealdb/engines";

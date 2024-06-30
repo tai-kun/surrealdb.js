@@ -61,7 +61,7 @@ export default class TaskQueue {
    * @param options - タスクランナーの実行オプション。
    * @returns タスクランナーの結果を取得するための `StatefulPromise` インスタンス。
    * @example
-   * ```typescript
+   * ```ts
    * const queue = new TaskQueue();
    * const task = queue.add(async ({ signal }) => {
    *   const response = await fetch("https://localhost:8000/data", { signal });
@@ -141,7 +141,7 @@ export default class TaskQueue {
    *
    * @returns タスクがすべて成功した場合は `Ok`、そうでない場合は `Err` を返します。
    * @example
-   * ```typescript
+   * ```ts
    * const queue = new TaskQueue();
    * queue.add(async ({ signal }) => {
    *   // 時間のかかる処理
@@ -178,7 +178,7 @@ export default class TaskQueue {
    *
    * @param reason - 中止の理由。
    * @example
-   * ```typescript
+   * ```ts
    * const queue = new TaskQueue();
    * const task = queue.add(({ signal }) => {
    *   return new Promise((_, reject) => {

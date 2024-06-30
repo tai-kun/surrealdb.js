@@ -62,7 +62,7 @@ function* matchIndices(
  * @param escaped - エスケープする文字。
  * @returns 囲まれた文字列。
  * @example
- * ```typescript
+ * ```ts
  * escape("foo", "'", "'", "''"); // 'foo'
  * escape("foo'bar", "'", "'", "''"); // 'foo''bar'
  * ```
@@ -82,7 +82,7 @@ export function escape(
  * @param str - 囲む文字列。
  * @returns 引用符で囲まれた文字列。
  * @example
- * ```typescript
+ * ```ts
  * quoteStr("cat"); // 'cat'
  * quoteStr("cat's"); // "cat's"
  * quoteStr(`cat's "toy"`); // "cat's \"toy\""
@@ -127,7 +127,7 @@ export function quoteStr(str: string): string {
  * @param str - エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
- * ```typescript
+ * ```ts
  * escapeKey("123"); // 123
  * escapeKey("foo_bar"); // foo_bar
  * escapeKey("foo-bar"); // "foo-bar"
@@ -145,7 +145,7 @@ export function escapeKey(str: string): string {
  * @param str - エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
- * ```typescript
+ * ```ts
  * escapeRid("123"); // ⟨123⟩
  * escapeRid("foo_bar"); // foo_bar
  * escapeRid("foo-bar"); // ⟨foo-bar⟩
@@ -163,7 +163,7 @@ export function escapeRid(str: string): string {
  * @param str - エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
- * ```typescript
+ * ```ts
  * escapeIdent("123"); // `123`
  * escapeIdent("foo_bar"); // foo_bar
  * escapeIdent("foo-bar"); // `foo-bar`
@@ -181,7 +181,7 @@ export function escapeIdent(str: string): string {
  * @param str - エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
- * ```typescript
+ * ```ts
  * escapeNormal("123", "'", "'", "''"); // 123
  * escapeNormal("foo_bar", "'", "'", "''"); // foo_bar
  * escapeNormal("foo-bar", "'", "'", "''"); // 'foo-bar'
@@ -212,7 +212,7 @@ export function escapeNormal(
  * @param str - エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
- * ```typescript
+ * ```ts
  * escapeNumeric("123", "'", "'", "''"); // '123'
  * escapeNumeric("foo_bar", "'", "'", "''"); // foo_bar
  * escapeNumeric("foo-bar", "'", "'", "''"); // 'foo-bar'

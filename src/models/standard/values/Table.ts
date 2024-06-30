@@ -22,7 +22,7 @@ export default class Table extends Base implements SurqlValueSerializer {
 
   /**
    * @example
-   * ```typescript
+   * ```ts
    * const table = new Table("0xff");
    * table.toJSON();
    * // 0xff
@@ -34,7 +34,7 @@ export default class Table extends Base implements SurqlValueSerializer {
 
   /**
    * @example
-   * ```typescript
+   * ```ts
    * const table = new Table("255");
    * table.toSurql();
    * // ⟨255⟩

@@ -1,5 +1,5 @@
 import type { Constructor } from "type-fest";
-import { TypeError } from "~/errors";
+import { SurrealDbTypeError } from "~/errors";
 import type { ClientConfig, default as ClientAbc } from "~/models/_client/Abc";
 import type { RecordData } from "./types";
 
@@ -107,7 +107,7 @@ export default function initSurreal<T extends ClientConstructor>(
   } = init;
 
   if (!/^[0-9a-z_]*$/i.test(prefix)) {
-    throw new TypeError(`Invalid prefix: ${prefix}`);
+    throw new SurrealDbTypeError(`Invalid prefix: ${prefix}`);
   }
 
   // @ts-ignore

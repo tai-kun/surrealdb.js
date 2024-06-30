@@ -3,6 +3,9 @@ import type {
   IdLessRpcResponseErr,
 } from "./common/types";
 
+/**
+ * このパッケージがハンドリングするエラーが継承するエラークラス。
+ */
 export class SurrealDbError extends Error {}
 
 /**
@@ -45,18 +48,17 @@ export function unreachable(...args: [cause?: never]): never {
 }
 
 /**
- * このエラーは、主に値が期待された型と異なる場合に投げられます。
+ * このエラーは、値が期待された型と異なる場合に投げられます。
+ * バリデーターや埋め込まれた検証がこのエラーを投げるため、あらゆる場所でこのエラーを捕捉する可能性があります。
  */
-export class TypeError extends SurrealDbError {
+export class SurrealDbTypeError extends SurrealDbError {
   static {
-    this.prototype.name = "TypeError";
+    this.prototype.name = "SurrealDbTypeError";
   }
 }
 
 /**
  * このエラーは、サポートされていないランタイムを使用していると判断された場合に投げられます。
- *
- * This error is thrown when an unsupported runtime is detected.
  */
 export class UnsupportedRuntime extends SurrealDbError {
   static {
@@ -75,7 +77,25 @@ export class UnsupportedRuntime extends SurrealDbError {
 /**
  * このエラーは、プロトコル間で循環参照が発生した場合に投げられます。
  *
- * This error is thrown when a circular reference occurs between protocols.
+ * @example
+ * ```ts
+ * // この例では、https プロトコルのエンジンが http に設定されているエンジンを使うことを示しているにもかかわらず、http プロトコルのエンジンは https に設定されているエンジンを使おうとするため、循環参照エラーが投げられます。
+ *
+ * const { Surreal } = initSurreal({
+ *   engines: {
+ *     http: "https",
+ *     https: "http",
+ *   },
+ *   // その他の設定
+ * });
+ *
+ * try {
+ *   await using db = new Surreal();
+ *   await db.connect("https://localhost:8000")
+ * } catch (error) {
+ *   console.error(error); // CircularEngineReference: Circular engine reference: http,https
+ * }
+ * ```
  */
 export class CircularEngineReference extends SurrealDbError {
   static {
@@ -94,7 +114,24 @@ export class CircularEngineReference extends SurrealDbError {
 /**
  * このエラーは、サポートされていないプロトコルを使用しようとした場合に投げられます。
  *
- * This error is thrown when attempting to connect using an unsupported protocol.
+ * @example
+ * ```ts
+ * // この例では、HTTP エンジンを http プロトコルにのみ設定しているため、https で接続しようとするとエラーが投げられます。
+ *
+ * const { Surreal } = initSurreal({
+ *   engines: {
+ *     http: httpEngine,
+ *   },
+ *   // その他の設定
+ * });
+ *
+ * try {
+ *   await using db = new Surreal();
+ *   await db.connect("https://localhost:8000");
+ * } catch (error) {
+ *   console.error(error); // UnsupportedProtocol: Unsupported protocol: https
+ * }
+ * ```
  */
 export class UnsupportedProtocol extends SurrealDbError {
   static {
@@ -112,8 +149,8 @@ export class UnsupportedProtocol extends SurrealDbError {
 
 /**
  * このエラーは、データの変換に失敗した場合に投げられます。
- *
- * This error is thrown when converting data fails.
+ * 現在は `Payload` クラスがレスポンスボディを ArrayBuffer への変換に失敗したときにのみ投げられます。
+ * そのため、このエラーはフォーマッターがレスポンスボディを JavaScript の値にデコードするのに失敗したことを意味します。
  */
 export class DataConversionFailure extends SurrealDbError {
   static {
@@ -138,6 +175,7 @@ export class DataConversionFailure extends SurrealDbError {
 
 /**
  * このエラーは、タスクが失敗した場合に投げられます。
+ * これは主に、イベントハンドラーがエラーを投げたことを意味します。
  */
 export class AggregateTasksError extends SurrealDbError {
   static {
@@ -154,7 +192,6 @@ export class AggregateTasksError extends SurrealDbError {
 
 /**
  * このエラーは、リソースがすでに破棄されてる場合に投げられます。
- *
  * これは、非同期タスクを管理するクラスなどがすでにその役目を終えていることを意味します。
  */
 export class ResourceAlreadyDisposed extends SurrealDbError {
@@ -171,9 +208,14 @@ export class ResourceAlreadyDisposed extends SurrealDbError {
   }
 }
 
+/**
+ * エンジンに起因するエラーのクラスのオプション。
+ */
 export interface EngineErrorOptions extends ErrorOptions {
   /**
    * このエラーが致命的であるかどうか。
+   *
+   * @default undefined
    */
   readonly fatal?: boolean | undefined;
 }
@@ -203,6 +245,18 @@ export class EngineError extends SurrealDbError {
 
 /**
  * このエラーは、HTTP エンジンに起因する問題が発生した場合に投げられます。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ *
+ * db.on("error", error => {
+ *   console.error(error); // HttpEngineError: <メッセージ>
+ * });
+ *
+ * await db.connect("http://localhost:8000");
+ * // 何らかのエラーが発生する処理
+ * ```
  */
 export class HttpEngineError extends EngineError {
   static {
@@ -219,7 +273,75 @@ export class HttpEngineError extends EngineError {
 }
 
 /**
+ * WebSocket エンジンに起因する問題のエラーコード。
+ */
+export namespace WebSocketEngineErrorCode {
+  /**
+   * 標準のエラーコード。
+   */
+  export type Defined =
+    // | 1000
+    // | 1004
+    // | 1005
+    // | 1001
+    // | 1006
+    | 1002
+    | 1003
+    | 1007
+    | 1008
+    | 1009
+    | 1010
+    | 1011
+    | 1012
+    | 1013
+    | 1014
+    | 1015;
+
+  /**
+   * カスタムのエラーコード。
+   */
+  export type Custom =
+    | 3000
+    | 3001
+    | 3002
+    | 3003;
+}
+
+/**
+ * WebSocket エンジンに起因する問題のエラーコード。
+ *
+ * 早期切断に由来する標準のエラーコードはエラーとして扱われません。
+ *
+ * カスタムのエラーコード:
+ *
+ * - `3000`: error イベントを捕捉したことを示します。
+ * - `3001`: open イベントハンドラー内でエラーが発生したことを示します。
+ *    これは `OPEN` イベントハンドラーのどれかがエラーを投げ、{@link StateTransitionError} が発生したことを意味します。
+ * - `3002`: message イベントハンドラー内でエラーが発生したことを示します。
+ *    レスポンスボディの検証に関する原因が考えられます。
+ *    通常 RPC はタイムアウトエラーで自己完結するため、直ちにエンドポイントとの接続を切る必要はありませんが、ログは記録するべきです。
+ * - `3003`: ping メッセージの送信に失敗したことを示します。この ping は WebSocket の ping メッセージではなく、SurrealDB の ping RPC です。
+ *
+ * @see https://developer.mozilla.org/ja/docs/Web/API/WebSocket/close#code
+ */
+export type WebSocketEngineErrorCode =
+  | WebSocketEngineErrorCode.Custom
+  | WebSocketEngineErrorCode.Defined;
+
+/**
  * このエラーは、WebSocket エンジンに起因する問題が発生した場合に投げられます。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ *
+ * db.on("error", error => {
+ *   console.error(error); // WebSocketEngineError: <メッセージ>
+ * });
+ *
+ * await db.connect("ws://localhost:8000");
+ * // 何らかのエラーが発生する処理
+ * ```
  */
 export class WebSocketEngineError extends EngineError {
   static {
@@ -228,10 +350,8 @@ export class WebSocketEngineError extends EngineError {
 
   /**
    * エラーコード。
-   *
-   * @see https://developer.mozilla.org/ja/docs/Web/API/WebSocket/close#code
    */
-  code: number;
+  code: WebSocketEngineErrorCode;
 
   /**
    * @param code - エラーコード。
@@ -239,7 +359,7 @@ export class WebSocketEngineError extends EngineError {
    * @param options - エラーオプション。
    */
   constructor(
-    code: number,
+    code: WebSocketEngineErrorCode,
     message: string,
     options?: EngineErrorOptions | undefined,
   ) {
@@ -251,6 +371,21 @@ export class WebSocketEngineError extends EngineError {
 /**
  * このエラーは、エンジンが内部状態の遷移に失敗した場合に投げられます。
  * これは主に、接続状態間の切り替え時に、その状態の変化を監視するコールバック関数がエラーを投げた場合に発生します。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ *
+ * db.on(CONNECTING, () => {
+ *   throw new Error("絶対接続させません。");
+ * });
+ *
+ * try {
+ *   await db.connect("http://localhost:8000");
+ * } catch (error) {
+ *   console.error(error); // StateTransitionError: Failed to transition from "3" to "0".
+ * }
+ * ```
  */
 export class StateTransitionError extends SurrealDbError {
   static {
@@ -275,8 +410,20 @@ export class StateTransitionError extends SurrealDbError {
  * このエラーは、エンジンが接続可能でない場合に投げられます。
  * これは主に、エンドポイントへの接続がまだ開始されていない場合に発生します。
  * 接続が進行中の場合、一般的にはその完了を待機するため、このエラーは発生しません。
- * 例えば `.connect()` のようなメソッドが事前に呼び出されていない可能性があります。
+ * 例えば `.connect()` メソッドが事前に呼び出されていない可能性があります。
  * なお、非同期処理のタイミングの問題により、稀にこのエラーが発生することがあります。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ * // await db.connect("ws://localhost:8000");
+ *
+ * try {
+ *   await db.ping();
+ * } catch (error) {
+ *   console.error(error); // ConnectionUnavailable: The connection is unavailable.
+ * }
+ * ```
  */
 export class ConnectionUnavailable extends SurrealDbError {
   static {
@@ -293,6 +440,18 @@ export class ConnectionUnavailable extends SurrealDbError {
 
 /**
  * このエラーは、データベースを指定する前に名前空間が指定されていない場合に投げられます。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ * await db.connect("http://localhost:8000");
+ *
+ * try {
+ *   await db.use({ database: "example" });
+ * } catch (error) {
+ *   console.error(error); // MissingNamespace: The namespace must be specified before the database.
+ * }
+ * ```
  */
 export class MissingNamespace extends SurrealDbError {
   static {
@@ -309,6 +468,7 @@ export class MissingNamespace extends SurrealDbError {
 
 /**
  * このエラーは、レスポンスが不正な値のときに投げられます。
+ * HTTP エンジンに設定したカスタム fetch のレスポンスの実装に誤りがあるか、レスポンスがステータスコード 200 以外を示しています。
  */
 export class InvalidResponse extends SurrealDbError {
   static {
@@ -326,6 +486,7 @@ export class InvalidResponse extends SurrealDbError {
 
 /**
  * このエラーは RPC レスポンスがエラーを示した場合に投げられます。
+ * 接続したプロトコルによる通信やレスポンスボディのデコードなどに問題はありませんが、SurrealDB が RPC リクエストを処理できないことを意味します。
  */
 export class RpcResponseError extends SurrealDbError {
   static {
@@ -339,6 +500,9 @@ export class RpcResponseError extends SurrealDbError {
 
   /**
    * エラーコード。
+   * SurrealDB のドキュメントに明記されていませんが、おそらく JSON-RPC のエラーコードだと思われます。
+   *
+   * @see https://www.jsonrpc.org/specification#error_object
    */
   code: BidirectionalRpcResponseErr["error"]["code"];
 
@@ -361,6 +525,19 @@ export class RpcResponseError extends SurrealDbError {
 
 /**
  * このエラーは、クエリーが失敗した場合に投げられます。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ * await db.connect("http://localhost:8000");
+ *
+ * try {
+ *   await db.query("OUTPUT 'Hello'");
+ * } catch (error) {
+ *   console.error(error); // QueryFailure: Query failed with 1 error(s)
+ *   console.error(...error.cause);
+ * }
+ * ```
  */
 export class QueryFailure extends SurrealDbError {
   static {
@@ -379,6 +556,18 @@ export class QueryFailure extends SurrealDbError {
 
 /**
  * このエラーは、クライアントが複数のエンドポイントに同時に接続しようとした場合に投げられます。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ *
+ * try {
+ *   await db.connect("http://localhost:8000");
+ *   await db.connect("http://localhost:11298");
+ * } catch (error) {
+ *   console.error(error); // ConnectionConflict: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
+ * }
+ * ```
  */
 export class ConnectionConflict extends SurrealDbError {
   static {
@@ -406,6 +595,19 @@ export class ConnectionConflict extends SurrealDbError {
  * このエラーは、接続が強制的に終了されたことを示します。
  * これは AbortSignal を介して取得されるエラーであり、
  * これを認識するタスクは現在の操作を即座に停止する必要があります。
+ *
+ * @example
+ * ```ts
+ * const db = new Surreal();
+ *
+ * db.on(<イベント>, ({ signal }) => {
+ *   signal.addEventListener("abort", function() {
+ *     console.error(this.reason); // EngineDisconnected: The engine is disconnected.
+ *   })
+ * });
+ *
+ * await db.disconnect({ force: true }); // force を true にすると中止シグナルにエラーが送信されます。
+ * ```
  */
 export class EngineDisconnected extends SurrealDbError {
   static {

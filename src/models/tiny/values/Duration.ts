@@ -1,4 +1,4 @@
-import { TypeError } from "~/errors";
+import { SurrealDbTypeError } from "~/errors";
 import { _defineAssertDuration } from "../../_values/internal";
 
 const SECONDS_PER_MINUTE = 60;
@@ -31,7 +31,9 @@ export default class Duration {
         + Number((b ?? "").padEnd(6, "0").substring(0, 6));
     } else if (typeof duration === "string") {
       if (duration.length > 1_000) {
-        throw new TypeError("Invalid duration: too long", { cause: duration });
+        throw new SurrealDbTypeError("Invalid duration: too long", {
+          cause: duration,
+        });
       }
 
       if (duration === "" || duration === "0") {
@@ -88,7 +90,7 @@ export default class Duration {
               break;
 
             default:
-              throw new TypeError("Invalid duration: invalid unit", {
+              throw new SurrealDbTypeError("Invalid duration: invalid unit", {
                 cause: duration,
               });
           }
@@ -97,13 +99,13 @@ export default class Duration {
         }
 
         if (count !== duration.length) {
-          throw new TypeError("Invalid duration: invalid format", {
+          throw new SurrealDbTypeError("Invalid duration: invalid format", {
             cause: duration,
           });
         }
 
         if (!Number.isSafeInteger(secs) || !Number.isSafeInteger(nano)) {
-          throw new TypeError("Invalid duration: out of range", {
+          throw new SurrealDbTypeError("Invalid duration: out of range", {
             cause: duration,
           });
         }
@@ -119,13 +121,13 @@ export default class Duration {
       this.#s = duration[0];
       this.#ns = duration[1];
     } else {
-      throw new TypeError("Invalid duration: invalid type", {
+      throw new SurrealDbTypeError("Invalid duration: invalid type", {
         cause: duration,
       });
     }
 
     if (this.#s < 0 || this.#ns < 0) {
-      throw new TypeError("Invalid duration: negative value", {
+      throw new SurrealDbTypeError("Invalid duration: negative value", {
         cause: duration,
       });
     }

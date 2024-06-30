@@ -6,7 +6,7 @@
  * @see https://caniuse.com/?search=throwIfAborted
  * @see https://github.com/nodejs/node/blob/v22.2.0/lib/internal/abort_controller.js#L187-L192
  * @example
- * ```typescript
+ * ```ts
  * function fetchData(signal: AbortSignal) {
  *   throwIfAborted(signal);
  *   const resp = await fetch("https://localhost:8000/data", { signal });

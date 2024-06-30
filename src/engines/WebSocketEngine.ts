@@ -13,6 +13,7 @@ import {
   ConnectionUnavailable,
   MissingNamespace,
   RpcResponseError,
+  SurrealDbTypeError,
   WebSocketEngineError,
 } from "~/errors";
 import { isArrayBuffer, Payload } from "~/formatters";
@@ -25,8 +26,7 @@ import EngineAbc, {
 } from "./Abc";
 
 type GlobalWebSocket = typeof globalThis extends
-  { WebSocket: infer T extends abstract new(...args: any) => any }
-  ? InstanceType<T>
+  { WebSocket: new(...args: any) => infer R } ? R
   : never;
 
 /**
@@ -150,7 +150,7 @@ export default class WebSocketEngine extends EngineAbc {
         case 1000: // Normal Closure
         case 1004: // Reserved (Not Used)
         case 1005: // No Status Received
-        // 早期切断に由来するエラーコードはエラーとして扱いません。
+        // 早期切断に由来するエラーコードをエラーとして扱いません。
         case 1001: // Going Away
         case 1006: // Abnormal Closure
           break;
@@ -271,7 +271,11 @@ export default class WebSocketEngine extends EngineAbc {
             const rpcResp = await this.rpc(request, signal);
 
             if (rpcResp.error) {
-              throw new RpcResponseError(rpcResp);
+              throw new RpcResponseError(rpcResp, {
+                cause: {
+                  endpoint: this.conn.endpoint?.href,
+                },
+              });
             }
           } catch (error) {
             this.ee.emit(
@@ -407,7 +411,7 @@ export default class WebSocketEngine extends EngineAbc {
     const body: unknown = await this.fmt.encode({ ...request, id });
 
     if (typeof body !== "string" && !isArrayBuffer(body)) {
-      throw new TypeError(
+      throw new SurrealDbTypeError(
         "The formatter encoded a non-string, non-ArrayBuffer value",
       );
     }

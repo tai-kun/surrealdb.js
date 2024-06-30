@@ -20,7 +20,7 @@ export default abstract class FormatterAbc {
    * @param data - エンコードするデータ。
    * @returns エンコードされたデータ。
    * @example
-   * ```typescript
+   * ```ts
    * const data = { foo: "bar" };
    * const encoded = await formatter.encode(data);
    * ```
@@ -33,7 +33,7 @@ export default abstract class FormatterAbc {
    * @param data - RPC リクエストのレスポンスデータ。
    * @returns デコードされたデータ。
    * @example
-   * ```typescript
+   * ```ts
    * const data = await formatter.decode(response);
    * ```
    */
@@ -45,7 +45,7 @@ export default abstract class FormatterAbc {
    * @param data - コピーするデータ。
    * @returns コピーされたデータ。
    * @example
-   * ```typescript
+   * ```ts
    * const data = { foo: "bar" };
    * const copied = await formatter.copy(data);
    * ```

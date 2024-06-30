@@ -57,7 +57,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * @param event - リスナーを追加するイベント。
    * @param listener - 追加するリスナー。
    * @example
-   * ```typescript
+   * ```ts
    * const taskEmitter = new TaskEmitter();
    * taskEmitter.on("event", async ({ signal }, arg0) => {
    *   awiat doSomething(arg0, { signal });
@@ -96,7 +96,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * @param event - リスナーを削除するイベント。
    * @param listener - 削除するリスナー。
    * @example
-   * ```typescript
+   * ```ts
    * const taskEmitter = new TaskEmitter();
    * const listener = async ({ signal }, arg0) => {
    *   awiat doSomething(arg0, { signal });
@@ -214,11 +214,11 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * @param args - イベントリスナーに渡される引数。
    * @returns このイベントによってトリガーされたイベントリスナーの Promise のリスト。
    * @example
-   * ```typescript
+   * ```ts
    * taskEmitter.emit("event", 1);
    * ```
    * @example
-   * ```typescript
+   * ```ts
    * const promises = taskEmitter.emit("event", 1);
    * const results = await Promise.all(promises || []);
    * ```
@@ -248,7 +248,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    *
    * @returns タスクがすべて成功した場合は `Ok`、そうでない場合は `Err` を返します。
    * @example
-   * ```typescript
+   * ```ts
    * const taskEmitter = new TaskEmitter();
    * taskEmitter.on("event", async ({ signal }, ...args) => {
    *   // 時間のかかる処理
@@ -273,7 +273,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    *
    * @param reason - 中止の理由。
    * @example
-   * ```typescript
+   * ```ts
    * taskEmitter.abort();
    * ```
    */

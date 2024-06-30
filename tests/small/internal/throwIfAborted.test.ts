@@ -24,14 +24,14 @@ test("中止されたシグナルを渡すと指定された例外を投げる",
   }
 
   const controller = new AbortController();
-  const reason = new TypeError("test");
+  const reason = new SurrealDbTypeError("test");
   controller.abort(reason);
 
   assertThrows(
     () => {
       throwIfAborted(controller.signal);
     },
-    TypeError,
+    SurrealDbTypeError,
     "test",
   );
 });

@@ -1,5 +1,5 @@
 import { isUuid } from "@tai-kun/surrealdb";
-import { TypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealDbTypeError } from "@tai-kun/surrealdb/errors";
 import { Uuid } from "@tai-kun/surrealdb/full";
 import { Uuid as UuidStandard } from "@tai-kun/surrealdb/standard";
 import { Uuid as UuidTiny } from "@tai-kun/surrealdb/tiny";
@@ -98,7 +98,12 @@ test("UUID 形式でない文字列から UUID インスタンスを作成する
       "バージョンが不正": "26c80163-3b83-081b-93da-c473947cccbc",
     })
   ) {
-    assertThrows(() => new Uuid(invalidUuid), TypeError, undefined, reason);
+    assertThrows(
+      () => new Uuid(invalidUuid),
+      SurrealDbTypeError,
+      undefined,
+      reason,
+    );
   }
 });
 

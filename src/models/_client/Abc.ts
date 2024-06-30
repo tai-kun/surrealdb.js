@@ -19,7 +19,7 @@ import {
 import {
   type AggregateTasksError,
   CircularEngineReference,
-  TypeError,
+  SurrealDbTypeError,
   UnsupportedProtocol,
 } from "~/errors";
 import type { FormatterAbc } from "~/formatters";
@@ -153,7 +153,7 @@ export default abstract class ClientAbc {
    * @param protocol - 接続を試みるエンドポイントのプロトコル。
    * @returns クライアントエンジン。
    * @example
-   * ```typescript
+   * ```ts
    * const url = new URL(endpoint);
    * const protocol = url.protocol.replace(/:$/, "");
    * const engine = await this.createEngine(protocol);
@@ -204,7 +204,7 @@ export default abstract class ClientAbc {
    * @param event - リスナーを追加するイベント。
    * @param listener - 追加するリスナー。
    * @example
-   * ```typescript
+   * ```ts
    * import { OPEN } from "@tai-kun/surrealdb/engines";
    *
    * const db = (省略);
@@ -226,7 +226,7 @@ export default abstract class ClientAbc {
    * @param event - リスナーを削除するイベント。
    * @param listener - 削除するリスナー。
    * @example
-   * ```typescript
+   * ```ts
    * import { CLOSED } from "@tai-kun/surrealdb/engines";
    *
    * const db = (省略);
@@ -244,7 +244,7 @@ export default abstract class ClientAbc {
     // 誤ってすべてのイベントリスナーを解除してしまわないようにするため、
     // listener が無い場合はエラーを投げる。
     if (!listener) {
-      throw new TypeError(
+      throw new SurrealDbTypeError(
         `Expected listener to be a function, but got ${typeof listener} instead.`,
       );
     }
@@ -260,7 +260,7 @@ export default abstract class ClientAbc {
    * @param options - タスクリスナーのオプション。
    * @returns イベントリスナーに渡された引数。
    * @example
-   * ```typescript
+   * ```ts
    * import { OPEN } from "@tai-kun/surrealdb/engines";
    *
    * const db = (省略);
@@ -283,7 +283,7 @@ export default abstract class ClientAbc {
    * @param endpoint - 接続先のエンドポイント。
    * @param options - 接続のオプション。
    * @example
-   * ```typescript
+   * ```ts
    * const db = (省略);
    * await db.connect("https://localhost:8000");
    * ```
@@ -299,7 +299,7 @@ export default abstract class ClientAbc {
    * @param options - 切断のオプション。
    * @returns　切断の結果。
    * @example
-   * ```typescript
+   * ```ts
    * const db = (省略);
    * await db.connect("https://localhost:8000");
    * const result = await db.disconnect();
@@ -334,7 +334,7 @@ export default abstract class ClientAbc {
    * @param options - リクエストのオプション。
    * @returns RPC の結果。
    * @example
-   * ```typescript
+   * ```ts
    * const db = (省略);
    * await db.connect("https://localhost:8000");
    *

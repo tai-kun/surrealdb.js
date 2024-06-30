@@ -1,7 +1,10 @@
 export const ENV = "Firefox";
 
 export function test(name, fn) {
-  return it(name, fn);
+  return it(name, function() {
+    this.timeout(30 * 1_000);
+    return fn.apply(this, arguments);
+  });
 }
 
 if (typeof Promise.withResolvers !== "function") {

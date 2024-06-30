@@ -2,6 +2,7 @@ import type { Promisable, ValueOf } from "type-fest";
 import type { WebSocket as WsWebSocket } from "ws";
 import { makeAbortApi } from "~/_internal";
 import { type Err, err, mutex, type Ok, ok, SerialId } from "~/_internal";
+import getTimeoutSignal from "~/_internal/timeoutSignal";
 import {
   ConnectionUnavailable,
   MissingNamespace,
@@ -23,6 +24,11 @@ import EngineAbc, {
   OPEN,
 } from "./Abc";
 
+type GlobalWebSocket = typeof globalThis extends
+  { WebSocket: infer T extends abstract new(...args: any) => any }
+  ? InstanceType<T>
+  : never;
+
 /**
  * WebSocket インスタンスを作成する関数。
  */
@@ -37,7 +43,7 @@ export interface CreateWebSocket {
   (
     address: URL,
     protocol: string | undefined,
-  ): Promisable<WebSocket | WsWebSocket>;
+  ): Promisable<GlobalWebSocket | WsWebSocket>;
 }
 
 /**
@@ -48,6 +54,12 @@ export interface WebSocketEngineConfig extends EngineConfig {
    * WebSocket インスタンスを作成する関数。
    */
   readonly createWebSocket: CreateWebSocket;
+  /**
+   * ping メッセージを送信する間隔 (ミリ秒)。
+   *
+   * @default 30_000
+   */
+  readonly pingInterval?: number | undefined;
 }
 
 /**
@@ -62,7 +74,7 @@ export default class WebSocketEngine extends EngineAbc {
   /**
    * WebSocket インスタンス。
    */
-  protected ws: WebSocket | null = null;
+  protected ws: WsWebSocket | null = null;
 
   /**
    * WebSocket インスタンスを作成する関数。
@@ -70,11 +82,17 @@ export default class WebSocketEngine extends EngineAbc {
   protected newWs: CreateWebSocket;
 
   /**
+   * ping メッセージを送信する間隔 (ミリ秒)。
+   */
+  readonly pingInterval: number;
+
+  /**
    * @param config - WebSocket エンジンの設定。
    */
   constructor(config: WebSocketEngineConfig) {
     super(config);
     this.newWs = config.createWebSocket;
+    this.pingInterval = Math.max(1_000, config.pingInterval ?? 30_000);
   }
 
   @mutex
@@ -91,14 +109,14 @@ export default class WebSocketEngine extends EngineAbc {
     });
 
     const [signal, abort] = makeAbortApi(timeoutSignal);
-    const promise = Promise.race([
+    const openOrError = Promise.race([
       this.ee.once(OPEN, { signal }),
       this.ee.once("error", { signal }),
     ]);
     const ws = await this.newWs(
       new URL(endpoint),
       this.fmt.protocol,
-    ) as WebSocket;
+    ) as WsWebSocket;
     ws.addEventListener("error", evt => {
       this.ee.emit(
         "error",
@@ -234,7 +252,7 @@ export default class WebSocketEngine extends EngineAbc {
     });
 
     try {
-      const [result] = await promise;
+      const [result] = await openOrError;
 
       if (result instanceof Error) {
         throw result;
@@ -243,6 +261,39 @@ export default class WebSocketEngine extends EngineAbc {
       if (!result.ok) {
         throw result.error;
       }
+
+      let timeout: any = undefined;
+      timeout = setInterval(async () => {
+        if (this.ws && this.ws.readyState === OPEN) {
+          try {
+            const signal = getTimeoutSignal(Math.min(this.pingInterval, 5_000));
+            const request: RpcRequest = { method: "ping", params: [] };
+            const rpcResp = await this.rpc(request, signal);
+
+            if (rpcResp.error) {
+              throw new RpcResponseError(rpcResp);
+            }
+          } catch (error) {
+            this.ee.emit(
+              "error",
+              new WebSocketEngineError(
+                // ping メッセージの送信に失敗したエラーを、
+                // カスタムエラーコード 3003 として報告します。
+                3003,
+                "Failed to send a ping message.",
+                {
+                  cause: error,
+                  fatal: false,
+                },
+              ),
+            );
+          }
+        }
+      }, this.pingInterval);
+      this.ee.on(CLOSING, () => {
+        clearInterval(timeout);
+        timeout = undefined;
+      });
     } finally {
       if (!signal.aborted) {
         abort();
@@ -277,7 +328,7 @@ export default class WebSocketEngine extends EngineAbc {
     }
 
     try {
-      const promise = this.ee.once(CLOSED);
+      const closed = this.ee.once(CLOSED);
       const abortHandler = () => {
         this.ee.emit(
           CLOSED,
@@ -298,7 +349,7 @@ export default class WebSocketEngine extends EngineAbc {
         this.ee.emit(CLOSED, ok(CLOSED));
       }
 
-      const [result] = await promise;
+      const [result] = await closed;
       signal.removeEventListener("abort", abortHandler);
 
       return result.ok
@@ -361,9 +412,9 @@ export default class WebSocketEngine extends EngineAbc {
       );
     }
 
-    const promise = this.ee.once(`rpc/${id}`, { signal });
+    const response = this.ee.once(`rpc/${id}`, { signal });
     this.ws.send(body);
-    const [rawResp] = await promise;
+    const [rawResp] = await response;
     // `rawResp` は message イベントハンドラー内で検証済みなので、ここでは型でキャストするだけです。
     const rpcResp = rawResp as BidirectionalRpcResponse;
 

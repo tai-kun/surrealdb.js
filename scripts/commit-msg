@@ -72,9 +72,11 @@ match "^$KIND: ."
 match "^$KIND\(ci\): ."
 match '^chore\(deps\): .'
 match '^chore\(deps-dev\): .'
-check "$(listup . -m 3)"
+check "$(listup . -m 1)"
 check "$(listup src)"
 check "$(listup tests)"
+check "$(listup scripts)"
+check "$(listup test-env)"
 
 echo 'Invalid Commit Message Format'
 exit 1

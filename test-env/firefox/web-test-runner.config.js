@@ -1,19 +1,17 @@
 import { setup } from "@tools/surrealdb/setup";
-import { playwrightLauncher } from "@web/test-runner-playwright";
+import { seleniumLauncher } from "@web/test-runner-selenium";
+import { Browser, Builder } from "selenium-webdriver";
 
 const conn = await setup();
 
 export default {
   nodeResolve: true,
   port: 9000,
-  browsers: [
-    playwrightLauncher({
-      product: "firefox",
-      launchOptions: {
-        executablePath: process.env.BROWSER_EXECUTABLE_PATH,
-      },
-    }),
-  ],
+  browsers: seleniumLauncher({
+    driverBuilder: new Builder()
+      .forBrowser(Browser.FIREFOX)
+      .usingServer("http://localhost:4444/wd/hub"),
+  }),
   testRunnerHtml: testFramework =>
     `<html>
       <body>

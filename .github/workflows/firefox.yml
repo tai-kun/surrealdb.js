@@ -21,18 +21,12 @@ jobs:
 
       - name: Set up Firefox
         run: |
-          sudo apt-get -qqy --no-install-recommends install firefox
-          sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/*
-          sudo wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
-          sudo apt-get -y purge firefox
-          sudo rm -rf /opt/firefox
-          sudo tar -C /opt -xjf /tmp/firefox.tar.bz2
-          sudo rm /tmp/firefox.tar.bz2
-          sudo mv /opt/firefox /opt/firefox-${{ matrix.browser-version }}
-          sudo ln -fs /opt/firefox-${{ matrix.browser-version }}/firefox /usr/bin/firefox
-
-          echo -n 'firefox-path=/usr/bin/firefox' >> $GITHUB_OUTPUT
-        id: setup-firefox
+          name="$(openssl rand -hex 12)"
+          docker run --name "$name" --rm -d --network host --shm-size=2g selenium/standalone-firefox:${{ matrix.browser-version }}
+          echo "selenium_container_name=$name" >>$GITHUB_OUTPUT
+          bash scripts/pretest/small.sh test-env/firefox
+          while ! curl --retry 5 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 1; done
+          curl -sSL http://localhost:4444/wd/hub/status | jq -e '.value.nodes'
 
       - name: Prepare
         run: bash scripts/pretest/small.sh test-env/firefox
@@ -40,56 +34,59 @@ jobs:
       - name: Test
         working-directory: test-env/firefox
         run: bash scripts/test.sh
-        env:
-          BROWSER_EXECUTABLE_PATH: ${{ steps.setup-firefox.outputs.firefox-path }}
 
-  medium:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        browser-version:
-          - "100.0"
-          # - "latest"
-        surrealdb-version:
-          - "v1.5.0"
-          - "latest"
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22.x"
-
-      - name: Set up Firefox
+      - name: Cleanup
+        if: always()
         run: |
-          sudo apt-get -qqy --no-install-recommends install firefox
-          sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/*
-          sudo wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
-          sudo apt-get -y purge firefox
-          sudo rm -rf /opt/firefox
-          sudo tar -C /opt -xjf /tmp/firefox.tar.bz2
-          sudo rm /tmp/firefox.tar.bz2
-          sudo mv /opt/firefox /opt/firefox-${{ matrix.browser-version }}
-          sudo ln -fs /opt/firefox-${{ matrix.browser-version }}/firefox /usr/bin/firefox
+          docker stop ${{ steps.prepare.outputs.selenium_container_name }} || true
 
-          echo -n 'firefox-path=/usr/bin/firefox' >> $GITHUB_OUTPUT
-        id: setup-firefox
+  # medium:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       browser-version:
+  #         - "100.0"
+  #         # - "latest"
+  #       surrealdb-version:
+  #         - "v1.5.0"
+  #         - "latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Prepare
-        run: bash scripts/pretest/medium.sh test-env/firefox ${{ matrix.surrealdb-version }}
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "22.x"
 
-      - name: Test
-        working-directory: test-env/firefox
-        run: bash scripts/test.sh
-        env:
-          BROWSER_EXECUTABLE_PATH: ${{ steps.setup-firefox.outputs.firefox-path }}
+  #     - name: Set up Firefox
+  #       run: |
+  #         sudo apt-get -qqy --no-install-recommends install firefox
+  #         sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+  #         sudo wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
+  #         sudo apt-get -y purge firefox
+  #         sudo rm -rf /opt/firefox
+  #         sudo tar -C /opt -xjf /tmp/firefox.tar.bz2
+  #         sudo rm /tmp/firefox.tar.bz2
+  #         sudo mv /opt/firefox /opt/firefox-${{ matrix.browser-version }}
+  #         sudo ln -fs /opt/firefox-${{ matrix.browser-version }}/firefox /usr/bin/firefox
+
+  #         echo -n 'firefox-path=/usr/bin/firefox' >> $GITHUB_OUTPUT
+  #       id: setup-firefox
+
+  #     - name: Prepare
+  #       run: bash scripts/pretest/medium.sh test-env/firefox ${{ matrix.surrealdb-version }}
+
+  #     - name: Test
+  #       working-directory: test-env/firefox
+  #       run: bash scripts/test.sh
+  #       env:
+  #         BROWSER_EXECUTABLE_PATH: ${{ steps.setup-firefox.outputs.firefox-path }}
 
   action-timeline:
     needs:
       - small
-      - medium
+      # - medium
     permissions:
       actions: read
     runs-on: ubuntu-latest

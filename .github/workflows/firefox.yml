@@ -83,7 +83,7 @@ jobs:
   action-timeline:
     needs:
       - small
-      # - medium
+      - medium
     permissions:
       actions: read
     runs-on: ubuntu-latest

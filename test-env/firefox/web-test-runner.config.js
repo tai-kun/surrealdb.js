@@ -7,11 +7,11 @@ const conn = await setup();
 export default {
   nodeResolve: true,
   port: 9000,
-  browsers: seleniumLauncher({
+  browsers: [seleniumLauncher({
     driverBuilder: new Builder()
       .forBrowser(Browser.FIREFOX)
       .usingServer("http://localhost:4444/wd/hub"),
-  }),
+  })],
   testRunnerHtml: testFramework =>
     `<html>
       <body>

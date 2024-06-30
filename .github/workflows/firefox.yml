@@ -21,11 +21,16 @@ jobs:
 
       - name: Set up Firefox
         run: |
-          sudo apt-get install libgtk2.0-0
-          wget https://ftp.mozilla.org/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
-          tar xvf firefox-${{ matrix.browser-version }}.tar.bz2
-          sudo mv firefox/ /usr/lib/firefox
-          sudo ln -s /usr/lib/firefox /usr/bin/firefox
+          sudo apt-get -qqy --no-install-recommends install firefox
+          sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+          sudo wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
+          sudo apt-get -y purge firefox
+          sudo rm -rf /opt/firefox
+          sudo tar -C /opt -xjf /tmp/firefox.tar.bz2
+          sudo rm /tmp/firefox.tar.bz2
+          sudo mv /opt/firefox /opt/firefox-${{ matrix.browser-version }}
+          sudo ln -fs /opt/firefox-${{ matrix.browser-version }}/firefox /usr/bin/firefox
+
           echo -n 'firefox-path=/usr/bin/firefox' >> $GITHUB_OUTPUT
         id: setup-firefox
 
@@ -59,11 +64,16 @@ jobs:
 
       - name: Set up Firefox
         run: |
-          sudo apt-get install libgtk2.0-0
-          wget https://ftp.mozilla.org/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
-          tar xvf firefox-${{ matrix.browser-version }}.tar.bz2
-          sudo mv firefox/ /usr/lib/firefox
-          sudo ln -s /usr/lib/firefox /usr/bin/firefox
+          sudo apt-get -qqy --no-install-recommends install firefox
+          sudo rm -rf /var/lib/apt/lists/* /var/cache/apt/*
+          sudo wget --no-verbose -O /tmp/firefox.tar.bz2 https://download-installer.cdn.mozilla.net/pub/firefox/releases/${{ matrix.browser-version }}/linux-x86_64/en-US/firefox-${{ matrix.browser-version }}.tar.bz2
+          sudo apt-get -y purge firefox
+          sudo rm -rf /opt/firefox
+          sudo tar -C /opt -xjf /tmp/firefox.tar.bz2
+          sudo rm /tmp/firefox.tar.bz2
+          sudo mv /opt/firefox /opt/firefox-${{ matrix.browser-version }}
+          sudo ln -fs /opt/firefox-${{ matrix.browser-version }}/firefox /usr/bin/firefox
+
           echo -n 'firefox-path=/usr/bin/firefox' >> $GITHUB_OUTPUT
         id: setup-firefox
 

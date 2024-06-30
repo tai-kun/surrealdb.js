@@ -1,6 +1,6 @@
 declare function getInitializedSurreal(): Promise<{
   endpoint: string;
-  Surreal: import("surrealjs").Surreal<
-    typeof import("surrealjs/full").Client
+  Surreal: import("surreal-js").Surreal<
+    typeof import("surreal-js/full").Client
   >;
 }>;

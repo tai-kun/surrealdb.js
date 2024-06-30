@@ -5,11 +5,11 @@ import {
   assertThrows,
 } from "@tools/assert";
 import { test } from "@tools/test";
-import { isUuid } from "surrealjs";
-import { SurrealDbTypeError } from "surrealjs/errors";
-import { Uuid } from "surrealjs/full";
-import { Uuid as UuidStandard } from "surrealjs/standard";
-import { Uuid as UuidTiny } from "surrealjs/tiny";
+import { isUuid } from "surreal-js";
+import { SurrealDbTypeError } from "surreal-js/errors";
+import { Uuid } from "surreal-js/full";
+import { Uuid as UuidStandard } from "surreal-js/standard";
+import { Uuid as UuidTiny } from "surreal-js/tiny";
 // @ts-expect-error
 import * as uuids from "uuid";
 

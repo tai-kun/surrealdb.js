@@ -5,10 +5,10 @@ import {
   assertNotEquals,
 } from "@tools/assert";
 import { test } from "@tools/test";
-import { isGeometryPoint } from "surrealjs";
-import { Decimal, GeometryPoint } from "surrealjs/full";
-import { GeometryPoint as GeometryPointStandard } from "surrealjs/standard";
-import { GeometryPoint as GeometryPointTiny } from "surrealjs/tiny";
+import { isGeometryPoint } from "surreal-js";
+import { Decimal, GeometryPoint } from "surreal-js/full";
+import { GeometryPoint as GeometryPointStandard } from "surreal-js/standard";
+import { GeometryPoint as GeometryPointTiny } from "surreal-js/tiny";
 
 test("GeometryPoint を作成する", () => {
   const point = new GeometryPoint([1, 2]);

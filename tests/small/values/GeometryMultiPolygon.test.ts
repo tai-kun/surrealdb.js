@@ -1,24 +1,24 @@
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
-import { isGeometryMultiPolygon } from "surrealjs";
+import { isGeometryMultiPolygon } from "surreal-js";
 import {
   GeometryLine,
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
-} from "surrealjs/full";
+} from "surreal-js/full";
 import {
   GeometryLine as GeometryLineStandard,
   GeometryMultiPolygon as GeometryMultiPolygonStandard,
   GeometryPoint as GeometryPointStandard,
   GeometryPolygon as GeometryPolygonStandard,
-} from "surrealjs/standard";
+} from "surreal-js/standard";
 import {
   GeometryLine as GeometryLineTiny,
   GeometryMultiPolygon as GeometryMultiPolygonTiny,
   GeometryPoint as GeometryPointTiny,
   GeometryPolygon as GeometryPolygonTiny,
-} from "surrealjs/tiny";
+} from "surreal-js/tiny";
 
 test("GeometryMultiPolygon を作成する", () => {
   const multiPolygon = new GeometryMultiPolygon([

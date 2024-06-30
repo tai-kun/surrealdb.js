@@ -4,7 +4,7 @@
     "@tools/assert": "file:./tools/assert",
     "@tools/surrealdb": "file:./tools/surrealdb",
     "@tools/test": "file:./tools/test",
-    "surrealjs": "file:../..",
+    "surreal-js": "file:../..",
     "cbor-redux": "^1.0.0",
     "decimal.js": "^10.4.3",
     "decimal.js-light": "^2.5.1",

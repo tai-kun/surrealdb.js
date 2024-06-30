@@ -3,7 +3,7 @@ import { test } from "@tools/test";
 import {
   TaskEmitter as _TaskEmitter,
   type TaskListener,
-} from "surrealjs/_internal";
+} from "surreal-js/_internal";
 
 // @ts-expect-error
 Symbol.asyncDispose ||= Symbol.for("Symbol.asyncDispose");

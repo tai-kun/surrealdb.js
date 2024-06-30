@@ -1,6 +1,6 @@
 import { assertEquals, AssertionError, assertRejects } from "@tools/assert";
 import { test } from "@tools/test";
-import { runInAsync } from "surrealjs/_internal";
+import { runInAsync } from "surreal-js/_internal";
 
 test("非同期コンテキストで非同期関数を実行する", async () => {
   async function fn(a: number, b: number): Promise<number> {

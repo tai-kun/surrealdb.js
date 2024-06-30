@@ -5,7 +5,7 @@ import {
   assertThrows,
 } from "@tools/assert";
 import { test } from "@tools/test";
-import { makeAbortApi } from "surrealjs/_internal";
+import { makeAbortApi } from "surreal-js/_internal";
 
 test("AbortSignal オブジェクトと中止関数を返す", () => {
   const [signal, abort] = makeAbortApi();

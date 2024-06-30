@@ -1,6 +1,6 @@
 import { assertEquals } from "@tools/assert";
 import { test } from "@tools/test";
-import { Thing } from "surrealjs/full";
+import { Thing } from "surreal-js/full";
 
 test("ID が半角英数字とアンダースコアのみで構成される", async () => {
   for (

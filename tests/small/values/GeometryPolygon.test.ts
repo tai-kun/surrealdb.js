@@ -1,17 +1,17 @@
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
-import { isGeometryPolygon } from "surrealjs";
-import { GeometryLine, GeometryPoint, GeometryPolygon } from "surrealjs/full";
+import { isGeometryPolygon } from "surreal-js";
+import { GeometryLine, GeometryPoint, GeometryPolygon } from "surreal-js/full";
 import {
   GeometryLine as GeometryLineStandard,
   GeometryPoint as GeometryPointStandard,
   GeometryPolygon as GeometryPolygonStandard,
-} from "surrealjs/standard";
+} from "surreal-js/standard";
 import {
   GeometryLine as GeometryLineTiny,
   GeometryPoint as GeometryPointTiny,
   GeometryPolygon as GeometryPolygonTiny,
-} from "surrealjs/tiny";
+} from "surreal-js/tiny";
 
 test("GeometryPolygon を作成する", () => {
   const polygon = new GeometryPolygon([

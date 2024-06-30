@@ -14,15 +14,15 @@
     "moduleResolution": "Bundler",
     "paths": {
       "~/*": ["./src/*"],
-      "surrealjs": ["./src/index.ts"],
-      "surrealjs/standard": ["./src/models/standard/index.ts"],
-      "surrealjs/tiny": ["./src/models/tiny/index.ts"],
-      "surrealjs/full": ["./src/models/full/index.ts"],
-      "surrealjs/engines": ["./src/engines/index.ts"],
-      "surrealjs/formatters": ["./src/formatters/index.ts"],
-      "surrealjs/validators": ["./src/validators/index.ts"],
-      "surrealjs/errors": ["./src/errors.ts"],
-      "surrealjs/_internal": ["./src/_internal/index.ts"]
+      "surreal-js": ["./src/index.ts"],
+      "surreal-js/standard": ["./src/models/standard/index.ts"],
+      "surreal-js/tiny": ["./src/models/tiny/index.ts"],
+      "surreal-js/full": ["./src/models/full/index.ts"],
+      "surreal-js/engines": ["./src/engines/index.ts"],
+      "surreal-js/formatters": ["./src/formatters/index.ts"],
+      "surreal-js/validators": ["./src/validators/index.ts"],
+      "surreal-js/errors": ["./src/errors.ts"],
+      "surreal-js/_internal": ["./src/_internal/index.ts"]
     }
   }
 }

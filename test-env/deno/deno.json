@@ -6,14 +6,14 @@
     "@tools/surrealdb": "__ROOT__/test-env/deno/tools/surrealdb/index.js",
     "@tools/test": "__ROOT__/test-env/deno/tools/test/index.js",
 
-    "surrealjs": "__ROOT__/dist/index.mjs",
-    "surrealjs/standard": "__ROOT__/dist/models/standard/index.mjs",
-    "surrealjs/tiny": "__ROOT__/dist/models/tiny/index.mjs",
-    "surrealjs/full": "__ROOT__/dist/models/full/index.mjs",
-    "surrealjs/engines": "__ROOT__/dist/engines/index.mjs",
-    "surrealjs/formatters": "__ROOT__/dist/formatters/index.mjs",
-    "surrealjs/validators": "__ROOT__/dist/validators/index.mjs",
-    "surrealjs/errors": "__ROOT__/dist/errors.mjs",
-    "surrealjs/_internal": "__ROOT__/dist/_internal/index.mjs"
+    "surreal-js": "__ROOT__/dist/index.mjs",
+    "surreal-js/standard": "__ROOT__/dist/models/standard/index.mjs",
+    "surreal-js/tiny": "__ROOT__/dist/models/tiny/index.mjs",
+    "surreal-js/full": "__ROOT__/dist/models/full/index.mjs",
+    "surreal-js/engines": "__ROOT__/dist/engines/index.mjs",
+    "surreal-js/formatters": "__ROOT__/dist/formatters/index.mjs",
+    "surreal-js/validators": "__ROOT__/dist/validators/index.mjs",
+    "surreal-js/errors": "__ROOT__/dist/errors.mjs",
+    "surreal-js/_internal": "__ROOT__/dist/_internal/index.mjs"
   }
 }

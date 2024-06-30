@@ -1,9 +1,9 @@
 import { ready } from "@tools/surrealdb";
-import { initSurreal } from "surrealjs";
-import { webSocketEngine } from "surrealjs/engines";
-import { JsonFormatter } from "surrealjs/formatters";
-import { Client } from "surrealjs/full";
-import { EmptyValidator } from "surrealjs/validators";
+import { initSurreal } from "surreal-js";
+import { webSocketEngine } from "surreal-js/engines";
+import { JsonFormatter } from "surreal-js/formatters";
+import { Client } from "surreal-js/full";
+import { EmptyValidator } from "surreal-js/validators";
 
 async function getInitializedSurreal() {
   const endpoint = await ready;

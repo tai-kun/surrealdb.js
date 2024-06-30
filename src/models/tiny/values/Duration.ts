@@ -1,4 +1,4 @@
-import { TypeError } from "~/common/errors";
+import { TypeError } from "~/errors";
 import { _defineAssertDuration } from "../../_values/internal";
 
 const SECONDS_PER_MINUTE = 60;

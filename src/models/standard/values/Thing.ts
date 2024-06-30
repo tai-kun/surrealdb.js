@@ -1,8 +1,8 @@
 import isPlainObject from "is-plain-obj";
-import { TypeError } from "~/common/errors";
 import { BRACKETL, BRACKETR, escapeRid, quoteStr } from "~/common/escape";
 import toSurql from "~/common/toSurql";
 import type { TableType } from "~/common/values";
+import { TypeError } from "~/errors";
 import type { SurqlValueSerializer } from "../../_values/Serializer";
 import Base, { type ThingId } from "../../tiny/values/Thing";
 

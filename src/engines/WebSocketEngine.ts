@@ -3,18 +3,18 @@ import type { WebSocket as WsWebSocket } from "ws";
 import { makeAbortApi } from "~/_internal";
 import { type Err, err, mutex, type Ok, ok, SerialId } from "~/_internal";
 import getTimeoutSignal from "~/_internal/timeoutSignal";
-import {
-  ConnectionUnavailable,
-  MissingNamespace,
-  RpcResponseError,
-  WebSocketEngineError,
-} from "~/common/errors";
 import type {
   BidirectionalRpcResponse,
   RpcParams,
   RpcRequest,
   RpcResult,
 } from "~/common/types";
+import {
+  ConnectionUnavailable,
+  MissingNamespace,
+  RpcResponseError,
+  WebSocketEngineError,
+} from "~/errors";
 import { isArrayBuffer, Payload } from "~/formatters";
 import EngineAbc, {
   CLOSED,

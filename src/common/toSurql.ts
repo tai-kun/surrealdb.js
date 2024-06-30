@@ -1,5 +1,5 @@
 import isPlainObject from "is-plain-obj";
-import { TypeError } from "./errors";
+import { TypeError } from "~/errors";
 import { escapeKey, quoteStr } from "./escape";
 
 export type SurqlPrimitive =

@@ -1,5 +1,4 @@
 import type { TaskListener } from "~/_internal";
-import { QueryFailure } from "~/common/errors";
 import type {
   Auth,
   LiveData,
@@ -12,6 +11,7 @@ import type {
   ScopeAuth,
 } from "~/common/types";
 import type { TableType, UuidType } from "~/common/values";
+import { QueryFailure } from "~/errors";
 import type { ClientRpcOptions } from "../../_client/Abc";
 import Base from "../../tiny/client/Client";
 

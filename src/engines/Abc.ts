@@ -7,18 +7,18 @@ import {
   ok,
   type TaskEmitter,
 } from "~/_internal";
-import {
-  type EngineError,
-  type HttpEngineError,
-  StateTransitionError,
-  type WebSocketEngineError,
-} from "~/common/errors";
 import type {
   BidirectionalRpcResponse,
   LiveResult,
   RpcRequest,
   RpcResponse,
 } from "~/common/types";
+import {
+  type EngineError,
+  type HttpEngineError,
+  StateTransitionError,
+  type WebSocketEngineError,
+} from "~/errors";
 import type { FormatterAbc } from "~/formatters";
 import type { ValidatorAbc } from "~/validators";
 

@@ -1,6 +1,6 @@
 import type { Constructor } from "type-fest";
+import { TypeError } from "~/errors";
 import type { ClientConfig, default as ClientAbc } from "~/models/_client/Abc";
-import { TypeError } from "./errors";
 import type { RecordData } from "./types";
 
 type ClientConstructor = Constructor<

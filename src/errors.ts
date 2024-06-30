@@ -1,7 +1,7 @@
 import type {
   BidirectionalRpcResponseErr,
   IdLessRpcResponseErr,
-} from "./types";
+} from "./common/types";
 
 export class SurrealDbError extends Error {}
 

@@ -1,4 +1,4 @@
-import { TypeError } from "~/common/errors";
+import { TypeError } from "~/errors";
 import { _defineAssertTable } from "../../_values/internal";
 
 /**

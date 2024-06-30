@@ -1,5 +1,5 @@
 import type { Jsonifiable, Simplify } from "type-fest";
-import { unreachable } from "~/common/errors";
+import { unreachable } from "~/errors";
 import {
   _defineAssertGeometryCollection,
   _defineAssertGeometryLine,

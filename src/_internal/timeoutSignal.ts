@@ -1,4 +1,4 @@
-import { UnsupportedRuntime } from "~/common/errors";
+import { UnsupportedRuntime } from "~/errors";
 import isBrowser from "./isBrowser";
 
 /**

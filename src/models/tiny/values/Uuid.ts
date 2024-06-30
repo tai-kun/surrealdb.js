@@ -1,4 +1,4 @@
-import { TypeError } from "~/common/errors";
+import { TypeError } from "~/errors";
 import { _defineAssertUuid } from "../../_values/internal";
 
 const UUID_36_REGEX =

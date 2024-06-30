@@ -1,4 +1,4 @@
-import { DataConversionFailure } from "~/common/errors";
+import { DataConversionFailure } from "~/errors";
 import isArrayBuffer from "./isArrayBuffer";
 
 /**

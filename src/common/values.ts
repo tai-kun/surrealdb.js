@@ -1,4 +1,5 @@
 import type { Primitive } from "type-fest";
+import { SurrealDbError } from "~/errors";
 import {
   ASSERT_VALUE,
   datetimeErrors,
@@ -60,7 +61,6 @@ import type {
   Thing as ThingTiny,
   Uuid as UuidTiny,
 } from "~/models/tiny";
-import { SurrealDbError } from "./errors";
 
 type IsValue<T> = {
   /**

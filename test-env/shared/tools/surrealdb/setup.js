@@ -50,8 +50,9 @@ async function spawnSurreal(port) {
     //   cp.kill();
     //   await cp.status;
     // });
+    return null;
   } else {
-    spawn("surreal", [
+    return spawn("surreal", [
       "start",
       ...["--bind", `0.0.0.0:${port}`],
       ...["--username", "root"],
@@ -59,7 +60,7 @@ async function spawnSurreal(port) {
     ], {
       detached: true,
       stdio: "ignore",
-    }).unref();
+    });
   }
 }
 
@@ -68,43 +69,48 @@ export async function setup() {
     return null;
   }
 
-  const port = await getPort();
-  await spawnSurreal(port);
-
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-  await sleep(100);
-  let count = 0;
 
-  for (;;) {
-    try {
-      const resp = await fetch(`http://localhost:${port}/health`);
-      await resp.body.cancel();
+  for (let tryCount = 1; tryCount <= 10; tryCount += 1) {
+    const port = await getPort();
+    const cp = await spawnSurreal(port);
+    let fetchError;
 
-      if (resp.status === 200) {
-        break;
-      }
-    } catch (error) {
-      // 約 20 秒
-      if (++count === 200) {
-        console.error("Failing to connect to SurrealDB", {
-          port,
-          error,
-        });
+    for (let checkCount = 1; checkCount <= 100; checkCount += 1) {
+      try {
+        await sleep(100);
+        const resp = await fetch(`http://localhost:${port}/health`);
+        await resp.body.cancel();
+
+        if (resp.status === 200) {
+          cp.unref();
+
+          return {
+            get host() {
+              return `localhost:${port}`;
+            },
+            get hostname() {
+              return "localhost";
+            },
+            get port() {
+              return port;
+            },
+          };
+        }
+      } catch (e) {
+        fetchError = e;
       }
     }
 
-    await sleep(100);
+    console.error("Failing to connect to SurrealDB", {
+      port,
+      error,
+    });
+
+    try {
+      cp.kill();
+    } catch {}
   }
 
-  return {
-    get host() {
-      return `localhost:${port}`;
-    },
-    get hostname() {
-      return "localhost";
-    },
-    get port() {
-      return port;
-    },
-  };
+  throw new Error("Failed to connect to SurrealDB");
 }

@@ -2,10 +2,11 @@
   "type": "module",
   "dependencies": {
     "@tools/assert": "file:./tools/assert",
-    "@tools/browser": "file:./tools/browser",
     "@tools/surrealdb": "file:./tools/surrealdb",
     "@tools/test": "file:./tools/test",
     "@tai-kun/surrealdb": "file:../..",
+    "@web/test-runner": "^0.18.2",
+    "@web/test-runner-playwright": "^0.11.0",
     "cbor-redux": "^1.0.0",
     "decimal.js": "^10.4.3",
     "decimal.js-light": "^2.5.1",

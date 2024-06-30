@@ -9,7 +9,8 @@ while IFS= read -r -d '' file; do
     echo '================================================================================'
     echo
 
-    node --enable-source-maps --test "$file" || c=$?
+    # npx wtr "$file" --node-resolve --port 9000 --playwright --browsers chromium || c=$?
+    npx wtr "$file" || c=$?
 done < <(find tests -name '*.test.js' -print0)
 
 exit $c

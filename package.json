@@ -86,7 +86,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tai-kun/surrealdb-js.git"
+    "url": "https://github.com/tai-kun/surreal.js.git"
   },
   "author": {
     "name": "tai-kun",

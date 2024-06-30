@@ -1,18 +1,18 @@
-[![Node.js](https://github.com/tai-kun/surrealdb-js/actions/workflows/nodejs.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/nodejs.yml)
-[![Deno](https://github.com/tai-kun/surrealdb-js/actions/workflows/deno.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/deno.yml)
-[![Bun](https://github.com/tai-kun/surrealdb-js/actions/workflows/bun.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/bun.yml)
+[![Node.js](https://github.com/tai-kun/surreal.js/actions/workflows/nodejs.yml/badge.svg)](https://github.com/tai-kun/surreal.js/actions/workflows/nodejs.yml)
+[![Deno](https://github.com/tai-kun/surreal.js/actions/workflows/deno.yml/badge.svg)](https://github.com/tai-kun/surreal.js/actions/workflows/deno.yml)
+[![Bun](https://github.com/tai-kun/surreal.js/actions/workflows/bun.yml/badge.svg)](https://github.com/tai-kun/surreal.js/actions/workflows/bun.yml)
 
-[![Chrome](https://github.com/tai-kun/surrealdb-js/actions/workflows/chrome.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/chrome.yml)
-[![Firefox](https://github.com/tai-kun/surrealdb-js/actions/workflows/firefox.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/firefox.yml)
-[![WebKit](https://github.com/tai-kun/surrealdb-js/actions/workflows/webkit.yml/badge.svg)](https://github.com/tai-kun/surrealdb-js/actions/workflows/webkit.yml)
+[![Chrome](https://github.com/tai-kun/surreal.js/actions/workflows/chrome.yml/badge.svg)](https://github.com/tai-kun/surreal.js/actions/workflows/chrome.yml)
+[![Firefox](https://github.com/tai-kun/surreal.js/actions/workflows/firefox.yml/badge.svg)](https://github.com/tai-kun/surreal.js/actions/workflows/firefox.yml)
+[![WebKit](https://github.com/tai-kun/surreal.js/actions/workflows/webkit.yml/badge.svg)](https://github.com/tai-kun/surreal.js/actions/workflows/webkit.yml)
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![npm version](https://img.shields.io/npm/v/@tai-kun/surreal)](https://www.npmjs.com/package/@tai-kun/surreal)
 
 [SurrealDB](https://github.com/surrealdb/surrealdb) の JavaScript/TypeScript クライアントライブラリです。公式の SDK がすでに [surrealdb.js](https://github.com/surrealdb/surrealdb.js) にありますが、こちらは個人的な用途が考慮された設計になっています。
 
-- [API リファレンス](https://tai-kun.github.io/surrealdb-js/)
-- [GitHub リポジトリ](https://github.com/tai-kun/surrealdb-js)
+- [API リファレンス](https://tai-kun.github.io/surreal.js/)
+- [GitHub リポジトリ](https://github.com/tai-kun/surreal.js)
 - [NPM パッケージ](https://www.npmjs.com/package/@tai-kun/surreal)
 - [互換性](#互換性)
 
@@ -363,7 +363,7 @@ import {
 
 ## API リファレンス
 
-[tai-kun.github.io/surrealdb-js](https://tai-kun.github.io/surrealdb-js/)
+[tai-kun.github.io/surreal.js](https://tai-kun.github.io/surreal.js/)
 
 ## テスト
 
@@ -390,4 +390,4 @@ import {
 
 ## License
 
-[Apache-2.0](https://github.com/tai-kun/surrealdb-js/blob/main/LICENSE)
+[Apache-2.0](https://github.com/tai-kun/surreal.js/blob/main/LICENSE)

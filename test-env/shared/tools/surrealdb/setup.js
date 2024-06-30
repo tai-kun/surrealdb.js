@@ -1,4 +1,5 @@
 import { exec, spawn } from "node:child_process";
+import { existsSync } from "node:fs";
 import { promisify } from "node:util";
 
 async function getPort() {
@@ -63,6 +64,10 @@ async function spawnSurreal(port) {
 }
 
 export async function setup() {
+  if (!existsSync("/tmp/lock")) {
+    return null;
+  }
+
   const port = await getPort();
   await spawnSurreal(port);
 

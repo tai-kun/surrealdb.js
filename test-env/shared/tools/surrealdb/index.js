@@ -2,7 +2,7 @@ import { ENV } from "@tools/test";
 
 let ready;
 
-if (ENV === "Chrome" || ENV === "Firefox") {
+if (ENV === "Chrome" || ENV === "Firefox" || ENV === "WebKit") {
   ready = Promise.resolve({
     get host() {
       return `${SURREALDB.hostname}:${SURREALDB.port}`;

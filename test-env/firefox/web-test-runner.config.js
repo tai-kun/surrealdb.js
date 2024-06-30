@@ -23,8 +23,5 @@ export default {
         <script type="module" src="${testFramework}"></script>
       </body>
     </html>`,
-  testFramework: {
-    timeout: String(30 * 1_000), // 30 sec
-  },
   testsFinishTimeout: 30 * 60 * 1_000, // 30 min
 };

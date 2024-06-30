@@ -1,5 +1,15 @@
 #!/usr/bin/env bash
 
-set -e
+c=0
 
-npx wtr 'tests/**/*.test.js'
+while IFS= read -r -d '' file; do
+    echo
+    echo '================================================================================'
+    echo "= $file"
+    echo '================================================================================'
+    echo
+
+    npx wtr "$file" || c=$?
+done < <(find tests -name '*.test.js' -print0)
+
+exit $c

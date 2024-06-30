@@ -1,7 +1,7 @@
 export const ENV = "Firefox";
 
 export function test(name, fn) {
-  __testQueue.push({ name, fn });
+  return it(name, fn);
 }
 
 if (typeof Promise.withResolvers !== "function") {

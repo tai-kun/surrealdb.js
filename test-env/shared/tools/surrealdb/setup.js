@@ -104,7 +104,7 @@ export async function setup() {
 
     console.error("Failing to connect to SurrealDB", {
       port,
-      error,
+      error: fetchError,
     });
 
     try {

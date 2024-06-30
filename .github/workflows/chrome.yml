@@ -60,7 +60,7 @@ jobs:
         id: setup-chrome
 
       - name: Prepare
-        run: bash scripts/pretest/medium.sh test-env/chrome
+        run: bash scripts/pretest/medium.sh test-env/chrome ${{ matrix.surrealdb-version }}
 
       - name: Test
         working-directory: test-env/chrome

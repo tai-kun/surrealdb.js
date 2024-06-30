@@ -59,7 +59,7 @@ jobs:
         id: setup-firefox
 
       - name: Prepare
-        run: bash scripts/pretest/medium.sh test-env/firefox
+        run: bash scripts/pretest/medium.sh test-env/firefox ${{ matrix.surrealdb-version }}
 
       - name: Test
         working-directory: test-env/firefox

@@ -1,13 +1,13 @@
-import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
-import { test } from "@tools/test";
-import { isGeometryMultiLine } from "surreal-js";
+import { isGeometryMultiLine } from "@tai-kun/surreal";
 import {
   GeometryLine,
   GeometryMultiLine,
   GeometryPoint,
-} from "surreal-js/full";
-import { GeometryMultiLine as GeometryMultiLineStandard } from "surreal-js/standard";
-import { GeometryMultiLine as GeometryMultiLineTiny } from "surreal-js/tiny";
+} from "@tai-kun/surreal/full";
+import { GeometryMultiLine as GeometryMultiLineStandard } from "@tai-kun/surreal/standard";
+import { GeometryMultiLine as GeometryMultiLineTiny } from "@tai-kun/surreal/tiny";
+import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
+import { test } from "@tools/test";
 
 test("GeometryMultiLine を作成する", () => {
   const multiLine = new GeometryMultiLine([

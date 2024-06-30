@@ -1,9 +1,6 @@
-import { assertDeepEquals, assertJsonEquals } from "@tools/assert";
-import { ready } from "@tools/surrealdb";
-import { test } from "@tools/test";
-import { initSurreal, toSurql } from "surreal-js";
-import { httpEngine } from "surreal-js/engines";
-import { CborFormatter } from "surreal-js/formatters";
+import { initSurreal, toSurql } from "@tai-kun/surreal";
+import { httpEngine } from "@tai-kun/surreal/engines";
+import { CborFormatter } from "@tai-kun/surreal/formatters";
 import {
   Client,
   Datetime,
@@ -19,8 +16,11 @@ import {
   Table,
   Thing,
   Uuid,
-} from "surreal-js/full";
-import { EmptyValidator } from "surreal-js/validators";
+} from "@tai-kun/surreal/full";
+import { EmptyValidator } from "@tai-kun/surreal/validators";
+import { assertDeepEquals, assertJsonEquals } from "@tools/assert";
+import { ready } from "@tools/surrealdb";
+import { test } from "@tools/test";
 
 class Formatter extends CborFormatter {
   constructor() {

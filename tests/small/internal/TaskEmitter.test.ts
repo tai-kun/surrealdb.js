@@ -1,9 +1,9 @@
-import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
-import { test } from "@tools/test";
 import {
   TaskEmitter as _TaskEmitter,
   type TaskListener,
-} from "surreal-js/_internal";
+} from "@tai-kun/surreal/_internal";
+import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
+import { test } from "@tools/test";
 
 // @ts-expect-error
 Symbol.asyncDispose ||= Symbol.for("Symbol.asyncDispose");

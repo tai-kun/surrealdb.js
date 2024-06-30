@@ -14,15 +14,15 @@
     "moduleResolution": "Bundler",
     "paths": {
       "~/*": ["./src/*"],
-      "surreal-js": ["./src/index.ts"],
-      "surreal-js/standard": ["./src/models/standard/index.ts"],
-      "surreal-js/tiny": ["./src/models/tiny/index.ts"],
-      "surreal-js/full": ["./src/models/full/index.ts"],
-      "surreal-js/engines": ["./src/engines/index.ts"],
-      "surreal-js/formatters": ["./src/formatters/index.ts"],
-      "surreal-js/validators": ["./src/validators/index.ts"],
-      "surreal-js/errors": ["./src/errors.ts"],
-      "surreal-js/_internal": ["./src/_internal/index.ts"]
+      "@tai-kun/surreal": ["./src/index.ts"],
+      "@tai-kun/surreal/standard": ["./src/models/standard/index.ts"],
+      "@tai-kun/surreal/tiny": ["./src/models/tiny/index.ts"],
+      "@tai-kun/surreal/full": ["./src/models/full/index.ts"],
+      "@tai-kun/surreal/engines": ["./src/engines/index.ts"],
+      "@tai-kun/surreal/formatters": ["./src/formatters/index.ts"],
+      "@tai-kun/surreal/validators": ["./src/validators/index.ts"],
+      "@tai-kun/surreal/errors": ["./src/errors.ts"],
+      "@tai-kun/surreal/_internal": ["./src/_internal/index.ts"]
     }
   }
 }

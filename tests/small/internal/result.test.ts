@@ -1,6 +1,6 @@
+import { err, ok } from "@tai-kun/surreal/_internal";
 import { assertDeepEquals } from "@tools/assert";
 import { test } from "@tools/test";
-import { err, ok } from "surreal-js/_internal";
 
 test("値無しで Ok を作成する", () => {
   const result = ok();

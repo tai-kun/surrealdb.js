@@ -1,6 +1,6 @@
+import { isBrowser } from "@tai-kun/surreal/_internal";
 import { assertEquals } from "@tools/assert";
 import { ENV, test } from "@tools/test";
-import { isBrowser } from "surreal-js/_internal";
 
 test("ブラウザかどうかを判定する", () => {
   let browser: boolean;

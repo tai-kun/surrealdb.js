@@ -1,6 +1,6 @@
+import { timeoutSignal } from "@tai-kun/surreal/_internal";
 import { assertEquals, assertRejects } from "@tools/assert";
 import { ENV, test } from "@tools/test";
-import { timeoutSignal } from "surreal-js/_internal";
 
 test("rpc を使える", async () => {
   const { endpoint, Surreal } = await getInitializedSurreal();

@@ -1,6 +1,6 @@
+import { mutex } from "@tai-kun/surreal/_internal";
 import { assertDeepEquals } from "@tools/assert";
 import { test } from "@tools/test";
-import { mutex } from "surreal-js/_internal";
 
 const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 

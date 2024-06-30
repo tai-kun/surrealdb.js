@@ -1,7 +1,6 @@
-import { ready } from "@tools/surrealdb";
-import { initSurreal } from "surreal-js";
-import { webSocketEngine } from "surreal-js/engines";
-import { CborFormatter } from "surreal-js/formatters";
+import { initSurreal } from "@tai-kun/surreal";
+import { webSocketEngine } from "@tai-kun/surreal/engines";
+import { CborFormatter } from "@tai-kun/surreal/formatters";
 import {
   Client,
   Datetime,
@@ -17,8 +16,9 @@ import {
   Table,
   Thing,
   Uuid,
-} from "surreal-js/full";
-import { EmptyValidator } from "surreal-js/validators";
+} from "@tai-kun/surreal/full";
+import { EmptyValidator } from "@tai-kun/surreal/validators";
+import { ready } from "@tools/surrealdb";
 
 class Formatter extends CborFormatter {
   constructor() {

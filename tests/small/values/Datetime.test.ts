@@ -1,9 +1,9 @@
+import { isDatetime } from "@tai-kun/surreal";
+import { Datetime } from "@tai-kun/surreal/full";
+import { Datetime as DatetimeStandard } from "@tai-kun/surreal/standard";
+import { Datetime as DatetimeTiny } from "@tai-kun/surreal/tiny";
 import { assert, assertEquals, assertThrows } from "@tools/assert";
 import { test } from "@tools/test";
-import { isDatetime } from "surreal-js";
-import { Datetime } from "surreal-js/full";
-import { Datetime as DatetimeStandard } from "surreal-js/standard";
-import { Datetime as DatetimeTiny } from "surreal-js/tiny";
 
 test("現在時刻の Datetime を作成する", () => {
   const dt = new Datetime();

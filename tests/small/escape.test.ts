@@ -1,6 +1,6 @@
+import { escapeIdent, escapeKey, escapeRid, quoteStr } from "@tai-kun/surreal";
 import { assertEquals } from "@tools/assert";
 import { test } from "@tools/test";
-import { escapeIdent, escapeKey, escapeRid, quoteStr } from "surreal-js";
 
 test("quoteStr", () => {
   for (

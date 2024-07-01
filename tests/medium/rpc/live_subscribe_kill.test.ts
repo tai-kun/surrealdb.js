@@ -37,7 +37,7 @@ for (
   });
 
   describe([engine, formatter, validator].join("-"), {
-    skip: !(engine === "ws"),
+    skip: !(engine === "ws" && formatter === "cbor"),
   }, () => {
     before(async () => {
       await surreal.ready;

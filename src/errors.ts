@@ -649,9 +649,14 @@ export class EngineDisconnected extends SurrealError {
 }
 
 /**
+ * CBOR 関連のエラーが継承するエラークラス。
+ */
+export class CborError extends SurrealError {}
+
+/**
  * このエラーは、CBOR タグが未知である場合に投げられます。
  */
-export class UnknownCborTag extends SurrealError {
+export class UnknownCborTag extends CborError {
   static {
     this.prototype.name = "UnknownCborTag";
   }

@@ -1,4 +1,4 @@
-import { decode, encode, TaggedValue } from "cbor-redux";
+import { decode, encode, OMIT_VALUE, TaggedValue } from "cbor-redux";
 import { UnknownCborTag } from "~/errors";
 import {
   isDatetime,
@@ -89,7 +89,11 @@ export default function createCborFormatter(
     mimeType: "application/cbor",
     wsFormat: "cbor",
     encode(data: unknown): ArrayBuffer {
-      return encode(data, (_, v: unknown) => {
+      return encode(data, (k, v: unknown) => {
+        if (k === "__proto__" || k === "constructor" || k === "prototype") {
+          return OMIT_VALUE;
+        }
+
         switch (true) {
           case isDatetime(v):
             // TODO(tai-kun): Handle invalid dates
@@ -162,7 +166,11 @@ export default function createCborFormatter(
       });
     },
     async decode(payload: Payload): Promise<unknown> {
-      return decode(await payload.arrayBuffer(), (_, v) => {
+      return decode(await payload.arrayBuffer(), (k, v) => {
+        if (k === "__proto__" || k === "constructor" || k === "prototype") {
+          return;
+        }
+
         if (!(v instanceof TaggedValue)) {
           return v;
         }

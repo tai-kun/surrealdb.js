@@ -16,7 +16,7 @@ export function test(...args) {
       this.timeout(timeout);
       (async () => {
         await fn();
-      })().then(done);
+      })().then(done, done);
     });
   }
 }
@@ -29,7 +29,7 @@ export function after(...args) {
     this.timeout(timeout);
     (async () => {
       await fn();
-    })().then(done);
+    })().then(done, done);
   });
 }
 
@@ -41,7 +41,7 @@ export function before(...args) {
     this.timeout(timeout);
     (async () => {
       await fn();
-    })().then(done);
+    })().then(done, done);
   });
 }
 

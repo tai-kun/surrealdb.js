@@ -1,10 +1,12 @@
 import { setup } from "@tools/surrealdb/setup";
+import { summaryReporter } from "@web/test-runner";
 import { playwrightLauncher } from "@web/test-runner-playwright";
 
 const conn = await setup();
 
 export default {
   nodeResolve: true,
+  reporters: [summaryReporter()],
   port: 9000,
   browsers: [
     playwrightLauncher({

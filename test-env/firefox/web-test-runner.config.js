@@ -1,4 +1,5 @@
 import { setup } from "@tools/surrealdb/setup";
+import { summaryReporter } from "@web/test-runner";
 import { seleniumLauncher } from "@web/test-runner-selenium";
 import { Browser, Builder } from "selenium-webdriver";
 
@@ -6,6 +7,7 @@ const conn = await setup();
 
 export default {
   nodeResolve: true,
+  reporters: [summaryReporter()],
   port: 9000,
   browsers: [seleniumLauncher({
     driverBuilder: new Builder()

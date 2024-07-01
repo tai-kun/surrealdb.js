@@ -1,25 +1,6 @@
 export const ENV = "Firefox";
 
-export function test(...args) {
-  const [name, options, fn] = args.length === 3
-    ? args
-    : [args[0], {}, args[1]];
-  const { skip = false, timeout = 5_000 } = options;
-
-  if (skip) {
-    if (typeof skip === "string") {
-      return it(name + "  # Skip: " + skip, function() {});
-    } else {
-      return it(name + "  # Skip", function() {});
-    }
-  } else {
-    return it(name, function() {
-      this.timeout(timeout);
-
-      return fn.apply(this, arguments);
-    });
-  }
-}
+export * from "@tools/browser-test";
 
 if (typeof Promise.withResolvers !== "function") {
   Promise.withResolvers = function withResolvers() {

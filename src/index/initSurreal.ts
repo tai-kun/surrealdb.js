@@ -23,7 +23,7 @@ export interface SurqlInit {
 /**
  * Surreal の初期化設定。
  *
- * @template T - クライアントのコンストラクターの型。
+ * @template T クライアントのコンストラクターの型。
  */
 export interface SurrealInit<T extends ClientConstructor = ClientConstructor>
   extends ClientConfig
@@ -41,7 +41,7 @@ export interface SurrealInit<T extends ClientConstructor = ClientConstructor>
 /**
  * Surreal クラス。
  *
- * @template T - クライアントのコンストラクターの型。
+ * @template T クライアントのコンストラクターの型。
  */
 export interface Surreal<T extends ClientConstructor> {
   new(): InstanceType<T> & AsyncDisposable;
@@ -64,8 +64,8 @@ function raw<T extends RawSurql>(value: T): Raw<T> {
 /**
  * Surreal を初期化する。
  *
- * @template T - クライアントのコンストラクターの型。
- * @param init - Surreal の初期化設定。
+ * @template T クライアントのコンストラクターの型。
+ * @param init Surreal の初期化設定。
  * @returns Surreal クラス。
  */
 export default function initSurreal<T extends ClientConstructor>(

@@ -36,8 +36,8 @@ export interface CreateWebSocket {
   /**
    * WebSocket インスタンスを作成します。
    *
-   * @param address - 接続先の URL。
-   * @param protocol - サブプロトコル。
+   * @param address 接続先の URL。
+   * @param protocol サブプロトコル。
    * @returns WebSocket インスタンス。
    */
   (
@@ -87,7 +87,7 @@ export default class WebSocketEngine extends EngineAbc {
   readonly pingInterval: number;
 
   /**
-   * @param config - WebSocket エンジンの設定。
+   * @param config WebSocket エンジンの設定。
    */
   constructor(config: WebSocketEngineConfig) {
     super(config);

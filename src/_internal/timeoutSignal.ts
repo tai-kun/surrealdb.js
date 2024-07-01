@@ -5,7 +5,7 @@ import isBrowser from "./isBrowser";
  * 指定されたミリ秒数後にタイムアウトする `AbortSignal` を返します。
  * この関数は `AbortSignal.timeout()` が実装されていない環境で使用されるために提供されています。
  *
- * @param milliseconds - タイムアウトするまでのミリ秒数。
+ * @param milliseconds タイムアウトするまでのミリ秒数。
  * @see https://caniuse.com/mdn-api_abortsignal_timeout_static
  * @see https://github.com/nodejs/node/blob/v22.2.0/lib/internal/abort_controller.js#L209-L221
  * @example

@@ -1,10 +1,6 @@
-import { test as testOrigin } from "node:test";
-
 export const ENV = "Node";
 
-export function test(name, fn) {
-  testOrigin(name, fn);
-}
+export { test } from "node:test";
 
 if (typeof Promise.withResolvers !== "function") {
   Promise.withResolvers = function withResolvers() {

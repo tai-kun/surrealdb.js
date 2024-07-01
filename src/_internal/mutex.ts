@@ -17,7 +17,7 @@ export interface ClassMethodDecoratorContext {
   /**
    * クラスを初期化する際に実行する関数を追加します。
    *
-   * @param initializer - 初期化関数。
+   * @param initializer 初期化関数。
    */
   addInitializer(initializer: (this: any) => void): void;
 }
@@ -26,9 +26,9 @@ export interface ClassMethodDecoratorContext {
  * 同時実行性 1 で非同期関数を実行します。
  * ステージ 3 のデコレーターのサポートが必要です。
  *
- * @template T - クラスのメソッドの型。
- * @param target - クラスのメソッド。
- * @param context - ステージ 3 のデコレーターのコンテキスト。
+ * @template T クラスのメソッドの型。
+ * @param target クラスのメソッド。
+ * @param context ステージ 3 のデコレーターのコンテキスト。
  * @returns ラップされたメソッド。
  * @example
  * ```ts

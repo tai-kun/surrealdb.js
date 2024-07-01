@@ -13,7 +13,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
   /**
    * テーブル名をエスケープします。
    *
-   * @param tb - テーブル名またはテーブル。
+   * @param tb テーブル名またはテーブル。
    * @returns エスケープされたテーブル名。
    */
   static escapeTb(tb: string | TableType): string {
@@ -33,7 +33,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
    * ID をエスケープします。64 ビットの範囲を超える `bigint` リテラルはエスケープされます。
    * 数値が NaN または Infinity の場合、エラーが発生します。
    *
-   * @param id - ID。
+   * @param id ID。
    * @returns エスケープされた ID。
    */
   static escapeId(id: ThingId): string {

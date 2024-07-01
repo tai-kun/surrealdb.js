@@ -6,7 +6,7 @@ export default class Table extends Base implements SurqlValueSerializer {
   /**
    * テーブル名をエスケープします。
    *
-   * @param name - テーブル名。
+   * @param name テーブル名。
    * @returns エスケープされたテーブル名。
    */
   static escapeName(name: string): string {

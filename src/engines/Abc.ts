@@ -162,7 +162,7 @@ export default abstract class EngineAbc {
   #state: ConnectionState = EngineAbc.CLOSED;
 
   /**
-   * @param config - エンジンの設定。
+   * @param config エンジンの設定。
    */
   constructor(config: EngineConfig) {
     this.ee = config.emitter;
@@ -173,8 +173,8 @@ export default abstract class EngineAbc {
   /**
    * 接続状態を変更します。
    *
-   * @param state - 遷移先の状態。
-   * @param fallback - 状態遷移に失敗した場合のフォールバック関数。
+   * @param state 遷移先の状態。
+   * @param fallback 状態遷移に失敗した場合のフォールバック関数。
    * @example
    * ```ts
    * await this.setState(CONNECTING, () => {
@@ -253,8 +253,8 @@ export default abstract class EngineAbc {
   /**
    * 指定されたエンドポイントに接続します。
    *
-   * @param endpoint - 接続先のエンドポイント。
-   * @param signal - 接続の中断に使用するシグナル。
+   * @param endpoint 接続先のエンドポイント。
+   * @param signal 接続の中断に使用するシグナル。
    * @example
    * ```ts
    * await engine.connect(new URL("ws://localhost:8080"));
@@ -265,7 +265,7 @@ export default abstract class EngineAbc {
   /**
    * サーバーとの接続を切ります。
    *
-   * @param signal - 切断の中断に使用するシグナル。
+   * @param signal 切断の中断に使用するシグナル。
    * @returns　切断の結果。
    * @example
    * ```ts
@@ -286,8 +286,8 @@ export default abstract class EngineAbc {
   /**
    * サーバーに RPC リクエストを送信します。
    *
-   * @param request - 送信する RPC リクエスト。
-   * @param signal - リクエストの中断に使用するシグナル。
+   * @param request 送信する RPC リクエスト。
+   * @param signal リクエストの中断に使用するシグナル。
    * @returns RPC レスポンス。
    * @example
    * ```ts

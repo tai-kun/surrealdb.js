@@ -11,7 +11,7 @@ export default class Table {
   name: string;
 
   /**
-   * @param name - テーブル名。
+   * @param name テーブル名。
    */
   constructor(name: string) {
     _defineAssertTable(this);

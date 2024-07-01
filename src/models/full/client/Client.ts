@@ -21,9 +21,9 @@ export default class Client extends Base {
   /**
    * テーブル内のすべてのレコードまたは単一のレコードを SELECT します。
    *
-   * @template T - 結果の型。
-   * @param thing - 選択するレコードのテーブル名。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param thing 選択するレコードのテーブル名。
+   * @param options RPC 呼び出しのオプション。
    * @returns 選択されたレコード。
    */
   async select<T extends RecordData = RecordData>(
@@ -34,9 +34,9 @@ export default class Client extends Base {
   /**
    * テーブル内のすべてのレコードまたは単一のレコードを SELECT します。
    *
-   * @template T - 結果の型。
-   * @param thing - 選択するレコードの ID。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param thing 選択するレコードの ID。
+   * @param options RPC 呼び出しのオプション。
    * @returns 選択されたレコード。
    */
   async select<T extends RecordData = RecordData>(
@@ -54,11 +54,11 @@ export default class Client extends Base {
   /**
    * テーブル内のすべてのレコードまたは単一のレコードを SELECT します。
    *
-   * @template T - 結果の型。
-   * @template U - 作成するレコードの型。
-   * @param thing - 作成するレコードのテーブル名。
-   * @param data - 作成するデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U 作成するレコードの型。
+   * @param thing 作成するレコードのテーブル名。
+   * @param data 作成するデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns 作成されたレコード。
    */
   async create<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -70,11 +70,11 @@ export default class Client extends Base {
   /**
    * レコードを作成します。
    *
-   * @template T - 結果の型。
-   * @template U - 作成するレコードの型。
-   * @param thing - 作成するレコードの ID。
-   * @param data - 作成するデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U 作成するレコードの型。
+   * @param thing 作成するレコードの ID。
+   * @param data 作成するデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns 作成されたレコード。
    */
   async create<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -94,11 +94,11 @@ export default class Client extends Base {
   /**
    * 複数または単一のレコードを挿入します。
    *
-   * @template T - 結果の型。
-   * @template U - 挿入するデータの型。
-   * @param thing - 挿入するレコードのテーブル名。
-   * @param data - 挿入するデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U 挿入するデータの型。
+   * @param thing 挿入するレコードのテーブル名。
+   * @param data 挿入するデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns 挿入されたレコード。
    */
   async insert<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -110,11 +110,11 @@ export default class Client extends Base {
   /**
    * レコードを挿入します。
    *
-   * @template T - 結果の型。
-   * @template U - 挿入するデータの型。
-   * @param thing - 挿入するレコードの ID。
-   * @param data - The data to insert.
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U 挿入するデータの型。
+   * @param thing 挿入するレコードの ID。
+   * @param data The data to insert.
+   * @param options RPC 呼び出しのオプション。
    * @returns 挿入されたレコード。
    */
   async insert<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -134,11 +134,11 @@ export default class Client extends Base {
   /**
    * 複数または単一のレコードを更新します。
    *
-   * @template T - 結果の型。
-   * @template U - 更新するデータの型。
-   * @param thing - 更新するレコードのテーブル名。
-   * @param data - 更新するデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U 更新するデータの型。
+   * @param thing 更新するレコードのテーブル名。
+   * @param data 更新するデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns 更新されたレコード。
    */
   async update<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -150,11 +150,11 @@ export default class Client extends Base {
   /**
    * レコードを更新します。
    *
-   * @template T - 結果の型。
-   * @template U - 更新するデータの型。
-   * @param thing - 更新するレコードの ID。
-   * @param data - 更新するデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U 更新するデータの型。
+   * @param thing 更新するレコードの ID。
+   * @param data 更新するデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns 更新されたレコード。
    */
   async update<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -174,11 +174,11 @@ export default class Client extends Base {
   /**
    * 複数または単一のレコードにデータをマージします。
    *
-   * @template T - 結果の型。
-   * @template U - マージするデータの型。
-   * @param thing - マージするレコードのテーブル名。
-   * @param data - マージするデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U マージするデータの型。
+   * @param thing マージするレコードのテーブル名。
+   * @param data マージするデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns マージされたレコード。
    */
   async merge<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -190,11 +190,11 @@ export default class Client extends Base {
   /**
    * レコードにデータをマージします。
    *
-   * @template T - 結果の型。
-   * @template U - マージするデータの型。
-   * @param thing - マージするレコードの ID。
-   * @param data - マージするデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @template U マージするデータの型。
+   * @param thing マージするレコードの ID。
+   * @param data マージするデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns マージされたレコード。
    */
   async merge<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -214,10 +214,10 @@ export default class Client extends Base {
   /**
    * 複数または単一のレコードにパッチを適用します。
    *
-   * @template T - 結果の型。
-   * @param thing - パッチを適用するレコードのテーブル名。
-   * @param patches - 適用するパッチ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param thing パッチを適用するレコードのテーブル名。
+   * @param patches 適用するパッチ。
+   * @param options RPC 呼び出しのオプション。
    * @returns パッチされたレコード。
    */
   async patch<T extends RecordData = RecordData>(
@@ -231,10 +231,10 @@ export default class Client extends Base {
   /**
    * レコードにパッチを適用します。
    *
-   * @template T - 結果の型。
-   * @param thing - パッチを適用するレコードの ID。
-   * @param patches - 適用するパッチ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param thing パッチを適用するレコードの ID。
+   * @param patches 適用するパッチ。
+   * @param options RPC 呼び出しのオプション。
    * @returns パッチされたレコード。
    */
   async patch<T extends RecordData = RecordData>(
@@ -248,9 +248,9 @@ export default class Client extends Base {
   /**
    * 複数または単一のレコードにパッチを適用します。
    *
-   * @param thing - パッチを適用するレコードのテーブル名。
-   * @param patches - 適用するパッチ。
-   * @param options - RPC 呼び出しのオプション。
+   * @param thing パッチを適用するレコードのテーブル名。
+   * @param patches 適用するパッチ。
+   * @param options RPC 呼び出しのオプション。
    * @returns JSON パッチ。
    */
   async patch(
@@ -262,9 +262,9 @@ export default class Client extends Base {
   /**
    * レコードにパッチを適用します。
    *
-   * @param thing - パッチを適用するレコードの ID。
-   * @param patches - 適用するパッチ。
-   * @param options - RPC 呼び出しのオプション。
+   * @param thing パッチを適用するレコードの ID。
+   * @param patches 適用するパッチ。
+   * @param options RPC 呼び出しのオプション。
    * @returns JSON パッチ。
    */
   async patch(
@@ -286,9 +286,9 @@ export default class Client extends Base {
   /**
    * 複数または単一のレコードを削除します。
    *
-   * @template T - 結果の型。
-   * @param thing - 削除するレコードのテーブル名。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param thing 削除するレコードのテーブル名。
+   * @param options RPC 呼び出しのオプション。
    * @returns 削除されたレコード。
    */
   async delete<T extends RecordData = RecordData>(
@@ -299,9 +299,9 @@ export default class Client extends Base {
   /**
    * レコードを削除します。
    *
-   * @template T - 結果の型。
-   * @param thing - 削除するレコードの ID。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param thing 削除するレコードの ID。
+   * @param options RPC 呼び出しのオプション。
    * @returns 削除されたレコード。
    */
   async delete<T extends RecordData = RecordData>(
@@ -319,7 +319,7 @@ export default class Client extends Base {
   /**
    * SurrealDB のバージョンを取得します。
    *
-   * @param options - RPC 呼び出しのオプション。
+   * @param options RPC 呼び出しのオプション。
    * @returns SurrealDB のバージョン。
    */
   async version(options?: ClientRpcOptions | undefined): Promise<string> {
@@ -329,9 +329,9 @@ export default class Client extends Base {
   /**
    * カスタム関数または組み込み関数を実行します。
    *
-   * @template T - 結果の型。
-   * @param funcName - 実行する関数の名前。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param funcName 実行する関数の名前。
+   * @param options RPC 呼び出しのオプション。
    * @returns 関数の実行結果。
    */
   async run<T = unknown>(
@@ -342,10 +342,10 @@ export default class Client extends Base {
   /**
    * カスタム関数または組み込み関数を実行します。
    *
-   * @template T - 結果の型。
-   * @param funcName - 実行する関数の名前。
-   * @param args - 関数に渡す引数。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param funcName 実行する関数の名前。
+   * @param args 関数に渡す引数。
+   * @param options RPC 呼び出しのオプション。
    * @returns 関数の実行結果。
    */
   async run<T = unknown>(
@@ -370,12 +370,12 @@ export default class Client extends Base {
   /**
    * レコード間にグラフエッジを作成します。
    *
-   * @template T - 結果の型。
-   * @param from - ソースレコードの ID。
-   * @param thing - グラフエッジのレコードのテーブル名。
-   * @param to - ターゲットレコードの ID。
-   * @param data - エッジに関連付けるデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param from ソースレコードの ID。
+   * @param thing グラフエッジのレコードのテーブル名。
+   * @param to ターゲットレコードの ID。
+   * @param data エッジに関連付けるデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns グラフエッジ。
    */
   async relate<T extends RecordData = RecordData, U extends RecordData = T>(
@@ -389,12 +389,12 @@ export default class Client extends Base {
   /**
    * レコード間にグラフエッジを作成します。
    *
-   * @template T - 結果の型。
-   * @param from - ソースレコードの ID。
-   * @param thing - グラフエッジのレコードの ID。
-   * @param to - ターゲットレコードの ID。
-   * @param data - エッジに関連付けるデータ。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T 結果の型。
+   * @param from ソースレコードの ID。
+   * @param thing グラフエッジのレコードの ID。
+   * @param to ターゲットレコードの ID。
+   * @param data エッジに関連付けるデータ。
+   * @param options RPC 呼び出しのオプション。
    * @returns グラフエッジ。
    */
   async relate<T extends RecordData = RecordData, U extends RecordData = T>(

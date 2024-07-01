@@ -12,7 +12,7 @@ export default class Decimal {
   #value: string;
 
   /**
-   * @param value - Decimal の値。10 進数以外の文字列と数値は自動的に 10 進数に変換されます。
+   * @param value Decimal の値。10 進数以外の文字列と数値は自動的に 10 進数に変換されます。
    */
   constructor(value: Decimal | number | string) {
     _defineAssertDecimal(this);

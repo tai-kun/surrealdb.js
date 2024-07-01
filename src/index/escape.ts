@@ -26,7 +26,7 @@ const isAsciiAlpha = (code: number) =>
 /**
  * 与えられた ASCII コードが数字かアルファベットかを判定します。
  *
- * @param code - ASCII コード。
+ * @param code ASCII コード。
  * @returns 数字かアルファベットの場合は `true`、それ以外の場合は `false`。
  */
 const isAsciiAlphaNumeric = (code: number) =>
@@ -56,10 +56,10 @@ function* matchIndices(
 /**
  * 文字列を囲います。
  *
- * @param str - 囲む文字列。
- * @param left - 左側の文字。
- * @param right - 右側の文字。
- * @param escaped - エスケープする文字。
+ * @param str 囲む文字列。
+ * @param left 左側の文字。
+ * @param right 右側の文字。
+ * @param escaped エスケープする文字。
  * @returns 囲まれた文字列。
  * @example
  * ```ts
@@ -79,7 +79,7 @@ export function escape(
 /**
  * 文字列を引用符で囲います。
  *
- * @param str - 囲む文字列。
+ * @param str 囲む文字列。
  * @returns 引用符で囲まれた文字列。
  * @example
  * ```ts
@@ -124,7 +124,7 @@ export function quoteStr(str: string): string {
 /**
  * オブジェクトのキーをエスケープします。
  *
- * @param str - エスケープする文字列。
+ * @param str エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
  * ```ts
@@ -142,7 +142,7 @@ export function escapeKey(str: string): string {
 /**
  * レコード ID をエスケープします。
  *
- * @param str - エスケープする文字列。
+ * @param str エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
  * ```ts
@@ -160,7 +160,7 @@ export function escapeRid(str: string): string {
 /**
  * 識別子をエスケープします。
  *
- * @param str - エスケープする文字列。
+ * @param str エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
  * ```ts
@@ -178,7 +178,7 @@ export function escapeIdent(str: string): string {
 /**
  * 通常の文字列をエスケープします。
  *
- * @param str - エスケープする文字列。
+ * @param str エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
  * ```ts
@@ -209,7 +209,7 @@ export function escapeNormal(
 /**
  * 数値もエスケープします。
  *
- * @param str - エスケープする文字列。
+ * @param str エスケープする文字列。
  * @returns エスケープされた文字列。
  * @example
  * ```ts

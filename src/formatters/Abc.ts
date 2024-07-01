@@ -6,8 +6,8 @@ import Payload from "./Payload";
  */
 export default abstract class FormatterAbc {
   /**
-   * @param mimeType - MIME タイプ。
-   * @param protocol - Websocket プロトコル。
+   * @param mimeType MIME タイプ。
+   * @param protocol Websocket プロトコル。
    */
   constructor(
     readonly mimeType?: string | undefined,
@@ -17,7 +17,7 @@ export default abstract class FormatterAbc {
   /**
    * データを文字列または ArrayBuffer にエンコードします。
    *
-   * @param data - エンコードするデータ。
+   * @param data エンコードするデータ。
    * @returns エンコードされたデータ。
    * @example
    * ```ts
@@ -30,7 +30,7 @@ export default abstract class FormatterAbc {
   /**
    * データをデコードします。
    *
-   * @param data - RPC リクエストのレスポンスデータ。
+   * @param data RPC リクエストのレスポンスデータ。
    * @returns デコードされたデータ。
    * @example
    * ```ts
@@ -42,7 +42,7 @@ export default abstract class FormatterAbc {
   /**
    * 与えられたデータを一度エンコードしてからデコードすることで、データのコピーを行います。
    *
-   * @param data - コピーするデータ。
+   * @param data コピーするデータ。
    * @returns コピーされたデータ。
    * @example
    * ```ts

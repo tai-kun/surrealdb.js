@@ -1,7 +1,7 @@
 /**
  * Promise のエラーを収集します。
  *
- * @param promises - エラーを収集する Promise のリスト。
+ * @param promises エラーを収集する Promise のリスト。
  * @returns Promise のエラーのリスト。
  * @example
  * ```ts
@@ -20,9 +20,9 @@ function collectErrors(
 /**
  * Promise のエラーを収集します。
  *
- * @template T - Promise の型。
- * @param promises - エラーを収集する Promise のリスト。
- * @param callback - 各要素から Promise を抽出するために使用されるコールバック。
+ * @template T Promise の型。
+ * @param promises エラーを収集する Promise のリスト。
+ * @param callback 各要素から Promise を抽出するために使用されるコールバック。
  * @returns Promise のエラーのリスト。
  * @example
  * ```ts

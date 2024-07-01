@@ -18,7 +18,7 @@ interface QueryResultBase<S extends string> {
 /**
  * クエリーが成功した場合の結果。
  *
- * @template T - クエリーの結果の型。
+ * @template T クエリーの結果の型。
  */
 export interface QueryResultOk<T = unknown> extends QueryResultBase<"OK"> {
   /**
@@ -40,7 +40,7 @@ export interface QueryResultErr extends QueryResultBase<"ERR"> {
 /**
  * クエリーの結果。
  *
- * @template T - クエリーの結果の型。
+ * @template T クエリーの結果の型。
  */
 export type QueryResult<T = unknown> = QueryResultOk<T> | QueryResultErr;
 
@@ -66,8 +66,8 @@ export type RecordData = {
 /**
  * 値を追加するパッチ操作。
  *
- * @template T - 追加する値の型。
- * @template P - パスの型。
+ * @template T 追加する値の型。
+ * @template P パスの型。
  */
 export interface AddPatch<T = unknown, P extends string = string> {
   /**
@@ -87,7 +87,7 @@ export interface AddPatch<T = unknown, P extends string = string> {
 /**
  * 値を削除するパッチ操作。
  *
- * @template P - パスの型。
+ * @template P パスの型。
  */
 export interface RemovePatch<P extends string = string> {
   /**
@@ -103,8 +103,8 @@ export interface RemovePatch<P extends string = string> {
 /**
  * 値を置換するパッチ操作。
  *
- * @template T - 置換する値の型。
- * @template P - パスの型。
+ * @template T 置換する値の型。
+ * @template P パスの型。
  */
 export interface ReplacePatch<T = unknown, P extends string = string> {
   /**
@@ -124,8 +124,8 @@ export interface ReplacePatch<T = unknown, P extends string = string> {
 /**
  * 値を変更するパッチ操作。
  *
- * @template T - 変更する値の型。
- * @template P - パスの型。
+ * @template T 変更する値の型。
+ * @template P パスの型。
  */
 export interface ChangePatch<
   T extends string = string,
@@ -148,8 +148,8 @@ export interface ChangePatch<
 /**
  * 値をコピーするパッチ操作。
  *
- * @template F - コピー元のパスの型。
- * @template P - コピー先のパスの型。
+ * @template F コピー元のパスの型。
+ * @template P コピー先のパスの型。
  */
 export interface CopyPatch<
   F extends string = string,
@@ -172,8 +172,8 @@ export interface CopyPatch<
 /**
  * 値を移動するパッチ操作。
  *
- * @template F - 移動元のパスの型。
- * @template P - 移動先のパスの型。
+ * @template F 移動元のパスの型。
+ * @template P 移動先のパスの型。
  */
 export interface MovePatch<
   F extends string = string,
@@ -196,8 +196,8 @@ export interface MovePatch<
 /**
  * 値が設定されているかテストするパッチ操作。
  *
- * @template T - テストする値の型。
- * @template P - パスの型。
+ * @template T テストする値の型。
+ * @template P パスの型。
  */
 export interface TestPatch<T = unknown, P extends string = string> {
   /**
@@ -217,7 +217,7 @@ export interface TestPatch<T = unknown, P extends string = string> {
 /**
  * パッチ操作。
  *
- * @template T - 値の型。
+ * @template T 値の型。
  */
 export type Patch<T = unknown> =
   | AddPatch<T>
@@ -231,7 +231,7 @@ export type Patch<T = unknown> =
 /**
  * 読み取り専用のパッチ操作。
  *
- * @template T - 値の型。
+ * @template T 値の型。
  */
 export type ReadonlyPatch<T = unknown> =
   | Readonly<AddPatch<T>>
@@ -255,8 +255,8 @@ export type LiveAction = "CREATE" | "UPDATE" | "DELETE";
  * ライブクエリーの結果。
  * このデータは双方向通信の {@link IdLessRpcResponseOk} の `result` プロパティに格納される。
  *
- * @template T - レコードのデータの型。
- * @template I - ライブクエリーの ID の型。
+ * @template T レコードのデータの型。
+ * @template I ライブクエリーの ID の型。
  */
 export interface LiveData<
   T extends RecordData = RecordData,
@@ -280,9 +280,9 @@ export interface LiveData<
  * ライブクエリーの結果。
  * このデータは双方向通信の {@link IdLessRpcResponseOk} の `result` プロパティに格納される。
  *
- * @template T - レコードのデータの型。
- * @template P - パッチ形式の変更内容の型。
- * @template I - ライブクエリーの ID の型。
+ * @template T レコードのデータの型。
+ * @template P パッチ形式の変更内容の型。
+ * @template I ライブクエリーの ID の型。
  */
 export type LiveDiff<
   T extends RecordData = RecordData,
@@ -320,9 +320,9 @@ export type LiveDiff<
  * ライブクエリーの結果。
  * このデータは双方向通信の {@link IdLessRpcResponseOk} の `result` プロパティに格納される。
  *
- * @template T - レコードのデータの型。
- * @template P - パッチ形式の変更内容の型。
- * @template I - ライブクエリーの ID の型。
+ * @template T レコードのデータの型。
+ * @template P パッチ形式の変更内容の型。
+ * @template I ライブクエリーの ID の型。
  */
 export type LiveResult<
   T extends RecordData = RecordData,
@@ -693,7 +693,7 @@ export type RpcMethod = RpcRequest["method"];
 /**
  * RPC リクエストのパラメーター。
  *
- * @template M - RPC リクエストのメソッドの型。
+ * @template M RPC リクエストのメソッドの型。
  */
 export type RpcParams<M extends RpcMethod = RpcMethod> = Extract<
   RpcRequest,
@@ -739,7 +739,7 @@ export interface RpcResultMapping {
 /**
  * RPC リクエストの結果。
  *
- * @template M - RPC リクエストのメソッドの型。
+ * @template M RPC リクエストのメソッドの型。
  */
 export type RpcResult<M extends RpcMethod = RpcMethod> = RpcResultMapping[M];
 
@@ -759,7 +759,7 @@ interface BidirectionalRpcResponseBase {
 /**
  * RPC リクエストが成功した場合のレスポンス。
  *
- * @template T - リクエストの結果の型。
+ * @template T リクエストの結果の型。
  */
 export interface BidirectionalRpcResponseOk<T = unknown>
   extends BidirectionalRpcResponseBase
@@ -802,7 +802,7 @@ export interface BidirectionalRpcResponseErr
 /**
  * RPC リクエストのレスポンス。
  *
- * @template T - リクエストの結果の型。
+ * @template T リクエストの結果の型。
  */
 export type BidirectionalRpcResponse<T = unknown> =
   | BidirectionalRpcResponseOk<T>
@@ -811,7 +811,7 @@ export type BidirectionalRpcResponse<T = unknown> =
 /**
  * RPC リクエストが成功した場合のレスポンス。`id` プロパティが不要または決定できない場合のレスポンス。
  *
- * @template T - リクエストの結果の型。
+ * @template T リクエストの結果の型。
  */
 export interface IdLessRpcResponseOk<T = unknown>
   extends Omit<BidirectionalRpcResponseOk<T>, "id">
@@ -827,7 +827,7 @@ export interface IdLessRpcResponseErr
 /**
  * RPC リクエストのレスポンス。`id` プロパティが不要または決定できない場合のレスポンス。
  *
- * @template T - リクエストの結果の型。
+ * @template T リクエストの結果の型。
  */
 export type IdLessRpcResponse<T = unknown> =
   | IdLessRpcResponseOk<T>
@@ -836,7 +836,7 @@ export type IdLessRpcResponse<T = unknown> =
 /**
  * RPC リクエストのレスポンス。
  *
- * @template T - リクエストの結果の型。
+ * @template T リクエストの結果の型。
  */
 export type RpcResponse<T = unknown> =
   | BidirectionalRpcResponse<T>

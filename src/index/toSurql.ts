@@ -22,7 +22,7 @@ export type SurqlValue = SurqlPrimitive | SurqlObject | SurqlArray;
 /**
  * 値を SurrealQL に直接埋め込める文字列に変換します。
  *
- * @param value - 変換する値。
+ * @param value 変換する値。
  * @returns SurrealQL に直接埋め込める文字列。
  */
 export default function toSurql(value: SurqlValue): string {

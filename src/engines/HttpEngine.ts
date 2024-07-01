@@ -60,8 +60,8 @@ export interface HttpEngineFetcher {
   /**
    * リクエストを送信し、HTTP レスポンスを取得します。
    *
-   * @param endpoint - リクエスト URL。
-   * @param init - リクエスト情報。
+   * @param endpoint リクエスト URL。
+   * @param init リクエスト情報。
    * @returns HTTP レスポンス。
    */
   (
@@ -85,7 +85,7 @@ export interface HttpEngineConfig extends EngineConfig {
 /**
  * fetch 関数のレスポンスかどうかを判定します。
  *
- * @param value - 判定する値。
+ * @param value 判定する値。
  * @returns value が fetch 関数のレスポンスならば true。
  */
 const isFetchResponse = (value: unknown): value is HttpEngineFetchResponse => (
@@ -114,7 +114,7 @@ export default class HttpEngine extends EngineAbc {
   protected fetch: HttpEngineFetcher;
 
   /**
-   * @param config - HTTP エンジンの設定。
+   * @param config HTTP エンジンの設定。
    */
   constructor(config: HttpEngineConfig) {
     super(config);

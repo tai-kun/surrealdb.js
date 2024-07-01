@@ -17,7 +17,7 @@ export class UnreachableError extends SurrealDbError {
   }
 
   /**
-   * @param options - エラーオプション。
+   * @param options エラーオプション。
    */
   constructor(options?: ErrorOptions | undefined) {
     super("Unreachable code reached.", options);
@@ -34,7 +34,7 @@ export function unreachable(): never;
 /**
  * 到達不能であることを示します。
  *
- * @param cause - 到達不能の原因。
+ * @param cause 到達不能の原因。
  * @throws {UnreachableError}
  */
 export function unreachable(cause: never): never;
@@ -66,8 +66,8 @@ export class UnsupportedRuntime extends SurrealDbError {
   }
 
   /**
-   * @param reason - 判断の理由。
-   * @param options - エラーオプション。
+   * @param reason 判断の理由。
+   * @param options エラーオプション。
    */
   constructor(reason: string, options?: ErrorOptions | undefined) {
     super("Unsupported runtime. " + reason, options);
@@ -103,8 +103,8 @@ export class CircularEngineReference extends SurrealDbError {
   }
 
   /**
-   * @param seen - 参照されたプロトコルのリスト。
-   * @param options - エラーオプション。
+   * @param seen 参照されたプロトコルのリスト。
+   * @param options エラーオプション。
    */
   constructor(seen: Iterable<string>, options?: ErrorOptions | undefined) {
     super(`Circular engine reference: ${[...seen]}`, options);
@@ -139,8 +139,8 @@ export class UnsupportedProtocol extends SurrealDbError {
   }
 
   /**
-   * @param protocol - サポートされていないプロトコル。
-   * @param options - エラーオプション。
+   * @param protocol サポートされていないプロトコル。
+   * @param options エラーオプション。
    */
   constructor(protocol: string, options?: ErrorOptions | undefined) {
     super(`Unsupported protocol: ${protocol}`, options);
@@ -158,10 +158,10 @@ export class DataConversionFailure extends SurrealDbError {
   }
 
   /**
-   * @param from - 変換元のデータ型。
-   * @param to - 変換先のデータ型。
-   * @param source - エラーの原因となったデータ。
-   * @param options - エラーオプション。
+   * @param from 変換元のデータ型。
+   * @param to 変換先のデータ型。
+   * @param source エラーの原因となったデータ。
+   * @param options エラーオプション。
    */
   constructor(
     from: string,
@@ -183,7 +183,7 @@ export class AggregateTasksError extends SurrealDbError {
   }
 
   /**
-   * @param errors - 失敗したタスクのリスト。
+   * @param errors 失敗したタスクのリスト。
    */
   constructor(errors: readonly unknown[]) {
     super(`${errors.length} task(s) failed.`, { cause: errors });
@@ -200,8 +200,8 @@ export class ResourceAlreadyDisposed extends SurrealDbError {
   }
 
   /**
-   * @param name - 破棄されたリソースの名前。
-   * @param options - エラーオプション。
+   * @param name 破棄されたリソースの名前。
+   * @param options エラーオプション。
    */
   constructor(name: string, options?: ErrorOptions | undefined) {
     super(`The resource "${name}" has been disposed.`, options);
@@ -234,8 +234,8 @@ export class EngineError extends SurrealDbError {
   fatal: boolean | undefined;
 
   /**
-   * @param message - エラーメッセージ。
-   * @param options - エラーオプション。
+   * @param message エラーメッセージ。
+   * @param options エラーオプション。
    */
   constructor(message: string, options?: EngineErrorOptions | undefined) {
     super(message, options);
@@ -264,8 +264,8 @@ export class HttpEngineError extends EngineError {
   }
 
   /**
-   * @param message - エラーメッセージ。
-   * @param options - エラーオプション。
+   * @param message エラーメッセージ。
+   * @param options エラーオプション。
    */
   constructor(message: string, options?: EngineErrorOptions | undefined) {
     super(message, options);
@@ -354,9 +354,9 @@ export class WebSocketEngineError extends EngineError {
   code: WebSocketEngineErrorCode;
 
   /**
-   * @param code - エラーコード。
-   * @param message - エラーメッセージ。
-   * @param options - エラーオプション。
+   * @param code エラーコード。
+   * @param message エラーメッセージ。
+   * @param options エラーオプション。
    */
   constructor(
     code: WebSocketEngineErrorCode,
@@ -393,9 +393,9 @@ export class StateTransitionError extends SurrealDbError {
   }
 
   /**
-   * @param from - 現在の状態。
-   * @param to - 遷移先の状態。
-   * @param options - エラーオプション。
+   * @param from 現在の状態。
+   * @param to 遷移先の状態。
+   * @param options エラーオプション。
    */
   constructor(
     from: { readonly toString: () => string },
@@ -431,7 +431,7 @@ export class ConnectionUnavailable extends SurrealDbError {
   }
 
   /**
-   * @param options - エラーオプション。
+   * @param options エラーオプション。
    */
   constructor(options?: ErrorOptions | undefined) {
     super("The connection is unavailable.", options);
@@ -459,7 +459,7 @@ export class MissingNamespace extends SurrealDbError {
   }
 
   /**
-   * @param options - エラーオプション。
+   * @param options エラーオプション。
    */
   constructor(options?: ErrorOptions | undefined) {
     super("The namespace must be specified before the database.", options);
@@ -476,8 +476,8 @@ export class InvalidResponse extends SurrealDbError {
   }
 
   /**
-   * @param message - エラーメッセージ。
-   * @param options - エラーオプション。
+   * @param message エラーメッセージ。
+   * @param options エラーオプション。
    */
   constructor(message: string, options?: ErrorOptions | undefined) {
     super(message, options);
@@ -507,8 +507,8 @@ export class RpcResponseError extends SurrealDbError {
   code: BidirectionalRpcResponseErr["error"]["code"];
 
   /**
-   * @param response - RPC レスポンス。
-   * @param options - エラーオプション。
+   * @param response RPC レスポンス。
+   * @param options エラーオプション。
    */
   constructor(
     response: IdLessRpcResponseErr | BidirectionalRpcResponseErr,
@@ -545,7 +545,7 @@ export class QueryFailure extends SurrealDbError {
   }
 
   /**
-   * @param errors - エラーメッセージ。
+   * @param errors エラーメッセージ。
    */
   constructor(errors: readonly string[]) {
     super(`Query failed with ${errors.length} error(s)`, {
@@ -575,9 +575,9 @@ export class ConnectionConflict extends SurrealDbError {
   }
 
   /**
-   * @param endpoint1 - 一方のエンドポイント。
-   * @param endpoint2 - もう一方のエンドポイント。
-   * @param options - エラーオプション。
+   * @param endpoint1 一方のエンドポイント。
+   * @param endpoint2 もう一方のエンドポイント。
+   * @param options エラーオプション。
    */
   constructor(
     endpoint1: unknown,
@@ -615,7 +615,7 @@ export class EngineDisconnected extends SurrealDbError {
   }
 
   /**
-   * @param options - エラーオプション。
+   * @param options エラーオプション。
    */
   constructor(options?: ErrorOptions | undefined) {
     super("The engine is disconnected.", options);
@@ -631,8 +631,8 @@ export class UnknownCborTag extends SurrealDbError {
   }
 
   /**
-   * @param tag - 未知の CBOR タグ。
-   * @param options - エラーオプション。
+   * @param tag 未知の CBOR タグ。
+   * @param options エラーオプション。
    */
   constructor(tag: number | bigint, options?: ErrorOptions | undefined) {
     super(`Unknown CBOR tag: ${tag}`, options);

@@ -51,7 +51,7 @@ export const byteToHex = /* @__PURE__ */ Array.from(
 /**
  * バイト配列が有効な UUID かどうかを判定します。
  *
- * @param bytes - バイト配列。
+ * @param bytes バイト配列。
  * @returns 有効な UUID なら `true`、そうでなければ `false`。
  */
 function isValidBytes(bytes: Uint8Array): boolean {
@@ -73,7 +73,7 @@ function isValidBytes(bytes: Uint8Array): boolean {
 /**
  * UUID 形式の文字列をバイト配列に変換します。
  *
- * @param uuid - UUID 形式の文字列。
+ * @param uuid UUID 形式の文字列。
  * @returns バイト配列。
  */
 function parseUuid36(uuid: string): Uint8Array {
@@ -106,7 +106,7 @@ function parseUuid36(uuid: string): Uint8Array {
 /**
  * バイト配列から UUID 文字列に変換します。
  *
- * @param bytes - バイト配列。
+ * @param bytes バイト配列。
  * @returns UUID 文字列。
  */
 function toString36(bytes: Uint8Array): string {
@@ -142,7 +142,7 @@ export default class Uuid {
   #bytes: Uint8Array;
 
   /**
-   * @param uuid - UUID を表すバイト配列または文字列。
+   * @param uuid UUID を表すバイト配列または文字列。
    */
   constructor(uuid: Uint8Array | string) {
     _defineAssertUuid(this);

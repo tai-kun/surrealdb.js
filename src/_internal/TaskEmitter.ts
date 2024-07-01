@@ -16,14 +16,14 @@ interface TypedMap<T> {
 /**
  * タスクのイベントリスナー。
  *
- * @template A - イベントリスナーの引数の型。
+ * @template A イベントリスナーの引数の型。
  */
 export interface TaskListener<A extends unknown[]> {
   /**
    * タスクを実行します。
    *
-   * @param runnerArgs - タスクランナーに渡される引数。
-   * @param args - イベントリスナーの引数。
+   * @param runnerArgs タスクランナーに渡される引数。
+   * @param args イベントリスナーの引数。
    */
   (runnerArgs: TaskRunnerArgs, ...args: A): Promisable<void>;
 }
@@ -37,7 +37,7 @@ export interface TaskListenerOptions extends TaskOptions {}
  * `TaskQueue` によって管理される非同期タスクのイベントエミッター。
  * 作成された `TaskEmitter` インスタンスは、最後に `.dispose()` を呼び出すことで破棄される必要があります。
  *
- * @template T - イベントの型。
+ * @template T イベントの型。
  */
 export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   #tasks = new TaskQueue();
@@ -53,9 +53,9 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * イベントリスナーを追加します。
    *
-   * @template K - イベントの型。
-   * @param event - リスナーを追加するイベント。
-   * @param listener - 追加するリスナー。
+   * @template K イベントの型。
+   * @param event リスナーを追加するイベント。
+   * @param listener 追加するリスナー。
    * @example
    * ```ts
    * const taskEmitter = new TaskEmitter();
@@ -92,9 +92,9 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * イベントリスナーを削除します。
    *
-   * @template K - イベントの型。
-   * @param event - リスナーを削除するイベント。
-   * @param listener - 削除するリスナー。
+   * @template K イベントの型。
+   * @param event リスナーを削除するイベント。
+   * @param listener 削除するリスナー。
    * @example
    * ```ts
    * const taskEmitter = new TaskEmitter();
@@ -133,9 +133,9 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * イベントを待機します。
    *
-   * @template K - イベントの型。
-   * @param event - 待機するイベント。
-   * @param options - タスクリスナーのオプション。
+   * @template K イベントの型。
+   * @param event 待機するイベント。
+   * @param options タスクリスナーのオプション。
    * @returns イベントリスナーに渡された引数。
    * @example
    * ```ts
@@ -209,9 +209,9 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * この emit によってトリガされたイベントリスナーを待つために `Promise.all` を使用できます。
    * `.dispose()` で正しく破棄されるなら、これらの Promise を待つ必要はなく、リソースリークも発生しません。
    *
-   * @template K - イベントの型。
-   * @param event - 発生させるイベント。
-   * @param args - イベントリスナーに渡される引数。
+   * @template K イベントの型。
+   * @param event 発生させるイベント。
+   * @param args イベントリスナーに渡される引数。
    * @returns このイベントによってトリガーされたイベントリスナーの Promise のリスト。
    * @example
    * ```ts
@@ -271,7 +271,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * すべてのタスクを中止します。
    *
-   * @param reason - 中止の理由。
+   * @param reason 中止の理由。
    * @example
    * ```ts
    * taskEmitter.abort();

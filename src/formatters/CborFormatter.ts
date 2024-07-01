@@ -68,7 +68,7 @@ export default class CborFormatter extends Abc {
   readonly #values: CborValues;
 
   /**
-   * @param values - CBOR でシリアライズ/デシリアライズする値。
+   * @param values CBOR でシリアライズ/デシリアライズする値。
    */
   constructor(values: Readonly<CborValues>) {
     super("application/cbor", "cbor");

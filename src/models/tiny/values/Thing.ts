@@ -20,8 +20,8 @@ export type ThingId =
  */
 export default class Thing {
   /**
-   * @param tb - テーブル名。
-   * @param id - テーブル内のレコードの識別子。
+   * @param tb テーブル名。
+   * @param id テーブル内のレコードの識別子。
    */
   constructor(public tb: string | TableType, public id: ThingId) {
     _defineAssertThing(this);

@@ -3,7 +3,7 @@ import throwIfAborted from "./throwIfAborted";
 /**
  * 中止シグナルと、それに関連付けられた中止関数を作成します。
  *
- * @param signal - この API に関連付けるオプションの中止シグナル。
+ * @param signal この API に関連付けるオプションの中止シグナル。
  * @returns 中止シグナルと中止関数。
  * @example
  * ```ts

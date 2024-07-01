@@ -15,7 +15,7 @@ export default class Duration {
 
   constructor(
     /**
-     * @param duration - 期間を表す文字列、ミリ秒を表す数値、秒とナノ秒のペア。
+     * @param duration 期間を表す文字列、ミリ秒を表す数値、秒とナノ秒のペア。
      */
     duration:
       | number

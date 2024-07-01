@@ -13,7 +13,7 @@ export default (
    *     - グローバルオブジェクトの WebSocket を使用します。
    *     - グローバルオブジェクトに WebSocket が存在しない場合、ws パッケージを動的インポートして WebSocket を使用します。
    *
-   * @param config - エンジンの設定。
+   * @param config エンジンの設定。
    * @returns クライアントエンジン。
    */
   function webSocketEngine(config) {

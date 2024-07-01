@@ -120,7 +120,7 @@ export default class Uuid extends Base implements SurqlValueSerializer {
    * 他の UUID とのタイムスタンプを比較します。
    * このインスタンスまたは他の UUID がタイムスタンプを持たない場合は 0 を返します。
    *
-   * @param other - 比較対象の UUID。
+   * @param other 比較対象の UUID。
    * @returns 比較結果。
    */
   compareTo(
@@ -151,7 +151,7 @@ export default class Uuid extends Base implements SurqlValueSerializer {
 /**
  * UUID から Unix 時間 (ミリ秒)を取得します。
  *
- * @param uuid - UUID。
+ * @param uuid UUID。
  * @returns Unix 時間 (ミリ秒)。
  */
 function getUnixMillisecondsFromUuid(
@@ -181,7 +181,7 @@ const GREGORIAN_OFFSET = 122_192_928_000_000_000n;
 /**
  * UUID v1 から Unix 時間 (ミリ秒)を取得します。
  *
- * @param bytes - UUID v1 のバイト配列。
+ * @param bytes UUID v1 のバイト配列。
  * @returns Unix 時間 (ミリ秒)。
  */
 function getUnixMillisecondsFromUuidV1(bytes: Uint8Array): number {
@@ -218,7 +218,7 @@ function getUnixMillisecondsFromUuidV1(bytes: Uint8Array): number {
 /**
  * UUID v6 から Unix 時間 (ミリ秒)を取得します。
  *
- * @param bytes - UUID v6 のバイト配列。
+ * @param bytes UUID v6 のバイト配列。
  * @returns Unix 時間 (ミリ秒)。
  */
 function getUnixMillisecondsFromUuidV6(bytes: Uint8Array): number {
@@ -256,7 +256,7 @@ function getUnixMillisecondsFromUuidV6(bytes: Uint8Array): number {
 /**
  * UUID v7 から Unix 時間 (ミリ秒)を取得します。
  *
- * @param bytes - UUID v7 のバイト配列。
+ * @param bytes UUID v7 のバイト配列。
  * @returns Unix 時間 (ミリ秒)。
  */
 function getUnixMillisecondsFromUuidV7(bytes: Uint8Array): number {

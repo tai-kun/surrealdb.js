@@ -28,8 +28,8 @@ export interface LiveOptions extends ClientRpcOptions {
 /**
  * ライブクエリーのイベントハンドラー。
  *
- * @template T - 結果の型。
- * @param response - ライブクエリーの結果。
+ * @template T 結果の型。
+ * @param response ライブクエリーの結果。
  */
 export type LiveHandler<T extends LiveResult<any, any> = LiveResult> =
   TaskListener<
@@ -39,7 +39,7 @@ export type LiveHandler<T extends LiveResult<any, any> = LiveResult> =
 /**
  * ライブクエリーのの結果の型を推論します。
  *
- * @template I - ライブクエリーの UUID。
+ * @template I ライブクエリーの UUID。
  */
 // dprint-ignore
 export type InferLiveResult<
@@ -55,7 +55,7 @@ export default class Client extends Base {
   /**
    * SurrealDB に Ping を送信します。
    *
-   * @param options - RPC 呼び出しのオプション。
+   * @param options RPC 呼び出しのオプション。
    */
   async ping(options?: ClientRpcOptions | undefined): Promise<void> {
     await this.rpc("ping", [], options);
@@ -64,8 +64,8 @@ export default class Client extends Base {
   /**
    * 特定の名前空間に切り替える。
    *
-   * @param ns - 切り替える名前空間。
-   * @param options - RPC 呼び出しのオプション。
+   * @param ns 切り替える名前空間。
+   * @param options RPC 呼び出しのオプション。
    */
   async use(
     ns: string | null | undefined,
@@ -75,9 +75,9 @@ export default class Client extends Base {
   /**
    * 特定の名前空間とデータベースに切り替える。
    *
-   * @param ns - 切り替える名前空間。
-   * @param db - 切り替えるデータベース。
-   * @param options - RPC 呼び出しのオプション。
+   * @param ns 切り替える名前空間。
+   * @param db 切り替えるデータベース。
+   * @param options RPC 呼び出しのオプション。
    */
   async use(
     ns: string | null | undefined,
@@ -88,8 +88,8 @@ export default class Client extends Base {
   /**
    * 特定の名前空間とデータベースに切り替える。
    *
-   * @param target - 切り替える名前空間とデータベース。
-   * @param options - RPC 呼び出しのオプション。
+   * @param target 切り替える名前空間とデータベース。
+   * @param options RPC 呼び出しのオプション。
    */
   async use(
     target: [ns: string | null | undefined, db?: string | null | undefined],
@@ -99,8 +99,8 @@ export default class Client extends Base {
   /**
    * 特定の名前空間とデータベースに切り替える。
    *
-   * @param target - 切り替える名前空間とデータベース。
-   * @param options - RPC 呼び出しのオプション。
+   * @param target 切り替える名前空間とデータベース。
+   * @param options RPC 呼び出しのオプション。
    */
   async use(
     target: {
@@ -113,8 +113,8 @@ export default class Client extends Base {
   /**
    * 特定の名前空間とデータベースに切り替える。
    *
-   * @param target - 切り替える名前空間とデータベース。
-   * @param options - RPC 呼び出しのオプション。
+   * @param target 切り替える名前空間とデータベース。
+   * @param options RPC 呼び出しのオプション。
    */
   async use(
     target: {
@@ -193,8 +193,8 @@ export default class Client extends Base {
    * SELECT * FROM $auth;
    * ```
    *
-   * @template T - RPC の結果の型。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param options RPC 呼び出しのオプション。
    * @returns `$auth` 変数の内容。
    */
   async info<T extends RpcResultMapping["info"] = RpcResultMapping["info"]>(
@@ -206,9 +206,9 @@ export default class Client extends Base {
   /**
    * スコープユーザーを登録します。
    *
-   * @template T - RPC の結果の型。
-   * @param auth - 認証情報。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param auth 認証情報。
+   * @param options RPC 呼び出しのオプション。
    * @returns JSON Web Token。
    */
   async signup<
@@ -223,9 +223,9 @@ export default class Client extends Base {
   /**
    * ルート、名前空間、データベース、またはスコープユーザーで SurrealDB にサインインします。
    *
-   * @template T - RPC の結果の型。
-   * @param auth - 認証情報。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param auth 認証情報。
+   * @param options RPC 呼び出しのオプション。
    * @returns JSON Web Token。
    */
   async signin<
@@ -240,8 +240,8 @@ export default class Client extends Base {
   /**
    * トークンで SurrealDB にサインインします。
    *
-   * @param token - トークン。
-   * @param options - RPC 呼び出しのオプション。
+   * @param token トークン。
+   * @param options RPC 呼び出しのオプション。
    */
   async authenticate(
     token: string,
@@ -253,7 +253,7 @@ export default class Client extends Base {
   /**
    * 現在の接続におけるユーザーのセッションを無効化します。
    *
-   * @param options - RPC 呼び出しのオプション。
+   * @param options RPC 呼び出しのオプション。
    */
   async invalidate(
     options?: ClientRpcOptions | undefined,
@@ -264,9 +264,9 @@ export default class Client extends Base {
   /**
    * 現在の接続における変数を定義します。
    *
-   * @param name - 変数名。
-   * @param value - 変数の値。
-   * @param options - RPC 呼び出しのオプション。
+   * @param name 変数名。
+   * @param value 変数の値。
+   * @param options RPC 呼び出しのオプション。
    */
   async let(
     name: string,
@@ -279,8 +279,8 @@ export default class Client extends Base {
   /**
    * 現在の接続における変数を削除します。
    *
-   * @param name - 変数名
-   * @param options - RPC 呼び出しのオプション。
+   * @param name 変数名
+   * @param options RPC 呼び出しのオプション。
    */
   async unset(
     name: string,
@@ -292,9 +292,9 @@ export default class Client extends Base {
   /**
    * ライブクエリーを開始します。
    *
-   * @template T - RPC の結果の型。
-   * @param table - 対象のテーブル。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param table 対象のテーブル。
+   * @param options RPC 呼び出しのオプション。
    * @returns ライブクエリーの UUID。
    */
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
@@ -305,9 +305,9 @@ export default class Client extends Base {
   /**
    * ライブクエリーを開始します。
    *
-   * @template T - RPC の結果の型。
-   * @param table - 対象のテーブル。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param table 対象のテーブル。
+   * @param options RPC 呼び出しのオプション。
    * @returns ライブクエリーの UUID。
    */
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
@@ -320,9 +320,9 @@ export default class Client extends Base {
   /**
    * ライブクエリーを開始します。
    *
-   * @template T - RPC の結果の型。
-   * @param table - 対象のテーブル。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param table 対象のテーブル。
+   * @param options RPC 呼び出しのオプション。
    * @returns ライブクエリーの UUID。
    */
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
@@ -348,10 +348,10 @@ export default class Client extends Base {
   /**
    * ライブクエリーの結果を購読します。
    *
-   * @template I - ライブクエリーの UUID。
-   * @template T - ライブクエリーの結果の型。
-   * @param queryUuid - ライブクエリーの UUID。
-   * @param callback - ライブクエリーの結果を受け取るコールバック。
+   * @template I ライブクエリーの UUID。
+   * @template T ライブクエリーの結果の型。
+   * @param queryUuid ライブクエリーの UUID。
+   * @param callback ライブクエリーの結果を受け取るコールバック。
    */
   subscribe<
     I extends string | UuidType,
@@ -366,8 +366,8 @@ export default class Client extends Base {
   /**
    * ライブクエリーの結果の購読を解除します。
    *
-   * @param queryUuid - ライブクエリーの UUID。
-   * @param callback - ライブクエリーの結果を受け取るコールバック。
+   * @param queryUuid ライブクエリーの UUID。
+   * @param callback ライブクエリーの結果を受け取るコールバック。
    */
   unsubscribe(
     queryUuid: string | UuidType,
@@ -379,8 +379,8 @@ export default class Client extends Base {
   /**
    * 実行中のライブクエリーを停止します。
    *
-   * @param queryUuid - ライブクエリーの UUID。
-   * @param options - RPC 呼び出しのオプション。
+   * @param queryUuid ライブクエリーの UUID。
+   * @param options RPC 呼び出しのオプション。
    */
   async kill(
     queryUuid: string | UuidType | readonly (string | UuidType)[],
@@ -399,10 +399,10 @@ export default class Client extends Base {
   /**
    * SurrealQL でカスタムクエリーを実行します。
    *
-   * @template T - RPC の結果の型。
-   * @param surql - SurrealQL。
-   * @param vars - SurrealQL の変数。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param surql SurrealQL。
+   * @param vars SurrealQL の変数。
+   * @param options RPC 呼び出しのオプション。
    * @returns クエリーの結果。
    */
   async queryRaw<T extends readonly QueryResult[] = QueryResult[]>(
@@ -425,10 +425,10 @@ export default class Client extends Base {
   /**
    * SurrealQL でカスタムクエリーを実行します。
    *
-   * @template T - RPC の結果の型。
-   * @param surql - SurrealQL。
-   * @param vars - SurrealQL の変数。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param surql SurrealQL。
+   * @param vars SurrealQL の変数。
+   * @param options RPC 呼び出しのオプション。
    * @returns クエリーの結果。
    */
   async query<T extends readonly unknown[]>(
@@ -444,10 +444,10 @@ export default class Client extends Base {
   /**
    * SurrealQL でカスタムクエリーを実行します。
    *
-   * @template T - RPC の結果の型。
-   * @param surql - SurrealQL。
-   * @param vars - SurrealQL の変数。
-   * @param options - RPC 呼び出しのオプション。
+   * @template T RPC の結果の型。
+   * @param surql SurrealQL。
+   * @param vars SurrealQL の変数。
+   * @param options RPC 呼び出しのオプション。
    * @returns クエリーの結果。
    */
   async query<T extends readonly unknown[] = unknown[]>(

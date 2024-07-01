@@ -13,7 +13,6 @@ if (ENV === "Chrome" || ENV === "Firefox" || ENV === "WebKit") {
     get port() {
       return SURREALDB.port;
     },
-    _: "BROWSERIFY SHOULD INJECT SURREALDB GLOBALS",
   });
 } else if (
   // ブラウザ向けのビルドでは、Node.js 向けのスクリプトを読み込まないようにする。

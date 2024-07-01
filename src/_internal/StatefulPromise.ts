@@ -8,9 +8,9 @@ export type StatefulPromiseState = "pending" | "fulfilled" | "rejected";
 /**
  * ステートフル Promise の実行関数。
  *
- * @template T - Promise の結果の型。
- * @param resolve - Promise が解決されたときに呼び出す関数。
- * @param reject - Promise が拒否されたときに呼び出す関数。
+ * @template T Promise の結果の型。
+ * @param resolve Promise が解決されたときに呼び出す関数。
+ * @param reject Promise が拒否されたときに呼び出す関数。
  */
 export type StatefulPromiseExecutor<T> = (
   resolve: (value: Promisable<T>) => void,
@@ -22,7 +22,7 @@ export type StatefulPromiseExecutor<T> = (
  * `await` すると、状態が解決されるまで待機し、拒否された場合は例外を投げます。
  * Promise をハンドリングしていない場合、拒否されてもその場で例外を投げることはありません。
  *
- * @template T - Promise の結果の型。
+ * @template T Promise の結果の型。
  * @example
  * ```ts
  * const promise = new StatefulPromise(resolve => {
@@ -41,8 +41,8 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   /**
    * 拒否理由とともに、新しい拒否された Promise を作成します。
    *
-   * @template T - Promise の結果の型。
-   * @param reason - 拒否理由。
+   * @template T Promise の結果の型。
+   * @param reason 拒否理由。
    * @returns 新しい拒否された Promise。
    */
   static reject<T = never>(reason?: unknown): StatefulPromise<T> {
@@ -52,7 +52,7 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   /**
    * Promise とそれを解決または拒否する関数を含むオブジェクトを作成します。
    *
-   * @template T - Promise の結果の型。
+   * @template T Promise の結果の型。
    * @returns Promise とそれを解決または拒否する関数を含むオブジェクト。
    * @example
    * ```ts
@@ -93,8 +93,8 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   #promise: Promise<void> | null;
 
   /**
-   * @template T - Promise の結果の型。
-   * @param executor - Promise の実行関数。
+   * @template T Promise の結果の型。
+   * @param executor Promise の実行関数。
    */
   constructor(executor: StatefulPromiseExecutor<T>) {
     this.#promise = new Promise<void>(resolve => {

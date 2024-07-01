@@ -70,7 +70,7 @@ type IsValue<T> = {
   /**
    * 値が指定された型であるかどうかを確認します。
    *
-   * @param value - 確認する値。
+   * @param value 確認する値。
    * @returns 値が指定された型である場合は `true`、そうでない場合は `false`。
    */
   (value: unknown): value is T;

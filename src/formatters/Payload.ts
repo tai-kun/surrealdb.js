@@ -10,7 +10,7 @@ export default class Payload {
   #buff: ArrayBuffer | null = null;
 
   /**
-   * @param data - データへの参照。これ以降 `data` を変更しないことを推奨します。
+   * @param data データへの参照。これ以降 `data` を変更しないことを推奨します。
    * データはコピーされることが保証されていません。
    */
   constructor(data: unknown) {

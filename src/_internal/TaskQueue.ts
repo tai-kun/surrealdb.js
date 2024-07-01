@@ -56,9 +56,9 @@ export default class TaskQueue {
    * したがって、タスクランナーの結果を確実に取得するためには、この `.add()` メソッドの戻り値を保持する必要があります。
    * `.dispose()` メソッドは保留中のタスクランナーを終了するだけであり、その後タスクランナーの結果を確実に取得する方法は無くなります。
    *
-   * @template T - タスクランナーの結果の型。
-   * @param runner - タスクランナー。
-   * @param options - タスクランナーの実行オプション。
+   * @template T タスクランナーの結果の型。
+   * @param runner タスクランナー。
+   * @param options タスクランナーの実行オプション。
    * @returns タスクランナーの結果を取得するための `StatefulPromise` インスタンス。
    * @example
    * ```ts
@@ -176,7 +176,7 @@ export default class TaskQueue {
   /**
    * すべてのタスクを中止します。
    *
-   * @param reason - 中止の理由。
+   * @param reason 中止の理由。
    * @example
    * ```ts
    * const queue = new TaskQueue();

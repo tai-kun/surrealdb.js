@@ -10,8 +10,8 @@ type None = typeof none;
  * これは操作が成功したことを示します。
  * プロパティ `ok` は常に `true` で、必要に応じて追加情報が提供されます。
  *
- * @template T - 値の型。
- * @template M - メタデータの型。
+ * @template T 値の型。
+ * @template M メタデータの型。
  */
 export type Ok<T = None, M extends UnknownObject = {}> = T extends None
   ? { ok: true }
@@ -21,8 +21,8 @@ export type Ok<T = None, M extends UnknownObject = {}> = T extends None
  * これは操作が失敗したことを示します。
  * プロパティ `ok` は常に `false` で、必要に応じて追加情報が提供されます。
  *
- * @template E - エラーの型。
- * @template M - メタデータの型。
+ * @template E エラーの型。
+ * @template M メタデータの型。
  */
 export type Err<E = None, M extends UnknownObject = {}> = E extends None
   ? { ok: false }
@@ -31,10 +31,10 @@ export type Err<E = None, M extends UnknownObject = {}> = E extends None
 /**
  * `Ok` 型のオブジェクトを作成します。
  *
- * @template T - 値の型。
- * @template M - メタデータの型。
- * @param value - 値。
- * @param meta - メタデータ。
+ * @template T 値の型。
+ * @template M メタデータの型。
+ * @param value 値。
+ * @param meta メタデータ。
  * @returns `Ok` 型のオブジェクト。
  * @example
  * ```ts
@@ -63,10 +63,10 @@ export const ok: {
 /**
  * `Err` 型のオブジェクトを作成します。
  *
- * @template E - エラーの型。
- * @template M - メタデータの型。
- * @param error - エラー。
- * @param meta - メタデータ。
+ * @template E エラーの型。
+ * @template M メタデータの型。
+ * @param error エラー。
+ * @param meta メタデータ。
  * @returns `Err` 型のオブジェクト。
  * @example
  * ```ts

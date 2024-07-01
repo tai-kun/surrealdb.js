@@ -32,7 +32,7 @@ export interface CreateEngine {
   /**
    * クライアントエンジンを作成します。
    *
-   * @param config - エンジンの設定。
+   * @param config エンジンの設定。
    * @returns クライアントエンジン。
    */
   (config: EngineConfig): Promisable<EngineAbc>;
@@ -134,7 +134,7 @@ export default abstract class ClientAbc {
   #engines: ClientEngines;
 
   /**
-   * @param config - クライアントの設定。
+   * @param config クライアントの設定。
    */
   constructor(config: ClientConfig) {
     const {
@@ -150,7 +150,7 @@ export default abstract class ClientAbc {
   /**
    * クライアントエンジンを作成します。
    *
-   * @param protocol - 接続を試みるエンドポイントのプロトコル。
+   * @param protocol 接続を試みるエンドポイントのプロトコル。
    * @returns クライアントエンジン。
    * @example
    * ```ts
@@ -200,9 +200,9 @@ export default abstract class ClientAbc {
   /**
    * イベントリスナーを追加します。
    *
-   * @template K - イベントの型。
-   * @param event - リスナーを追加するイベント。
-   * @param listener - 追加するリスナー。
+   * @template K イベントの型。
+   * @param event リスナーを追加するイベント。
+   * @param listener 追加するリスナー。
    * @example
    * ```ts
    * import { OPEN } from "@tai-kun/surreal/engines";
@@ -222,9 +222,9 @@ export default abstract class ClientAbc {
   /**
    * イベントリスナーを削除します。
    *
-   * @template K - イベントの型。
-   * @param event - リスナーを削除するイベント。
-   * @param listener - 削除するリスナー。
+   * @template K イベントの型。
+   * @param event リスナーを削除するイベント。
+   * @param listener 削除するリスナー。
    * @example
    * ```ts
    * import { CLOSED } from "@tai-kun/surreal/engines";
@@ -255,9 +255,9 @@ export default abstract class ClientAbc {
   /**
    * イベントを待機します。
    *
-   * @template K - イベントの型。
-   * @param event - 待機するイベント。
-   * @param options - タスクリスナーのオプション。
+   * @template K イベントの型。
+   * @param event 待機するイベント。
+   * @param options タスクリスナーのオプション。
    * @returns イベントリスナーに渡された引数。
    * @example
    * ```ts
@@ -280,8 +280,8 @@ export default abstract class ClientAbc {
   /**
    * 指定されたエンドポイントに接続します。
    *
-   * @param endpoint - 接続先のエンドポイント。
-   * @param options - 接続のオプション。
+   * @param endpoint 接続先のエンドポイント。
+   * @param options 接続のオプション。
    * @example
    * ```ts
    * const db = (省略);
@@ -296,7 +296,7 @@ export default abstract class ClientAbc {
   /**
    * サーバーとの接続を切断します。
    *
-   * @param options - 切断のオプション。
+   * @param options 切断のオプション。
    * @returns　切断の結果。
    * @example
    * ```ts
@@ -328,10 +328,10 @@ export default abstract class ClientAbc {
   /**
    * サーバーに RPC リクエストを送信します。
    *
-   * @template M - RPC メソッドの型。
-   * @param method - RPC メソッド。
-   * @param params - RPC メソッドのパラメータ。
-   * @param options - リクエストのオプション。
+   * @template M RPC メソッドの型。
+   * @param method RPC メソッド。
+   * @param params RPC メソッドのパラメータ。
+   * @param options リクエストのオプション。
    * @returns RPC の結果。
    * @example
    * ```ts

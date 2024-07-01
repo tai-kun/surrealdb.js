@@ -1,7 +1,7 @@
 import type { Jsonifiable } from "type-fest";
 
 /**
- * SurrealQL の値をシリアライズするインターフェース。
+ * SurrealQL の値をエンコードするインターフェース。
  */
 export interface SurqlValueSerializer {
   /**

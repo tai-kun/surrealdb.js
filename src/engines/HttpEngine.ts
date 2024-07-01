@@ -6,7 +6,7 @@ import {
   MissingNamespace,
   SurrealTypeError,
 } from "~/errors";
-import { isArrayBuffer, Payload } from "~/formatters";
+import { copy, isArrayBuffer, Payload } from "~/formatters";
 import type {
   IdLessRpcResponse,
   RpcParams,
@@ -211,7 +211,7 @@ export default class HttpEngine extends EngineAbc {
 
       case "let": {
         const [name, value] = request.params;
-        this.vars[name] = await this.fmt.copy(value);
+        this.vars[name] = await copy(this.fmt, value);
 
         return {
           result: null,

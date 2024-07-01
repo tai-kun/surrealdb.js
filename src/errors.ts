@@ -169,13 +169,12 @@ export class UnsupportedProtocol extends SurrealError {
 }
 
 /**
- * このエラーは、データの変換に失敗した場合に投げられます。
- * 現在は `Payload` クラスがレスポンスボディを ArrayBuffer への変換に失敗したときにのみ投げられます。
- * そのため、このエラーはフォーマッターがレスポンスボディを JavaScript の値にデコードするのに失敗したことを意味します。
+ * このエラーは、`Payload` クラスがレスポンスデータを ArrayBuffer へ変換するのに失敗したときに投げられます。
+ * そのため、このエラーはフォーマッターがレスポンスデータを JavaScript の値にデコードするのに失敗したことを意味します。
  */
-export class DataConversionFailure extends SurrealError {
+export class DataFormatError extends SurrealError {
   static {
-    this.prototype.name = "DataConversionFailure";
+    this.prototype.name = "DataFormatError";
   }
 
   /**

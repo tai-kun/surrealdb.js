@@ -102,7 +102,7 @@ export default function initSurreal<T extends ClientConstructor>(
     surql: { prefix = "__js_tagged_" } = {},
     Client,
     engines,
-    Formatter,
+    formatter,
     Validator,
   } = init;
 
@@ -115,7 +115,7 @@ export default function initSurreal<T extends ClientConstructor>(
     constructor() {
       super({
         engines,
-        Formatter,
+        formatter,
         Validator,
       });
     }

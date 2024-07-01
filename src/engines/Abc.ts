@@ -13,7 +13,7 @@ import {
   StateTransitionError,
   type WebSocketEngineError,
 } from "~/errors";
-import type { FormatterAbc } from "~/formatters";
+import type { Formatter } from "~/formatters";
 import type {
   BidirectionalRpcResponse,
   LiveResult,
@@ -86,9 +86,9 @@ export interface EngineConfig {
    */
   readonly emitter: TaskEmitter<EngineEvents>;
   /**
-   * クライアントとサーバー間で伝送されるデータのシリアライザーとデシリアライザー。
+   * クライアントとサーバー間で伝送されるデータのエンコーダーとデコーダー。
    */
-  readonly formatter: FormatterAbc;
+  readonly formatter: Formatter;
   /**
    * 各種データの検証を行うバリデータ-。
    */
@@ -145,9 +145,9 @@ export default abstract class EngineAbc {
   protected ee: TaskEmitter<EngineEvents>;
 
   /**
-   * クライアントとサーバー間で伝送されるデータのシリアライザーとデシリアライザー。
+   * クライアントとサーバー間で伝送されるデータのエンコーダーとデコーダー。
    */
-  protected fmt: FormatterAbc;
+  protected fmt: Formatter;
 
   /**
    * 各種データの検証を行うバリデータ-。

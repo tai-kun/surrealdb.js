@@ -1,8 +1,9 @@
-import { DataConversionFailure } from "~/errors";
+import { DataFormatError } from "~/errors";
 import isArrayBuffer from "./isArrayBuffer";
 
 /**
  * RPC リクエストのレスポンスデータを表すクラス。
+ * レスポンスデータは、HTTP のレスポンスボディや WebSocket のメッセージの内容のことです。
  */
 export default class Payload {
   #data: unknown;
@@ -31,7 +32,7 @@ export default class Payload {
    * @returns UTF-8 文字列に変換されたレスポンスデータ。
    * @example
    * ```ts
-   * const responseBodyAsText = await payload.text();
+   * const payloadAsText = await payload.text();
    * ```
    */
   async text(): Promise<string> {
@@ -54,7 +55,7 @@ export default class Payload {
    * @returns ArrayBuffer に変換されたレスポンスデータ。
    * @example
    * ```ts
-   * const responseBodyAsArrayBuffer = await payload.arrayBuffer();
+   * const payloadAsArrayBuffer = await payload.arrayBuffer();
    * ```
    */
   async arrayBuffer(): Promise<ArrayBuffer> {
@@ -85,7 +86,7 @@ export default class Payload {
           throw null;
         }
       } catch (error) {
-        throw new DataConversionFailure(
+        throw new DataFormatError(
           "RpcResponseRawData",
           "ArrayBuffer",
           this.#buff,

@@ -1,6 +1,12 @@
 import { initSurreal } from "@tai-kun/surreal";
-import { httpEngine, webSocketEngine } from "@tai-kun/surreal/engines";
-import { CborFormatter, JsonFormatter } from "@tai-kun/surreal/formatters";
+import {
+  createHttpEngine,
+  createWebSocketEngine,
+} from "@tai-kun/surreal/engines";
+import {
+  createCborFormatter,
+  jsonFormatter,
+} from "@tai-kun/surreal/formatters";
 import {
   Client,
   Datetime,
@@ -20,25 +26,21 @@ import {
 import { EmptyValidator, ZodValidator } from "@tai-kun/surreal/validators";
 import { ready } from "@tools/surrealdb";
 
-class FullsizeCborFormatter extends CborFormatter {
-  constructor() {
-    super({
-      Datetime,
-      Decimal,
-      Duration,
-      GeometryCollection,
-      GeometryLine,
-      GeometryMultiLine,
-      GeometryMultiPoint,
-      GeometryMultiPolygon,
-      GeometryPoint,
-      GeometryPolygon,
-      Table,
-      Thing,
-      Uuid,
-    });
-  }
-}
+const cborFormatter = createCborFormatter({
+  Datetime,
+  Decimal,
+  Duration,
+  GeometryCollection,
+  GeometryLine,
+  GeometryMultiLine,
+  GeometryMultiPoint,
+  GeometryMultiPolygon,
+  GeometryPoint,
+  GeometryPolygon,
+  Table,
+  Thing,
+  Uuid,
+});
 
 export default Object.assign([
   {
@@ -50,9 +52,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          http: httpEngine,
+          http: createHttpEngine,
         },
-        Formatter: JsonFormatter,
+        formatter: jsonFormatter,
         Validator: EmptyValidator,
       });
 
@@ -71,9 +73,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          http: httpEngine,
+          http: createHttpEngine,
         },
-        Formatter: JsonFormatter,
+        formatter: jsonFormatter,
         Validator: ZodValidator,
       });
 
@@ -92,9 +94,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          http: httpEngine,
+          http: createHttpEngine,
         },
-        Formatter: FullsizeCborFormatter,
+        formatter: cborFormatter,
         Validator: EmptyValidator,
       });
 
@@ -113,9 +115,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          http: httpEngine,
+          http: createHttpEngine,
         },
-        Formatter: FullsizeCborFormatter,
+        formatter: cborFormatter,
         Validator: ZodValidator,
       });
 
@@ -134,9 +136,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          ws: webSocketEngine,
+          ws: createWebSocketEngine,
         },
-        Formatter: JsonFormatter,
+        formatter: jsonFormatter,
         Validator: EmptyValidator,
       });
 
@@ -155,9 +157,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          ws: webSocketEngine,
+          ws: createWebSocketEngine,
         },
-        Formatter: JsonFormatter,
+        formatter: jsonFormatter,
         Validator: ZodValidator,
       });
 
@@ -176,9 +178,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          ws: webSocketEngine,
+          ws: createWebSocketEngine,
         },
-        Formatter: FullsizeCborFormatter,
+        formatter: cborFormatter,
         Validator: EmptyValidator,
       });
 
@@ -197,9 +199,9 @@ export default Object.assign([
       const surreal = initSurreal({
         Client,
         engines: {
-          ws: webSocketEngine,
+          ws: createWebSocketEngine,
         },
-        Formatter: FullsizeCborFormatter,
+        formatter: cborFormatter,
         Validator: ZodValidator,
       });
 

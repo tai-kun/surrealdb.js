@@ -21,7 +21,7 @@ import {
   SurrealTypeError,
   UnsupportedProtocol,
 } from "~/errors";
-import type { FormatterAbc } from "~/formatters";
+import type { Formatter } from "~/formatters/types";
 import type { RpcMethod, RpcParams, RpcResult } from "~/index/types";
 import type { ValidatorAbc } from "~/validators";
 
@@ -57,12 +57,9 @@ export interface ClientConfig {
    */
   readonly engines: ClientEngines;
   /**
-   * クライアントとサーバー間で伝送されるデータのシリアライザーとデシリアライザー。
+   * クライアントとサーバー間で伝送されるデータのエンコーダーとデコーダー。
    */
-  readonly Formatter: Constructor<
-    FormatterAbc,
-    ConstructorParameters<typeof FormatterAbc>
-  >;
+  readonly formatter: Formatter;
   /**
    * 各種データの検証を行うバリデータ-。
    */
@@ -117,9 +114,9 @@ export default abstract class ClientAbc {
   protected ee: TaskEmitter<EngineEvents> = new TaskEmitter();
 
   /**
-   * クライアントとサーバー間で伝送されるデータのシリアライザーとデシリアライザー。
+   * クライアントとサーバー間で伝送されるデータのエンコーダーとデコーダー。
    */
-  protected fmt: FormatterAbc;
+  protected fmt: Formatter;
 
   /**
    * 各種データの検証を行うバリデータ-。
@@ -139,10 +136,10 @@ export default abstract class ClientAbc {
   constructor(config: ClientConfig) {
     const {
       engines,
-      Formatter,
+      formatter,
       Validator,
     } = config;
-    this.fmt = new Formatter();
+    this.fmt = formatter;
     this.v8n = new Validator();
     this.#engines = { ...engines }; // Shallow copy
   }

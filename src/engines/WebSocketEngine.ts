@@ -115,7 +115,7 @@ export default class WebSocketEngine extends EngineAbc {
     ]);
     const ws = await this.newWs(
       new URL(endpoint),
-      this.fmt.protocol,
+      this.fmt.wsFormat,
     ) as WsWebSocket;
     ws.addEventListener("error", evt => {
       this.ee.emit(

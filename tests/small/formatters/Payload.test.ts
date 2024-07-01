@@ -1,4 +1,4 @@
-import { DataConversionFailure } from "@tai-kun/surreal/errors";
+import { DataFormatError } from "@tai-kun/surreal/errors";
 import { Payload } from "@tai-kun/surreal/formatters";
 import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
 import { test } from "@tools/test";
@@ -57,6 +57,6 @@ test("ArrayBuffer にできない場合はエラーを投げる", async () => {
 
   await assertRejects(
     async () => await paylaod.arrayBuffer(),
-    DataConversionFailure,
+    DataFormatError,
   );
 });

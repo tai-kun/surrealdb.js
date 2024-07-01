@@ -1,6 +1,7 @@
 import {
   type Err,
   err,
+  makeAbortApi,
   mutex,
   type Ok,
   ok,
@@ -134,7 +135,23 @@ export default class Client extends Abc {
     const { signal = timeoutSignal(5_000) } = options;
 
     if (this.state === CONNECTING) {
-      await this.ee.once(OPEN, { signal });
+      const [signalWithTimeout, abort] = makeAbortApi(signal);
+      const [result] = await Promise.race([
+        this.ee.once(OPEN, { signal: signalWithTimeout }),
+        this.ee.once(CLOSED, { signal: signalWithTimeout }),
+      ]);
+
+      abort();
+
+      if (result.value === OPEN && result.ok) {
+        // 次に進める
+      } else {
+        throw new ConnectionUnavailable({
+          cause: result.ok
+            ? "Connection Closed."
+            : result.error,
+        });
+      }
     }
 
     if (!this.conn) {

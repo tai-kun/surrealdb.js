@@ -10,7 +10,7 @@ jobs:
       fail-fast: false
       matrix:
         browser-version:
-          - "113"
+          - "100.0"
           - "latest"
     steps:
       - uses: actions/checkout@v4
@@ -19,10 +19,14 @@ jobs:
         with:
           node-version: "22.x"
 
-      - uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: ${{ matrix.browser-version }}
-          install-dependencies: true
+      - name: Set up Chrome
+        run: |
+          name="$(openssl rand -hex 12)"
+          docker run --name "$name" --rm -d --network host --shm-size=2g selenium/standalone-chrome:${{ matrix.browser-version }}
+          echo "selenium_container_name=$name" >>$GITHUB_OUTPUT
+          bash scripts/pretest/small.sh test-env/chrome
+          while ! curl --retry 5 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 1; done
+          curl -sSL http://localhost:4444/wd/hub/status | jq -e '.value.nodes'
         id: setup-chrome
 
       - name: Prepare
@@ -31,8 +35,10 @@ jobs:
       - name: Test
         working-directory: test-env/chrome
         run: bash scripts/test.sh
-        env:
-          BROWSER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+        
+      - name: Cleanup
+        if: always()
+        run: docker stop ${{ steps.setup-chrome.outputs.selenium_container_name }} || true
 
   medium:
     runs-on: ubuntu-latest
@@ -41,7 +47,7 @@ jobs:
       fail-fast: false
       matrix:
         browser-version:
-          - "113"
+          - "100.0"
           - "latest"
         surrealdb-version:
           - "v1.5.0"
@@ -53,10 +59,14 @@ jobs:
         with:
           node-version: "22.x"
 
-      - uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: ${{ matrix.browser-version }}
-          install-dependencies: true
+      - name: Set up Chrome
+        run: |
+          name="$(openssl rand -hex 12)"
+          docker run --name "$name" --rm -d --network host --shm-size=2g selenium/standalone-chrome:${{ matrix.browser-version }}
+          echo "selenium_container_name=$name" >>$GITHUB_OUTPUT
+          bash scripts/pretest/small.sh test-env/chrome
+          while ! curl --retry 5 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 1; done
+          curl -sSL http://localhost:4444/wd/hub/status | jq -e '.value.nodes'
         id: setup-chrome
 
       - name: Prepare
@@ -65,8 +75,10 @@ jobs:
       - name: Test
         working-directory: test-env/chrome
         run: bash scripts/test.sh
-        env:
-          BROWSER_EXECUTABLE_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+        
+      - name: Cleanup
+        if: always()
+        run: docker stop ${{ steps.setup-chrome.outputs.selenium_container_name }} || true
 
   action-timeline:
     needs:

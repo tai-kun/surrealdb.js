@@ -1,5 +1,9 @@
 import type { Promisable } from "type-fest";
-import { AggregateTasksError, ResourceAlreadyDisposed } from "~/errors";
+import {
+  AggregateTasksError,
+  ResourceAlreadyDisposed,
+  unreachable,
+} from "~/errors";
 import collectErrors from "./collectErrors";
 import makeAbortApi from "./makeAbortApi";
 import { type Err, err, type Ok, ok } from "./result";
@@ -108,7 +112,7 @@ export default class TaskQueue {
             if ("reason" in task.abort) {
               abort(task.abort.reason);
             } else {
-              throw new Error("unreachable");
+              unreachable();
             }
           } else {
             task.abort = { dispatch: abort };

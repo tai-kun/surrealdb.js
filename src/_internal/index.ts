@@ -30,5 +30,5 @@ export { default as TaskQueue } from "./TaskQueue";
 export type * from "./throwIfAborted";
 export { default as throwIfAborted } from "./throwIfAborted";
 
-export type * from "./timeoutSignal";
-export { default as timeoutSignal } from "./timeoutSignal";
+export type * from "./getTimeoutSignal";
+export { default as getTimeoutSignal } from "./getTimeoutSignal";

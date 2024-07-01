@@ -2,7 +2,7 @@ import type { Promisable, ValueOf } from "type-fest";
 import type { WebSocket as WsWebSocket } from "ws";
 import { makeAbortApi } from "~/_internal";
 import { type Err, err, mutex, type Ok, ok, SerialId } from "~/_internal";
-import getTimeoutSignal from "~/_internal/timeoutSignal";
+import getTimeoutSignal from "~/_internal/getTimeoutSignal";
 import {
   ConnectionUnavailable,
   MissingNamespace,

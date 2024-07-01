@@ -1,12 +1,12 @@
 import {
   type Err,
   err,
+  getTimeoutSignal,
   makeAbortApi,
   mutex,
   type Ok,
   ok,
   TaskEmitter,
-  timeoutSignal,
 } from "~/_internal";
 import { CLOSED, CONNECTING, OPEN } from "~/engines";
 import {
@@ -71,7 +71,7 @@ export default class Client extends Abc {
     });
     const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
     const engine = this.conn = await this.createEngine(protocol);
-    const { signal = timeoutSignal(15_000) } = options;
+    const { signal = getTimeoutSignal(15_000) } = options;
     await engine.connect(endpoint, signal);
   }
 
@@ -93,7 +93,7 @@ export default class Client extends Abc {
 
       const {
         force = false,
-        signal = timeoutSignal(15_000),
+        signal = getTimeoutSignal(15_000),
       } = options;
 
       if (force) {
@@ -132,13 +132,13 @@ export default class Client extends Abc {
     params: RpcParams<M>,
     options: ClientRpcOptions | undefined = {},
   ): Promise<T> {
-    const { signal = timeoutSignal(5_000) } = options;
+    const { signal: timeoutSignal = getTimeoutSignal(5_000) } = options;
 
     if (this.state === CONNECTING) {
-      const [signalWithTimeout, abort] = makeAbortApi(signal);
+      const [signal, abort] = makeAbortApi(timeoutSignal);
       const [result] = await Promise.race([
-        this.ee.once(OPEN, { signal: signalWithTimeout }),
-        this.ee.once(CLOSED, { signal: signalWithTimeout }),
+        this.ee.once(OPEN, { signal }),
+        this.ee.once(CLOSED, { signal }),
       ]);
 
       abort();
@@ -161,7 +161,7 @@ export default class Client extends Abc {
     const resp: RpcResponse<any> = await this.conn.rpc(
       // @ts-expect-error
       { method, params },
-      signal,
+      timeoutSignal,
     );
 
     if ("result" in resp) {

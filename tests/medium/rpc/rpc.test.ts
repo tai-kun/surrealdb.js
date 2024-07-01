@@ -1,4 +1,4 @@
-import { timeoutSignal } from "@tai-kun/surreal/_internal";
+import { getTimeoutSignal } from "@tai-kun/surreal/_internal";
 import { assertEquals, assertRejects } from "@tools/assert";
 import { before, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
@@ -33,7 +33,7 @@ for (
       await assertRejects(
         async () => {
           await db.rpc("query", [/*surql*/ `SLEEP 3s`], {
-            signal: timeoutSignal(1_000),
+            signal: getTimeoutSignal(1_000),
           });
         },
         Error,

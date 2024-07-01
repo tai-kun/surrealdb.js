@@ -11,11 +11,11 @@ import isBrowser from "./isBrowser";
  * @example
  * ```ts
  * const resp = await fetch("https://localhost:8000/data", {
- *   signal: timeoutSignal(5_000),
+ *   signal: getTimeoutSignal(5_000),
  * });
  * ```
  */
-export default function timeoutSignal(milliseconds: number): AbortSignal {
+export default function getTimeoutSignal(milliseconds: number): AbortSignal {
   if (typeof AbortSignal.timeout === "function") {
     return AbortSignal.timeout(milliseconds);
   }

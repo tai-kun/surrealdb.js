@@ -1,4 +1,4 @@
-import { SurrealDbTypeError } from "~/errors";
+import { SurrealTypeError } from "~/errors";
 import { isDecimal } from "~/index/values";
 import { _defineAssertDecimal } from "../../_values/internal";
 
@@ -27,7 +27,7 @@ export default class Decimal {
       } else if (DECIMAL_REGEX.test(value)) {
         this.#value = value;
       } else {
-        throw new SurrealDbTypeError("Invalid Decimal string", {
+        throw new SurrealTypeError("Invalid Decimal string", {
           cause: value,
         });
       }
@@ -36,7 +36,7 @@ export default class Decimal {
     } else if (isDecimal(value)) {
       this.#value = value.valueOf();
     } else {
-      throw new SurrealDbTypeError("Invalid Decimal value", { cause: value });
+      throw new SurrealTypeError("Invalid Decimal value", { cause: value });
     }
   }
 

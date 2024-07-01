@@ -1,4 +1,4 @@
-import { SurrealDbTypeError } from "~/errors";
+import { SurrealTypeError } from "~/errors";
 import { isDatetime } from "~/index/values";
 import { _defineAssertDatetime } from "../../_values/internal";
 
@@ -100,7 +100,7 @@ export default class Datetime extends Date {
           + Math.trunc(this.#ns / 1_000_000),
         );
       } else {
-        throw new SurrealDbTypeError("Invalid datetime");
+        throw new SurrealTypeError("Invalid datetime");
       }
     } else if (
       typeof args[0] === "number"
@@ -141,7 +141,7 @@ export default class Datetime extends Date {
         // ナノ秒時刻のマイクロ秒時刻以下 (6 桁目以下) を取得する。ミリ秒の部分は上記で取得済み。
         + nt % 1_000_000;
     } else {
-      throw new SurrealDbTypeError("Invalid datetime");
+      throw new SurrealTypeError("Invalid datetime");
     }
 
     _defineAssertDatetime(this);

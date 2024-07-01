@@ -1,5 +1,5 @@
 import isPlainObject from "is-plain-obj";
-import { SurrealDbTypeError } from "~/errors";
+import { SurrealTypeError } from "~/errors";
 import { escapeKey, quoteStr } from "./escape";
 
 export type SurqlPrimitive =
@@ -59,7 +59,7 @@ export default function toSurql(value: SurqlValue): string {
 
     if (Array.isArray(x)) {
       if (c.seen.has(x)) {
-        throw new SurrealDbTypeError("Circular reference");
+        throw new SurrealTypeError("Circular reference");
       }
 
       c.seen.add(x);
@@ -71,7 +71,7 @@ export default function toSurql(value: SurqlValue): string {
 
     if (typeof x === "object") {
       if (c.seen.has(x)) {
-        throw new SurrealDbTypeError("Circular reference");
+        throw new SurrealTypeError("Circular reference");
       }
 
       c.seen.add(x);
@@ -96,7 +96,7 @@ export default function toSurql(value: SurqlValue): string {
       }
     }
 
-    throw new SurrealDbTypeError("Unexpected value: " + String(x));
+    throw new SurrealTypeError("Unexpected value: " + String(x));
   }
 
   return inner(value, {

@@ -1,5 +1,5 @@
 import { isUuid } from "@tai-kun/surreal";
-import { SurrealDbTypeError } from "@tai-kun/surreal/errors";
+import { SurrealTypeError } from "@tai-kun/surreal/errors";
 import { Uuid } from "@tai-kun/surreal/full";
 import { Uuid as UuidStandard } from "@tai-kun/surreal/standard";
 import { Uuid as UuidTiny } from "@tai-kun/surreal/tiny";
@@ -100,7 +100,7 @@ test("UUID 形式でない文字列から UUID インスタンスを作成する
   ) {
     assertThrows(
       () => new Uuid(invalidUuid),
-      SurrealDbTypeError,
+      SurrealTypeError,
       undefined,
       reason,
     );

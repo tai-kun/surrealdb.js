@@ -4,14 +4,32 @@ import type {
 } from "./index/types";
 
 /**
+ * {@link SurrealError} のオプション。
+ */
+export type SurrealErrorOptions = "cause" extends keyof Error ? ErrorOptions
+  : { cause?: unknown };
+
+/**
  * このパッケージがハンドリングするエラーが継承するエラークラス。
  */
-export class SurrealDbError extends Error {}
+export class SurrealError extends Error {
+  /**
+   * @param message エラーメッセージ。
+   * @param options エラーオプション。
+   */
+  constructor(message: string, options?: SurrealErrorOptions | undefined) {
+    super(message, options);
+
+    if (!("cause" in this) && options && "cause" in options) {
+      this.cause = options.cause;
+    }
+  }
+}
 
 /**
  * このエラーは、到達不能なコードに到達した場合に投げられます。
  */
-export class UnreachableError extends SurrealDbError {
+export class UnreachableError extends SurrealError {
   static {
     this.prototype.name = "UnreachableError";
   }
@@ -19,7 +37,7 @@ export class UnreachableError extends SurrealDbError {
   /**
    * @param options エラーオプション。
    */
-  constructor(options?: ErrorOptions | undefined) {
+  constructor(options?: SurrealErrorOptions | undefined) {
     super("Unreachable code reached.", options);
   }
 }
@@ -51,16 +69,16 @@ export function unreachable(...args: [cause?: never]): never {
  * このエラーは、値が期待された型と異なる場合に投げられます。
  * バリデーターや埋め込まれた検証がこのエラーを投げるため、あらゆる場所でこのエラーを捕捉する可能性があります。
  */
-export class SurrealDbTypeError extends SurrealDbError {
+export class SurrealTypeError extends SurrealError {
   static {
-    this.prototype.name = "SurrealDbTypeError";
+    this.prototype.name = "SurrealTypeError";
   }
 }
 
 /**
  * このエラーは、サポートされていないランタイムを使用していると判断された場合に投げられます。
  */
-export class UnsupportedRuntime extends SurrealDbError {
+export class UnsupportedRuntime extends SurrealError {
   static {
     this.prototype.name = "UnsupportedRuntime";
   }
@@ -69,7 +87,7 @@ export class UnsupportedRuntime extends SurrealDbError {
    * @param reason 判断の理由。
    * @param options エラーオプション。
    */
-  constructor(reason: string, options?: ErrorOptions | undefined) {
+  constructor(reason: string, options?: SurrealErrorOptions | undefined) {
     super("Unsupported runtime. " + reason, options);
   }
 }
@@ -97,7 +115,7 @@ export class UnsupportedRuntime extends SurrealDbError {
  * }
  * ```
  */
-export class CircularEngineReference extends SurrealDbError {
+export class CircularEngineReference extends SurrealError {
   static {
     this.prototype.name = "CircularEngineReference";
   }
@@ -106,7 +124,10 @@ export class CircularEngineReference extends SurrealDbError {
    * @param seen 参照されたプロトコルのリスト。
    * @param options エラーオプション。
    */
-  constructor(seen: Iterable<string>, options?: ErrorOptions | undefined) {
+  constructor(
+    seen: Iterable<string>,
+    options?: SurrealErrorOptions | undefined,
+  ) {
     super(`Circular engine reference: ${[...seen]}`, options);
   }
 }
@@ -133,7 +154,7 @@ export class CircularEngineReference extends SurrealDbError {
  * }
  * ```
  */
-export class UnsupportedProtocol extends SurrealDbError {
+export class UnsupportedProtocol extends SurrealError {
   static {
     this.prototype.name = "UnsupportedProtocol";
   }
@@ -142,7 +163,7 @@ export class UnsupportedProtocol extends SurrealDbError {
    * @param protocol サポートされていないプロトコル。
    * @param options エラーオプション。
    */
-  constructor(protocol: string, options?: ErrorOptions | undefined) {
+  constructor(protocol: string, options?: SurrealErrorOptions | undefined) {
     super(`Unsupported protocol: ${protocol}`, options);
   }
 }
@@ -152,7 +173,7 @@ export class UnsupportedProtocol extends SurrealDbError {
  * 現在は `Payload` クラスがレスポンスボディを ArrayBuffer への変換に失敗したときにのみ投げられます。
  * そのため、このエラーはフォーマッターがレスポンスボディを JavaScript の値にデコードするのに失敗したことを意味します。
  */
-export class DataConversionFailure extends SurrealDbError {
+export class DataConversionFailure extends SurrealError {
   static {
     this.prototype.name = "DataConversionFailure";
   }
@@ -167,7 +188,7 @@ export class DataConversionFailure extends SurrealDbError {
     from: string,
     to: string,
     public source: unknown,
-    options?: ErrorOptions | undefined,
+    options?: SurrealErrorOptions | undefined,
   ) {
     super(`Failed to convert the data from ${from} to ${to}.`, options);
   }
@@ -177,7 +198,7 @@ export class DataConversionFailure extends SurrealDbError {
  * このエラーは、タスクが失敗した場合に投げられます。
  * これは主に、イベントハンドラーがエラーを投げたことを意味します。
  */
-export class AggregateTasksError extends SurrealDbError {
+export class AggregateTasksError extends SurrealError {
   static {
     this.prototype.name = "AggregateTasksError";
   }
@@ -194,7 +215,7 @@ export class AggregateTasksError extends SurrealDbError {
  * このエラーは、リソースがすでに破棄されてる場合に投げられます。
  * これは、非同期タスクを管理するクラスなどがすでにその役目を終えていることを意味します。
  */
-export class ResourceAlreadyDisposed extends SurrealDbError {
+export class ResourceAlreadyDisposed extends SurrealError {
   static {
     this.prototype.name = "ResourceAlreadyDisposed";
   }
@@ -203,7 +224,7 @@ export class ResourceAlreadyDisposed extends SurrealDbError {
    * @param name 破棄されたリソースの名前。
    * @param options エラーオプション。
    */
-  constructor(name: string, options?: ErrorOptions | undefined) {
+  constructor(name: string, options?: SurrealErrorOptions | undefined) {
     super(`The resource "${name}" has been disposed.`, options);
   }
 }
@@ -211,7 +232,7 @@ export class ResourceAlreadyDisposed extends SurrealDbError {
 /**
  * エンジンに起因するエラーのクラスのオプション。
  */
-export interface EngineErrorOptions extends ErrorOptions {
+export interface EngineSurrealErrorOptions extends SurrealErrorOptions {
   /**
    * このエラーが致命的であるかどうか。
    *
@@ -223,7 +244,7 @@ export interface EngineErrorOptions extends ErrorOptions {
 /**
  * このエラーは、エンジンに起因する問題が発生した場合に投げられます。
  */
-export class EngineError extends SurrealDbError {
+export class EngineError extends SurrealError {
   static {
     this.prototype.name = "EngineError";
   }
@@ -237,7 +258,10 @@ export class EngineError extends SurrealDbError {
    * @param message エラーメッセージ。
    * @param options エラーオプション。
    */
-  constructor(message: string, options?: EngineErrorOptions | undefined) {
+  constructor(
+    message: string,
+    options?: EngineSurrealErrorOptions | undefined,
+  ) {
     super(message, options);
     this.fatal = options?.fatal;
   }
@@ -267,7 +291,10 @@ export class HttpEngineError extends EngineError {
    * @param message エラーメッセージ。
    * @param options エラーオプション。
    */
-  constructor(message: string, options?: EngineErrorOptions | undefined) {
+  constructor(
+    message: string,
+    options?: EngineSurrealErrorOptions | undefined,
+  ) {
     super(message, options);
   }
 }
@@ -361,7 +388,7 @@ export class WebSocketEngineError extends EngineError {
   constructor(
     code: WebSocketEngineErrorCode,
     message: string,
-    options?: EngineErrorOptions | undefined,
+    options?: EngineSurrealErrorOptions | undefined,
   ) {
     super(message, options);
     this.code = code;
@@ -387,7 +414,7 @@ export class WebSocketEngineError extends EngineError {
  * }
  * ```
  */
-export class StateTransitionError extends SurrealDbError {
+export class StateTransitionError extends SurrealError {
   static {
     this.prototype.name = "StateTransitionError";
   }
@@ -400,7 +427,7 @@ export class StateTransitionError extends SurrealDbError {
   constructor(
     from: { readonly toString: () => string },
     to: { readonly toString: () => string },
-    options?: ErrorOptions | undefined,
+    options?: SurrealErrorOptions | undefined,
   ) {
     super(`Failed to transition from "${from}" to "${to}".`, options);
   }
@@ -425,7 +452,7 @@ export class StateTransitionError extends SurrealDbError {
  * }
  * ```
  */
-export class ConnectionUnavailable extends SurrealDbError {
+export class ConnectionUnavailable extends SurrealError {
   static {
     this.prototype.name = "ConnectionUnavailable";
   }
@@ -433,7 +460,7 @@ export class ConnectionUnavailable extends SurrealDbError {
   /**
    * @param options エラーオプション。
    */
-  constructor(options?: ErrorOptions | undefined) {
+  constructor(options?: SurrealErrorOptions | undefined) {
     super("The connection is unavailable.", options);
   }
 }
@@ -453,7 +480,7 @@ export class ConnectionUnavailable extends SurrealDbError {
  * }
  * ```
  */
-export class MissingNamespace extends SurrealDbError {
+export class MissingNamespace extends SurrealError {
   static {
     this.prototype.name = "MissingNamespace";
   }
@@ -461,7 +488,7 @@ export class MissingNamespace extends SurrealDbError {
   /**
    * @param options エラーオプション。
    */
-  constructor(options?: ErrorOptions | undefined) {
+  constructor(options?: SurrealErrorOptions | undefined) {
     super("The namespace must be specified before the database.", options);
   }
 }
@@ -470,7 +497,7 @@ export class MissingNamespace extends SurrealDbError {
  * このエラーは、レスポンスが不正な値のときに投げられます。
  * HTTP エンジンに設定したカスタム fetch のレスポンスの実装に誤りがあるか、レスポンスがステータスコード 200 以外を示しています。
  */
-export class InvalidResponse extends SurrealDbError {
+export class InvalidResponse extends SurrealError {
   static {
     this.prototype.name = "InvalidResponse";
   }
@@ -479,7 +506,7 @@ export class InvalidResponse extends SurrealDbError {
    * @param message エラーメッセージ。
    * @param options エラーオプション。
    */
-  constructor(message: string, options?: ErrorOptions | undefined) {
+  constructor(message: string, options?: SurrealErrorOptions | undefined) {
     super(message, options);
   }
 }
@@ -488,7 +515,7 @@ export class InvalidResponse extends SurrealDbError {
  * このエラーは RPC レスポンスがエラーを示した場合に投げられます。
  * 接続したプロトコルによる通信やレスポンスボディのデコードなどに問題はありませんが、SurrealDB が RPC リクエストを処理できないことを意味します。
  */
-export class RpcResponseError extends SurrealDbError {
+export class RpcResponseError extends SurrealError {
   static {
     this.prototype.name = "RpcResponseError";
   }
@@ -512,7 +539,7 @@ export class RpcResponseError extends SurrealDbError {
    */
   constructor(
     response: IdLessRpcResponseErr | BidirectionalRpcResponseErr,
-    options?: ErrorOptions | undefined,
+    options?: SurrealErrorOptions | undefined,
   ) {
     super(response.error.message, options);
     this.code = response.error.code;
@@ -539,7 +566,7 @@ export class RpcResponseError extends SurrealDbError {
  * }
  * ```
  */
-export class QueryFailure extends SurrealDbError {
+export class QueryFailure extends SurrealError {
   static {
     this.prototype.name = "QueryFailure";
   }
@@ -569,7 +596,7 @@ export class QueryFailure extends SurrealDbError {
  * }
  * ```
  */
-export class ConnectionConflict extends SurrealDbError {
+export class ConnectionConflict extends SurrealError {
   static {
     this.prototype.name = "ConnectionConflict";
   }
@@ -582,7 +609,7 @@ export class ConnectionConflict extends SurrealDbError {
   constructor(
     endpoint1: unknown,
     endpoint2: unknown,
-    options?: ErrorOptions | undefined,
+    options?: SurrealErrorOptions | undefined,
   ) {
     super(
       `Connection conflict between ${endpoint1} and ${endpoint2}.`,
@@ -609,7 +636,7 @@ export class ConnectionConflict extends SurrealDbError {
  * await db.disconnect({ force: true }); // force を true にすると中止シグナルにエラーが送信されます。
  * ```
  */
-export class EngineDisconnected extends SurrealDbError {
+export class EngineDisconnected extends SurrealError {
   static {
     this.prototype.name = "EngineDisconnected";
   }
@@ -617,7 +644,7 @@ export class EngineDisconnected extends SurrealDbError {
   /**
    * @param options エラーオプション。
    */
-  constructor(options?: ErrorOptions | undefined) {
+  constructor(options?: SurrealErrorOptions | undefined) {
     super("The engine is disconnected.", options);
   }
 }
@@ -625,7 +652,7 @@ export class EngineDisconnected extends SurrealDbError {
 /**
  * このエラーは、CBOR タグが未知である場合に投げられます。
  */
-export class UnknownCborTag extends SurrealDbError {
+export class UnknownCborTag extends SurrealError {
   static {
     this.prototype.name = "UnknownCborTag";
   }
@@ -634,7 +661,10 @@ export class UnknownCborTag extends SurrealDbError {
    * @param tag 未知の CBOR タグ。
    * @param options エラーオプション。
    */
-  constructor(tag: number | bigint, options?: ErrorOptions | undefined) {
+  constructor(
+    tag: number | bigint,
+    options?: SurrealErrorOptions | undefined,
+  ) {
     super(`Unknown CBOR tag: ${tag}`, options);
   }
 }

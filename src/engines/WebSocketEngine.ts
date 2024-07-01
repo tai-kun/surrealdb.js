@@ -7,7 +7,7 @@ import {
   ConnectionUnavailable,
   MissingNamespace,
   RpcResponseError,
-  SurrealDbTypeError,
+  SurrealTypeError,
   WebSocketEngineError,
 } from "~/errors";
 import { isArrayBuffer, Payload } from "~/formatters";
@@ -411,7 +411,7 @@ export default class WebSocketEngine extends EngineAbc {
     const body: unknown = await this.fmt.encode({ ...request, id });
 
     if (typeof body !== "string" && !isArrayBuffer(body)) {
-      throw new SurrealDbTypeError(
+      throw new SurrealTypeError(
         "The formatter encoded a non-string, non-ArrayBuffer value",
       );
     }

@@ -1,5 +1,5 @@
 import isPlainObject from "is-plain-obj";
-import { SurrealDbTypeError } from "~/errors";
+import { SurrealTypeError } from "~/errors";
 import { BRACKETL, BRACKETR, escapeRid, quoteStr } from "~/index/escape";
 import toSurql from "~/index/toSurql";
 import type { TableType } from "~/index/values";
@@ -55,7 +55,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
 
     if (typeof id === "number") {
       if (Number.isNaN(id) || !Number.isFinite(id)) {
-        throw new SurrealDbTypeError("Invalid ID", { cause: id });
+        throw new SurrealTypeError("Invalid ID", { cause: id });
       }
 
       if (Number.isInteger(id)) {
@@ -81,7 +81,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
       return toSurql(id);
     }
 
-    throw new SurrealDbTypeError("Invalid ID", { cause: id });
+    throw new SurrealTypeError("Invalid ID", { cause: id });
   }
 
   /**

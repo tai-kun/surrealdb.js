@@ -4,7 +4,7 @@ import {
   ConnectionUnavailable,
   InvalidResponse,
   MissingNamespace,
-  SurrealDbTypeError,
+  SurrealTypeError,
 } from "~/errors";
 import { isArrayBuffer, Payload } from "~/formatters";
 import type {
@@ -246,13 +246,13 @@ export default class HttpEngine extends EngineAbc {
     }
 
     if (!this.fmt.mimeType) {
-      throw new SurrealDbTypeError("Formatter must have a MIME type");
+      throw new SurrealTypeError("Formatter must have a MIME type");
     }
 
     const body: unknown = await this.fmt.encode(request);
 
     if (typeof body !== "string" && !isArrayBuffer(body)) {
-      throw new SurrealDbTypeError(
+      throw new SurrealTypeError(
         "The formatter encoded a non-string, non-ArrayBuffer value",
       );
     }

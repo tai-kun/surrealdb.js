@@ -1,5 +1,5 @@
 import { throwIfAborted } from "@tai-kun/surreal/_internal";
-import { SurrealDbTypeError } from "@tai-kun/surreal/errors";
+import { SurrealTypeError } from "@tai-kun/surreal/errors";
 import { assertThrows } from "@tools/assert";
 import { test } from "@tools/test";
 
@@ -20,14 +20,14 @@ test("中止されたシグナルを渡すと例外を投げる", () => {
 
 test("中止されたシグナルを渡すと指定された例外を投げる", () => {
   const controller = new AbortController();
-  const reason = new SurrealDbTypeError("test");
+  const reason = new SurrealTypeError("test");
   controller.abort(reason);
 
   assertThrows(
     () => {
       throwIfAborted(controller.signal);
     },
-    SurrealDbTypeError,
+    SurrealTypeError,
     "test",
   );
 });

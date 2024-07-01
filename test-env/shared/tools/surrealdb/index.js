@@ -14,10 +14,7 @@ if (ENV === "Chrome" || ENV === "Firefox" || ENV === "WebKit") {
       return SURREALDB.port;
     },
   });
-} else if (
-  // ブラウザ向けのビルドでは、Node.js 向けのスクリプトを読み込まないようにする。
-  globalThis.BROWSERIFY !== "true"
-) {
+} else {
   ready = import("./setup.js").then(({ setup }) => setup());
 }
 

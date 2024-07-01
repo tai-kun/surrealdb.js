@@ -1,5 +1,5 @@
 import type { Primitive } from "type-fest";
-import { SurrealDbError } from "~/errors";
+import { SurrealError } from "~/errors";
 import {
   ASSERT_VALUE,
   datetimeErrors,
@@ -78,7 +78,7 @@ type IsValue<T> = {
 
 function isValue(errors: Map<object, object>, value: any): boolean {
   const errorKey = {};
-  const error = new SurrealDbError(
+  const error = new SurrealError(
     "This function cannot be used in this context.",
   );
 

@@ -18,7 +18,7 @@ import {
 import {
   type AggregateTasksError,
   CircularEngineReference,
-  SurrealDbTypeError,
+  SurrealTypeError,
   UnsupportedProtocol,
 } from "~/errors";
 import type { FormatterAbc } from "~/formatters";
@@ -244,7 +244,7 @@ export default abstract class ClientAbc {
     // 誤ってすべてのイベントリスナーを解除してしまわないようにするため、
     // listener が無い場合はエラーを投げる。
     if (!listener) {
-      throw new SurrealDbTypeError(
+      throw new SurrealTypeError(
         `Expected listener to be a function, but got ${typeof listener} instead.`,
       );
     }

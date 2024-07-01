@@ -1,5 +1,5 @@
 import { isDuration } from "@tai-kun/surreal";
-import { SurrealDbTypeError } from "@tai-kun/surreal/errors";
+import { SurrealTypeError } from "@tai-kun/surreal/errors";
 import { Duration } from "@tai-kun/surreal/full";
 import { Duration as DurationStandard } from "@tai-kun/surreal/standard";
 import { Duration as DurationTiny } from "@tai-kun/surreal/tiny";
@@ -45,7 +45,7 @@ for (
       () => {
         new Duration(input);
       },
-      SurrealDbTypeError,
+      SurrealTypeError,
     );
   });
 }

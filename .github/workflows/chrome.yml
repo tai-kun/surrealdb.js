@@ -59,26 +59,23 @@ jobs:
         with:
           node-version: "22.x"
 
-      - name: Set up Chrome
+      - name: Set up
         run: |
           name="$(openssl rand -hex 12)"
           docker run --name "$name" --rm -d --network host --shm-size=2g selenium/standalone-chrome:${{ matrix.browser-version }}
           echo "selenium_container_name=$name" >>$GITHUB_OUTPUT
-          bash scripts/pretest/small.sh test-env/chrome
+          bash scripts/pretest/medium.sh test-env/chrome ${{ matrix.surrealdb-version }}
           while ! curl --retry 5 -sSL http://localhost:4444/wd/hub/status | jq -e '.value.ready' | grep -q true; do sleep 1; done
           curl -sSL http://localhost:4444/wd/hub/status | jq -e '.value.nodes'
-        id: setup-chrome
-
-      - name: Prepare
-        run: bash scripts/pretest/medium.sh test-env/chrome ${{ matrix.surrealdb-version }}
+        id: setup
 
       - name: Test
         working-directory: test-env/chrome
         run: bash scripts/test.sh
-        
+
       - name: Cleanup
         if: always()
-        run: docker stop ${{ steps.setup-chrome.outputs.selenium_container_name }} || true
+        run: docker stop ${{ steps.setup.outputs.selenium_container_name }} || true
 
   action-timeline:
     needs:

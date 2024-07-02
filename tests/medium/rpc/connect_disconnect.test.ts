@@ -61,7 +61,7 @@ for (
       await db.connect(endpoint);
       await db.disconnect();
 
-      assertEquals(db.state, CLOSED);
+      assertEquals(db.state, undefined);
       assertEquals(db.getConnectionInfo(), undefined);
     });
 
@@ -75,8 +75,8 @@ for (
         db.disconnect(),
       ]);
 
-      assertEquals(db.state, CLOSED);
-      assertEquals(db.getConnectionInfo(), null);
+      assertEquals(db.state, undefined);
+      assertEquals(db.getConnectionInfo(), undefined);
       assertDeepEquals(results, [
         {
           status: "fulfilled",
@@ -119,37 +119,29 @@ for (
       assertDeepEquals(results, [
         // 1 回目
         {
-          ok: true,
-          value: CONNECTING,
+          state: CONNECTING,
         },
         {
-          ok: true,
-          value: OPEN,
+          state: OPEN,
         },
         {
-          ok: true,
-          value: CLOSING,
+          state: CLOSING,
         },
         {
-          ok: true,
-          value: CLOSED,
+          state: CLOSED,
         },
         // 2 回目
         {
-          ok: true,
-          value: CONNECTING,
+          state: CONNECTING,
         },
         {
-          ok: true,
-          value: OPEN,
+          state: OPEN,
         },
         {
-          ok: true,
-          value: CLOSING,
+          state: CLOSING,
         },
         {
-          ok: true,
-          value: CLOSED,
+          state: CLOSED,
         },
       ]);
     });
@@ -183,20 +175,16 @@ for (
       assertDeepEquals(results, [
         // 1 回目
         {
-          ok: true,
-          value: CONNECTING,
+          state: CONNECTING,
         },
         {
-          ok: true,
-          value: OPEN,
+          state: OPEN,
         },
         {
-          ok: true,
-          value: CLOSING,
+          state: CLOSING,
         },
         {
-          ok: true,
-          value: CLOSED,
+          state: CLOSED,
         },
         // 2 回目
         // ここで接続状態の遷移を監視できなくなる。

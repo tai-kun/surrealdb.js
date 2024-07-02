@@ -1,5 +1,5 @@
 import type { Constructor } from "type-fest";
-import { SurrealTypeError } from "~/errors";
+import { SurrealTypeError, unreachable } from "~/errors";
 import type { ClientConfig, default as ClientAbc } from "~/models/_client/Abc";
 import type { RecordData } from "./types";
 
@@ -51,6 +51,7 @@ export type RawSurql =
   | string
   | number
   | bigint
+  | boolean
   | { readonly toSurql: () => string };
 
 class Raw<T extends RawSurql = RawSurql> {
@@ -127,7 +128,7 @@ export default function initSurreal<T extends ClientConstructor>(
 
   class Surql<T extends readonly unknown[] = unknown[]> {
     /**
-     * @deprecated - この値は存在しません。型推論のためにのみ使用されます。
+     * @deprecated この値は存在しません。型推論のためにのみ使用されます。
      */
     // @ts-expect-error
     readonly __type: T;
@@ -154,27 +155,65 @@ export default function initSurreal<T extends ClientConstructor>(
     texts: readonly string[] | TemplateStringsArray,
     ...values: unknown[]
   ): Surql<T> {
-    let text = "",
-      vars: Record<string, unknown> = {},
-      len = texts.length,
-      i = 0,
-      j: number;
+    let text = "";
+    const vars: Record<string, unknown> = {};
 
-    for (; i < len; i++) {
+    for (let i = 0, j: number, len = texts.length; i < len; i++) {
       text += texts[i];
 
       if (i in values) {
         if (values[i] instanceof Raw) {
-          const { value } = values[i] as Raw;
-          text += typeof value === "string"
-            ? value
-            : typeof value === "number" || typeof value === "bigint"
-            ? value.toString(10)
-            : value.toSurql();
+          const { value: x } = values[i] as Raw;
+
+          switch (typeof x) {
+            case "string":
+            case "bigint":
+              text += x;
+              break;
+
+            case "number":
+              if (!Number.isFinite(x)) {
+                throw new SurrealTypeError(
+                  "The number `" + x + "` is not finite.",
+                );
+              }
+
+              text += x;
+              break;
+
+            // case "bigint":
+            //   text += x;
+            //   break;
+
+            case "object":
+              if (x === null || typeof x.toSurql !== "function") {
+                throw new SurrealTypeError("Unexpected object: " + String(x));
+              }
+
+              text += x.toSurql();
+              break;
+
+            case "boolean":
+              text += x && "true" || "false";
+              break;
+
+            case "symbol":
+            case "function":
+            case "undefined":
+              throw new SurrealTypeError("Unexpected type: " + typeof x);
+
+            default:
+              unreachable();
+          }
         } else {
-          j = values.findIndex(v => Object.is(v, values[i]));
-          text += `$${prefix}${j}`;
-          vars[`${prefix}${j}`] = values[j];
+          j = values.indexOf(values[i]);
+
+          if (j === -1) {
+            j = i;
+          }
+
+          text += "$" + prefix + j;
+          vars[prefix + j] = values[j];
         }
       }
     }

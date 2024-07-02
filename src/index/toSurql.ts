@@ -1,5 +1,5 @@
 import isPlainObject from "is-plain-obj";
-import { SurrealTypeError } from "~/errors";
+import { SurrealTypeError, unreachable } from "~/errors";
 import { escapeKey, quoteStr } from "./escape";
 
 export type SurqlPrimitive =
@@ -11,7 +11,7 @@ export type SurqlPrimitive =
   | undefined;
 
 export type SurqlObject =
-  | { readonly [_ in string | number]?: SurqlValue }
+  | { readonly [_ in string]?: SurqlValue }
   | { readonly toSurql: () => string }
   | Date;
 
@@ -32,71 +32,95 @@ export default function toSurql(value: SurqlValue): string {
       seen: Set<SurqlObject | SurqlArray>;
     },
   ): string {
-    if (typeof x === "string") {
-      // s 接頭辞を付けることで、特定の形式を満たす文字列を別のデータ型に自動変換されないようにします。
-      return "s" + quoteStr(x);
-    }
+    switch (typeof x) {
+      case "object":
+        break;
 
-    if (typeof x === "number" || typeof x === "bigint") {
-      return x.toString(10);
-    }
+      case "string":
+        // s 接頭辞を付けることで、特定の形式を満たす文字列を別のデータ型に自動変換されないようにします。
+        return "s" + quoteStr(x);
 
-    if (typeof x === "boolean") {
-      return x
-        ? "true"
-        : "false";
+      case "number":
+        if (!Number.isFinite(x)) {
+          throw new SurrealTypeError("The number `" + x + "` is not finite.");
+        }
+
+        return "" + x;
+
+      case "bigint":
+        return "" + x;
+
+      case "boolean":
+        return x && "true" || "false";
+
+      case "undefined":
+        return "NONE";
+
+      case "symbol":
+      case "function":
+        throw new SurrealTypeError("Unexpected type: " + typeof x);
+
+      default:
+        unreachable();
     }
 
     if (x === null) {
       return "NULL";
     }
 
-    if (x === undefined) {
-      return "NONE";
+    if (c.seen.has(x)) {
+      throw new SurrealTypeError("Circular reference: " + String(x));
     }
 
-    let s: string | undefined;
+    if (x instanceof Date) {
+      return "d" + quoteStr(x.toISOString());
+    }
 
     if (Array.isArray(x)) {
-      if (c.seen.has(x)) {
-        throw new SurrealTypeError("Circular reference");
+      c.seen.add(x);
+      let s = "[";
+
+      for (let i = 0, len = x.length; i < len; i++) {
+        i && (s += ",");
+        s += inner(x[i], c);
       }
 
-      c.seen.add(x);
-      s = "[" + x.map(v => inner(v, c)).join(",") + "]";
+      s += "]";
       c.seen.delete(x);
 
       return s;
     }
 
-    if (typeof x === "object") {
-      if (c.seen.has(x)) {
-        throw new SurrealTypeError("Circular reference");
-      }
-
+    if (typeof x.toSurql === "function") {
       c.seen.add(x);
-
-      if (x instanceof Date) {
-        s = "d" + quoteStr(x.toISOString());
-      } else if (typeof x.toSurql === "function") {
-        s = x.toSurql();
-      } else if (isPlainObject(x)) {
-        s = "{"
-          + Object.entries(x)
-            .sort(([a], [b]) => a.localeCompare(b))
-            .map(([k, v]) => escapeKey(k) + ":" + inner(v, c))
-            .join(",")
-          + "}";
-      }
-
+      const s = x.toSurql();
       c.seen.delete(x);
 
-      if (s !== undefined) {
-        return s;
-      }
+      return s;
     }
 
-    throw new SurrealTypeError("Unexpected value: " + String(x));
+    if (isPlainObject(x)) {
+      c.seen.add(x);
+      let s = "{";
+
+      for (
+        let i = 0,
+          kys = Object.keys(x).sort(),
+          len = kys.length;
+        i < len;
+        i++
+      ) {
+        i && (s += ",");
+        s += escapeKey(kys[i]!) + ":" + inner((x as any)[kys[i]!], c);
+      }
+
+      s += "}";
+      c.seen.delete(x);
+
+      return s;
+    }
+
+    throw new SurrealTypeError("Unexpected object: " + String(x));
   }
 
   return inner(value, {

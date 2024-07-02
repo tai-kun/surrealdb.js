@@ -114,9 +114,9 @@
     {
       "import": {
         "dist/index.mjs": "{ initSurreal }",
-        "dist/engines/index.mjs": "{ httpEngine }",
-        "dist/formatters/index.mjs": "{ JsonFormatter }",
-        "dist/validators/index.mjs": "{ EmptyValidator }",
+        "dist/engines/index.mjs": "{ createHttpEngine }",
+        "dist/formatters/index.mjs": "{ jsonFormatter }",
+        "dist/validators/index.mjs": "{ emptyValidator }",
         "dist/models/standard/index.mjs": "{ Client }"
       },
       "gzip": true
@@ -124,9 +124,9 @@
     {
       "import": {
         "dist/index.mjs": "{ initSurreal }",
-        "dist/engines/index.mjs": "{ httpEngine }",
-        "dist/formatters/index.mjs": "{ CborFormatter }",
-        "dist/validators/index.mjs": "{ EmptyValidator }",
+        "dist/engines/index.mjs": "{ createHttpEngine }",
+        "dist/formatters/index.mjs": "{ createCborFormatter }",
+        "dist/validators/index.mjs": "{ emptyValidator }",
         "dist/models/standard/index.mjs": "{ Client }",
         "dist/models/tiny/index.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
       },
@@ -135,9 +135,9 @@
     {
       "import": {
         "dist/index.mjs": "{ initSurreal }",
-        "dist/engines/index.mjs": "{ httpEngine, webSocketEngine }",
-        "dist/formatters/index.mjs": "{ CborFormatter }",
-        "dist/validators/index.mjs": "{ ZodValidator }",
+        "dist/engines/index.mjs": "{ createHttpEngine, createWebSocketEngine }",
+        "dist/formatters/index.mjs": "{ createCborFormatter }",
+        "dist/validators/index.mjs": "{ zodValidator }",
         "dist/models/full/index.mjs": "{ Client, Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
       },
       "gzip": true

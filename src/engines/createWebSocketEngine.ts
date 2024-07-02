@@ -16,7 +16,7 @@ export default (
    * @param config エンジンの設定。
    * @returns クライアントエンジン。
    */
-  function webSocketEngine(config) {
+  function createWebSocketEngine(config) {
     return new WebSocketEngine({
       ...config,
       async createWebSocket(address, protocol) {

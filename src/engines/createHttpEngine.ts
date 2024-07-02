@@ -8,7 +8,7 @@ export default (
    * @param config エンジンの設定。
    * @returns クライアントエンジン。
    */
-  function httpEngine(config) {
+  function createHttpEngine(config) {
     return new HttpEngine(config);
   }
 ) satisfies CreateEngine;

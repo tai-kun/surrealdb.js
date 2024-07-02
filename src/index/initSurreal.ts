@@ -103,7 +103,7 @@ export default function initSurreal<T extends ClientConstructor>(
     Client,
     engines,
     formatter,
-    Validator,
+    validator,
   } = init;
 
   if (!/^[0-9a-z_]*$/i.test(prefix)) {
@@ -116,7 +116,7 @@ export default function initSurreal<T extends ClientConstructor>(
       super({
         engines,
         formatter,
-        Validator,
+        validator,
       });
     }
 

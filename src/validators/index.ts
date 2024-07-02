@@ -1,8 +1,7 @@
-export type * from "./Abc";
-export { default as ValidatorAbc } from "./Abc";
+export type * from "./types";
 
-export type * from "./EmptyValidator";
-export { default as EmptyValidator } from "./EmptyValidator";
+export type * from "./emptyValidator";
+export { default as emptyValidator } from "./emptyValidator";
 
 export type * from "./ZodValidator";
-export { default as ZodValidator } from "./ZodValidator";
+export { default as zodValidator } from "./ZodValidator";

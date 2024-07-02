@@ -20,7 +20,7 @@ import type {
   RpcRequest,
   RpcResponse,
 } from "~/index/types";
-import type { ValidatorAbc } from "~/validators";
+import type { Validator } from "~/validators";
 
 /**
  * 現在の接続状態。
@@ -92,7 +92,7 @@ export interface EngineConfig {
   /**
    * 各種データの検証を行うバリデータ-。
    */
-  readonly validator: ValidatorAbc;
+  readonly validator: Validator;
 }
 
 /**
@@ -152,7 +152,7 @@ export default abstract class EngineAbc {
   /**
    * 各種データの検証を行うバリデータ-。
    */
-  protected v8n: ValidatorAbc;
+  protected v8n: Validator;
 
   /**
    * 接続情報。

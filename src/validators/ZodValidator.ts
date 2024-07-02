@@ -66,7 +66,7 @@ import {
   type ThingType,
   type UuidType,
 } from "~/index/values";
-import Abc, { type ParseResponseContext } from "./Abc";
+import type { Validator } from "./types";
 
 type ZodType<T> = z.ZodType<T, any, any>;
 
@@ -108,758 +108,763 @@ function setRequired<P extends string>(properties: readonly P[]) {
   };
 }
 
-export default class ZodValidator extends Abc {
-  JwtLike = z.string().refine(x => {
-    const { source: base64Url } = /([0-9a-zA-Z_-]{4})*([0-9a-zA-Z_-]{2,3})?/;
-    const JWT_REGEX = new RegExp([
-      "^",
-      base64Url,
-      "\\.",
-      base64Url,
-      "\\.",
-      base64Url,
-      "$",
-    ].join(""));
+const JwtLike = z.string().refine(x => {
+  const { source: base64Url } = /([0-9a-zA-Z_-]{4})*([0-9a-zA-Z_-]{2,3})?/;
+  const JWT_REGEX = new RegExp([
+    "^",
+    base64Url,
+    "\\.",
+    base64Url,
+    "\\.",
+    base64Url,
+    "$",
+  ].join(""));
 
-    return JWT_REGEX.test(x);
+  return JWT_REGEX.test(x);
+});
+
+// [] を読み取り専用にすると readonly [] ではなく readonly never[] になるので、
+// 読み取り専用のから配列のスキーマを用意する。
+const ReadonlyEmptyArray = z.tuple([])
+  .readonly() as unknown as ZodType<readonly []>;
+
+const Table = z.custom<TableType>(isTable);
+const Thing = z.custom<ThingType>(isThing);
+const Uuid = z.custom<UuidType>(isUuid);
+
+/******************************************************************************
+ * Query Types
+ *****************************************************************************/
+
+const QueryResultBase = <S extends string>(status: S) =>
+  z.object({
+    status: z.literal(status),
+    time: z.string(),
   });
-  // [] を読み取り専用にすると readonly [] ではなく readonly never[] になるので、
-  // 読み取り専用のから配列のスキーマを用意する。
-  ReadonlyEmptyArray = z.tuple([])
-    .readonly() as unknown as ZodType<readonly []>;
 
-  Table = z.custom<TableType>(isTable);
-  Thing = z.custom<ThingType>(isThing);
-  Uuid = z.custom<UuidType>(isUuid);
-
-  /****************************************************************************
-   * Query Types
-   ***************************************************************************/
-
-  QueryResultBase = <S extends string>(status: S) =>
-    z.object({
-      status: z.literal(status),
-      time: z.string(),
-    });
-
-  QueryResultOk = <T>(result: ZodType<T>): ZodType<QueryResultOk<T>> =>
-    this.QueryResultBase("OK")
-      .extend({ result })
-      .strict()
-      .transform(setRequired(["result"]));
-
-  QueryResultErr: ZodType<QueryResultErr> = this.QueryResultBase("ERR")
-    .extend({ result: z.string() })
+const QueryResultOk = <T>(result: ZodType<T>): ZodType<QueryResultOk<T>> =>
+  QueryResultBase("OK")
+    .extend({ result })
     .strict()
     .transform(setRequired(["result"]));
 
-  QueryResult = <T>(result: ZodType<T>): ZodType<QueryResult<T>> =>
-    z.union([
-      this.QueryResultOk(result),
-      this.QueryResultErr,
-    ]);
+const QueryResultErr: ZodType<QueryResultErr> = QueryResultBase("ERR")
+  .extend({ result: z.string() })
+  .strict()
+  .transform(setRequired(["result"]));
 
-  RecordInputData: ZodType<RecordInputData> = z.record(z.unknown())
-    .readonly();
-
-  RecordData: ZodType<RecordData> = z.record(z.unknown());
-
-  /****************************************************************************
-   * Patch Types
-   ***************************************************************************/
-
-  AddPatch = <T, P extends string>(
-    value: ZodType<T>,
-    path: ZodType<P>,
-  ): ZodType<AddPatch<T, P>> =>
-    z.object({
-      op: z.literal("add"),
-      path,
-      value,
-    })
-      .strict()
-      .transform(setRequired(["value"]));
-
-  RemovePatch = <P extends string>(path: ZodType<P>): ZodType<RemovePatch<P>> =>
-    z.object({
-      op: z.literal("remove"),
-      path,
-    })
-      .strict()
-      .transform(setRequired([]));
-
-  ReplacePatch = <T, P extends string>(
-    value: ZodType<T>,
-    path: ZodType<P>,
-  ): ZodType<ReplacePatch<T, P>> =>
-    z.object({
-      op: z.literal("replace"),
-      path,
-      value,
-    })
-      .strict()
-      .transform(setRequired(["value"]));
-
-  ChangePatch = <T extends string, P extends string>(
-    value: ZodType<T>,
-    path: ZodType<P>,
-  ): ZodType<ChangePatch<T, P>> =>
-    z.object({
-      op: z.literal("change"),
-      path,
-      value,
-    })
-      .strict()
-      .transform(setRequired([]));
-
-  CopyPatch = <F extends string, T extends string>(
-    from: ZodType<F>,
-    to: ZodType<T>,
-  ): ZodType<CopyPatch<F, T>> =>
-    z.object({
-      op: z.literal("copy"),
-      path: to,
-      from,
-    })
-      .strict()
-      .transform(setRequired([]));
-
-  MovePatch = <F extends string, T extends string>(
-    from: ZodType<F>,
-    to: ZodType<T>,
-  ): ZodType<MovePatch<F, T>> =>
-    z.object({
-      op: z.literal("move"),
-      path: to,
-      from,
-    })
-      .strict()
-      .transform(setRequired([]));
-
-  TestPatch = <T, P extends string>(
-    value: ZodType<T>,
-    path: ZodType<P>,
-  ): ZodType<TestPatch<T, P>> =>
-    z.object({
-      op: z.literal("test"),
-      path,
-      value,
-    })
-      .strict()
-      .transform(setRequired(["value"]));
-
-  Patch = <T>(value: ZodType<T>): ZodType<Patch<T>> =>
-    z.union([
-      this.AddPatch(value, z.string()),
-      this.RemovePatch(z.string()),
-      this.ReplacePatch(value, z.string()),
-      this.ChangePatch(z.string(), z.string()),
-      this.CopyPatch(z.string(), z.string()),
-      this.MovePatch(z.string(), z.string()),
-      this.TestPatch(value, z.string()),
-    ]);
-
-  ReadonlyPatch = <T>(value: ZodType<T>): ZodType<ReadonlyPatch<T>> =>
-    z.union([
-      this.AddPatch(value, z.string()).readonly(),
-      this.RemovePatch(z.string()).readonly(),
-      this.ReplacePatch(value, z.string()).readonly(),
-      this.ChangePatch(z.string(), z.string()).readonly(),
-      this.CopyPatch(z.string(), z.string()).readonly(),
-      this.MovePatch(z.string(), z.string()).readonly(),
-      this.TestPatch(value, z.string()).readonly(),
-    ]);
-
-  /****************************************************************************
-   * Live Query Types
-   ***************************************************************************/
-
-  LiveAction: ZodType<LiveAction> = z.enum([
-    "CREATE",
-    "UPDATE",
-    "DELETE",
+const QueryResult = <T>(result: ZodType<T>): ZodType<QueryResult<T>> =>
+  z.union([
+    QueryResultOk(result),
+    QueryResultErr,
   ]);
 
-  LiveData = <T extends RecordData, I extends string | UuidType>(
-    data: ZodType<T>,
-    id: ZodType<I>,
-  ): ZodType<LiveData<T, I>> =>
+const RecordInputData: ZodType<RecordInputData> = z.record(z.unknown())
+  .readonly();
+
+const RecordData: ZodType<RecordData> = z.record(z.unknown());
+
+/******************************************************************************
+ * Patch Types
+ *****************************************************************************/
+
+const AddPatch = <T, P extends string>(
+  value: ZodType<T>,
+  path: ZodType<P>,
+): ZodType<AddPatch<T, P>> =>
+  z.object({
+    op: z.literal("add"),
+    path,
+    value,
+  })
+    .strict()
+    .transform(setRequired(["value"]));
+
+const RemovePatch = <P extends string>(
+  path: ZodType<P>,
+): ZodType<RemovePatch<P>> =>
+  z.object({
+    op: z.literal("remove"),
+    path,
+  })
+    .strict()
+    .transform(setRequired([]));
+
+const ReplacePatch = <T, P extends string>(
+  value: ZodType<T>,
+  path: ZodType<P>,
+): ZodType<ReplacePatch<T, P>> =>
+  z.object({
+    op: z.literal("replace"),
+    path,
+    value,
+  })
+    .strict()
+    .transform(setRequired(["value"]));
+
+const ChangePatch = <T extends string, P extends string>(
+  value: ZodType<T>,
+  path: ZodType<P>,
+): ZodType<ChangePatch<T, P>> =>
+  z.object({
+    op: z.literal("change"),
+    path,
+    value,
+  })
+    .strict()
+    .transform(setRequired([]));
+
+const CopyPatch = <F extends string, T extends string>(
+  from: ZodType<F>,
+  to: ZodType<T>,
+): ZodType<CopyPatch<F, T>> =>
+  z.object({
+    op: z.literal("copy"),
+    path: to,
+    from,
+  })
+    .strict()
+    .transform(setRequired([]));
+
+const MovePatch = <F extends string, T extends string>(
+  from: ZodType<F>,
+  to: ZodType<T>,
+): ZodType<MovePatch<F, T>> =>
+  z.object({
+    op: z.literal("move"),
+    path: to,
+    from,
+  })
+    .strict()
+    .transform(setRequired([]));
+
+const TestPatch = <T, P extends string>(
+  value: ZodType<T>,
+  path: ZodType<P>,
+): ZodType<TestPatch<T, P>> =>
+  z.object({
+    op: z.literal("test"),
+    path,
+    value,
+  })
+    .strict()
+    .transform(setRequired(["value"]));
+
+const Patch = <T>(value: ZodType<T>): ZodType<Patch<T>> =>
+  z.union([
+    AddPatch(value, z.string()),
+    RemovePatch(z.string()),
+    ReplacePatch(value, z.string()),
+    ChangePatch(z.string(), z.string()),
+    CopyPatch(z.string(), z.string()),
+    MovePatch(z.string(), z.string()),
+    TestPatch(value, z.string()),
+  ]);
+
+const ReadonlyPatch = <T>(value: ZodType<T>): ZodType<ReadonlyPatch<T>> =>
+  z.union([
+    AddPatch(value, z.string()).readonly(),
+    RemovePatch(z.string()).readonly(),
+    ReplacePatch(value, z.string()).readonly(),
+    ChangePatch(z.string(), z.string()).readonly(),
+    CopyPatch(z.string(), z.string()).readonly(),
+    MovePatch(z.string(), z.string()).readonly(),
+    TestPatch(value, z.string()).readonly(),
+  ]);
+
+/******************************************************************************
+ * Live Query Types
+ *****************************************************************************/
+
+const LiveAction: ZodType<LiveAction> = z.enum([
+  "CREATE",
+  "UPDATE",
+  "DELETE",
+]);
+
+const LiveData = <T extends RecordData, I extends string | UuidType>(
+  data: ZodType<T>,
+  id: ZodType<I>,
+): ZodType<LiveData<T, I>> =>
+  z.object({
+    action: LiveAction,
+    id,
+    result: data,
+  })
+    .strict()
+    .transform(setRequired(["result"]));
+
+const LiveDiff = <
+  T extends RecordData,
+  P extends readonly Patch[],
+  I extends string | UuidType,
+>(
+  data: ZodType<T>,
+  patch: ZodType<P>,
+  id: ZodType<I>,
+): ZodType<LiveDiff<T, P, I>> =>
+  z.union([
     z.object({
-      action: this.LiveAction,
+      action: z.enum(["CREATE", "UPDATE"]),
+      id,
+      result: patch,
+    })
+      .strict()
+      .transform(setRequired(["result"])),
+    z.object({
+      action: z.literal("DELETE"),
       id,
       result: data,
     })
       .strict()
-      .transform(setRequired(["result"]));
+      .transform(setRequired(["result"])),
+  ]);
 
-  LiveDiff = <
-    T extends RecordData,
-    P extends readonly Patch[],
-    I extends string | UuidType,
-  >(
-    data: ZodType<T>,
-    patch: ZodType<P>,
-    id: ZodType<I>,
-  ): ZodType<LiveDiff<T, P, I>> =>
-    z.union([
-      z.object({
-        action: z.enum(["CREATE", "UPDATE"]),
-        id,
-        result: patch,
-      })
-        .strict()
-        .transform(setRequired(["result"])),
-      z.object({
-        action: z.literal("DELETE"),
-        id,
-        result: data,
-      })
-        .strict()
-        .transform(setRequired(["result"])),
-    ]);
+const LiveResult = <
+  T extends RecordData,
+  P extends readonly Patch[],
+  I extends string | UuidType,
+>(
+  data: ZodType<T>,
+  patch: ZodType<P>,
+  id: ZodType<I>,
+): ZodType<LiveResult<T, P, I>> =>
+  z.union([
+    LiveData(data, id),
+    LiveDiff(data, patch, id),
+  ]);
 
-  LiveResult = <
-    T extends RecordData,
-    P extends readonly Patch[],
-    I extends string | UuidType,
-  >(
-    data: ZodType<T>,
-    patch: ZodType<P>,
-    id: ZodType<I>,
-  ): ZodType<LiveResult<T, P, I>> =>
-    z.union([
-      this.LiveData(data, id),
-      this.LiveDiff(data, patch, id),
-    ]);
+/******************************************************************************
+ * Authentication Types
+ *****************************************************************************/
 
-  /****************************************************************************
-   * Authentication Types
-   ***************************************************************************/
+const RootAuth: ZodType<RootAuth> = z.object({
+  ns: z.null().optional(),
+  db: z.null().optional(),
+  sc: z.null().optional(),
+  user: z.string(),
+  pass: z.string(),
+})
+  .strict()
+  .readonly();
 
-  RootAuth: ZodType<RootAuth> = z.object({
-    ns: z.null().optional(),
-    db: z.null().optional(),
-    sc: z.null().optional(),
-    user: z.string(),
-    pass: z.string(),
+const NamespaceAuth: ZodType<NamespaceAuth> = z.object({
+  ns: z.string(),
+  db: z.null().optional(),
+  sc: z.null().optional(),
+  user: z.string(),
+  pass: z.string(),
+})
+  .strict()
+  .readonly();
+
+const DatabaseAuth: ZodType<DatabaseAuth> = z.object({
+  ns: z.string(),
+  db: z.string(),
+  sc: z.null().optional(),
+  user: z.string(),
+  pass: z.string(),
+})
+  .strict()
+  .readonly();
+
+const ScopeAuth: ZodType<ScopeAuth> = z.object({
+  ns: z.string(),
+  db: z.string(),
+  sc: z.string(),
+})
+  .catchall(z.unknown())
+  .readonly();
+
+const SystemAuth: ZodType<SystemAuth> = z.union([
+  RootAuth,
+  NamespaceAuth,
+  DatabaseAuth,
+]);
+
+const Auth: ZodType<Auth> = z.union([
+  SystemAuth,
+  ScopeAuth,
+]);
+
+/******************************************************************************
+ * RPC Request Types
+ *****************************************************************************/
+
+const RpcRequestBase = <
+  M extends string,
+  P extends ZodType<readonly unknown[]>,
+>(
+  method: M,
+  params: P,
+) =>
+  z.object({
+    method: z.literal(method),
+    params,
   })
     .strict()
     .readonly();
 
-  NamespaceAuth: ZodType<NamespaceAuth> = z.object({
-    ns: z.string(),
-    db: z.null().optional(),
-    sc: z.null().optional(),
-    user: z.string(),
-    pass: z.string(),
-  })
-    .strict()
-    .readonly();
+const RpcPingRequest: ZodType<RpcPingRequest> = RpcRequestBase(
+  "ping",
+  ReadonlyEmptyArray,
+);
 
-  DatabaseAuth: ZodType<DatabaseAuth> = z.object({
-    ns: z.string(),
-    db: z.string(),
-    sc: z.null().optional(),
-    user: z.string(),
-    pass: z.string(),
-  })
-    .strict()
-    .readonly();
-
-  ScopeAuth: ZodType<ScopeAuth> = z.object({
-    ns: z.string(),
-    db: z.string(),
-    sc: z.string(),
-  })
-    .catchall(z.unknown())
-    .readonly();
-
-  SystemAuth: ZodType<SystemAuth> = z.union([
-    this.RootAuth,
-    this.NamespaceAuth,
-    this.DatabaseAuth,
-  ]);
-
-  Auth: ZodType<Auth> = z.union([
-    this.SystemAuth,
-    this.ScopeAuth,
-  ]);
-
-  /****************************************************************************
-   * RPC Request Types
-   ***************************************************************************/
-
-  RpcRequestBase = <M extends string, P extends ZodType<readonly unknown[]>>(
-    method: M,
-    params: P,
-  ) =>
-    z.object({
-      method: z.literal(method),
-      params,
-    })
-      .strict()
-      .readonly();
-
-  RpcPingRequest: ZodType<RpcPingRequest> = this.RpcRequestBase(
-    "ping",
-    this.ReadonlyEmptyArray,
-  );
-
-  RpcUseRequest: ZodType<RpcUseRequest> = this.RpcRequestBase(
-    "use",
-    z.union([
-      this.ReadonlyEmptyArray,
-      z.tuple([
-        // ns
-        z.string()
-          .nullish(),
-      ])
-        .readonly(),
-      z.tuple([
-        // ns
-        z.string()
-          .nullish(),
-        // db
-        z.string()
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcInfoRequest: ZodType<RpcInfoRequest> = this.RpcRequestBase(
-    "info",
-    this.ReadonlyEmptyArray,
-  );
-
-  RpcSignupRequest: ZodType<RpcSignupRequest> = this.RpcRequestBase(
-    "signup",
-    z.tuple([this.ScopeAuth])
-      .readonly(),
-  );
-
-  RpcSigninRequest: ZodType<RpcSigninRequest> = this.RpcRequestBase(
-    "signin",
-    z.tuple([this.Auth])
-      .readonly(),
-  );
-
-  RpcAuthenticateRequest: ZodType<RpcAuthenticateRequest> = this.RpcRequestBase(
-    "authenticate",
-    z.tuple([this.JwtLike])
-      .readonly(),
-  );
-
-  RpcInvalidateRequest: ZodType<RpcInvalidateRequest> = this.RpcRequestBase(
-    "invalidate",
-    this.ReadonlyEmptyArray,
-  );
-
-  RpcLetRequest: ZodType<RpcLetRequest> = this.RpcRequestBase(
-    "let",
+const RpcUseRequest: ZodType<RpcUseRequest> = RpcRequestBase(
+  "use",
+  z.union([
+    ReadonlyEmptyArray,
     z.tuple([
-      z.string(),
-      z.unknown(),
+      // ns
+      z.string()
+        .nullish(),
     ])
       .readonly(),
-  );
-
-  RpcUnsetRequest: ZodType<RpcUnsetRequest> = this.RpcRequestBase(
-    "unset",
-    z.tuple([z.string()])
-      .readonly(),
-  );
-
-  RpcLiveRequest: ZodType<RpcLiveRequest> = this.RpcRequestBase(
-    "live",
-    z.union([
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Table,
-        ]),
-      ])
-        .readonly(),
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Table,
-        ]),
-        z.boolean()
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcKillRequest: ZodType<RpcKillRequest> = this.RpcRequestBase(
-    "kill",
     z.tuple([
-      z.union([
-        z.string().uuid(),
-        this.Uuid,
-      ]),
+      // ns
+      z.string()
+        .nullish(),
+      // db
+      z.string()
+        .nullish(),
     ])
       .readonly(),
-  );
+  ]),
+);
 
-  RpcQueryRequest: ZodType<RpcQueryRequest> = this.RpcRequestBase(
-    "query",
-    z.union([
-      z.tuple([
-        z.union([
-          z.string(),
-          z.object({
-            text: z.string(),
-            vars: this.RecordInputData
-              .nullish(),
-          })
-            .readonly(),
-        ]),
-      ])
-        .readonly(),
-      z.tuple([
-        z.union([
-          z.string(),
-          z.object({
-            text: z.string(),
-            vars: this.RecordInputData
-              .nullish(),
-          })
-            .readonly(),
-        ]),
-        this.RecordInputData
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
+const RpcInfoRequest: ZodType<RpcInfoRequest> = RpcRequestBase(
+  "info",
+  ReadonlyEmptyArray,
+);
 
-  RpcSelectRequest: ZodType<RpcSelectRequest> = this.RpcRequestBase(
-    "select",
+const RpcSignupRequest: ZodType<RpcSignupRequest> = RpcRequestBase(
+  "signup",
+  z.tuple([ScopeAuth])
+    .readonly(),
+);
+
+const RpcSigninRequest: ZodType<RpcSigninRequest> = RpcRequestBase(
+  "signin",
+  z.tuple([Auth])
+    .readonly(),
+);
+
+const RpcAuthenticateRequest: ZodType<RpcAuthenticateRequest> = RpcRequestBase(
+  "authenticate",
+  z.tuple([JwtLike])
+    .readonly(),
+);
+
+const RpcInvalidateRequest: ZodType<RpcInvalidateRequest> = RpcRequestBase(
+  "invalidate",
+  ReadonlyEmptyArray,
+);
+
+const RpcLetRequest: ZodType<RpcLetRequest> = RpcRequestBase(
+  "let",
+  z.tuple([
+    z.string(),
+    z.unknown(),
+  ])
+    .readonly(),
+);
+
+const RpcUnsetRequest: ZodType<RpcUnsetRequest> = RpcRequestBase(
+  "unset",
+  z.tuple([z.string()])
+    .readonly(),
+);
+
+const RpcLiveRequest: ZodType<RpcLiveRequest> = RpcRequestBase(
+  "live",
+  z.union([
     z.tuple([
       z.union([
         z.string(),
-        this.Thing,
+        Table,
       ]),
     ])
       .readonly(),
-  );
-
-  RpcCreateRequest: ZodType<RpcCreateRequest> = this.RpcRequestBase(
-    "create",
-    z.union([
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-      ])
-        .readonly(),
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-        this.RecordInputData
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcInsertRequest: ZodType<RpcInsertRequest> = this.RpcRequestBase(
-    "insert",
-    z.union([
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-      ])
-        .readonly(),
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-        z.union([
-          this.RecordInputData,
-          z.array(this.RecordInputData)
-            .readonly(),
-        ])
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcUpdateRequest: ZodType<RpcUpdateRequest> = this.RpcRequestBase(
-    "update",
-    z.union([
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-      ])
-        .readonly(),
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-        this.RecordInputData
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcMergeRequest: ZodType<RpcMergeRequest> = this.RpcRequestBase(
-    "merge",
     z.tuple([
       z.union([
         z.string(),
-        this.Thing,
+        Table,
       ]),
-      this.RecordInputData,
+      z.boolean()
+        .nullish(),
     ])
       .readonly(),
-  );
+  ]),
+);
 
-  RpcPatchRequest: ZodType<RpcPatchRequest> = this.RpcRequestBase(
-    "patch",
+const RpcKillRequest: ZodType<RpcKillRequest> = RpcRequestBase(
+  "kill",
+  z.tuple([
     z.union([
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-        z.array(this.ReadonlyPatch(z.unknown()))
-          .readonly(),
-      ])
-        .readonly(),
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-        z.array(this.ReadonlyPatch(z.unknown()))
-          .readonly(),
-        z.boolean()
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcDeleteRequest: ZodType<RpcDeleteRequest> = this.RpcRequestBase(
-    "delete",
-    z.tuple([
-      z.union([
-        z.string(),
-        this.Thing,
-      ]),
-    ])
-      .readonly(),
-  );
-
-  RpcVersionRequest: ZodType<RpcVersionRequest> = this.RpcRequestBase(
-    "version",
-    this.ReadonlyEmptyArray,
-  );
-
-  RpcRunRequest: ZodType<RpcRunRequest> = this.RpcRequestBase(
-    "run",
-    z.union([
-      z.tuple([
-        z.string(),
-      ])
-        .readonly(),
-      z.tuple([
-        z.string(),
-        z.string()
-          .nullish(),
-      ])
-        .readonly(),
-      z.tuple([
-        z.string(),
-        z.string()
-          .nullish(),
-        z.array(z.unknown())
-          .readonly()
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcRelateRequest: ZodType<RpcRelateRequest> = this.RpcRequestBase(
-    "relate",
-    z.union([
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-          z.array(this.Thing)
-            .readonly(),
-        ]),
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-        z.union([
-          z.string(),
-          this.Thing,
-          z.array(this.Thing)
-            .readonly(),
-        ]),
-      ])
-        .readonly(),
-      z.tuple([
-        z.union([
-          z.string(),
-          this.Thing,
-          z.array(this.Thing)
-            .readonly(),
-        ]),
-        z.union([
-          z.string(),
-          this.Thing,
-        ]),
-        z.union([
-          z.string(),
-          this.Thing,
-          z.array(this.Thing)
-            .readonly(),
-        ]),
-        this.RecordInputData
-          .nullish(),
-      ])
-        .readonly(),
-    ]),
-  );
-
-  RpcRequest: ZodType<RpcRequest> = z.union([
-    this.RpcPingRequest,
-    this.RpcUseRequest,
-    this.RpcInfoRequest,
-    this.RpcSignupRequest,
-    this.RpcSigninRequest,
-    this.RpcAuthenticateRequest,
-    this.RpcInvalidateRequest,
-    this.RpcLetRequest,
-    this.RpcUnsetRequest,
-    this.RpcLiveRequest,
-    this.RpcKillRequest,
-    this.RpcQueryRequest,
-    this.RpcSelectRequest,
-    this.RpcCreateRequest,
-    this.RpcInsertRequest,
-    this.RpcUpdateRequest,
-    this.RpcMergeRequest,
-    this.RpcPatchRequest,
-    this.RpcDeleteRequest,
-    this.RpcVersionRequest,
-    this.RpcRunRequest,
-    this.RpcRelateRequest,
-  ]);
-
-  /****************************************************************************
-   * RPC Response Types
-   ***************************************************************************/
-
-  TableRecord = z.object({
-    id: z.union([
-      z.string(),
-      this.Thing,
-    ]),
-  })
-    .catchall(z.unknown());
-
-  RpcResultMapping: {
-    [M in keyof RpcResultMapping]: ZodType<
-      // dprint-ignore
-      RpcResultMapping[M] extends void
-        ? void | null | undefined
-        : RpcResultMapping[M]
-    >;
-  } = {
-    ping: z.void().nullish(),
-    use: z.void().nullish(),
-    info: this.TableRecord,
-    signup: this.JwtLike,
-    signin: this.JwtLike,
-    authenticate: z.void().nullish(),
-    invalidate: z.void().nullish(),
-    let: z.void().nullish(),
-    unset: z.void().nullish(),
-    live: z.union([
       z.string().uuid(),
-      this.Uuid,
+      Uuid,
     ]),
-    kill: z.void().nullish(),
-    query: z.array(this.QueryResult(z.unknown())),
-    select: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-    ]),
-    create: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-    ]),
-    insert: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-    ]),
-    update: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-    ]),
-    merge: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-    ]),
-    patch: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-      z.array(
-        z.union([
-          this.Patch(z.unknown()),
-          z.array(this.Patch(z.unknown())),
-        ]),
-      ),
-    ]),
-    delete: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-    ]),
-    version: z.string(),
-    run: z.unknown(),
-    relate: z.union([
-      this.TableRecord,
-      z.array(this.TableRecord),
-    ]),
-  };
+  ])
+    .readonly(),
+);
 
-  BidirectionalRpcResponseBase = z.object({
-    id: z.string()
-      .regex(
-        new RegExp("^" + Object.keys(this.RpcResultMapping).join("|") + "/.+$"),
-      ) as ZodType<`${RpcMethod}/${string | number}`>,
-  });
+const RpcQueryRequest: ZodType<RpcQueryRequest> = RpcRequestBase(
+  "query",
+  z.union([
+    z.tuple([
+      z.union([
+        z.string(),
+        z.object({
+          text: z.string(),
+          vars: RecordInputData
+            .nullish(),
+        })
+          .readonly(),
+      ]),
+    ])
+      .readonly(),
+    z.tuple([
+      z.union([
+        z.string(),
+        z.object({
+          text: z.string(),
+          vars: RecordInputData
+            .nullish(),
+        })
+          .readonly(),
+      ]),
+      RecordInputData
+        .nullish(),
+    ])
+      .readonly(),
+  ]),
+);
 
-  BidirectionalRpcResponseOk = <T>(
-    result: ZodType<T>,
-  ): ZodType<BidirectionalRpcResponseOk<T>> =>
-    this.BidirectionalRpcResponseBase
-      .extend({ result })
-      .strict()
-      .transform(setRequired(["result"]));
+const RpcSelectRequest: ZodType<RpcSelectRequest> = RpcRequestBase(
+  "select",
+  z.tuple([
+    z.union([
+      z.string(),
+      Thing,
+    ]),
+  ])
+    .readonly(),
+);
 
-  BidirectionalRpcResponseErr: ZodType<BidirectionalRpcResponseErr> = this
-    .BidirectionalRpcResponseBase
+const RpcCreateRequest: ZodType<RpcCreateRequest> = RpcRequestBase(
+  "create",
+  z.union([
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+    ])
+      .readonly(),
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+      RecordInputData
+        .nullish(),
+    ])
+      .readonly(),
+  ]),
+);
+
+const RpcInsertRequest: ZodType<RpcInsertRequest> = RpcRequestBase(
+  "insert",
+  z.union([
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+    ])
+      .readonly(),
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+      z.union([
+        RecordInputData,
+        z.array(RecordInputData)
+          .readonly(),
+      ])
+        .nullish(),
+    ])
+      .readonly(),
+  ]),
+);
+
+const RpcUpdateRequest: ZodType<RpcUpdateRequest> = RpcRequestBase(
+  "update",
+  z.union([
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+    ])
+      .readonly(),
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+      RecordInputData
+        .nullish(),
+    ])
+      .readonly(),
+  ]),
+);
+
+const RpcMergeRequest: ZodType<RpcMergeRequest> = RpcRequestBase(
+  "merge",
+  z.tuple([
+    z.union([
+      z.string(),
+      Thing,
+    ]),
+    RecordInputData,
+  ])
+    .readonly(),
+);
+
+const RpcPatchRequest: ZodType<RpcPatchRequest> = RpcRequestBase(
+  "patch",
+  z.union([
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+      z.array(ReadonlyPatch(z.unknown()))
+        .readonly(),
+    ])
+      .readonly(),
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+      z.array(ReadonlyPatch(z.unknown()))
+        .readonly(),
+      z.boolean()
+        .nullish(),
+    ])
+      .readonly(),
+  ]),
+);
+
+const RpcDeleteRequest: ZodType<RpcDeleteRequest> = RpcRequestBase(
+  "delete",
+  z.tuple([
+    z.union([
+      z.string(),
+      Thing,
+    ]),
+  ])
+    .readonly(),
+);
+
+const RpcVersionRequest: ZodType<RpcVersionRequest> = RpcRequestBase(
+  "version",
+  ReadonlyEmptyArray,
+);
+
+const RpcRunRequest: ZodType<RpcRunRequest> = RpcRequestBase(
+  "run",
+  z.union([
+    z.tuple([
+      z.string(),
+    ])
+      .readonly(),
+    z.tuple([
+      z.string(),
+      z.string()
+        .nullish(),
+    ])
+      .readonly(),
+    z.tuple([
+      z.string(),
+      z.string()
+        .nullish(),
+      z.array(z.unknown())
+        .readonly()
+        .nullish(),
+    ])
+      .readonly(),
+  ]),
+);
+
+const RpcRelateRequest: ZodType<RpcRelateRequest> = RpcRequestBase(
+  "relate",
+  z.union([
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+        z.array(Thing)
+          .readonly(),
+      ]),
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+      z.union([
+        z.string(),
+        Thing,
+        z.array(Thing)
+          .readonly(),
+      ]),
+    ])
+      .readonly(),
+    z.tuple([
+      z.union([
+        z.string(),
+        Thing,
+        z.array(Thing)
+          .readonly(),
+      ]),
+      z.union([
+        z.string(),
+        Thing,
+      ]),
+      z.union([
+        z.string(),
+        Thing,
+        z.array(Thing)
+          .readonly(),
+      ]),
+      RecordInputData
+        .nullish(),
+    ])
+      .readonly(),
+  ]),
+);
+
+const RpcRequest: ZodType<RpcRequest> = z.union([
+  RpcPingRequest,
+  RpcUseRequest,
+  RpcInfoRequest,
+  RpcSignupRequest,
+  RpcSigninRequest,
+  RpcAuthenticateRequest,
+  RpcInvalidateRequest,
+  RpcLetRequest,
+  RpcUnsetRequest,
+  RpcLiveRequest,
+  RpcKillRequest,
+  RpcQueryRequest,
+  RpcSelectRequest,
+  RpcCreateRequest,
+  RpcInsertRequest,
+  RpcUpdateRequest,
+  RpcMergeRequest,
+  RpcPatchRequest,
+  RpcDeleteRequest,
+  RpcVersionRequest,
+  RpcRunRequest,
+  RpcRelateRequest,
+]);
+
+/******************************************************************************
+ * RPC Response Types
+ *****************************************************************************/
+
+const TableRecord = z.object({
+  id: z.union([
+    z.string(),
+    Thing,
+  ]),
+})
+  .catchall(z.unknown());
+
+const RpcResultMapping: {
+  [M in keyof RpcResultMapping]: ZodType<
+    // dprint-ignore
+    RpcResultMapping[M] extends void
+      ? void | null | undefined
+      : RpcResultMapping[M]
+  >;
+} = {
+  ping: z.void().nullish(),
+  use: z.void().nullish(),
+  info: TableRecord,
+  signup: JwtLike,
+  signin: JwtLike,
+  authenticate: z.void().nullish(),
+  invalidate: z.void().nullish(),
+  let: z.void().nullish(),
+  unset: z.void().nullish(),
+  live: z.union([
+    z.string().uuid(),
+    Uuid,
+  ]),
+  kill: z.void().nullish(),
+  query: z.array(QueryResult(z.unknown())),
+  select: z.union([
+    TableRecord,
+    z.array(TableRecord),
+  ]),
+  create: z.union([
+    TableRecord,
+    z.array(TableRecord),
+  ]),
+  insert: z.union([
+    TableRecord,
+    z.array(TableRecord),
+  ]),
+  update: z.union([
+    TableRecord,
+    z.array(TableRecord),
+  ]),
+  merge: z.union([
+    TableRecord,
+    z.array(TableRecord),
+  ]),
+  patch: z.union([
+    TableRecord,
+    z.array(TableRecord),
+    z.array(
+      z.union([
+        Patch(z.unknown()),
+        z.array(Patch(z.unknown())),
+      ]),
+    ),
+  ]),
+  delete: z.union([
+    TableRecord,
+    z.array(TableRecord),
+  ]),
+  version: z.string(),
+  run: z.unknown(),
+  relate: z.union([
+    TableRecord,
+    z.array(TableRecord),
+  ]),
+};
+
+const BidirectionalRpcResponseBase = z.object({
+  id: z.string()
+    .regex(
+      new RegExp("^" + Object.keys(RpcResultMapping).join("|") + "/.+$"),
+    ) as ZodType<`${RpcMethod}/${string | number}`>,
+});
+
+const BidirectionalRpcResponseOk = <T>(
+  result: ZodType<T>,
+): ZodType<BidirectionalRpcResponseOk<T>> =>
+  BidirectionalRpcResponseBase
+    .extend({ result })
+    .strict()
+    .transform(setRequired(["result"]));
+
+const BidirectionalRpcResponseErr: ZodType<BidirectionalRpcResponseErr> =
+  BidirectionalRpcResponseBase
     .extend({
       error: z.object({
         code: z.number(),
@@ -868,62 +873,61 @@ export default class ZodValidator extends Abc {
     })
     .strict();
 
-  BidirectionalRpcResponse = <T>(
-    result: ZodType<T>,
-  ): ZodType<BidirectionalRpcResponse<T>> =>
-    z.union([
-      this.BidirectionalRpcResponseOk(result),
-      this.BidirectionalRpcResponseErr,
-    ]);
+const BidirectionalRpcResponse = <T>(
+  result: ZodType<T>,
+): ZodType<BidirectionalRpcResponse<T>> =>
+  z.union([
+    BidirectionalRpcResponseOk(result),
+    BidirectionalRpcResponseErr,
+  ]);
 
-  IdLessRpcResponseOk = <T>(
-    result: ZodType<T>,
-  ): ZodType<IdLessRpcResponseOk<T>> =>
-    z.object({
-      result,
-    })
-      .strict()
-      .transform(setRequired(["result"]));
-
-  IdLessRpcResponseErr: ZodType<IdLessRpcResponseErr> = z.object({
-    error: z.object({
-      code: z.number(),
-      message: z.string(),
-    }),
+const IdLessRpcResponseOk = <T>(
+  result: ZodType<T>,
+): ZodType<IdLessRpcResponseOk<T>> =>
+  z.object({
+    result,
   })
-    .strict();
+    .strict()
+    .transform(setRequired(["result"]));
 
-  IdLessRpcResponse = <T>(result: ZodType<T>): ZodType<IdLessRpcResponse<T>> =>
-    z.union([
-      this.IdLessRpcResponseOk(result),
-      this.IdLessRpcResponseErr,
-    ]);
+const IdLessRpcResponseErr: ZodType<IdLessRpcResponseErr> = z.object({
+  error: z.object({
+    code: z.number(),
+    message: z.string(),
+  }),
+})
+  .strict();
 
-  RpcResponse = <T extends ZodType<unknown>>(result: T) =>
-    z.union([
-      this.BidirectionalRpcResponse(result),
-      this.IdLessRpcResponse(result),
-    ]);
+const IdLessRpcResponse = <T>(
+  result: ZodType<T>,
+): ZodType<IdLessRpcResponse<T>> =>
+  z.union([
+    IdLessRpcResponseOk(result),
+    IdLessRpcResponseErr,
+  ]);
 
-  /****************************************************************************
-   * Parse Methods
-   ***************************************************************************/
+const RpcResponse = <T extends ZodType<unknown>>(result: T) =>
+  z.union([
+    BidirectionalRpcResponse(result),
+    IdLessRpcResponse(result),
+  ]);
 
-  parseRpcResult = (x: unknown, c: ParseResponseContext) =>
-    this.RpcResultMapping[c.request.method].parse(x);
+/******************************************************************************
+ * Parse Methods
+ *****************************************************************************/
 
-  parseLiveResult = (x: LiveResult) =>
-    this.LiveResult(
-      this.RecordData,
-      z.array(this.Patch(z.unknown())),
-      z.union([z.string().uuid(), this.Uuid]),
+const zodValidator: Validator = {
+  parseRpcResult: (x, c) => RpcResultMapping[c.request.method].parse(x),
+  parseLiveResult: x =>
+    LiveResult(
+      RecordData,
+      z.array(Patch(z.unknown())),
+      z.union([z.string().uuid(), Uuid]),
     )
-      .parse(x);
+      .parse(x),
+  parseRpcRequest: x => RpcRequest.parse(x),
+  parseRpcResponse: x => RpcResponse(z.unknown()).parse(x),
+  parseIdLessRpcResponse: x => IdLessRpcResponse(z.unknown()).parse(x),
+};
 
-  parseRpcRequest = (x: RpcRequest) => this.RpcRequest.parse(x);
-
-  parseRpcResponse = (x: RpcResponse) => this.RpcResponse(z.unknown()).parse(x);
-
-  parseIdLessRpcResponse = (x: IdLessRpcResponse) =>
-    this.IdLessRpcResponse(z.unknown()).parse(x);
-}
+export default zodValidator;

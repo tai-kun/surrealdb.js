@@ -23,7 +23,7 @@ import {
   Thing,
   Uuid,
 } from "@tai-kun/surreal/full";
-import { EmptyValidator, ZodValidator } from "@tai-kun/surreal/validators";
+import { emptyValidator, zodValidator } from "@tai-kun/surreal/validators";
 import { ready } from "@tools/surrealdb";
 
 const cborFormatter = createCborFormatter({
@@ -55,7 +55,7 @@ export default Object.assign([
           http: createHttpEngine,
         },
         formatter: jsonFormatter,
-        Validator: EmptyValidator,
+        validator: emptyValidator,
       });
 
       return {
@@ -76,7 +76,7 @@ export default Object.assign([
           http: createHttpEngine,
         },
         formatter: jsonFormatter,
-        Validator: ZodValidator,
+        validator: zodValidator,
       });
 
       return {
@@ -97,7 +97,7 @@ export default Object.assign([
           http: createHttpEngine,
         },
         formatter: cborFormatter,
-        Validator: EmptyValidator,
+        validator: emptyValidator,
       });
 
       return {
@@ -118,7 +118,7 @@ export default Object.assign([
           http: createHttpEngine,
         },
         formatter: cborFormatter,
-        Validator: ZodValidator,
+        validator: zodValidator,
       });
 
       return {
@@ -139,7 +139,7 @@ export default Object.assign([
           ws: createWebSocketEngine,
         },
         formatter: jsonFormatter,
-        Validator: EmptyValidator,
+        validator: emptyValidator,
       });
 
       return {
@@ -160,7 +160,7 @@ export default Object.assign([
           ws: createWebSocketEngine,
         },
         formatter: jsonFormatter,
-        Validator: ZodValidator,
+        validator: zodValidator,
       });
 
       return {
@@ -181,7 +181,7 @@ export default Object.assign([
           ws: createWebSocketEngine,
         },
         formatter: cborFormatter,
-        Validator: EmptyValidator,
+        validator: emptyValidator,
       });
 
       return {
@@ -202,7 +202,7 @@ export default Object.assign([
           ws: createWebSocketEngine,
         },
         formatter: cborFormatter,
-        Validator: ZodValidator,
+        validator: zodValidator,
       });
 
       return {

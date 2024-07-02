@@ -1,4 +1,4 @@
-import type { Constructor, Promisable } from "type-fest";
+import type { Promisable } from "type-fest";
 import {
   type Err,
   type Ok,
@@ -23,7 +23,7 @@ import {
 } from "~/errors";
 import type { Formatter } from "~/formatters/types";
 import type { RpcMethod, RpcParams, RpcResult } from "~/index/types";
-import type { ValidatorAbc } from "~/validators";
+import type { Validator } from "~/validators";
 
 /**
  * クライアントエンジンを作成する関数。
@@ -63,10 +63,7 @@ export interface ClientConfig {
   /**
    * 各種データの検証を行うバリデータ-。
    */
-  readonly Validator: Constructor<
-    ValidatorAbc,
-    ConstructorParameters<typeof ValidatorAbc>
-  >;
+  readonly validator: Validator;
 }
 
 /**
@@ -121,7 +118,7 @@ export default abstract class ClientAbc {
   /**
    * 各種データの検証を行うバリデータ-。
    */
-  protected v8n: ValidatorAbc;
+  protected v8n: Validator;
 
   /**
    * クライアントエンジン。
@@ -137,10 +134,10 @@ export default abstract class ClientAbc {
     const {
       engines,
       formatter,
-      Validator,
+      validator,
     } = config;
     this.fmt = formatter;
-    this.v8n = new Validator();
+    this.v8n = validator;
     this.#engines = { ...engines }; // Shallow copy
   }
 

@@ -23,4 +23,11 @@ export default class SerialId {
   next(): number {
     return (this.#id = this.#id % Number.MAX_SAFE_INTEGER + 1);
   }
+
+  /**
+   * 内部のカウンターをリセットします。
+   */
+  reset(): void {
+    this.#id = 0;
+  }
 }

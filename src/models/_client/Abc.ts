@@ -1,22 +1,18 @@
 import type { Promisable } from "type-fest";
 import {
-  type Err,
-  type Ok,
   type StatefulPromise,
   TaskEmitter,
   type TaskListener,
   type TaskListenerOptions,
 } from "~/_internal";
-import {
-  CLOSED,
-  type Connection,
-  type ConnectionState,
-  type EngineAbc,
-  type EngineConfig,
-  type EngineEvents,
+import type {
+  ConnectionInfo,
+  ConnectionState,
+  EngineAbc,
+  EngineConfig,
+  EngineEvents,
 } from "~/engines";
 import {
-  type AggregateTasksError,
   CircularEngineReference,
   SurrealTypeError,
   UnsupportedProtocol,
@@ -123,7 +119,7 @@ export default abstract class ClientAbc {
   /**
    * クライアントエンジン。
    */
-  protected conn: EngineAbc | null = null;
+  protected eng: EngineAbc | null = null;
 
   #engines: ClientEngines;
 
@@ -179,16 +175,87 @@ export default abstract class ClientAbc {
 
   /**
    * 現在の接続状態。
+   * まだ接続が要求されておらず、エンジンが未定義の場合は undefined です。
+   *
+   * - `0` 接続中
+   * - `1` 接続済み
+   * - `2` 切断中
+   * - `3` 切断済み
    */
-  get state(): ConnectionState {
-    return this.conn?.state ?? CLOSED;
+  get state(): ConnectionState | undefined {
+    return this.eng?.state;
   }
 
   /**
-   * 現在の接続情報。
+   * 接続しているサーバーのエンドポイント。
+   * 切断状態では null です。
+   * まだ接続が要求されておらず、エンジンが未定義の場合は undefined です。
    */
-  get connection(): Connection | null {
-    return this.conn?.connection || null;
+  get endpoint(): URL | null | undefined {
+    return this.eng?.endpoint;
+  }
+
+  /**
+   * 現在選択されている名前空間。
+   * 接続が確立していないか、名前空間を切り替えていない場合は null です。
+   * まだ接続が要求されておらず、エンジンが未定義の場合は undefined です。
+   */
+  get namespace(): string | null | undefined {
+    return this.eng?.namespace;
+  }
+
+  set namespace(ns: string | null) {
+    if (this.eng) {
+      this.eng.namespace = ns;
+    }
+  }
+
+  /**
+   * 現在選択されているデータベース。
+   * 接続が確立していないか、データベースを切り替えていない場合は null です。
+   * まだ接続が要求されておらず、エンジンが未定義の場合は undefined です。
+   */
+  get database(): string | null | undefined {
+    return this.eng?.database;
+  }
+
+  set database(db: string | null) {
+    if (this.eng) {
+      this.eng.database = db;
+    }
+  }
+
+  /**
+   * 現在認証されているトークン。
+   * 接続が確立していないか、認証していない場合は null です。
+   * まだ接続が要求されておらず、エンジンが未定義の場合は undefined です。
+   */
+  get token(): string | null | undefined {
+    return this.eng?.token;
+  }
+
+  set token(token: string | null) {
+    if (this.eng) {
+      this.eng.token = token;
+    }
+  }
+
+  /**
+   * 接続情報。この接続情報は参照されるたびにコピーされます。
+   * そのため、実装されたメソッドを回避してこれを変更することはできません。
+   * まだ接続が要求されておらず、エンジンが未定義の場合は undefined です。
+   *
+   * @example
+   * ```ts
+   * const conn = db.getConnectionInfo();
+   * console.log(`接続先: ${conn.endpoint}`);
+   *
+   * // ⚠ この操作は接続情報に影響を与えません。
+   * conn.endpoint = new URL("http://localhost:8080");
+   * ```
+   */
+  getConnectionInfo(): ConnectionInfo | undefined {
+    return this.eng?.getConnectionInfo();
   }
 
   /**
@@ -310,14 +377,9 @@ export default abstract class ClientAbc {
    *   }
    * }
    */
-  abstract disconnect(options?: ClientDisconnectOptions | undefined): Promise<
-    | Ok
-    | Ok<"AlreadyDisconnected">
-    | Err<{
-      disconnect?: unknown;
-      dispose?: AggregateTasksError;
-    }>
-  >;
+  abstract disconnect(
+    options?: ClientDisconnectOptions | undefined,
+  ): Promise<void>;
 
   /**
    * サーバーに RPC リクエストを送信します。

@@ -1,6 +1,5 @@
 import type { Promisable } from "type-fest";
-import { type AggregateTasksError, ResourceAlreadyDisposed } from "~/errors";
-import type { Err, Ok } from "./result";
+import { ResourceAlreadyDisposed } from "~/errors";
 import StatefulPromise from "./StatefulPromise";
 import TaskQueue, { type TaskOptions, type TaskRunnerArgs } from "./TaskQueue";
 import throwIfAborted from "./throwIfAborted";
@@ -256,16 +255,17 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * taskEmitter.on("event", async ({ signal }, ...args) => {
    *   // 時間のかかる処理
    * });
-   * const result = await taskEmitter.dispose();
    *
-   * if (result.ok) {
+   * try {
+   *   await taskEmitter.dispose();
    *   console.log("全てのタスクが正常に終了しました。");
-   * } else {
-   *   throw result.error; // AggregateTasksError を投げる。
+   * } catch (error) {
+   *   error // AggregateTasksError を投げる。
    * }
+   * ```
    */
-  async dispose(): Promise<Ok | Err<AggregateTasksError>> {
-    return await this.#tasks.dispose();
+  async dispose(): Promise<void> {
+    await this.#tasks.dispose();
   }
 
   /**

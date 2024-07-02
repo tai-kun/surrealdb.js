@@ -13,11 +13,7 @@ class TaskEmitter<T extends Record<string | number, unknown[]>>
   implements AsyncDisposable
 {
   async [Symbol.asyncDispose](): Promise<void> {
-    const result = await this.dispose();
-
-    if (!result.ok) {
-      throw result.error;
-    }
+    await this.dispose();
   }
 }
 

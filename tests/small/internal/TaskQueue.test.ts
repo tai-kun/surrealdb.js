@@ -1,5 +1,8 @@
 import { TaskQueue } from "@tai-kun/surreal/_internal";
-import { ResourceAlreadyDisposed } from "@tai-kun/surreal/errors";
+import {
+  AggregateTasksError,
+  ResourceAlreadyDisposed,
+} from "@tai-kun/surreal/errors";
 import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
 import { test } from "@tools/test";
 
@@ -63,13 +66,13 @@ test("タスクを中断する", async () => {
   });
 
   queue.abort(new Error("test"));
-  const result = await queue.dispose();
 
-  assertEquals(result.ok, false);
-  assertEquals(
-    // @ts-expect-error
-    String(result.error),
-    "AggregateTasksError: 2 task(s) failed.",
+  await assertRejects(
+    async () => {
+      await queue.dispose();
+    },
+    AggregateTasksError,
+    "2 task(s) failed.",
   );
   await assertRejects(
     async () => {

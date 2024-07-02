@@ -1,3 +1,4 @@
+import type { Jsonifiable } from "type-fest";
 import type {
   BidirectionalRpcResponseErr,
   IdLessRpcResponseErr,
@@ -23,6 +24,31 @@ export class SurrealError extends Error {
     if (!("cause" in this) && options && "cause" in options) {
       this.cause = options.cause;
     }
+  }
+}
+
+/**
+ * 複数のエラーがまとめられたエラー。
+ */
+export class SurrealAggregateError extends SurrealError {
+  static {
+    this.prototype.name = "SurrealAggregateError";
+  }
+
+  override cause: unknown[];
+
+  /**
+   * @param message エラーメッセージ。
+   * @param errors エラー。
+   * @param options エラーオプション。
+   */
+  constructor(
+    message: string,
+    errors: readonly unknown[],
+    options?: Omit<SurrealErrorOptions, "cause"> | undefined,
+  ) {
+    super(message, options);
+    this.cause = errors.slice();
   }
 }
 
@@ -197,7 +223,7 @@ export class DataFormatError extends SurrealError {
  * このエラーは、タスクが失敗した場合に投げられます。
  * これは主に、イベントハンドラーがエラーを投げたことを意味します。
  */
-export class AggregateTasksError extends SurrealError {
+export class AggregateTasksError extends SurrealAggregateError {
   static {
     this.prototype.name = "AggregateTasksError";
   }
@@ -206,7 +232,7 @@ export class AggregateTasksError extends SurrealError {
    * @param errors 失敗したタスクのリスト。
    */
   constructor(errors: readonly unknown[]) {
-    super(`${errors.length} task(s) failed.`, { cause: errors });
+    super(`${errors.length} task(s) failed.`, errors);
   }
 }
 
@@ -409,7 +435,7 @@ export class WebSocketEngineError extends EngineError {
  * try {
  *   await db.connect("http://localhost:8000");
  * } catch (error) {
- *   console.error(error); // StateTransitionError: Failed to transition from "3" to "0".
+ *   console.error(error); // StateTransitionError: The transition from `3` to `0` failed, falling back to `3`.
  * }
  * ```
  */
@@ -421,14 +447,20 @@ export class StateTransitionError extends SurrealError {
   /**
    * @param from 現在の状態。
    * @param to 遷移先の状態。
+   * @param fallback フォールバック先の状態。
    * @param options エラーオプション。
    */
   constructor(
-    from: { readonly toString: () => string },
-    to: { readonly toString: () => string },
+    from: number,
+    to: number,
+    fallback: number,
     options?: SurrealErrorOptions | undefined,
   ) {
-    super(`Failed to transition from "${from}" to "${to}".`, options);
+    super(
+      `The transition from \`${from}\` to \`${to}\` failed, `
+        + `falling back to \`${fallback}\`.`,
+      options,
+    );
   }
 }
 
@@ -591,7 +623,7 @@ export class QueryFailure extends SurrealError {
  *   await db.connect("http://localhost:8000");
  *   await db.connect("http://localhost:11298");
  * } catch (error) {
- *   console.error(error); // ConnectionConflict: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
+ *   console.error(error); // ConnectionConflict: Connection conflict between "http://localhost:8000/rpc" and "http://localhost:11298/rpc".
  * }
  * ```
  */
@@ -606,12 +638,100 @@ export class ConnectionConflict extends SurrealError {
    * @param options エラーオプション。
    */
   constructor(
-    endpoint1: unknown,
-    endpoint2: unknown,
+    endpoint1: Jsonifiable,
+    endpoint2: Jsonifiable,
     options?: SurrealErrorOptions | undefined,
   ) {
+    endpoint1 = JSON.stringify(endpoint1);
+    endpoint2 = JSON.stringify(endpoint2);
     super(
       `Connection conflict between ${endpoint1} and ${endpoint2}.`,
+      options,
+    );
+  }
+}
+
+/**
+ * このエラーは、クライアントが同時に異なる複数の名前空間に切り替えようとした場合に投げられます。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ *
+ * try {
+ *   await db.connect("http://localhost:8000");
+ *   await db.use({ namespace: "baz" });
+ *   await Promise.all([
+ *     db.use({ namespace: "foo" }),
+ *     db.use({ namespace: "bar" }),
+ *   ]);
+ * } catch (error) {
+ *   console.error(error); // ConnectionConflict: Namespace conflict between "foo" and "bar".
+ * }
+ * ```
+ */
+export class NamespaceConflict extends SurrealError {
+  static {
+    this.prototype.name = "NamespaceConflict";
+  }
+
+  /**
+   * @param namespace1 一方の名前空間。
+   * @param namespace2 もう一方の名前空間。
+   * @param options エラーオプション。
+   */
+  constructor(
+    namespace1: Jsonifiable,
+    namespace2: Jsonifiable,
+    options?: SurrealErrorOptions | undefined,
+  ) {
+    namespace1 = JSON.stringify(namespace1);
+    namespace2 = JSON.stringify(namespace2);
+    super(
+      `Namespace conflict between ${namespace1} and ${namespace2}.`,
+      options,
+    );
+  }
+}
+
+/**
+ * このエラーは、クライアントが同時に異なる複数の名前空間に切り替えようとした場合に投げられます。
+ *
+ * @example
+ * ```ts
+ * await using db = new Surreal();
+ *
+ * try {
+ *   await db.connect("http://localhost:8000");
+ *   await db.use({ namespace: "foo", database: "baz" });
+ *   await Promise.all([
+ *     db.use({ database: "foo" }),
+ *     db.use({ database: "bar" }),
+ *   ]);
+ * } catch (error) {
+ *   console.error(error); // ConnectionConflict: Database conflict between "foo" and "bar".
+ * }
+ * ```
+ */
+export class DatabaseConflict extends SurrealError {
+  static {
+    this.prototype.name = "DatabaseConflict";
+  }
+
+  /**
+   * @param database1 一方の名前空間。
+   * @param database2 もう一方の名前空間。
+   * @param options エラーオプション。
+   */
+  constructor(
+    database1: Jsonifiable,
+    database2: Jsonifiable,
+    options?: SurrealErrorOptions | undefined,
+  ) {
+    database1 = JSON.stringify(database1);
+    database2 = JSON.stringify(database2);
+    super(
+      `Database conflict between ${database1} and ${database2}.`,
       options,
     );
   }

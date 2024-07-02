@@ -49,43 +49,46 @@ for (
         ConnectionConflict,
       );
       assertEquals(db.state, OPEN);
-      assertEquals(db.connection?.endpoint?.toString(), `${endpoint}/rpc`);
+      assertEquals(
+        db.getConnectionInfo()?.endpoint?.href,
+        `${endpoint}/rpc`,
+      );
     });
 
     test("切断できる", async () => {
       const { endpoint, Surreal } = await initSurreal();
       await using db = new Surreal();
       await db.connect(endpoint);
-      const result = await db.disconnect();
+      await db.disconnect();
 
       assertEquals(db.state, CLOSED);
-      assertEquals(db.connection, null);
-      assertDeepEquals(result, { ok: true });
+      assertEquals(db.getConnectionInfo(), undefined);
     });
 
     test("一度だけ切断処理が実行される", async () => {
       const { endpoint, Surreal } = await initSurreal();
       await using db = new Surreal();
       await db.connect(endpoint);
-      const results = await Promise.all([
+      const results = await Promise.allSettled([
         db.disconnect(),
         db.disconnect(),
         db.disconnect(),
       ]);
 
       assertEquals(db.state, CLOSED);
-      assertEquals(db.connection, null);
+      assertEquals(db.getConnectionInfo(), null);
       assertDeepEquals(results, [
         {
-          ok: true,
+          status: "fulfilled",
+          value: undefined,
         },
         {
-          ok: true,
-          value: "AlreadyDisconnected",
+          status: "fulfilled",
+          value: undefined,
         },
         {
-          ok: true,
-          value: "AlreadyDisconnected",
+          status: "fulfilled",
+          value: undefined,
         },
       ]);
     });
@@ -203,18 +206,16 @@ for (
     test("接続状態の遷移を `await` で待つことができる", async () => {
       const { endpoint, Surreal } = await initSurreal();
       await using db = new Surreal();
-      const promiseOpen = db.once(OPEN);
-      const promiseClosed = db.once(CLOSED);
+      const open = db.once(OPEN);
+      const closed = db.once(CLOSED);
       await db.connect(endpoint);
       await db.disconnect();
 
-      assertDeepEquals(await promiseOpen, [{
-        ok: true,
-        value: OPEN,
+      assertDeepEquals(await open, [{
+        state: OPEN,
       }]);
-      assertDeepEquals(await promiseClosed, [{
-        ok: true,
-        value: CLOSED,
+      assertDeepEquals(await closed, [{
+        state: CLOSED,
       }]);
     });
   });

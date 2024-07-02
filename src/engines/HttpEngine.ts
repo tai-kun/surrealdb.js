@@ -1,10 +1,12 @@
 import type { ValueOf } from "type-fest";
-import { type Err, err, isBrowser, mutex, type Ok, ok } from "~/_internal";
+import { isBrowser, mutex, throwIfAborted } from "~/_internal";
 import {
+  ConnectionConflict,
   ConnectionUnavailable,
   InvalidResponse,
   MissingNamespace,
   SurrealTypeError,
+  unreachable,
 } from "~/errors";
 import { copy, isArrayBuffer, Payload } from "~/formatters";
 import type {
@@ -128,46 +130,62 @@ export default class HttpEngine extends EngineAbc {
       return;
     }
 
-    this.conn.endpoint = new URL(endpoint); // copy
-    await this.setState(CONNECTING, () => {
-      this.conn = {};
+    if (this.state !== CLOSED) {
+      unreachable();
+    }
 
-      return CLOSED;
-    });
-
-    await this.setState(OPEN, () => {
-      this.conn = {};
-
-      return CLOSED;
-    });
+    await this.transition(
+      {
+        state: CONNECTING,
+        endpoint,
+      },
+      () => CLOSED,
+    );
+    await this.transition(
+      {
+        state: OPEN,
+        endpoint,
+      },
+      () => CLOSED,
+    );
   }
 
   @mutex
-  async disconnect(): Promise<
-    | Ok<"Disconnected">
-    | Ok<"AlreadyDisconnected">
-    | Err<unknown>
-  > {
-    if (this.state === CLOSED) {
-      return ok("AlreadyDisconnected");
-    }
+  async disconnect(signal: AbortSignal): Promise<void> {
+    throwIfAborted(signal);
+    const conn = this.getConnectionInfo();
+    const close = async () => {
+      await this.transition(CLOSED, () => CLOSED);
+    };
 
-    try {
-      await this.setState(CLOSING, () => CLOSING);
+    switch (conn.state) {
+      case OPEN:
+        this.vars = {};
+        await this.transition(
+          {
+            state: CLOSING,
+            endpoint: conn.endpoint,
+          },
+          () => ({
+            state: CLOSING,
+            endpoint: conn.endpoint,
+          }),
+        );
+        throwIfAborted(signal);
+        await close();
 
-      return ok("Disconnected");
-    } catch (error) {
-      return err(error);
-    } finally {
-      this.conn = {};
-      this.vars = {};
+        break;
 
-      try {
-        await this.setState(CLOSED, () => CLOSED);
-      } catch {
-        // 無視: `CLOSED` イベント内で発生したエラーは、
-        // このエンジンを使用する `Surreal` が対処します。
-      }
+      case CLOSING:
+        await close();
+
+        break;
+
+      case CLOSED:
+        break;
+
+      default:
+        unreachable();
     }
   }
 
@@ -176,15 +194,19 @@ export default class HttpEngine extends EngineAbc {
     signal: AbortSignal,
   ): Promise<IdLessRpcResponse> {
     if (this.state === CONNECTING) {
-      await this.ee.once(OPEN);
+      await this.ee.once(OPEN, { signal });
     }
 
-    if (!this.conn.endpoint) {
+    // 接続情報のスナップショットを取得します。
+    // 以降、接続情報を参照する際はこれを使用します。
+    const conn = this.getConnectionInfo();
+
+    if (conn.state !== OPEN) {
       throw new ConnectionUnavailable();
     }
 
     request = this.v8n.parseRpcRequest(request, {
-      endpoint: new URL(this.conn.endpoint),
+      endpoint: new URL(conn.endpoint),
       engineName: "http",
     });
 
@@ -193,15 +215,15 @@ export default class HttpEngine extends EngineAbc {
         const [ns, db] = request.params;
 
         if (ns) {
-          this.conn.ns = ns;
+          this.namespace = ns;
         }
 
         if (db) {
-          if (!this.conn.ns) {
+          if (!this.namespace) {
             throw new MissingNamespace();
           }
 
-          this.conn.db = db;
+          this.database = db;
         }
 
         return {
@@ -241,7 +263,7 @@ export default class HttpEngine extends EngineAbc {
       }
     }
 
-    if (!this.conn.ns && this.conn.db) {
+    if (!conn.ns && conn.db) {
       throw new MissingNamespace();
     }
 
@@ -257,25 +279,29 @@ export default class HttpEngine extends EngineAbc {
       );
     }
 
-    const resp: unknown = await this.fetch(this.conn.endpoint.toString(), {
+    if (conn.endpoint.href !== this.endpoint?.href) {
+      throw new ConnectionConflict(conn.endpoint, this.endpoint);
+    }
+
+    const resp: unknown = await this.fetch(conn.endpoint.href, {
       body,
       signal,
       method: "POST",
       headers: {
         Accept: this.fmt.mimeType,
         "Content-Type": this.fmt.mimeType,
-        ...(this.conn.ns ? { "Surreal-NS": this.conn.ns } : {}),
-        ...(this.conn.db ? { "Surreal-DB": this.conn.db } : {}),
-        ...(this.conn.token
-          ? { Authorization: `Bearer ${this.conn.token}` }
+        ...(conn.ns ? { "Surreal-NS": conn.ns } : {}),
+        ...(conn.db ? { "Surreal-DB": conn.db } : {}),
+        ...(conn.token
+          ? { Authorization: `Bearer ${conn.token}` }
           : {}),
       },
     });
     const cause = {
       request,
-      endpoint: this.conn.endpoint.href,
-      database: this.conn.db,
-      namespace: this.conn.ns,
+      endpoint: conn.endpoint.href,
+      database: conn.db,
+      namespace: conn.ns,
     };
 
     if (!isFetchResponse(resp)) {
@@ -321,7 +347,7 @@ export default class HttpEngine extends EngineAbc {
     const decoded = await this.fmt.decode(data);
     const rpcResp = this.v8n.parseIdLessRpcResponse(decoded, {
       request,
-      endpoint: new URL(this.conn.endpoint),
+      endpoint: new URL(conn.endpoint),
       engineName: "http",
     });
 
@@ -331,7 +357,7 @@ export default class HttpEngine extends EngineAbc {
         params: request.params,
         result: rpcResp.result = this.v8n.parseRpcResult(rpcResp.result, {
           request,
-          endpoint: new URL(this.conn.endpoint),
+          endpoint: new URL(conn.endpoint),
           engineName: "http",
         }),
       } as ValueOf<
@@ -347,19 +373,18 @@ export default class HttpEngine extends EngineAbc {
       switch (rpc.method) {
         case "signin":
         case "signup":
-          this.conn.token = rpc.result;
+          this.token = rpc.result;
 
           break;
 
         case "authenticate": {
-          const [token] = rpc.params;
-          this.conn.token = token;
+          [this.token] = rpc.params;
 
           break;
         }
 
         case "invalidate":
-          delete this.conn.token;
+          this.token = null;
 
           break;
       }

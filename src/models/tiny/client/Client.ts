@@ -1,20 +1,11 @@
+import { getTimeoutSignal, mutex, TaskEmitter } from "~/_internal";
+import { OPEN } from "~/engines";
 import {
-  type Err,
-  err,
-  getTimeoutSignal,
-  makeAbortApi,
-  mutex,
-  type Ok,
-  ok,
-  TaskEmitter,
-} from "~/_internal";
-import { CLOSED, CONNECTING, OPEN } from "~/engines";
-import {
-  type AggregateTasksError,
   ConnectionConflict,
   ConnectionUnavailable,
   EngineDisconnected,
   RpcResponseError,
+  SurrealAggregateError,
   unreachable,
 } from "~/errors";
 import type {
@@ -28,6 +19,7 @@ import Abc, {
   type ClientDisconnectOptions,
   ClientRpcOptions,
 } from "../../_client/Abc";
+import defaultErrorHandler from "./defaultErrorHandler";
 
 export default class Client extends Abc {
   @mutex
@@ -35,7 +27,8 @@ export default class Client extends Abc {
     endpoint: string | URL,
     options: ClientConnectOptions | undefined = {},
   ): Promise<void> {
-    endpoint = new URL(endpoint); // copy
+    const conn = this.getConnectionInfo();
+    endpoint = new URL(endpoint); // コピー
 
     if (!endpoint.pathname.endsWith("/rpc")) {
       if (!endpoint.pathname.endsWith("/")) {
@@ -45,32 +38,19 @@ export default class Client extends Abc {
       endpoint.pathname += "rpc";
     }
 
-    if (this.state === OPEN) {
-      if (!this.conn?.connection.endpoint) {
-        unreachable();
-      }
-
-      if (this.conn.connection.endpoint.href === endpoint.href) {
+    if (conn?.state === OPEN) {
+      if (conn.endpoint.href === endpoint.href) {
         return;
       }
 
-      throw new ConnectionConflict(this.conn?.connection.endpoint, endpoint);
+      throw new ConnectionConflict(conn.endpoint, endpoint);
     }
 
-    this.ee.on("error", (_, error) => {
-      if (error.fatal) {
-        console.error(error);
-        this.disconnect({ force: true }).then(result => {
-          if (!result.ok) {
-            console.error(result.error);
-          }
-        });
-      } else {
-        console.warn(error);
-      }
+    this.ee.on("error", (...args) => {
+      defaultErrorHandler.apply(this, args);
     });
     const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
-    const engine = this.conn = await this.createEngine(protocol);
+    const engine = this.eng = await this.createEngine(protocol);
     const { signal = getTimeoutSignal(15_000) } = options;
     await engine.connect(endpoint, signal);
   }
@@ -78,52 +58,54 @@ export default class Client extends Abc {
   @mutex
   async disconnect(
     options: ClientDisconnectOptions | undefined = {},
-  ): Promise<
-    | Ok
-    | Ok<"AlreadyDisconnected">
-    | Err<{
-      disconnect?: unknown;
-      dispose?: AggregateTasksError;
-    }>
-  > {
+  ): Promise<void> {
+    if (!this.eng) {
+      return;
+    }
+
+    const {
+      force = false,
+      signal = getTimeoutSignal(15_000),
+    } = options;
+
     try {
-      if (!this.conn || this.state === CLOSED) {
-        return ok("AlreadyDisconnected");
-      }
-
-      const {
-        force = false,
-        signal = getTimeoutSignal(15_000),
-      } = options;
-
       if (force) {
         this.ee.abort(new EngineDisconnected());
       }
 
-      const disconnResult = await this.conn.disconnect(signal);
-      const disposeResult = await this.ee.dispose();
+      const errors: unknown[] = [];
 
-      if (!disconnResult.ok || !disposeResult.ok) {
-        const error: {
-          disconnect?: unknown;
-          dispose?: AggregateTasksError;
-        } = {};
-
-        if (!disconnResult.ok) {
-          error.disconnect = disconnResult.error;
-        }
-
-        if (!disposeResult.ok) {
-          error.dispose = disposeResult.error;
-        }
-
-        return err(error);
+      try {
+        await this.eng.disconnect(signal);
+      } catch (error) {
+        errors.push(error);
       }
 
-      return disposeResult;
+      try {
+        await this.ee.dispose();
+      } catch (error) {
+        errors.push(error);
+      }
+
+      switch (errors.length) {
+        case 0:
+          break;
+
+        case 1:
+          throw errors[0];
+
+        case 2:
+          throw new SurrealAggregateError(
+            "Failed to disconnect and dispose resources.",
+            errors,
+          );
+
+        default:
+          unreachable();
+      }
     } finally {
       this.ee = new TaskEmitter();
-      this.conn = null;
+      this.eng = null;
     }
   }
 
@@ -132,36 +114,25 @@ export default class Client extends Abc {
     params: RpcParams<M>,
     options: ClientRpcOptions | undefined = {},
   ): Promise<T> {
-    const { signal: timeoutSignal = getTimeoutSignal(5_000) } = options;
+    // if (this.state === CONNECTING) {
+    //   const [result] = await this.ee.once(OPEN, { signal });
 
-    if (this.state === CONNECTING) {
-      const [signal, abort] = makeAbortApi(timeoutSignal);
-      const [result] = await Promise.race([
-        this.ee.once(OPEN, { signal }),
-        this.ee.once(CLOSED, { signal }),
-      ]);
+    //   if ("error" in result) {
+    //     throw new ConnectionUnavailable({
+    //       cause: result.error,
+    //     });
+    //   }
+    // }
 
-      abort();
-
-      if (result.value === OPEN && result.ok) {
-        // 次に進める
-      } else {
-        throw new ConnectionUnavailable({
-          cause: result.ok
-            ? "Connection Closed."
-            : result.error,
-        });
-      }
-    }
-
-    if (!this.conn) {
+    if (!this.eng) {
       throw new ConnectionUnavailable();
     }
 
-    const resp: RpcResponse<any> = await this.conn.rpc(
+    const { signal = getTimeoutSignal(5_000) } = options;
+    const resp: RpcResponse<any> = await this.eng.rpc(
       // @ts-expect-error
       { method, params },
-      timeoutSignal,
+      signal,
     );
 
     if ("result" in resp) {

@@ -10,8 +10,6 @@ export { default as makeAbortApi } from "./makeAbortApi";
 export type * from "./mutex";
 export { default as mutex } from "./mutex";
 
-export { type Err, err, type Ok, ok } from "./result";
-
 export type * from "./runInAsync";
 export { default as runInAsync } from "./runInAsync";
 

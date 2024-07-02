@@ -6,7 +6,6 @@ import {
 } from "~/errors";
 import collectErrors from "./collectErrors";
 import makeAbortApi from "./makeAbortApi";
-import { type Err, err, type Ok, ok } from "./result";
 import runInAsync from "./runInAsync";
 import StatefulPromise from "./StatefulPromise";
 import throwIfAborted from "./throwIfAborted";
@@ -143,7 +142,6 @@ export default class TaskQueue {
   /**
    * このインスタンスを破棄し、すべてのタスクが終了するまで待機します。
    *
-   * @returns タスクがすべて成功した場合は `Ok`、そうでない場合は `Err` を返します。
    * @example
    * ```ts
    * const queue = new TaskQueue();
@@ -153,16 +151,16 @@ export default class TaskQueue {
    * queue.add(async ({ signal }) => {
    *   // 時間のかかる処理
    * });
-   * const result = await queue.dispose();
    *
-   * if (result.ok) {
+   * try {
+   *   await queue.dispose();
    *   console.log("全てのタスクが正常に終了しました。");
-   * } else {
-   *   throw result.error; // AggregateTasksError を投げる。
+   * } catch (error) {
+   *   error // AggregateTasksError
    * }
    * ```
    */
-  async dispose(): Promise<Ok | Err<AggregateTasksError>> {
+  async dispose(): Promise<void> {
     if (!this.#disposed) {
       const tasks = this.#tasks.slice();
       this.#tasks = [];
@@ -170,11 +168,9 @@ export default class TaskQueue {
       const errors = await collectErrors(tasks, ({ promise }) => promise);
 
       if (errors.length > 0) {
-        return err(new AggregateTasksError(errors));
+        throw new AggregateTasksError(errors);
       }
     }
-
-    return ok();
   }
 
   /**

@@ -59,7 +59,7 @@ for (
       });
 
       assertMatch(token, JWT_REGEX);
-      assertEquals(db.connection?.token, token);
+      assertEquals(db.getConnectionInfo()?.token, token);
 
       // クリーンアップ
       {
@@ -94,7 +94,7 @@ for (
       });
 
       assertMatch(token, JWT_REGEX);
-      assertEquals(db.connection?.token, token);
+      assertEquals(db.getConnectionInfo()?.token, token);
 
       // クリーンアップ
       {
@@ -135,7 +135,7 @@ for (
         });
 
         assertMatch(token, JWT_REGEX);
-        assertEquals(db.connection?.token, token);
+        assertEquals(db.getConnectionInfo()?.token, token);
       }
 
       // サインイン
@@ -148,7 +148,7 @@ for (
         });
 
         assertMatch(token, JWT_REGEX);
-        assertEquals(db.connection?.token, token);
+        assertEquals(db.getConnectionInfo()?.token, token);
       }
 
       // 資格情報

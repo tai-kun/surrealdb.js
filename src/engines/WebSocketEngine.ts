@@ -1,13 +1,20 @@
 import type { Promisable, ValueOf } from "type-fest";
 import type { WebSocket as WsWebSocket } from "ws";
-import { makeAbortApi } from "~/_internal";
-import { type Err, err, mutex, type Ok, ok, SerialId } from "~/_internal";
-import getTimeoutSignal from "~/_internal/getTimeoutSignal";
+import {
+  getTimeoutSignal,
+  makeAbortApi,
+  mutex,
+  SerialId,
+  throwIfAborted,
+} from "~/_internal";
 import {
   ConnectionUnavailable,
+  DatabaseConflict,
   MissingNamespace,
+  NamespaceConflict,
   RpcResponseError,
   SurrealTypeError,
+  unreachable,
   WebSocketEngineError,
 } from "~/errors";
 import { isArrayBuffer, Payload } from "~/formatters";
@@ -60,6 +67,13 @@ export interface WebSocketEngineConfig extends EngineConfig {
    * @default 30_000
    */
   readonly pingInterval?: number | undefined;
+  /**
+   * エベントエミッターを介して通知できないエラーを捕捉する関数。
+   *
+   * @param error 投げられたエラー
+   * @default console.error
+   */
+  readonly onCaughtError?: (error: unknown) => void;
 }
 
 /**
@@ -87,12 +101,18 @@ export default class WebSocketEngine extends EngineAbc {
   readonly pingInterval: number;
 
   /**
+   * エベントエミッターを介して通知できないエラーを捕捉する関数。
+   */
+  readonly onCaughtError: (error: unknown) => void;
+
+  /**
    * @param config WebSocket エンジンの設定。
    */
   constructor(config: WebSocketEngineConfig) {
     super(config);
     this.newWs = config.createWebSocket;
     this.pingInterval = Math.max(1_000, config.pingInterval ?? 30_000);
+    this.onCaughtError = config.onCaughtError || console.error;
   }
 
   @mutex
@@ -101,18 +121,22 @@ export default class WebSocketEngine extends EngineAbc {
       return;
     }
 
-    this.conn.endpoint = endpoint = new URL(endpoint); // copy
-    await this.setState(CONNECTING, () => {
-      this.conn = {};
+    if (this.state !== CLOSED) {
+      unreachable();
+    }
 
-      return CLOSED;
-    });
-
+    await this.transition(
+      {
+        state: CONNECTING,
+        endpoint,
+      },
+      () => CLOSED,
+    );
     const [signal, abort] = makeAbortApi(timeoutSignal);
-    const openOrError = Promise.race([
+    const openOrError = [
       this.ee.once(OPEN, { signal }),
       this.ee.once("error", { signal }),
-    ]);
+    ];
     const ws = await this.newWs(
       new URL(endpoint),
       this.fmt.wsFormat,
@@ -131,20 +155,19 @@ export default class WebSocketEngine extends EngineAbc {
            *     - ws: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/ws/index.d.ts#L289-L294
            * - Deno: https://github.com/denoland/deno/blob/v1.43.6/ext/web/02_event.js#L1064-L1133
            */
-          "message" in evt && evt.message != null
-            ? String(evt.message)
-            : "The \"error\" event was caught.",
+          evt.message != null
+            ? "The \"error\" event was caught."
+            : String(evt.message),
           {
-            ...("error" in evt ? { cause: evt.error } : {}),
+            ...(evt.error == null ? {} : { cause: evt.error }),
             fatal: true,
           },
         ),
       );
     });
     ws.addEventListener("close", async evt => {
-      this.id = new SerialId();
       this.ws = null;
-      this.conn = {};
+      this.id.reset();
 
       switch (evt.code) {
         case 1000: // Normal Closure
@@ -173,22 +196,25 @@ export default class WebSocketEngine extends EngineAbc {
       }
 
       try {
-        await this.setState(CLOSED, () => CLOSED);
-      } catch {
-        // Ignore
-        // CLOSED エベントのエラーハンドリングは、このエンジンを使用する Surreal クラス
-        // が行うことを期待します。
+        await this.transition(CLOSED, () => CLOSED);
+      } catch (error) {
+        this.onCaughtError(error);
       }
     });
     ws.addEventListener("open", async () => {
       try {
         this.ws = ws;
-        await this.setState(OPEN, () => {
-          this.ws = null;
-          this.conn = {};
+        await this.transition(
+          {
+            state: OPEN,
+            endpoint,
+          },
+          () => {
+            this.ws = null;
 
-          return CLOSED;
-        });
+            return CLOSED;
+          },
+        );
       } catch (error) {
         this.ee.emit(
           "error",
@@ -207,8 +233,8 @@ export default class WebSocketEngine extends EngineAbc {
     });
     ws.addEventListener("message", async evt => {
       try {
-        const data = new Payload(evt.data);
-        const decoded = await this.fmt.decode(data);
+        const payload = new Payload(evt.data);
+        const decoded = await this.fmt.decode(payload);
         const rpcResp = this.v8n.parseRpcResponse(decoded, {
           endpoint: new URL(endpoint),
           engineName: "websocket",
@@ -228,9 +254,7 @@ export default class WebSocketEngine extends EngineAbc {
         } else {
           throw new RpcResponseError(rpcResp, {
             cause: {
-              endpoint: this.conn.endpoint?.href,
-              database: this.conn.db,
-              namespace: this.conn.ns,
+              endpoint: new URL(endpoint),
             },
           });
         }
@@ -251,116 +275,106 @@ export default class WebSocketEngine extends EngineAbc {
       }
     });
 
-    try {
-      const [result] = await openOrError;
+    const [result] = await Promise.race(openOrError);
+    abort();
 
-      if (result instanceof Error) {
-        throw result;
-      }
-
-      if (!result.ok) {
-        throw result.error;
-      }
-
-      let timeout: any = undefined;
-      timeout = setInterval(async () => {
-        if (this.ws && this.ws.readyState === OPEN) {
-          try {
-            const signal = getTimeoutSignal(Math.min(this.pingInterval, 5_000));
-            const request: RpcRequest = { method: "ping", params: [] };
-            const rpcResp = await this.rpc(request, signal);
-
-            if (rpcResp.error) {
-              throw new RpcResponseError(rpcResp, {
-                cause: {
-                  endpoint: this.conn.endpoint?.href,
-                },
-              });
-            }
-          } catch (error) {
-            this.ee.emit(
-              "error",
-              new WebSocketEngineError(
-                // ping メッセージの送信に失敗したエラーを、
-                // カスタムエラーコード 3003 として報告します。
-                3003,
-                "Failed to send a ping message.",
-                {
-                  cause: error,
-                  fatal: false,
-                },
-              ),
-            );
-          }
-        }
-      }, this.pingInterval);
-      this.ee.on(CLOSING, () => {
-        clearInterval(timeout);
-        timeout = undefined;
-      });
-    } finally {
-      if (!signal.aborted) {
-        abort();
-      }
+    if (result instanceof Error) {
+      throw result;
     }
+
+    if ("error" in result) {
+      throw result.error;
+    }
+
+    const pingTimeoutMs = Math.min(this.pingInterval, 5_000);
+    let pinger: any = setInterval(async () => {
+      try {
+        const signal = getTimeoutSignal(pingTimeoutMs);
+        const request: RpcRequest = { method: "ping", params: [] };
+        const rpcResp = await this.rpc(request, signal);
+
+        if (rpcResp.error) {
+          throw new RpcResponseError(rpcResp, {
+            cause: {
+              endpoint: new URL(endpoint),
+            },
+          });
+        }
+      } catch (error) {
+        this.ee.emit(
+          "error",
+          new WebSocketEngineError(
+            // ping メッセージの送信に失敗したエラーを、
+            // カスタムエラーコード 3003 として報告します。
+            3003,
+            "Failed to send a ping message.",
+            {
+              cause: error,
+              fatal: false,
+            },
+          ),
+        );
+      }
+    }, this.pingInterval);
+    this.ee.on(CLOSING, () => {
+      clearInterval(pinger);
+      pinger = undefined;
+    });
   }
 
   @mutex
-  async disconnect(signal: AbortSignal): Promise<
-    | Ok<"Disconnected", { warning?: unknown }>
-    | Ok<"AlreadyDisconnected">
-    | Err<unknown, { warning?: unknown }>
-  > {
-    const warning: { warning?: unknown } = {};
-
-    if (signal.aborted) {
-      return err(signal.reason as unknown, warning);
-    }
-
-    if (this.state === CLOSED) {
-      return ok("AlreadyDisconnected");
-    }
-
-    try {
-      await this.setState(CLOSING, () => CLOSING);
-    } catch (error) {
-      warning.warning = error;
-    }
-
-    if (signal.aborted) {
-      return err(signal.reason as unknown, warning);
-    }
-
-    try {
-      const closed = this.ee.once(CLOSED);
-      const abortHandler = () => {
-        this.ee.emit(
-          CLOSED,
-          err(signal.reason as unknown, {
-            value: CLOSED,
-          }),
-        );
-      };
+  async disconnect(signal: AbortSignal): Promise<void> {
+    throwIfAborted(signal);
+    const conn = this.getConnectionInfo();
+    const close = async () => {
+      const closed = this.ee.once(CLOSED, { signal });
 
       if (
         this.ws
         && this.ws.readyState !== CLOSED
         && this.ws.readyState !== CLOSING
       ) {
-        signal.addEventListener("abort", abortHandler, { once: true });
         this.ws.close();
       } else {
-        this.ee.emit(CLOSED, ok(CLOSED));
+        this.ee.emit(CLOSED, {
+          state: CLOSED,
+        });
       }
 
       const [result] = await closed;
-      signal.removeEventListener("abort", abortHandler);
 
-      return result.ok
-        ? ok("Disconnected", warning)
-        : err(result.error, warning);
-    } catch (error) {
-      return err(error, warning);
+      if ("error" in result) {
+        throw result.error;
+      }
+    };
+
+    switch (conn.state) {
+      case OPEN:
+        await this.transition(
+          {
+            state: CLOSING,
+            endpoint: conn.endpoint,
+          },
+          () => ({
+            state: CLOSING,
+            endpoint: conn.endpoint,
+          }),
+        );
+        throwIfAborted(signal);
+        await close();
+
+        break;
+
+      case CLOSING:
+        await close();
+
+        break;
+
+      case CLOSED:
+        break;
+
+      default:
+        unreachable();
     }
   }
 
@@ -369,15 +383,19 @@ export default class WebSocketEngine extends EngineAbc {
     signal: AbortSignal,
   ): Promise<BidirectionalRpcResponse> {
     if (this.state === CONNECTING) {
-      await this.ee.once(OPEN);
+      await this.ee.once(OPEN, { signal });
     }
 
-    if (!this.ws || !this.conn.endpoint) {
+    // 接続情報のスナップショットを取得します。
+    // 以降、接続情報を参照する際はこれを使用します。
+    const conn = this.getConnectionInfo();
+
+    if (!this.ws || conn.state !== OPEN) {
       throw new ConnectionUnavailable();
     }
 
     request = this.v8n.parseRpcRequest(request, {
-      endpoint: new URL(this.conn.endpoint),
+      endpoint: new URL(conn.endpoint),
       engineName: "websocket",
     });
 
@@ -385,7 +403,7 @@ export default class WebSocketEngine extends EngineAbc {
       case "use": {
         const [ns, db] = request.params;
 
-        if (!this.conn.ns && !ns && db) {
+        if (!conn.ns && !ns && db) {
           throw new MissingNamespace();
         }
 
@@ -428,7 +446,7 @@ export default class WebSocketEngine extends EngineAbc {
         params: request.params,
         result: this.v8n.parseRpcResult(rpcResp.result, {
           request,
-          endpoint: new URL(this.conn.endpoint),
+          endpoint: new URL(conn.endpoint),
           engineName: "websocket",
         }),
       } as ValueOf<
@@ -446,11 +464,20 @@ export default class WebSocketEngine extends EngineAbc {
           const [ns, db] = rpc.params;
 
           if (ns) {
-            this.conn.ns = ns;
+            if (this.namespace !== conn.ns) {
+              throw new NamespaceConflict(this.namespace, conn.ns);
+            }
+
+            this.namespace = ns;
           }
 
+          // `.rpc` メソッドの実行開始直後のデータベースから変更がなければ更新する。
           if (db) {
-            this.conn.db = db;
+            if (this.database !== conn.db) {
+              throw new DatabaseConflict(this.database, conn.db);
+            }
+
+            this.database = db;
           }
 
           break;
@@ -458,19 +485,18 @@ export default class WebSocketEngine extends EngineAbc {
 
         case "signin":
         case "signup":
-          this.conn.token = rpc.result;
+          this.token = rpc.result;
 
           break;
 
         case "authenticate": {
-          const [token] = rpc.params;
-          this.conn.token = token;
+          [this.token] = rpc.params;
 
           break;
         }
 
         case "invalidate":
-          delete this.conn.token;
+          this.token = null;
 
           break;
       }

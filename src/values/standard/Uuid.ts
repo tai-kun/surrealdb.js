@@ -1,6 +1,6 @@
 import { unreachable } from "~/errors";
 import { quoteStr } from "~/index/escape";
-import type { SurqlValueSerializer } from "../_lib/Serializer";
+import type { SurqlValueSerializer } from "../_lib/types";
 import Base, { byteToHex } from "../tiny/Uuid";
 
 /**

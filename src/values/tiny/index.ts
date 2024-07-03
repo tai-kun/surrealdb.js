@@ -1,3 +1,5 @@
+// main exports
+
 import DecimalJs from "./Decimal";
 
 export type * from "./Datetime";
@@ -38,3 +40,10 @@ export { default as Thing } from "./Thing";
 
 export type * from "./Uuid";
 export { default as Uuid } from "./Uuid";
+
+// lib exports
+
+export type * from "../_lib/geometry/Abc";
+export { default as GeometryAbc } from "../_lib/geometry/Abc";
+
+export type * from "../_lib/types";

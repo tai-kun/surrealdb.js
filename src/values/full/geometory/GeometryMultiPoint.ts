@@ -1,6 +1,6 @@
 import toSurql from "~/index/toSurql";
 import createGeometryMultiPoint from "../../_lib/geometry/createGeometryMultiPoint";
-import type { SurqlValueSerializer } from "../../_lib/Serializer";
+import type { SurqlValueSerializer } from "../../_lib/types";
 import GeometryPoint from "./GeometryPoint";
 
 export default class GeometryMultiPoint

@@ -3,7 +3,7 @@ import { SurrealTypeError } from "~/errors";
 import { BRACKETL, BRACKETR, escapeRid, quoteStr } from "~/index/escape";
 import toSurql from "~/index/toSurql";
 import type { TableType } from "~/index/values";
-import type { SurqlValueSerializer } from "../_lib/Serializer";
+import type { SurqlValueSerializer } from "../_lib/types";
 import Base, { type ThingId } from "../tiny/Thing";
 
 const I64_MAX = 9223372036854775807n;

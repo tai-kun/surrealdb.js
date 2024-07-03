@@ -1,6 +1,6 @@
 import toSurql from "~/index/toSurql";
 import createGeometryMultiPolygon from "../../_lib/geometry/createGeometryMultiPolygon";
-import type { SurqlValueSerializer } from "../../_lib/Serializer";
+import type { SurqlValueSerializer } from "../../_lib/types";
 import GeometryPolygon from "./GeometryPolygon";
 
 export default class GeometryMultiPolygon

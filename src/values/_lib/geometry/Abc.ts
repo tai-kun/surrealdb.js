@@ -11,7 +11,7 @@ import {
 } from "../internal";
 
 // https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/geometry.rs#L67-L78
-type GeometryType =
+export type GeometryType =
   | "Point"
   | "LineString"
   | "Polygon"

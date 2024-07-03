@@ -1,6 +1,6 @@
 import DecimalJs from "decimal.js";
 import { _defineAssertDecimal } from "../_lib/internal";
-import type { SurqlValueSerializer } from "../_lib/Serializer";
+import type { SurqlValueSerializer } from "../_lib/types";
 
 declare module "decimal.js" {
   export interface Decimal extends Pick<SurqlValueSerializer, "toSurql"> {}

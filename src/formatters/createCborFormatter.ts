@@ -15,8 +15,8 @@ import {
   isThing,
   isUuid,
 } from "~/index/values";
-import type Payload from "./Payload";
-import type { Formatter } from "./types";
+import type Payload from "./_lib/Payload";
+import type { Formatter } from "./_lib/types";
 
 // Tags from the spec - https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
 const TAG_SPEC_DATETIME = 0;

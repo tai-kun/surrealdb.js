@@ -1,13 +1,13 @@
-export type * from "./copy";
-export { default as copy } from "./copy";
+export type * from "./_lib/copy";
+export { default as copy } from "./_lib/copy";
 
-export type * from "./isArrayBuffer";
-export { default as isArrayBuffer } from "./isArrayBuffer";
+export type * from "./_lib/isArrayBuffer";
+export { default as isArrayBuffer } from "./_lib/isArrayBuffer";
 
-export type * from "./Payload";
-export { default as Payload } from "./Payload";
+export type * from "./_lib/Payload";
+export { default as Payload } from "./_lib/Payload";
 
-export type * from "./types";
+export type * from "./_lib/types";
 
 export type * from "./createCborFormatter";
 export { default as createCborFormatter } from "./createCborFormatter";

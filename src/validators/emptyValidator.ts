@@ -4,7 +4,7 @@ import type {
   RpcRequest,
   RpcResponse,
 } from "~/index/types";
-import type { Validator } from "./types";
+import type { Validator } from "./_lib/types";
 
 const emptyValidator: Validator = {
   parseRpcResult: x => x,

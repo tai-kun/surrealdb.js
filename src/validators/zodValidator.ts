@@ -66,7 +66,7 @@ import {
   type ThingType,
   type UuidType,
 } from "~/index/values";
-import type { Validator } from "./types";
+import type { Validator } from "./_lib/types";
 
 type ZodType<T> = z.ZodType<T, any, any>;
 

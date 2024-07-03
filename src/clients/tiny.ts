@@ -18,8 +18,8 @@ import Abc, {
   type ClientConnectOptions,
   type ClientDisconnectOptions,
   ClientRpcOptions,
-} from "./Abc";
-import defaultErrorHandler from "./defaultErrorHandler";
+} from "./_lib/Abc";
+import defaultErrorHandler from "./_lib/defaultErrorHandler";
 
 export default class Client extends Abc {
   @mutex
@@ -143,4 +143,4 @@ export default class Client extends Abc {
   }
 }
 
-export type * from "./Abc";
+export type * from "./_lib/Abc";

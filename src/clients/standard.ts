@@ -12,7 +12,7 @@ import type {
   ScopeAuth,
 } from "~/index/types";
 import type { TableType, UuidType } from "~/index/values";
-import type { ClientRpcOptions } from "./Abc";
+import type { ClientRpcOptions } from "./_lib/Abc";
 import Base from "./tiny";
 
 /**

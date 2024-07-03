@@ -1,8 +1,8 @@
 import isPlainObject from "is-plain-obj";
 import type { JsonValue } from "type-fest";
 import { SurrealTypeError, unreachable } from "~/errors";
-import type Payload from "./Payload";
-import type { Formatter } from "./types";
+import type Payload from "./_lib/Payload";
+import type { Formatter } from "./_lib/types";
 
 // https://github.com/fastify/fast-json-stringify/blob/master/lib/serializer.js
 const STR_ESCAPE = /[\u0000-\u001f\u0022\u005c\ud800-\udfff]/;

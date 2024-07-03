@@ -1,5 +1,5 @@
 import type { Constructor } from "type-fest";
-import type { ClientConfig, default as ClientAbc } from "~/clients/Abc";
+import type { ClientConfig, default as ClientAbc } from "~/clients/_lib/Abc";
 import { SurrealTypeError, unreachable } from "~/errors";
 import type { RecordData } from "./types";
 

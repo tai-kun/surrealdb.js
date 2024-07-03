@@ -17,7 +17,7 @@ import {
   SurrealTypeError,
   UnsupportedProtocol,
 } from "~/errors";
-import type { Formatter } from "~/formatters/types";
+import type { Formatter } from "~/formatters/_lib/types";
 import type { RpcMethod, RpcParams, RpcResult } from "~/index/types";
 import type { Validator } from "~/validators";
 

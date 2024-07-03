@@ -1,14 +1,20 @@
-export type * from "./Abc";
-export { CLOSED, CLOSING, CONNECTING, default as EngineAbc, OPEN } from "./Abc";
+export type * from "./_lib/Abc";
+export {
+  CLOSED,
+  CLOSING,
+  CONNECTING,
+  default as EngineAbc,
+  OPEN,
+} from "./_lib/Abc";
 
-export type * from "./HttpEngine";
-export { default as EngineHttp } from "./HttpEngine";
+export type * from "./_lib/HttpEngine";
+export { default as EngineHttp } from "./_lib/HttpEngine";
 
 export type * from "./createHttpEngine";
 export { default as createHttpEngine } from "./createHttpEngine";
 
-export type * from "./WebSocketEngine";
-export { default as EngineWebSocket } from "./WebSocketEngine";
+export type * from "./_lib/WebSocketEngine";
+export { default as EngineWebSocket } from "./_lib/WebSocketEngine";
 
 export type * from "./createWebSocketEngine";
 export { default as createWebSocketEngine } from "./createWebSocketEngine";

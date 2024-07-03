@@ -1,7 +1,7 @@
 import { Simplify } from "type-fest";
 import type { Patch, ReadonlyPatch, RecordData } from "~/index/types";
 import type { ThingType } from "~/index/values";
-import type { ClientRpcOptions } from "./Abc";
+import type { ClientRpcOptions } from "./_lib/Abc";
 import Base from "./standard";
 
 // dprint-ignore

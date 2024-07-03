@@ -1,5 +1,5 @@
 import { setup } from "@tools/surrealdb/setup";
-import { summaryReporter } from "@web/test-runner";
+import { defaultReporter, summaryReporter } from "@web/test-runner";
 import { seleniumLauncher } from "@web/test-runner-selenium";
 import { Browser, Builder } from "selenium-webdriver";
 
@@ -7,7 +7,13 @@ const conn = await setup();
 
 export default {
   nodeResolve: true,
-  reporters: [summaryReporter()],
+  reporters: [
+    defaultReporter({
+      reportTestResults: true,
+      reportTestProgress: false,
+    }),
+    summaryReporter(),
+  ],
   port: 9000,
   browsers: [seleniumLauncher({
     driverBuilder: new Builder()
@@ -23,5 +29,4 @@ export default {
         <script type="module" src="${testFramework}"></script>
       </body>
     </html>`,
-  testsFinishTimeout: 30 * 60 * 1_000, // 30 min
 };

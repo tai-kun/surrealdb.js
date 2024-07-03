@@ -1,12 +1,18 @@
 import { setup } from "@tools/surrealdb/setup";
-import { summaryReporter } from "@web/test-runner";
+import { defaultReporter, summaryReporter } from "@web/test-runner";
 import { playwrightLauncher } from "@web/test-runner-playwright";
 
 const conn = await setup();
 
 export default {
   nodeResolve: true,
-  reporters: [summaryReporter()],
+  reporters: [
+    defaultReporter({
+      reportTestResults: true,
+      reportTestProgress: false,
+    }),
+    summaryReporter(),
+  ],
   port: 9000,
   browsers: [
     playwrightLauncher({
@@ -22,5 +28,4 @@ export default {
         <script type="module" src="${testFramework}"></script>
       </body>
     </html>`,
-  testsFinishTimeout: 30 * 60 * 1_000, // 30 min
 };

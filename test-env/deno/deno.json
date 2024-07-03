@@ -2,6 +2,8 @@
   "imports": {
     "@std/testing": "jsr:@std/testing@^0.225.3",
 
+    "assert": "npm:assert@2.1.0",
+
     "@tools/assert": "__ROOT__/test-env/deno/tools/assert/index.js",
     "@tools/surrealdb": "__ROOT__/test-env/deno/tools/surrealdb/index.js",
     "@tools/test": "__ROOT__/test-env/deno/tools/test/index.js",

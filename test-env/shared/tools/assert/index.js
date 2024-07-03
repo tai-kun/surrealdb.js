@@ -1,11 +1,19 @@
-const assert = require("node:assert/strict");
+import assert from "assert";
 
-module.exports = Object.assign(assert, {
+export default Object.assign(assert.strict, {
   jsonEqual(actual, expected, ...args) {
-    return assert.deepEqual(jsonify(actual), jsonify(expected), ...args);
+    return assert.deepStrictEqual(
+      jsonify(actual),
+      jsonify(expected),
+      ...args,
+    );
   },
   jsonNotEqual(actual, expected, ...args) {
-    return assert.notDeepEqual(jsonify(actual), jsonify(expected), ...args);
+    return assert.notDeepStrictEqual(
+      jsonify(actual),
+      jsonify(expected),
+      ...args,
+    );
   },
 });
 

@@ -1,5 +1,5 @@
 import { escapeIdent, escapeKey, escapeRid, quoteStr } from "@tai-kun/surreal";
-import { assertEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("quoteStr", () => {
@@ -10,7 +10,7 @@ test("quoteStr", () => {
       [`cat's "toy"`, `"cat's \"toy\""`],
     ] satisfies [any, any][]
   ) {
-    assertEquals(quoteStr(str), expect);
+    assert.equal(quoteStr(str), expect);
   }
 });
 
@@ -23,7 +23,7 @@ test("escapeKey", () => {
       [`ehco "hello"`, `"ehco \"hello\""`],
     ] satisfies [any, any][]
   ) {
-    assertEquals(escapeKey(str), expect);
+    assert.equal(escapeKey(str), expect);
   }
 });
 
@@ -36,7 +36,7 @@ test("escapeRid", () => {
       ["ehco ⟩", "⟨ehco \⟩⟩"],
     ] satisfies [any, any][]
   ) {
-    assertEquals(escapeRid(str), expect);
+    assert.equal(escapeRid(str), expect);
   }
 });
 
@@ -49,6 +49,6 @@ test("escapeIdent", () => {
       ["ehco `hello`", "`ehco \`hello\``"],
     ] satisfies [any, any][]
   ) {
-    assertEquals(escapeIdent(str), expect);
+    assert.equal(escapeIdent(str), expect);
   }
 });

@@ -1,25 +1,20 @@
 import { makeAbortApi } from "@tai-kun/surreal/_lib";
-import {
-  assertEquals,
-  assertInstanceOf,
-  assertNotEquals,
-  assertThrows,
-} from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("AbortSignal オブジェクトと中止関数を返す", () => {
   const [signal, abort] = makeAbortApi();
 
-  assertInstanceOf(signal, AbortSignal);
-  assertInstanceOf(abort, Function);
-  assertEquals(signal.aborted, false);
+  assert(signal instanceof AbortSignal);
+  assert(abort instanceof Function);
+  assert.equal(signal.aborted, false);
 });
 
 test("シグナルがすでに中断を示していたらエラーを投げる", () => {
   const ac = new AbortController();
   ac.abort();
 
-  assertThrows(
+  assert.throws(
     () => {
       makeAbortApi(ac.signal);
     },
@@ -32,8 +27,8 @@ test("中止する", async () => {
   const reason = {};
   abort(reason);
 
-  assertEquals(signal.aborted, true);
-  assertEquals(signal.reason, reason);
+  assert.equal(signal.aborted, true);
+  assert.equal(signal.reason, reason);
 });
 
 test("オプションのシグナルに中止の情報を伝播する", async () => {
@@ -46,8 +41,8 @@ test("オプションのシグナルに中止の情報を伝播する", async ()
   const reason = {};
   ac.abort(reason);
 
-  assertNotEquals(signal, ac.signal);
-  assertEquals(signal.aborted, true);
-  assertEquals(signal.reason, reason);
-  assertEquals(aborted, true);
+  assert.notEqual(signal, ac.signal);
+  assert.equal(signal.aborted, true);
+  assert.equal(signal.reason, reason);
+  assert.equal(aborted, true);
 });

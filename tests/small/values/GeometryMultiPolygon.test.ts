@@ -17,7 +17,7 @@ import {
   GeometryPoint as GeometryPointTiny,
   GeometryPolygon as GeometryPolygonTiny,
 } from "@tai-kun/surreal/values/tiny";
-import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryMultiPolygon を作成する", () => {
@@ -29,8 +29,8 @@ test("GeometryMultiPolygon を作成する", () => {
     ]),
   ]);
 
-  assertInstanceOf(multiPolygon, GeometryMultiPolygon);
-  assertJsonEquals(multiPolygon, {
+  assert(multiPolygon instanceof GeometryMultiPolygon);
+  assert.jsonEqual(multiPolygon, {
     type: "MultiPolygon",
     coordinates: [
       // Polygon

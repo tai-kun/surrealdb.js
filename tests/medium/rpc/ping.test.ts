@@ -1,4 +1,4 @@
-import { before, describe, test } from "@tools/test";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -10,7 +10,7 @@ for (
   } of surreal
 ) {
   describe([engine, formatter, validator].join("-"), () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 

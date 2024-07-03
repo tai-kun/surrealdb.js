@@ -1,5 +1,5 @@
-import { assertDeepEquals } from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -13,7 +13,7 @@ for (
   describe([engine, formatter, validator].join("-"), {
     skip: !(formatter === "json"),
   }, () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -24,7 +24,7 @@ for (
       await db.let("js_number", 123);
       const result = await db.query<[number]>(/*surql*/ `RETURN $js_number`);
 
-      assertDeepEquals(result, [123]);
+      assert.deepEqual(result, [123]);
     });
 
     test("変数を再定義する", async () => {
@@ -35,7 +35,7 @@ for (
       await db.let("js_number", 456);
       const result = await db.query<[number]>(/*surql*/ `RETURN $js_number`);
 
-      assertDeepEquals(result, [456]);
+      assert.deepEqual(result, [456]);
     });
 
     test("変数を削除する", async () => {
@@ -47,7 +47,7 @@ for (
       await db.use("my_namespace", "my_database");
       const result = await db.query<[unknown]>(/*surql*/ `RETURN $js_number`);
 
-      assertDeepEquals(result, [null]);
+      assert.deepEqual(result, [null]);
     });
 
     test("変数は不変である", async () => {
@@ -61,15 +61,15 @@ for (
         /*surql*/ `RETURN $js_object`,
       );
 
-      assertDeepEquals(obj, { key: "changed" });
-      assertDeepEquals(result, [{ key: "value" }]);
+      assert.deepEqual(obj, { key: "changed" });
+      assert.deepEqual(result, [{ key: "value" }]);
     });
   });
 
   describe([engine, formatter, validator].join("-"), {
     skip: !(formatter === "cbor"),
   }, () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -80,7 +80,7 @@ for (
       await db.let("js_number", 123);
       const result = await db.query<[number]>(/*surql*/ `RETURN $js_number`);
 
-      assertDeepEquals(result, [123]);
+      assert.deepEqual(result, [123]);
     });
 
     test("変数を再定義する", async () => {
@@ -91,7 +91,7 @@ for (
       await db.let("js_number", 456);
       const result = await db.query<[number]>(/*surql*/ `RETURN $js_number`);
 
-      assertDeepEquals(result, [456]);
+      assert.deepEqual(result, [456]);
     });
 
     test("変数を削除する", async () => {
@@ -103,7 +103,7 @@ for (
       await db.use("my_namespace", "my_database");
       const result = await db.query<[unknown]>(/*surql*/ `RETURN $js_number`);
 
-      assertDeepEquals(result, [undefined]);
+      assert.deepEqual(result, [undefined]);
     });
 
     test("変数は不変である", async () => {
@@ -117,8 +117,8 @@ for (
         /*surql*/ `RETURN $js_object`,
       );
 
-      assertDeepEquals(obj, { key: "changed" });
-      assertDeepEquals(result, [{ key: "value" }]);
+      assert.deepEqual(obj, { key: "changed" });
+      assert.deepEqual(result, [{ key: "value" }]);
     });
   });
 }

@@ -1,7 +1,7 @@
 import { QueryFailure, RpcResponseError } from "@tai-kun/surreal/errors";
 import { Thing } from "@tai-kun/surreal/values/full";
-import { assertDeepEquals, assertRejects } from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -15,7 +15,7 @@ for (
   describe([engine, formatter, validator].join("-"), {
     skip: !(formatter === "json"),
   }, () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -29,7 +29,7 @@ for (
         RETURN fn::undefined_function();
       `);
 
-      assertDeepEquals(results, [
+      assert.deepEqual(results, [
         {
           status: "OK",
           time: results[0]?.time!,
@@ -48,7 +48,7 @@ for (
       await using db = new Surreal();
       await db.connect(endpoint);
 
-      await assertRejects(
+      await assert.rejects(
         async () => {
           await db.queryRaw(/*surql*/ `OUTPUT "OK"`);
         },
@@ -65,7 +65,7 @@ for (
         named_variable: 42,
       });
 
-      assertDeepEquals(results, [42]);
+      assert.deepEqual(results, [42]);
     });
 
     test("クエリーの結果のうち 1 つでもエラーがある場合、エラーが投げられる", async () => {
@@ -74,7 +74,7 @@ for (
       await db.connect(endpoint);
       await db.use("my_namespace", "my_database");
 
-      await assertRejects(
+      await assert.rejects(
         async () => {
           await db.query(/*surql*/ `
             RETURN 42;
@@ -89,7 +89,7 @@ for (
   describe([engine, formatter, validator].join("-"), {
     skip: !(formatter === "cbor"),
   }, () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -103,7 +103,7 @@ for (
         RETURN fn::undefined_function();
       `);
 
-      assertDeepEquals(results, [
+      assert.deepEqual(results, [
         {
           status: "OK",
           time: results[0]?.time!,
@@ -126,7 +126,7 @@ for (
         named_variable: new Thing("tb-name", "record-id"),
       });
 
-      assertDeepEquals(results, [new Thing("tb-name", "record-id")]);
+      assert.deepEqual(results, [new Thing("tb-name", "record-id")]);
     });
   });
 }

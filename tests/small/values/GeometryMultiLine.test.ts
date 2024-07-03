@@ -6,7 +6,7 @@ import {
 } from "@tai-kun/surreal/values/full";
 import { GeometryMultiLine as GeometryMultiLineStandard } from "@tai-kun/surreal/values/standard";
 import { GeometryMultiLine as GeometryMultiLineTiny } from "@tai-kun/surreal/values/tiny";
-import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryMultiLine を作成する", () => {
@@ -16,8 +16,8 @@ test("GeometryMultiLine を作成する", () => {
     ]),
   ]);
 
-  assertInstanceOf(multiLine, GeometryMultiLine);
-  assertJsonEquals(multiLine, {
+  assert(multiLine instanceof GeometryMultiLine);
+  assert.jsonEqual(multiLine, {
     type: "MultiLineString",
     coordinates: [
       // LineString

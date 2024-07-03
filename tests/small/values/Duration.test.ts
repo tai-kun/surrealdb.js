@@ -3,7 +3,7 @@ import { SurrealTypeError } from "@tai-kun/surreal/errors";
 import { Duration } from "@tai-kun/surreal/values/full";
 import { Duration as DurationStandard } from "@tai-kun/surreal/values/standard";
 import { Duration as DurationTiny } from "@tai-kun/surreal/values/tiny";
-import { assert, assertEquals, assertThrows } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 for (
@@ -26,10 +26,10 @@ for (
   test(`${input} から Duration を作成する`, () => {
     const duration = new Duration(input);
 
-    assertEquals(duration.seconds, secs);
-    assertEquals(duration.nanoseconds, nano);
-    assertEquals(duration.toSurql(), string);
-    assertEquals(new Duration(string).toSurql(), string);
+    assert.equal(duration.seconds, secs);
+    assert.equal(duration.nanoseconds, nano);
+    assert.equal(duration.toSurql(), string);
+    assert.equal(new Duration(string).toSurql(), string);
   });
 }
 
@@ -41,7 +41,7 @@ for (
   ] satisfies any[]
 ) {
   test(`${input} から Duration を作成するとエラーが投げられる`, () => {
-    assertThrows(
+    assert.throws(
       () => {
         new Duration(input);
       },

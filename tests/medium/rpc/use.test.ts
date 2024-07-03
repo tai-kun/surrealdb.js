@@ -1,5 +1,5 @@
-import { assertEquals } from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -11,7 +11,7 @@ for (
   } of surreal
 ) {
   describe([engine, formatter, validator].join("-"), () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -35,11 +35,11 @@ for (
         INFO FOR DB;
       `);
 
-      assertEquals(infoForNs1?.status, "ERR");
-      assertEquals(infoForDb1?.status, "ERR");
+      assert.equal(infoForNs1?.status, "ERR");
+      assert.equal(infoForDb1?.status, "ERR");
 
-      assertEquals(infoForNs2?.status, "OK");
-      assertEquals(infoForDb2?.status, "ERR");
+      assert.equal(infoForNs2?.status, "OK");
+      assert.equal(infoForDb2?.status, "ERR");
     });
 
     test("特定の名前空間とデータベースに切り替える。", async () => {
@@ -62,11 +62,11 @@ for (
         INFO FOR DB;
       `);
 
-      assertEquals(infoForNs1?.status, "ERR");
-      assertEquals(infoForDb1?.status, "ERR");
+      assert.equal(infoForNs1?.status, "ERR");
+      assert.equal(infoForDb1?.status, "ERR");
 
-      assertEquals(infoForNs2?.status, "OK");
-      assertEquals(infoForDb2?.status, "OK");
+      assert.equal(infoForNs2?.status, "OK");
+      assert.equal(infoForDb2?.status, "OK");
     });
   });
 }

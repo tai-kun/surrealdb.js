@@ -2,7 +2,7 @@ import { isTable } from "@tai-kun/surreal";
 import { Table } from "@tai-kun/surreal/values/full";
 import { Table as TableStandard } from "@tai-kun/surreal/values/standard";
 import { Table as TableTiny } from "@tai-kun/surreal/values/tiny";
-import { assert, assertEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("半角英数字とアンダースコアのみで構成される", async () => {
@@ -16,12 +16,12 @@ test("半角英数字とアンダースコアのみで構成される", async ()
   ) {
     const table = new Table(name);
 
-    assertEquals(
+    assert.equal(
       table.toJSON(),
       name,
       name + " の JSON 表現はエスケープされない",
     );
-    assertEquals(
+    assert.equal(
       table.toSurql(),
       name,
       name + " の Surql 表現はエスケープされない",
@@ -43,12 +43,12 @@ test("10 進数または半角英数字とアンダースコア以外が含ま�
   ) {
     const table = new Table(name);
 
-    assertEquals(
+    assert.equal(
       table.toJSON(),
       name,
       name + " の JSON 表現はエスケープされない",
     );
-    assertEquals(
+    assert.equal(
       table.toSurql(),
       "`" + name + "`",
       name + " の Surql 表現はエスケープされる",

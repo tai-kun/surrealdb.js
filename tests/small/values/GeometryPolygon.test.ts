@@ -14,7 +14,7 @@ import {
   GeometryPoint as GeometryPointTiny,
   GeometryPolygon as GeometryPolygonTiny,
 } from "@tai-kun/surreal/values/tiny";
-import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryPolygon を作成する", () => {
@@ -25,15 +25,15 @@ test("GeometryPolygon を作成する", () => {
     new GeometryLine([new GeometryPoint([3, 4])]),
   ]);
 
-  assertInstanceOf(polygon, GeometryPolygon);
-  assertJsonEquals(polygon.exteriorRing, {
+  assert(polygon instanceof GeometryPolygon);
+  assert.jsonEqual(polygon.exteriorRing, {
     type: "LineString",
     coordinates: [
       // Point
       ["1", "2"],
     ],
   });
-  assertJsonEquals(polygon.interiorRings, [
+  assert.jsonEqual(polygon.interiorRings, [
     {
       type: "LineString",
       coordinates: [
@@ -42,7 +42,7 @@ test("GeometryPolygon を作成する", () => {
       ],
     },
   ]);
-  assertJsonEquals(polygon, {
+  assert.jsonEqual(polygon, {
     type: "Polygon",
     coordinates: [
       // LineString

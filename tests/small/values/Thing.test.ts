@@ -1,5 +1,5 @@
 import { Thing } from "@tai-kun/surreal/values/full";
-import { assertEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("ID が半角英数字とアンダースコアのみで構成される", async () => {
@@ -13,12 +13,12 @@ test("ID が半角英数字とアンダースコアのみで構成される", as
   ) {
     const thing = new Thing("tb", id);
 
-    assertEquals(
+    assert.equal(
       thing.toJSON(),
       `tb:${id}`,
       id + " の JSON 表現はエスケープされない",
     );
-    assertEquals(
+    assert.equal(
       thing.toSurql(),
       `r'tb:${id}'`,
       id + " の Surql 表現はエスケープされない",
@@ -40,12 +40,12 @@ test("ID に 10 進数または半角英数字とアンダースコア以外が�
   ) {
     const thing = new Thing("tb", id);
 
-    assertEquals(
+    assert.equal(
       thing.toJSON(),
       `tb:⟨${id}⟩`,
       id + " の JSON 表現はエスケープされる",
     );
-    assertEquals(
+    assert.equal(
       thing.toSurql(),
       `r'tb:⟨${id}⟩'`,
       id + " の Surql 表現はエスケープされる",
@@ -63,12 +63,12 @@ test("ID が ID ジェネレーターの場合", async () => {
   ) {
     const thing = new Thing("tb", id);
 
-    assertEquals(
+    assert.equal(
       thing.toJSON(),
       `tb:${id}`,
       id + " の JSON 表現はエスケープされない",
     );
-    assertEquals(
+    assert.equal(
       thing.toSurql(),
       `r'tb:${id}'`,
       id + " の Surql 表現はエスケープされない",
@@ -94,11 +94,11 @@ test("ID が文字列以外の場合", async () => {
   };
   const thing = new Thing("tb", id);
 
-  assertEquals(
+  assert.equal(
     thing.toJSON(),
     `tb:{bigint:9007199254740992,boolean:[true,false],date:d'1970-01-01T00:00:00.000Z',null:NULL,number:[123,3.14],string:s'あいうえお😢',undefined:NONE}`,
   );
-  assertEquals(
+  assert.equal(
     thing.toSurql(),
     `r"tb:{bigint:9007199254740992,boolean:[true,false],date:d'1970-01-01T00:00:00.000Z',null:NULL,number:[123,3.14],string:s'あいうえお😢',undefined:NONE}"`,
   );

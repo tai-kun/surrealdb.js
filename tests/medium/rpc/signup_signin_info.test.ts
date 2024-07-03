@@ -1,5 +1,5 @@
-import { assertDeepEquals, assertEquals, assertMatch } from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -11,7 +11,7 @@ for (
   } of surreal
 ) {
   describe([engine, formatter, validator].join("-"), () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -36,7 +36,7 @@ for (
         pass: "root",
       });
 
-      assertMatch(token, JWT_REGEX);
+      assert.match(token, JWT_REGEX);
     });
 
     test("名前空間ユーザーでサインインする", async () => {
@@ -58,8 +58,8 @@ for (
         pass: "passw0rd",
       });
 
-      assertMatch(token, JWT_REGEX);
-      assertEquals(db.getConnectionInfo()?.token, token);
+      assert.match(token, JWT_REGEX);
+      assert.equal(db.getConnectionInfo()?.token, token);
 
       // クリーンアップ
       {
@@ -93,8 +93,8 @@ for (
         pass: "passw0rd",
       });
 
-      assertMatch(token, JWT_REGEX);
-      assertEquals(db.getConnectionInfo()?.token, token);
+      assert.match(token, JWT_REGEX);
+      assert.equal(db.getConnectionInfo()?.token, token);
 
       // クリーンアップ
       {
@@ -134,8 +134,8 @@ for (
           foo: "bar",
         });
 
-        assertMatch(token, JWT_REGEX);
-        assertEquals(db.getConnectionInfo()?.token, token);
+        assert.match(token, JWT_REGEX);
+        assert.equal(db.getConnectionInfo()?.token, token);
       }
 
       // サインイン
@@ -147,8 +147,8 @@ for (
           id: "tai-kun",
         });
 
-        assertMatch(token, JWT_REGEX);
-        assertEquals(db.getConnectionInfo()?.token, token);
+        assert.match(token, JWT_REGEX);
+        assert.equal(db.getConnectionInfo()?.token, token);
       }
 
       // 資格情報
@@ -156,13 +156,13 @@ for (
         const { id, ...info } = await db.info();
 
         if (typeof id === "string") {
-          assertEquals(id, "app_user:⟨tai-kun⟩");
+          assert.equal(id, "app_user:⟨tai-kun⟩");
         } else {
-          assertEquals(id.tb, "app_user");
-          assertEquals(id.id, "tai-kun");
+          assert.equal(id.tb, "app_user");
+          assert.equal(id.id, "tai-kun");
         }
 
-        assertDeepEquals(info, {
+        assert.deepEqual(info, {
           foo: "bar",
         });
       }

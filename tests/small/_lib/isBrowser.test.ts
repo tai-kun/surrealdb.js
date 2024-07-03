@@ -1,5 +1,5 @@
 import { isBrowser } from "@tai-kun/surreal/_lib";
-import { assertEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { ENV, test } from "@tools/test";
 
 test("ブラウザかどうかを判定する", () => {
@@ -19,5 +19,5 @@ test("ブラウザかどうかを判定する", () => {
       break;
   }
 
-  assertEquals(isBrowser, browser);
+  assert.equal(isBrowser, browser);
 });

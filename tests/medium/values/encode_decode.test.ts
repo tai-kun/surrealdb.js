@@ -14,8 +14,8 @@ import {
   Thing,
   Uuid,
 } from "@tai-kun/surreal/values/full";
-import { assertDeepEquals, assertJsonEquals } from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -29,7 +29,7 @@ for (
   describe([engine, formatter, validator].join("-"), {
     skip: !(formatter === "cbor"),
   }, () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -66,13 +66,13 @@ for (
         const [output] = await db.query(surql`
           RETURN ${input}
         `);
-        assertDeepEquals(output, expected);
+        assert.deepEqual(output, expected);
       }
       {
         const [output] = await db.query(surql`
           RETURN ${surql.raw(toSurql(input))}
         `);
-        assertDeepEquals(output, expected);
+        assert.deepEqual(output, expected);
       }
     });
 
@@ -131,13 +131,13 @@ for (
         const [output] = await db.query<[any]>(surql`
           RETURN ${input}
         `);
-        assertJsonEquals(output, input);
+        assert.jsonEqual(output, input);
       }
       {
         const [output] = await db.query<[any]>(surql`
           RETURN ${surql.raw(toSurql(input))}
         `);
-        assertJsonEquals(output, input);
+        assert.jsonEqual(output, input);
       }
     });
   });

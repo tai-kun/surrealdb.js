@@ -1,5 +1,5 @@
 import { collectErrors } from "@tai-kun/surreal/_lib";
-import { assertDeepEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("Promise のエラーを収集する", async () => {
@@ -10,7 +10,7 @@ test("Promise のエラーを収集する", async () => {
     undefined,
   ]);
 
-  assertDeepEquals(errors, [error]);
+  assert.deepEqual(errors, [error]);
 });
 
 test("Promise をコールバックで取り出しながらエラーを収集する", async () => {
@@ -23,5 +23,5 @@ test("Promise をコールバックで取り出しながらエラーを収集す
         : undefined,
   );
 
-  assertDeepEquals(errors, [error]);
+  assert.deepEqual(errors, [error]);
 });

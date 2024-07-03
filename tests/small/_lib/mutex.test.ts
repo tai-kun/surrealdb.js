@@ -1,5 +1,5 @@
 import { mutex } from "@tai-kun/surreal/_lib";
-import { assertDeepEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
@@ -33,6 +33,6 @@ test("同時実行性が 1 である", async () => {
     runner.withoutQueue(0, "C"),
   ]);
 
-  assertDeepEquals(runner.resultWithQueue, ["A", "B", "C"]);
-  assertDeepEquals(runner.resultWithoutQueue, ["C", "B", "A"]);
+  assert.deepEqual(runner.resultWithQueue, ["A", "B", "C"]);
+  assert.deepEqual(runner.resultWithoutQueue, ["C", "B", "A"]);
 });

@@ -2,7 +2,7 @@ import {
   TaskEmitter as _TaskEmitter,
   type TaskListener,
 } from "@tai-kun/surreal/_lib";
-import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 // @ts-expect-error
@@ -39,15 +39,15 @@ test("イベントリスナーを登録して、イベントを補足する", as
     barListeners = emitter.emit("bar", "test", true)?.length;
   }
 
-  assertDeepEquals(
+  assert.deepEqual(
     events.sort((a, b) => a.length - b.length),
     [
       [1],
       ["test", true],
     ],
   );
-  assertEquals(fooListeners, 1);
-  assertEquals(barListeners, 1);
+  assert.equal(fooListeners, 1);
+  assert.equal(barListeners, 1);
 });
 
 test("イベントリスナーの登録を解除すると、以降のイベントを補足しない", async () => {
@@ -76,8 +76,8 @@ test("イベントリスナーの登録を解除すると、以降のイベン�
     emitter.emit("foo", 2);
   }
 
-  assertDeepEquals(events1, [[1]]);
-  assertDeepEquals(
+  assert.deepEqual(events1, [[1]]);
+  assert.deepEqual(
     events2.sort(([a], [b]) => a - b),
     [
       [1],
@@ -112,8 +112,8 @@ test("特定のイベントのすべてのイベントリスナーを解除す�
     emitter.emit("foo", 2);
   }
 
-  assertDeepEquals(events1, [[1]]);
-  assertDeepEquals(events2, [[1]]);
+  assert.deepEqual(events1, [[1]]);
+  assert.deepEqual(events2, [[1]]);
 });
 
 test("イベントを一度だけ補足する", async () => {
@@ -140,7 +140,7 @@ test("イベントを一度だけ補足する", async () => {
     await Promise.all(emitter.emit("foo", 3) || []);
   }
 
-  assertDeepEquals(events, [
+  assert.deepEqual(events, [
     [1],
     [2],
     [2],
@@ -152,15 +152,17 @@ test("イベントを一度だけ補足する際、すでに中止されてい�
     foo: [number];
   };
 
-  await assertRejects(
+  await assert.rejects(
     async () => {
       await using emitter = new TaskEmitter<Events>();
       const controller = new AbortController();
       controller.abort();
       await emitter.once("foo", { signal: controller.signal });
     },
-    Error,
-    "abort",
+    {
+      name: "Error",
+      message: "test",
+    },
   );
 });
 
@@ -169,7 +171,7 @@ test("イベントを一度だけ補足する際、途中で中止されたら�
     foo: [number];
   };
 
-  await assertRejects(
+  await assert.rejects(
     async () => {
       await using emitter = new TaskEmitter<Events>();
       const controller = new AbortController();
@@ -177,7 +179,9 @@ test("イベントを一度だけ補足する際、途中で中止されたら�
       setTimeout(() => controller.abort(new Error("test")), 500);
       await promise;
     },
-    Error,
-    "test",
+    {
+      name: "Error",
+      message: "test",
+    },
   );
 });

@@ -1,7 +1,7 @@
 import { CLOSED, CLOSING, CONNECTING, OPEN } from "@tai-kun/surreal/engines";
 import { ConnectionConflict } from "@tai-kun/surreal/errors";
-import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -13,7 +13,7 @@ for (
   } of surreal
 ) {
   describe([engine, formatter, validator].join("-"), () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -22,7 +22,7 @@ for (
       await using db = new Surreal();
       await db.connect(endpoint);
 
-      assertEquals(db.state, OPEN);
+      assert.equal(db.state, OPEN);
     });
 
     test("同じエンドポイントであれば、重複して connect メソッドを呼び出してもエラーにならない", async () => {
@@ -34,7 +34,7 @@ for (
         db.connect(endpoint),
       ]);
 
-      assertEquals(db.state, OPEN);
+      assert.equal(db.state, OPEN);
     });
 
     test("別のエンドポイントで重複して connect メソッドを呼び出すとエラーになる", async () => {
@@ -42,14 +42,14 @@ for (
       await using db = new Surreal();
       await db.connect(endpoint);
 
-      await assertRejects(
+      await assert.rejects(
         async () => {
           await db.connect(`${endpoint}/other`);
         },
         ConnectionConflict,
       );
-      assertEquals(db.state, OPEN);
-      assertEquals(
+      assert.equal(db.state, OPEN);
+      assert.equal(
         db.getConnectionInfo()?.endpoint?.href,
         `${endpoint}/rpc`,
       );
@@ -61,8 +61,8 @@ for (
       await db.connect(endpoint);
       await db.disconnect();
 
-      assertEquals(db.state, undefined);
-      assertEquals(db.getConnectionInfo(), undefined);
+      assert.equal(db.state, undefined);
+      assert.equal(db.getConnectionInfo(), undefined);
     });
 
     test("一度だけ切断処理が実行される", async () => {
@@ -75,9 +75,9 @@ for (
         db.disconnect(),
       ]);
 
-      assertEquals(db.state, undefined);
-      assertEquals(db.getConnectionInfo(), undefined);
-      assertDeepEquals(results, [
+      assert.equal(db.state, undefined);
+      assert.equal(db.getConnectionInfo(), undefined);
+      assert.deepEqual(results, [
         {
           status: "fulfilled",
           value: undefined,
@@ -116,7 +116,7 @@ for (
         await db.disconnect();
       }
 
-      assertDeepEquals(results, [
+      assert.deepEqual(results, [
         // 1 回目
         {
           state: CONNECTING,
@@ -172,7 +172,7 @@ for (
       await db.connect(endpoint);
       await db.disconnect();
 
-      assertDeepEquals(results, [
+      assert.deepEqual(results, [
         // 1 回目
         {
           state: CONNECTING,
@@ -199,10 +199,10 @@ for (
       await db.connect(endpoint);
       await db.disconnect();
 
-      assertDeepEquals(await open, [{
+      assert.deepEqual(await open, [{
         state: OPEN,
       }]);
-      assertDeepEquals(await closed, [{
+      assert.deepEqual(await closed, [{
         state: CLOSED,
       }]);
     });

@@ -12,7 +12,7 @@ import {
   GeometryCollection as GeometryCollectionTiny,
   GeometryPoint as GeometryPointTiny,
 } from "@tai-kun/surreal/values/tiny";
-import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("GeometryCollection を作成する", () => {
@@ -21,8 +21,8 @@ test("GeometryCollection を作成する", () => {
     new GeometryLine([]),
   ]);
 
-  assertInstanceOf(collection, GeometryCollection);
-  assertJsonEquals(collection, {
+  assert(collection instanceof GeometryCollection);
+  assert.jsonEqual(collection, {
     type: "GeometryCollection",
     geometries: [
       {

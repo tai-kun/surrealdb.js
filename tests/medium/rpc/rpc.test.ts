@@ -1,6 +1,6 @@
 import { getTimeoutSignal } from "@tai-kun/surreal/_lib";
-import { assertEquals, assertRejects } from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -12,7 +12,7 @@ for (
   } of surreal
 ) {
   describe([engine, formatter, validator].join("-"), () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -22,7 +22,7 @@ for (
       await db.connect(endpoint);
       const [queryResult] = await db.rpc("query", [/*surql*/ `RETURN 1`]);
 
-      assertEquals(queryResult?.result, 1);
+      assert.equal(queryResult?.result, 1);
     });
 
     test("rpc のタイムアウトを設定できる", async () => {
@@ -30,7 +30,7 @@ for (
       await using db = new Surreal();
       await db.connect(endpoint);
 
-      await assertRejects(
+      await assert.rejects(
         async () => {
           await db.rpc("query", [/*surql*/ `SLEEP 3s`], {
             signal: getTimeoutSignal(1_000),

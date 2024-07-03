@@ -1,9 +1,5 @@
 import { TaskQueue } from "@tai-kun/surreal/_lib";
-import {
-  AggregateTasksError,
-  ResourceAlreadyDisposed,
-} from "@tai-kun/surreal/errors";
-import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("タスクランナーをキューに追加する", async () => {
@@ -17,8 +13,8 @@ test("タスクランナーをキューに追加する", async () => {
   });
   await Promise.all([promise1, promise2]);
 
-  assertDeepEquals(results.sort(), [1, 2]);
-  assertEquals(queue.count, 0);
+  assert.deepEqual(results.sort(), [1, 2]);
+  assert.equal(queue.count, 0);
 });
 
 test("タスクを中断して拒否する", async () => {
@@ -37,15 +33,17 @@ test("タスクを中断して拒否する", async () => {
     },
   );
 
-  await assertRejects(
+  await assert.rejects(
     async () => {
       setTimeout(() => controller.abort(new Error("test")), 500);
       await promise;
     },
-    Error,
-    "test",
+    {
+      name: "Error",
+      message: "test",
+    },
   );
-  assertEquals(queue.count, 0);
+  assert.equal(queue.count, 0);
 });
 
 test("タスクを中断する", async () => {
@@ -67,28 +65,34 @@ test("タスクを中断する", async () => {
 
   queue.abort(new Error("test"));
 
-  await assertRejects(
+  await assert.rejects(
     async () => {
       await queue.dispose();
     },
-    AggregateTasksError,
-    "2 task(s) failed.",
+    {
+      name: "AggregateTasksError",
+      message: "2 task(s) failed.",
+    },
   );
-  await assertRejects(
+  await assert.rejects(
     async () => {
       await promise1;
     },
-    Error,
-    "test",
+    {
+      name: "Error",
+      message: "test",
+    },
   );
-  await assertRejects(
+  await assert.rejects(
     async () => {
       await promise2;
     },
-    Error,
-    "test",
+    {
+      name: "Error",
+      message: "test",
+    },
   );
-  assertEquals(queue.count, 0);
+  assert.equal(queue.count, 0);
 });
 
 test("インスタンスがすでに破棄されている場合は例外を投げる", async () => {
@@ -96,14 +100,16 @@ test("インスタンスがすでに破棄されている場合は例外を投�
   const promise = queue.add(() => {});
   await queue.dispose();
 
-  assertEquals(promise.state, "fulfilled");
-  assertEquals(queue.count, 0);
-  assertEquals(queue.disposed, true);
-  await assertRejects(
+  assert.equal(promise.state, "fulfilled");
+  assert.equal(queue.count, 0);
+  assert.equal(queue.disposed, true);
+  await assert.rejects(
     async () => {
       await queue.add(() => {});
     },
-    ResourceAlreadyDisposed,
-    "The resource \"TaskQueue\" has been disposed.",
+    {
+      name: "ResourceAlreadyDisposed",
+      message: "The resource \"TaskQueue\" has been disposed.",
+    },
   );
 });

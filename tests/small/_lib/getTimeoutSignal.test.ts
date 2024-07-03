@@ -1,11 +1,11 @@
 import { getTimeoutSignal } from "@tai-kun/surreal/_lib";
-import { assertInstanceOf } from "@tools/assert";
+import assert from "@tools/assert";
 import { test } from "@tools/test";
 
 test("AbortSignal を返す", () => {
   const signal = getTimeoutSignal(1);
 
-  assertInstanceOf(signal, AbortSignal);
+  assert(signal instanceof AbortSignal);
 });
 
 test("指定時間経過後に中止される", async () => {
@@ -19,5 +19,5 @@ test("指定時間経過後に中止される", async () => {
     await sleep(100);
   }
 
-  assertInstanceOf(signal.reason, DOMException);
+  assert(signal.reason instanceof DOMException);
 });

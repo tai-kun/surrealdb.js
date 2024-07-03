@@ -1,12 +1,7 @@
 import { isUuid, type LiveResult } from "@tai-kun/surreal";
 import { Thing } from "@tai-kun/surreal/values/full";
-import {
-  assert,
-  assertDeepEquals,
-  assertMatch,
-  assertRejects,
-} from "@tools/assert";
-import { before, describe, test } from "@tools/test";
+import assert from "@tools/assert";
+import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
 for (
@@ -20,7 +15,7 @@ for (
   describe([engine, formatter, validator].join("-"), {
     skip: !(engine === "http"),
   }, () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -30,7 +25,7 @@ for (
       await db.connect(endpoint);
       await db.use("my_namespace", "my_database");
 
-      await assertRejects(async () => {
+      await assert.rejects(async () => {
         await db.live("person");
       });
     });
@@ -39,7 +34,7 @@ for (
   describe([engine, formatter, validator].join("-"), {
     skip: !(engine === "ws" && formatter === "cbor"),
   }, () => {
-    before(async () => {
+    beforeAll(async () => {
       await surreal.ready;
     });
 
@@ -63,7 +58,7 @@ for (
       const queryUuid = await db.live("person");
 
       if (typeof queryUuid === "string") {
-        assertMatch(queryUuid, UUID_REGEX);
+        assert.match(queryUuid, UUID_REGEX);
       } else {
         assert(isUuid(queryUuid));
       }
@@ -90,7 +85,7 @@ for (
 
       await withTimeout(promise, 5e3); // Wait for the DELETE event
 
-      assertDeepEquals(events, [
+      assert.deepEqual(events, [
         {
           action: "CREATE",
           result: {
@@ -126,7 +121,7 @@ for (
       const queryUuid = await db.live("person", { diff: true });
 
       if (typeof queryUuid === "string") {
-        assertMatch(queryUuid, UUID_REGEX);
+        assert.match(queryUuid, UUID_REGEX);
       } else {
         assert(isUuid(queryUuid));
       }
@@ -153,7 +148,7 @@ for (
 
       await withTimeout(promise, 5e3); // Wait for the DELETE event
 
-      assertDeepEquals(events, [
+      assert.deepEqual(events, [
         {
           action: "CREATE",
           result: [

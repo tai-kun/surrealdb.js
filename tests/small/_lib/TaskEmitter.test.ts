@@ -160,8 +160,7 @@ test("イベントを一度だけ補足する際、すでに中止されてい�
       await emitter.once("foo", { signal: controller.signal });
     },
     {
-      name: "Error",
-      message: "test",
+      name: "AbortError",
     },
   );
 });

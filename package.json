@@ -132,7 +132,7 @@
         "dist/engines/index.mjs": "{ createHttpEngine }",
         "dist/formatters/index.mjs": "{ jsonFormatter }",
         "dist/validators/index.mjs": "{ emptyValidator }",
-        "dist/clients/standard.mjs": "{ Client }"
+        "dist/clients/standard.mjs": "Client"
       },
       "gzip": true
     },
@@ -142,7 +142,7 @@
         "dist/engines/index.mjs": "{ createHttpEngine }",
         "dist/formatters/index.mjs": "{ createCborFormatter }",
         "dist/validators/index.mjs": "{ emptyValidator }",
-        "dist/clients/standard.mjs": "{ Client }",
+        "dist/clients/standard.mjs": "Client",
         "dist/values/tiny/index.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
       },
       "gzip": true
@@ -153,7 +153,7 @@
         "dist/engines/index.mjs": "{ createHttpEngine, createWebSocketEngine }",
         "dist/formatters/index.mjs": "{ createCborFormatter }",
         "dist/validators/index.mjs": "{ zodValidator }",
-        "dist/clients/full.mjs": "{ Client }",
+        "dist/clients/full.mjs": "Client",
         "dist/values/full/index.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
       },
       "gzip": true

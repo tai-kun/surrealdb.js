@@ -1,4 +1,4 @@
-import { getTimeoutSignal } from "@tai-kun/surreal/_internal";
+import { getTimeoutSignal } from "@tai-kun/surreal/_lib";
 import { assertEquals, assertRejects } from "@tools/assert";
 import { before, describe, test } from "@tools/test";
 import surreal from "../surreal.js";

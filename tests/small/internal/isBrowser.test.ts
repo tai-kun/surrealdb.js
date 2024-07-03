@@ -1,4 +1,4 @@
-import { isBrowser } from "@tai-kun/surreal/_internal";
+import { isBrowser } from "@tai-kun/surreal/_lib";
 import { assertEquals } from "@tools/assert";
 import { ENV, test } from "@tools/test";
 

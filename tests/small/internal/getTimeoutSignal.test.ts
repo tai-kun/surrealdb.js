@@ -1,4 +1,4 @@
-import { getTimeoutSignal } from "@tai-kun/surreal/_internal";
+import { getTimeoutSignal } from "@tai-kun/surreal/_lib";
 import { assertInstanceOf } from "@tools/assert";
 import { test } from "@tools/test";
 

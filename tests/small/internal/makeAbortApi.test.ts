@@ -1,4 +1,4 @@
-import { makeAbortApi } from "@tai-kun/surreal/_internal";
+import { makeAbortApi } from "@tai-kun/surreal/_lib";
 import {
   assertEquals,
   assertInstanceOf,

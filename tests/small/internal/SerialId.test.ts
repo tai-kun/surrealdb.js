@@ -1,4 +1,4 @@
-import { SerialId } from "@tai-kun/surreal/_internal";
+import { SerialId } from "@tai-kun/surreal/_lib";
 import { assertEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

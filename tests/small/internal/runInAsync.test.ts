@@ -1,4 +1,4 @@
-import { runInAsync } from "@tai-kun/surreal/_internal";
+import { runInAsync } from "@tai-kun/surreal/_lib";
 import { assertEquals, AssertionError, assertRejects } from "@tools/assert";
 import { test } from "@tools/test";
 

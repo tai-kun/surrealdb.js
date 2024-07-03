@@ -6,7 +6,7 @@ import {
   mutex,
   SerialId,
   throwIfAborted,
-} from "~/_internal";
+} from "~/_lib";
 import {
   ConnectionUnavailable,
   DatabaseConflict,

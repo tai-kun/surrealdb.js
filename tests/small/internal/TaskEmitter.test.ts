@@ -1,7 +1,7 @@
 import {
   TaskEmitter as _TaskEmitter,
   type TaskListener,
-} from "@tai-kun/surreal/_internal";
+} from "@tai-kun/surreal/_lib";
 import { assertDeepEquals, assertEquals, assertRejects } from "@tools/assert";
 import { test } from "@tools/test";
 

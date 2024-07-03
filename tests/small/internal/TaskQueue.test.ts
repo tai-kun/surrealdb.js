@@ -1,4 +1,4 @@
-import { TaskQueue } from "@tai-kun/surreal/_internal";
+import { TaskQueue } from "@tai-kun/surreal/_lib";
 import {
   AggregateTasksError,
   ResourceAlreadyDisposed,

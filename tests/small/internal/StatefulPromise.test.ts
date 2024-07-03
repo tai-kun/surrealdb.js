@@ -1,4 +1,4 @@
-import { StatefulPromise } from "@tai-kun/surreal/_internal";
+import { StatefulPromise } from "@tai-kun/surreal/_lib";
 import { assertEquals, assertRejects } from "@tools/assert";
 import { test } from "@tools/test";
 

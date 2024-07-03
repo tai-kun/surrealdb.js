@@ -25,7 +25,7 @@
       "@tai-kun/surreal/formatters": ["./src/formatters/index.ts"],
       "@tai-kun/surreal/validators": ["./src/validators/index.ts"],
       "@tai-kun/surreal/errors": ["./src/errors.ts"],
-      "@tai-kun/surreal/_internal": ["./src/_internal/index.ts"]
+      "@tai-kun/surreal/_lib": ["./src/_lib/index.ts"]
     }
   }
 }

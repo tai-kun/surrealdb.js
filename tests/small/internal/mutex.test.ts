@@ -1,4 +1,4 @@
-import { mutex } from "@tai-kun/surreal/_internal";
+import { mutex } from "@tai-kun/surreal/_lib";
 import { assertDeepEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

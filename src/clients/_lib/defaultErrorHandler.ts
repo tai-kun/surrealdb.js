@@ -1,4 +1,4 @@
-import type { TaskRunnerArgs } from "~/_internal";
+import type { TaskRunnerArgs } from "~/_lib";
 import type { EngineEvents } from "~/engines";
 import type Client from "./Abc";
 

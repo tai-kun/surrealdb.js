@@ -1,5 +1,5 @@
 import type { ValueOf } from "type-fest";
-import { isBrowser, mutex, throwIfAborted } from "~/_internal";
+import { isBrowser, mutex, throwIfAborted } from "~/_lib";
 import {
   ConnectionConflict,
   ConnectionUnavailable,

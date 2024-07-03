@@ -1,4 +1,4 @@
-import type { TaskListener } from "~/_internal";
+import type { TaskListener } from "~/_lib";
 import { QueryFailure } from "~/errors";
 import type {
   Auth,

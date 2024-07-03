@@ -1,4 +1,4 @@
-import { getTimeoutSignal, mutex, TaskEmitter } from "~/_internal";
+import { getTimeoutSignal, mutex, TaskEmitter } from "~/_lib";
 import { OPEN } from "~/engines";
 import {
   ConnectionConflict,

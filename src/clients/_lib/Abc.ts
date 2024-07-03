@@ -4,7 +4,7 @@ import {
   TaskEmitter,
   type TaskListener,
   type TaskListenerOptions,
-} from "~/_internal";
+} from "~/_lib";
 import type {
   ConnectionInfo,
   ConnectionState,

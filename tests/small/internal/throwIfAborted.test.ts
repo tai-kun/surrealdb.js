@@ -1,4 +1,4 @@
-import { throwIfAborted } from "@tai-kun/surreal/_internal";
+import { throwIfAborted } from "@tai-kun/surreal/_lib";
 import { SurrealTypeError } from "@tai-kun/surreal/errors";
 import { assertThrows } from "@tools/assert";
 import { test } from "@tools/test";

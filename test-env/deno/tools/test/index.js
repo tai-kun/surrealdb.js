@@ -1,10 +1,66 @@
+"use strict";
+
 import * as bdd from "@std/testing/bdd";
 
-export const ENV = "Deno";
+/**
+ * @typedef {() => void | Promise<void>} Fn
+ * @typedef {{ timeout?: number | undefined }} Abortable
+ * @typedef {{ skip?: boolean | string | undefined }} Skipable
+ * @typedef {Abortable & Skipable} TestOptions
+ * @typedef {Abortable} HookOptions
+ * @typedef {Skipable} SuiteOptions
+ */
 
+/**
+ * @param {[name: string, fn: Fn] | [name: string, options: TestOptions, fn: Fn]} args
+ */
+function parseTestArgs(args) {
+  const [name, opts, f] = args.length === 3 ? args : [args[0], {}, args[1]];
+  const {
+    skip = false,
+    timeout = 5_000,
+  } = opts;
+
+  return {
+    fn: withTimeout(f, timeout),
+    name,
+    skip,
+  };
+}
+
+/**
+ * @param {[fn: Fn] | [options: HookOptions, fn: Fn]} args
+ */
+function parseHookArgs(args) {
+  const [opts, f] = args.length === 2 ? args : [{}, args[0]];
+  const { timeout = 5_000 } = opts;
+
+  return {
+    fn: withTimeout(f, timeout),
+  };
+}
+
+/**
+ * @param {[name: string, fn: () => void] | [name: string, options: SuiteOptions, fn: () => void]} args
+ */
+function parseDescribeArgs(args) {
+  const [name, opts, fn] = args.length === 3 ? args : [args[0], {}, args[1]];
+  const { skip = false } = opts;
+
+  return {
+    fn,
+    name,
+    skip,
+  };
+}
+
+/**
+ * @param {Fn} f
+ * @param {number} timeout
+ */
 // TODO(tai-kun): Deno でタイムアウトを自走する方法がわからないので調査する。
-function withTimeout(fn, timeout) {
-  return async () => {
+function withTimeout(f, timeout) {
+  return async function fn() {
     let timerId;
 
     try {
@@ -12,21 +68,21 @@ function withTimeout(fn, timeout) {
         throw new Error("Timeout after " + timeout + "ms");
       }, timeout);
 
-      return await fn();
+      return await f();
     } finally {
       clearTimeout(timerId);
     }
   };
 }
 
+export const ENV = "Deno";
+
 export function test(...args) {
-  const [name, options, fn] = args.length === 3
-    ? args
-    : [args[0], {}, args[1]];
   const {
-    skip = false,
-    timeout = 5_000,
-  } = options;
+    fn,
+    name,
+    skip,
+  } = parseTestArgs(args);
 
   if (skip) {
     if (typeof skip === "string") {
@@ -35,33 +91,48 @@ export function test(...args) {
       return bdd.it.skip(name + " # SKIP", fn);
     }
   } else {
-    return bdd.it(name, withTimeout(fn, timeout));
+    return bdd.it(name, fn);
   }
 }
 
-export function after(...args) {
-  const [options, fn] = args.length === 2
-    ? args
-    : [{}, args[0]];
-  const { timeout = 5_000 } = options;
+export function beforeAll(...args) {
+  const {
+    fn,
+  } = parseHookArgs(args);
 
-  return bdd.after(withTimeout(fn, timeout));
+  return bdd.beforeAll(fn);
 }
 
-export function before(...args) {
-  const [options, fn] = args.length === 2
-    ? args
-    : [{}, args[0]];
-  const { timeout = 5_000 } = options;
+export function beforeEach(...args) {
+  const {
+    fn,
+  } = parseHookArgs(args);
 
-  return bdd.before(withTimeout(fn, timeout));
+  return bdd.beforeEach(fn);
+}
+
+export function afterAll(...args) {
+  const {
+    fn,
+  } = parseHookArgs(args);
+
+  return bdd.afterAll(fn);
+}
+
+export function afterEach(...args) {
+  const {
+    fn,
+  } = parseHookArgs(args);
+
+  return bdd.afterEach(fn);
 }
 
 export function describe(...args) {
-  const [name, options, fn] = args.length === 3
-    ? args
-    : [args[0], {}, args[1]];
-  const { skip = false } = options;
+  const {
+    fn,
+    name,
+    skip,
+  } = parseDescribeArgs(args);
 
   if (skip) {
     if (typeof skip === "string") {

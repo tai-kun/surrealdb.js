@@ -4,15 +4,8 @@ import assert from "@tools/assert";
 import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
-for (
-  const {
-    engine,
-    formatter,
-    validator,
-    initSurreal,
-  } of surreal
-) {
-  describe([engine, formatter, validator].join("-"), {
+for (const { suiteName, formatter, initSurreal } of surreal) {
+  describe(suiteName, {
     skip: !(formatter === "json"),
   }, () => {
     beforeAll(async () => {
@@ -86,7 +79,7 @@ for (
     });
   });
 
-  describe([engine, formatter, validator].join("-"), {
+  describe(suiteName, {
     skip: !(formatter === "cbor"),
   }, () => {
     beforeAll(async () => {

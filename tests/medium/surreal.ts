@@ -42,173 +42,180 @@ const cborFormatter = createCborFormatter({
   Uuid,
 });
 
-export default Object.assign([
-  {
-    engine: "http" as const,
-    formatter: "json" as const,
-    validator: "empty" as const,
-    initSurreal: async function httpJsonEmpty() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          http: createHttpEngine,
-        },
-        formatter: jsonFormatter,
-        validator: emptyValidator,
-      });
+export default Object.assign(
+  [
+    {
+      engine: "http" as const,
+      formatter: "json" as const,
+      validator: "empty" as const,
+      initSurreal: async function httpJsonEmpty() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            http: createHttpEngine,
+          },
+          formatter: jsonFormatter,
+          validator: emptyValidator,
+        });
 
-      return {
-        endpoint: `http://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `http://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-  {
-    engine: "http" as const,
-    formatter: "json" as const,
-    validator: "zod" as const,
-    initSurreal: async function httpJsonZod() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          http: createHttpEngine,
-        },
-        formatter: jsonFormatter,
-        validator: zodValidator,
-      });
+    {
+      engine: "http" as const,
+      formatter: "json" as const,
+      validator: "zod" as const,
+      initSurreal: async function httpJsonZod() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            http: createHttpEngine,
+          },
+          formatter: jsonFormatter,
+          validator: zodValidator,
+        });
 
-      return {
-        endpoint: `http://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `http://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-  {
-    engine: "http" as const,
-    formatter: "cbor" as const,
-    validator: "empty" as const,
-    initSurreal: async function httpCborEmpty() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          http: createHttpEngine,
-        },
-        formatter: cborFormatter,
-        validator: emptyValidator,
-      });
+    {
+      engine: "http" as const,
+      formatter: "cbor" as const,
+      validator: "empty" as const,
+      initSurreal: async function httpCborEmpty() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            http: createHttpEngine,
+          },
+          formatter: cborFormatter,
+          validator: emptyValidator,
+        });
 
-      return {
-        endpoint: `http://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `http://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-  {
-    engine: "http" as const,
-    formatter: "cbor" as const,
-    validator: "zod" as const,
-    initSurreal: async function httpCborZod() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          http: createHttpEngine,
-        },
-        formatter: cborFormatter,
-        validator: zodValidator,
-      });
+    {
+      engine: "http" as const,
+      formatter: "cbor" as const,
+      validator: "zod" as const,
+      initSurreal: async function httpCborZod() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            http: createHttpEngine,
+          },
+          formatter: cborFormatter,
+          validator: zodValidator,
+        });
 
-      return {
-        endpoint: `http://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `http://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-  {
-    engine: "ws" as const,
-    formatter: "json" as const,
-    validator: "empty" as const,
-    initSurreal: async function wsJsonEmpty() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          ws: createWebSocketEngine,
-        },
-        formatter: jsonFormatter,
-        validator: emptyValidator,
-      });
+    {
+      engine: "ws" as const,
+      formatter: "json" as const,
+      validator: "empty" as const,
+      initSurreal: async function wsJsonEmpty() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            ws: createWebSocketEngine,
+          },
+          formatter: jsonFormatter,
+          validator: emptyValidator,
+        });
 
-      return {
-        endpoint: `ws://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `ws://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-  {
-    engine: "ws" as const,
-    formatter: "json" as const,
-    validator: "zod" as const,
-    initSurreal: async function wsJsonZod() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          ws: createWebSocketEngine,
-        },
-        formatter: jsonFormatter,
-        validator: zodValidator,
-      });
+    {
+      engine: "ws" as const,
+      formatter: "json" as const,
+      validator: "zod" as const,
+      initSurreal: async function wsJsonZod() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            ws: createWebSocketEngine,
+          },
+          formatter: jsonFormatter,
+          validator: zodValidator,
+        });
 
-      return {
-        endpoint: `ws://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `ws://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-  {
-    engine: "ws" as const,
-    formatter: "cbor" as const,
-    validator: "empty" as const,
-    initSurreal: async function wsJsonEmpty() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          ws: createWebSocketEngine,
-        },
-        formatter: cborFormatter,
-        validator: emptyValidator,
-      });
+    {
+      engine: "ws" as const,
+      formatter: "cbor" as const,
+      validator: "empty" as const,
+      initSurreal: async function wsCborEmpty() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            ws: createWebSocketEngine,
+          },
+          formatter: cborFormatter,
+          validator: emptyValidator,
+        });
 
-      return {
-        endpoint: `ws://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `ws://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-  {
-    engine: "ws" as const,
-    formatter: "cbor" as const,
-    validator: "zod" as const,
-    initSurreal: async function wsJsonZod() {
-      const endpoint = await ready;
-      const surreal = initSurreal({
-        Client,
-        engines: {
-          ws: createWebSocketEngine,
-        },
-        formatter: cborFormatter,
-        validator: zodValidator,
-      });
+    {
+      engine: "ws" as const,
+      formatter: "cbor" as const,
+      validator: "zod" as const,
+      initSurreal: async function wsCborZod() {
+        const endpoint = await ready;
+        const surreal = initSurreal({
+          Client,
+          engines: {
+            ws: createWebSocketEngine,
+          },
+          formatter: cborFormatter,
+          validator: zodValidator,
+        });
 
-      return {
-        endpoint: `ws://${endpoint.host}`,
-        ...surreal,
-      };
+        return {
+          endpoint: `ws://${endpoint.host}`,
+          ...surreal,
+        };
+      },
     },
-  },
-], { ready });
+  ].map(surreal => ({
+    ...surreal,
+    suiteName:
+      `${surreal.engine}_${surreal.formatter}_${surreal.validator}` as const,
+  })),
+  { ready },
+);

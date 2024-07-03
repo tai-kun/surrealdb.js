@@ -2,15 +2,8 @@ import assert from "@tools/assert";
 import { beforeAll, describe, test } from "@tools/test";
 import surreal from "../surreal.js";
 
-for (
-  const {
-    engine,
-    formatter,
-    validator,
-    initSurreal,
-  } of surreal
-) {
-  describe([engine, formatter, validator].join("-"), () => {
+for (const { suiteName, initSurreal } of surreal) {
+  describe(suiteName, () => {
     beforeAll(async () => {
       await surreal.ready;
     });

@@ -1,7 +1,7 @@
 import { isGeometryPoint } from "@tai-kun/surreal";
-import { Decimal, GeometryPoint } from "@tai-kun/surreal/full";
-import { GeometryPoint as GeometryPointStandard } from "@tai-kun/surreal/standard";
-import { GeometryPoint as GeometryPointTiny } from "@tai-kun/surreal/tiny";
+import { Decimal, GeometryPoint } from "@tai-kun/surreal/values/full";
+import { GeometryPoint as GeometryPointStandard } from "@tai-kun/surreal/values/standard";
+import { GeometryPoint as GeometryPointTiny } from "@tai-kun/surreal/values/tiny";
 import {
   assert,
   assertInstanceOf,

@@ -1,7 +1,7 @@
 import { isGeometryLine } from "@tai-kun/surreal";
-import { GeometryLine, GeometryPoint } from "@tai-kun/surreal/full";
-import { GeometryLine as GeometryLineStandard } from "@tai-kun/surreal/standard";
-import { GeometryLine as GeometryLineTiny } from "@tai-kun/surreal/tiny";
+import { GeometryLine, GeometryPoint } from "@tai-kun/surreal/values/full";
+import { GeometryLine as GeometryLineStandard } from "@tai-kun/surreal/values/standard";
+import { GeometryLine as GeometryLineTiny } from "@tai-kun/surreal/values/tiny";
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

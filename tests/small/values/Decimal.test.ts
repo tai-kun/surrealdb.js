@@ -1,7 +1,7 @@
 import { isDecimal } from "@tai-kun/surreal";
-import { Decimal } from "@tai-kun/surreal/full";
-import { Decimal as DecimalStandard } from "@tai-kun/surreal/standard";
-import { Decimal as DecimalTiny } from "@tai-kun/surreal/tiny";
+import { Decimal } from "@tai-kun/surreal/values/full";
+import { Decimal as DecimalStandard } from "@tai-kun/surreal/values/standard";
+import { Decimal as DecimalTiny } from "@tai-kun/surreal/values/tiny";
 import { assert, assertEquals, assertInstanceOf } from "@tools/assert";
 import { test } from "@tools/test";
 

@@ -1,5 +1,5 @@
 import { isUuid, type LiveResult } from "@tai-kun/surreal";
-import { Thing } from "@tai-kun/surreal/full";
+import { Thing } from "@tai-kun/surreal/values/full";
 import {
   assert,
   assertDeepEquals,

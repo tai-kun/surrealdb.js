@@ -1,7 +1,7 @@
 import { isTable } from "@tai-kun/surreal";
-import { Table } from "@tai-kun/surreal/full";
-import { Table as TableStandard } from "@tai-kun/surreal/standard";
-import { Table as TableTiny } from "@tai-kun/surreal/tiny";
+import { Table } from "@tai-kun/surreal/values/full";
+import { Table as TableStandard } from "@tai-kun/surreal/values/standard";
+import { Table as TableTiny } from "@tai-kun/surreal/values/tiny";
 import { assert, assertEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

@@ -1,7 +1,7 @@
 import { isDatetime } from "@tai-kun/surreal";
-import { Datetime } from "@tai-kun/surreal/full";
-import { Datetime as DatetimeStandard } from "@tai-kun/surreal/standard";
-import { Datetime as DatetimeTiny } from "@tai-kun/surreal/tiny";
+import { Datetime } from "@tai-kun/surreal/values/full";
+import { Datetime as DatetimeStandard } from "@tai-kun/surreal/values/standard";
+import { Datetime as DatetimeTiny } from "@tai-kun/surreal/values/tiny";
 import { assert, assertEquals, assertThrows } from "@tools/assert";
 import { test } from "@tools/test";
 

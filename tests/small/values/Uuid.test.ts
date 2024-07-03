@@ -1,8 +1,8 @@
 import { isUuid } from "@tai-kun/surreal";
 import { SurrealTypeError } from "@tai-kun/surreal/errors";
-import { Uuid } from "@tai-kun/surreal/full";
-import { Uuid as UuidStandard } from "@tai-kun/surreal/standard";
-import { Uuid as UuidTiny } from "@tai-kun/surreal/tiny";
+import { Uuid } from "@tai-kun/surreal/values/full";
+import { Uuid as UuidStandard } from "@tai-kun/surreal/values/standard";
+import { Uuid as UuidTiny } from "@tai-kun/surreal/values/tiny";
 import {
   assert,
   assertEquals,

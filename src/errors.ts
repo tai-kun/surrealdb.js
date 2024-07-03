@@ -597,7 +597,7 @@ export class RpcResponseError extends SurrealError {
  * }
  * ```
  */
-export class QueryFailure extends SurrealError {
+export class QueryFailure extends SurrealAggregateError {
   static {
     this.prototype.name = "QueryFailure";
   }
@@ -606,9 +606,7 @@ export class QueryFailure extends SurrealError {
    * @param errors エラーメッセージ。
    */
   constructor(errors: readonly string[]) {
-    super(`Query failed with ${errors.length} error(s)`, {
-      cause: errors,
-    });
+    super(`Query failed with ${errors.length} error(s)`, errors);
   }
 }
 

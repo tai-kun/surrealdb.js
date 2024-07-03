@@ -1,4 +1,5 @@
 import { initSurreal } from "@tai-kun/surreal";
+import Client from "@tai-kun/surreal/clients/full";
 import {
   createHttpEngine,
   createWebSocketEngine,
@@ -7,8 +8,8 @@ import {
   createCborFormatter,
   jsonFormatter,
 } from "@tai-kun/surreal/formatters";
+import { emptyValidator, zodValidator } from "@tai-kun/surreal/validators";
 import {
-  Client,
   Datetime,
   Decimal,
   Duration,
@@ -22,8 +23,7 @@ import {
   Table,
   Thing,
   Uuid,
-} from "@tai-kun/surreal/full";
-import { emptyValidator, zodValidator } from "@tai-kun/surreal/validators";
+} from "@tai-kun/surreal/values/full";
 import { ready } from "@tools/surrealdb";
 
 const cborFormatter = createCborFormatter({

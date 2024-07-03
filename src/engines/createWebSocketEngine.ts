@@ -1,4 +1,4 @@
-import type { CreateEngine } from "~/models/_client/Abc";
+import type { CreateEngine } from "~/clients/Abc";
 import WebSocketEngine from "./WebSocketEngine";
 
 export default (

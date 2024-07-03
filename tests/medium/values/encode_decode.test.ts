@@ -13,7 +13,7 @@ import {
   Table,
   Thing,
   Uuid,
-} from "@tai-kun/surreal/full";
+} from "@tai-kun/surreal/values/full";
 import { assertDeepEquals, assertJsonEquals } from "@tools/assert";
 import { before, describe, test } from "@tools/test";
 import surreal from "../surreal.js";

@@ -14,20 +14,35 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     },
-    "./standard": {
-      "tyes": "./dist/models/standard/index.d.ts",
-      "import": "./dist/models/standard/index.mjs",
-      "require": "./dist/models/standard/index.cjs"
+    "./clients/standard": {
+      "tyes": "./dist/clients/standard.d.ts",
+      "import": "./dist/clients/standard.mjs",
+      "require": "./dist/clients/standard.cjs"
     },
-    "./tiny": {
-      "tyes": "./dist/models/tiny/index.d.ts",
-      "import": "./dist/models/tiny/index.mjs",
-      "require": "./dist/models/tiny/index.cjs"
+    "./clients/tiny": {
+      "tyes": "./dist/clients/tiny.d.ts",
+      "import": "./dist/clients/tiny.mjs",
+      "require": "./dist/clients/tiny.cjs"
     },
-    "./full": {
-      "tyes": "./dist/models/full/index.d.ts",
-      "import": "./dist/models/full/index.mjs",
-      "require": "./dist/models/full/index.cjs"
+    "./clients/full": {
+      "tyes": "./dist/clients/full.d.ts",
+      "import": "./dist/clients/full.mjs",
+      "require": "./dist/clients/full.cjs"
+    },
+    "./values/standard": {
+      "tyes": "./dist/values/standard/index.d.ts",
+      "import": "./dist/values/standard/index.mjs",
+      "require": "./dist/values/standard/index.cjs"
+    },
+    "./values/tiny": {
+      "tyes": "./dist/values/tiny/index.d.ts",
+      "import": "./dist/values/tiny/index.mjs",
+      "require": "./dist/values/tiny/index.cjs"
+    },
+    "./values/full": {
+      "tyes": "./dist/values/full/index.d.ts",
+      "import": "./dist/values/full/index.mjs",
+      "require": "./dist/values/full/index.cjs"
     },
     "./engines": {
       "tyes": "./dist/engines/index.d.ts",
@@ -107,7 +122,7 @@
     "test:md:webkit": "node scripts/test.js webkit medium",
     "test:sm:firefox": "node scripts/test.js firefox small",
     "test:md:firefox": "node scripts/test.js firefox medium",
-    "docs": "typedoc src src/models/full src/models/standard src/models/tiny src/engines src/formatters src/validators src/errors.ts --out docs --lang jp",
+    "docs": "typedoc src src/clients/full.ts src/clients/standard.ts src/clients/tiny.ts src/values/full src/values/standard src/values/tiny src/engines src/formatters src/validators src/errors.ts --out docs --lang jp",
     "size": "npm run build && size-limit"
   },
   "size-limit": [
@@ -117,7 +132,7 @@
         "dist/engines/index.mjs": "{ createHttpEngine }",
         "dist/formatters/index.mjs": "{ jsonFormatter }",
         "dist/validators/index.mjs": "{ emptyValidator }",
-        "dist/models/standard/index.mjs": "{ Client }"
+        "dist/clients/standard.mjs": "{ Client }"
       },
       "gzip": true
     },
@@ -127,8 +142,8 @@
         "dist/engines/index.mjs": "{ createHttpEngine }",
         "dist/formatters/index.mjs": "{ createCborFormatter }",
         "dist/validators/index.mjs": "{ emptyValidator }",
-        "dist/models/standard/index.mjs": "{ Client }",
-        "dist/models/tiny/index.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
+        "dist/clients/standard.mjs": "{ Client }",
+        "dist/values/tiny/index.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
       },
       "gzip": true
     },
@@ -138,7 +153,8 @@
         "dist/engines/index.mjs": "{ createHttpEngine, createWebSocketEngine }",
         "dist/formatters/index.mjs": "{ createCborFormatter }",
         "dist/validators/index.mjs": "{ zodValidator }",
-        "dist/models/full/index.mjs": "{ Client, Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
+        "dist/clients/full.mjs": "{ Client }",
+        "dist/values/full/index.mjs": "{ Datetime, Table, Thing, Uuid, Decimal, Duration, GeometryPoint, GeometryLine, GeometryPolygon, GeometryMultiPoint, GeometryMultiLine, GeometryMultiPolygon, GeometryCollection }"
       },
       "gzip": true
     }

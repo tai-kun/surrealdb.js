@@ -1,7 +1,10 @@
 import { isGeometryMultiPoint } from "@tai-kun/surreal";
-import { GeometryMultiPoint, GeometryPoint } from "@tai-kun/surreal/full";
-import { GeometryMultiPoint as GeometryMultiPointStandard } from "@tai-kun/surreal/standard";
-import { GeometryMultiPoint as GeometryMultiPointTiny } from "@tai-kun/surreal/tiny";
+import {
+  GeometryMultiPoint,
+  GeometryPoint,
+} from "@tai-kun/surreal/values/full";
+import { GeometryMultiPoint as GeometryMultiPointStandard } from "@tai-kun/surreal/values/standard";
+import { GeometryMultiPoint as GeometryMultiPointTiny } from "@tai-kun/surreal/values/tiny";
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

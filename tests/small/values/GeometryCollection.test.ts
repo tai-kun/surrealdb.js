@@ -3,15 +3,15 @@ import {
   GeometryCollection,
   GeometryLine,
   GeometryPoint,
-} from "@tai-kun/surreal/full";
+} from "@tai-kun/surreal/values/full";
 import {
   GeometryCollection as GeometryCollectionStandard,
   GeometryPoint as GeometryPointStandard,
-} from "@tai-kun/surreal/standard";
+} from "@tai-kun/surreal/values/standard";
 import {
   GeometryCollection as GeometryCollectionTiny,
   GeometryPoint as GeometryPointTiny,
-} from "@tai-kun/surreal/tiny";
+} from "@tai-kun/surreal/values/tiny";
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

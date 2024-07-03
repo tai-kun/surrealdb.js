@@ -15,7 +15,7 @@ import {
   tableErrors,
   thingErrors,
   uuidErrors,
-} from "~/models/_values/internal";
+} from "~/values/_lib/internal";
 import type {
   Datetime as DatetimeFull,
   Decimal as DecimalFull,
@@ -30,7 +30,7 @@ import type {
   Table as TableFull,
   Thing as ThingFull,
   Uuid as UuidFull,
-} from "~/models/full";
+} from "~/values/full";
 import type {
   Datetime,
   Decimal,
@@ -45,7 +45,7 @@ import type {
   Table,
   Thing,
   Uuid,
-} from "~/models/standard";
+} from "~/values/standard";
 import type {
   Datetime as DatetimeTiny,
   Decimal as DecimalTiny,
@@ -60,7 +60,7 @@ import type {
   Table as TableTiny,
   Thing as ThingTiny,
   Uuid as UuidTiny,
-} from "~/models/tiny";
+} from "~/values/tiny";
 
 type IsValue<T> = {
   /**

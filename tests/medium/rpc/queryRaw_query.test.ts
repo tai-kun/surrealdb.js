@@ -1,5 +1,5 @@
 import { QueryFailure, RpcResponseError } from "@tai-kun/surreal/errors";
-import { Thing } from "@tai-kun/surreal/full";
+import { Thing } from "@tai-kun/surreal/values/full";
 import { assertDeepEquals, assertRejects } from "@tools/assert";
 import { before, describe, test } from "@tools/test";
 import surreal from "../surreal.js";

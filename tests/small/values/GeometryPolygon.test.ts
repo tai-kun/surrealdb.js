@@ -3,17 +3,17 @@ import {
   GeometryLine,
   GeometryPoint,
   GeometryPolygon,
-} from "@tai-kun/surreal/full";
+} from "@tai-kun/surreal/values/full";
 import {
   GeometryLine as GeometryLineStandard,
   GeometryPoint as GeometryPointStandard,
   GeometryPolygon as GeometryPolygonStandard,
-} from "@tai-kun/surreal/standard";
+} from "@tai-kun/surreal/values/standard";
 import {
   GeometryLine as GeometryLineTiny,
   GeometryPoint as GeometryPointTiny,
   GeometryPolygon as GeometryPolygonTiny,
-} from "@tai-kun/surreal/tiny";
+} from "@tai-kun/surreal/values/tiny";
 import { assert, assertInstanceOf, assertJsonEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

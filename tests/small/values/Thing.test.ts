@@ -1,4 +1,4 @@
-import { Thing } from "@tai-kun/surreal/full";
+import { Thing } from "@tai-kun/surreal/values/full";
 import { assertEquals } from "@tools/assert";
 import { test } from "@tools/test";
 

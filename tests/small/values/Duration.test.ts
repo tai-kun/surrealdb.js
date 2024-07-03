@@ -1,8 +1,8 @@
 import { isDuration } from "@tai-kun/surreal";
 import { SurrealTypeError } from "@tai-kun/surreal/errors";
-import { Duration } from "@tai-kun/surreal/full";
-import { Duration as DurationStandard } from "@tai-kun/surreal/standard";
-import { Duration as DurationTiny } from "@tai-kun/surreal/tiny";
+import { Duration } from "@tai-kun/surreal/values/full";
+import { Duration as DurationStandard } from "@tai-kun/surreal/values/standard";
+import { Duration as DurationTiny } from "@tai-kun/surreal/values/tiny";
 import { assert, assertEquals, assertThrows } from "@tools/assert";
 import { test } from "@tools/test";
 

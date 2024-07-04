@@ -4,6 +4,12 @@
 import assert from "assert";
 
 export default Object.assign(assert.strict, {
+  /**
+   * @param {*} actual
+   * @param {*} expected
+   * @param  {*} args
+   * @returns {*}
+   */
   jsonEqual(actual, expected, ...args) {
     return assert.deepStrictEqual(
       jsonify(actual),
@@ -11,6 +17,12 @@ export default Object.assign(assert.strict, {
       ...args,
     );
   },
+  /**
+   * @param {*} actual
+   * @param {*} expected
+   * @param  {*} args
+   * @returns {*}
+   */
   jsonNotEqual(actual, expected, ...args) {
     return assert.notDeepStrictEqual(
       jsonify(actual),
@@ -23,6 +35,10 @@ export default Object.assign(assert.strict, {
   doesNotMatch,
 });
 
+/**
+ * @param {*} value
+ * @returns {*}
+ */
 function jsonify(value) {
   return JSON.parse(JSON.stringify(value));
 }
@@ -60,7 +76,10 @@ function innerMatch(value, regExp, message, operator, stackStartFn) {
     );
   }
 
-  if (typeof value !== "string" || regExp.test(value)) {
+  if (
+    typeof value !== "string"
+    || regExp.test(value) === (operator === "match")
+  ) {
     if (message instanceof Error) {
       throw message;
     }

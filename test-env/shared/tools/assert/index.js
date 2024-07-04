@@ -78,7 +78,7 @@ function innerMatch(value, regExp, message, operator, stackStartFn) {
 
   if (
     typeof value !== "string"
-    || regExp.test(value) === (operator === "match")
+    || regExp.test(value) !== (operator === "match")
   ) {
     if (message instanceof Error) {
       throw message;
@@ -91,7 +91,10 @@ function innerMatch(value, regExp, message, operator, stackStartFn) {
         ? typeof value !== "string"
           ? `The "value" argument must be of type string. `
             + `Received type ${typeof value}`
-          : `The input did not match the regular expression ${regExp}. `
+          : operator === "match"
+          ? `The input did not match the regular expression ${regExp}. `
+            + `Input:\n\n${value}\n\n`
+          : `The input was expected to not match the regular expression ${regExp}. `
             + `Input:\n\n${value}\n\n`
         : message,
       operator,

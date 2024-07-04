@@ -1,3 +1,7 @@
+import { SurrealTypeError } from "~/errors";
+
+const MAX_SAFE_INTEGER = 9_007_199_254_740_991;
+
 /**
  * 増分 ID を生成するクラス。双方向通信における RPC リクエストの ID を生成するために使用されます。
  * ID は循環的に生成され、ID が `Number.MAX_SAFE_INTEGER` を超えないようにします。
@@ -5,6 +9,21 @@
  */
 export default class SerialId {
   #id = 0;
+  #max: number;
+
+  /**
+   * @param max 最大値。
+   */
+  constructor(max: number | undefined = MAX_SAFE_INTEGER) {
+    if (Number.isFinite(max) && max > 0) {
+      this.#max = max;
+    } else {
+      throw new SurrealTypeError(
+        `The "max" argument must be of a finite integer greater than 0,`
+          + `but got ${max}.`,
+      );
+    }
+  }
 
   /**
    * 次の ID を取得します。
@@ -21,7 +40,7 @@ export default class SerialId {
    * ```
    */
   next(): number {
-    return (this.#id = this.#id % Number.MAX_SAFE_INTEGER + 1);
+    return (this.#id = this.#id % this.#max + 1);
   }
 
   /**

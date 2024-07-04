@@ -26,8 +26,8 @@ test("イベントリスナーを登録して、イベントを補足する", as
   const listener: TaskListener<Events[keyof Events]> = (_, ...args) => {
     events.push(args);
   };
-  let fooListeners: any = 0;
-  let barListeners: any = 0;
+  let fooListeners: number = 0;
+  let barListeners: number = 0;
 
   {
     await using emitter = new TaskEmitter<Events>();
@@ -35,8 +35,8 @@ test("イベントリスナーを登録して、イベントを補足する", as
     emitter.on("foo", listener);
     emitter.on("bar", listener);
 
-    fooListeners = emitter.emit("foo", 1)?.length;
-    barListeners = emitter.emit("bar", "test", true)?.length;
+    fooListeners = emitter.emit("foo", 1)?.length!;
+    barListeners = emitter.emit("bar", "test", true)?.length!;
   }
 
   assert.deepEqual(

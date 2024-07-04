@@ -6,33 +6,39 @@ const sleep = (ms: number) => new Promise<void>(r => setTimeout(r, ms));
 
 test("同時実行性が 1 である", async () => {
   class Runner {
-    resultWithQueue: string[] = [];
-    resultWithoutQueue: string[] = [];
+    resultWithMutex: string[] = [];
+    resultWithoutMutex: string[] = [];
 
     @mutex
-    async withQueue(ms: number, value: string) {
+    async withMutex(ms: number, value: string) {
       await sleep(ms);
-      this.resultWithQueue.push(value);
+      this.resultWithMutex.push(value);
     }
 
-    async withoutQueue(ms: number, value: string) {
+    async withoutMutex(ms: number, value: string) {
       await sleep(ms);
-      this.resultWithoutQueue.push(value);
+      this.resultWithoutMutex.push(value);
     }
   }
 
   const runner = new Runner();
   await Promise.all([
-    // withQueue
-    runner.withQueue(1000, "A"),
-    runner.withQueue(500, "B"),
-    runner.withQueue(0, "C"),
-    // withoutQueue
-    runner.withoutQueue(1000, "A"),
-    runner.withoutQueue(500, "B"),
-    runner.withoutQueue(0, "C"),
+    runner.withMutex(1000, "A"),
+    runner.withMutex(500, "B"),
+    runner.withMutex(0, "C"),
+    runner.withoutMutex(1000, "A"),
+    runner.withoutMutex(500, "B"),
+    runner.withoutMutex(0, "C"),
   ]);
 
-  assert.deepEqual(runner.resultWithQueue, ["A", "B", "C"]);
-  assert.deepEqual(runner.resultWithoutQueue, ["C", "B", "A"]);
+  assert.deepEqual(
+    runner.resultWithMutex,
+    ["A", "B", "C"],
+    "mutex を使うと実行順に処理が進むべきです。",
+  );
+  assert.deepEqual(
+    runner.resultWithoutMutex,
+    ["C", "B", "A"],
+    "mutex を使わないと遅延時間の順番で処理が終わるべきです。",
+  );
 });

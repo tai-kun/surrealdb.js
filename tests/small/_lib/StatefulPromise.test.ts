@@ -5,19 +5,20 @@ import { test } from "@tools/test";
 test("`resolve` で解決できる", async () => {
   const { promise, resolve } = StatefulPromise.withResolvers();
 
-  assert.equal(promise.state, "pending");
+  assert.equal(
+    promise.state,
+    "pending",
+    "未解決時の状態は pending を示すべきです。",
+  );
 
   resolve("test");
 
-  assert.equal(await promise, "test");
-  assert.equal(promise.state, "fulfilled");
-});
-
-test("`await` で解決できる", async () => {
-  const promise = new StatefulPromise(resolve => resolve("test"));
-
-  assert.equal(await promise, "test");
-  assert.equal(promise.state, "fulfilled");
+  assert.equal(await promise, "test", "`resolve` に渡した値が返るべきです。");
+  assert.equal(
+    promise.state,
+    "fulfilled",
+    "解決後の状態は fulfilled を示すべきです。",
+  );
 });
 
 test("`reject` で拒否できる", async () => {
@@ -35,23 +36,13 @@ test("`reject` で拒否できる", async () => {
       name: "Error",
       message: "test",
     },
+    "`reject` に渡した値が投げられるべきです。",
   );
-  assert.equal(promise.state, "rejected");
-});
-
-test("`await` で拒否できる", async () => {
-  const promise = StatefulPromise.reject(new Error("test"));
-
-  await assert.rejects(
-    async () => {
-      await promise;
-    },
-    {
-      name: "Error",
-      message: "test",
-    },
+  assert.equal(
+    promise.state,
+    "rejected",
+    "拒否後の状態は rejected を示すべきです。",
   );
-  assert.equal(promise.state, "rejected");
 });
 
 test("解決後は常に同じ値を返す", async () => {

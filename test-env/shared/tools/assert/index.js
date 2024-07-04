@@ -1,3 +1,6 @@
+// @ts-check
+"use strict";
+
 import assert from "assert";
 
 export default Object.assign(assert.strict, {
@@ -24,39 +27,36 @@ function jsonify(value) {
   return JSON.parse(JSON.stringify(value));
 }
 
+/**
+ * @param {string} value
+ * @param {RegExp} regExp
+ * @param {string | Error} [message]
+ */
 function match(value, regExp, message) {
-  if (!(regExp instanceof RegExp)) {
-    throw TypeError(
-      `The value must be RegExp. Received type ${typeof value}.`,
-    );
-  }
-
-  if (typeof value !== "string" || !regExp.test(value)) {
-    if (message instanceof Error) {
-      throw message;
-    }
-
-    const error = new assert.AssertionError({
-      actual: value,
-      expected: regExp,
-      message: typeof message !== "string"
-        ? `The "string" argument must be of type string.`
-          + ` Received type ${typeof message}`
-        : `The input did not match the regular expression ${regExp}.`
-          + ` Input:\n\n${value}\n\n`,
-      operator: "match",
-      stackStartFn: match,
-    });
-    error.generatedMessage = !message;
-
-    throw error;
-  }
+  innerMatch(value, regExp, message, "match", match);
 }
 
+/**
+ * @param {string} value
+ * @param {RegExp} regExp
+ * @param {string | Error} [message]
+ */
 function doesNotMatch(value, regExp, message) {
+  innerMatch(value, regExp, message, "doesNotMatch", doesNotMatch);
+}
+
+/**
+ * @param {string} value
+ * @param {RegExp} regExp
+ * @param {string | Error | undefined} message
+ * @param {string} operator
+ * @param {Function} stackStartFn
+ */
+function innerMatch(value, regExp, message, operator, stackStartFn) {
   if (!(regExp instanceof RegExp)) {
     throw TypeError(
-      `The value must be RegExp. Received type ${typeof value}.`,
+      `The "regExp" argument must be RegExp. `
+        + `Received type ${typeof regExp}.`,
     );
   }
 
@@ -68,13 +68,15 @@ function doesNotMatch(value, regExp, message) {
     const error = new assert.AssertionError({
       actual: value,
       expected: regExp,
-      message: typeof message !== "string"
-        ? `The "string" argument must be of type string.`
-          + ` Received type ${typeof message}`
-        : `The input was expected to not match the regular expression ${regExp}.`
-          + ` Input:\n\n${value}\n\n`,
-      operator: "doesNotMatch",
-      stackStartFn: doesNotMatch,
+      message: !message
+        ? typeof value !== "string"
+          ? `The "value" argument must be of type string. `
+            + `Received type ${typeof value}`
+          : `The input did not match the regular expression ${regExp}. `
+            + `Input:\n\n${value}\n\n`
+        : message,
+      operator,
+      stackStartFn,
     });
     error.generatedMessage = !message;
 

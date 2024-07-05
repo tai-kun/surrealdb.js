@@ -1,13 +1,11 @@
 declare module "@tools/assert" {
   import assert, {
     deepStrictEqual,
-    deepStrictEqual,
     ifError,
     notDeepStrictEqual,
     notStrictEqual,
     ok,
     strict,
-    strictEqual,
     strictEqual,
   } from "node:assert";
 
@@ -46,14 +44,28 @@ declare module "@tools/assert" {
         <T extends import("type-fest").Jsonifiable>(
           actual: unknown,
           expected: T,
-          message?: string | Error,
+          message?: string | Error | undefined,
         ): asserts actual is T;
       };
-      jsonNotEqual: {
+      notJsonEqual: {
         (
           actual: unknown,
           expected: import("type-fest").Jsonifiable,
-          message?: string | Error,
+          message?: string | Error | undefined,
+        ): void;
+      };
+      deepJsonEqual: {
+        <T extends import("type-fest").Jsonifiable>(
+          actual: unknown,
+          expected: T,
+          message?: string | Error | undefined,
+        ): asserts actual is T;
+      };
+      notDeepJsonEqual: {
+        (
+          actual: unknown,
+          expected: import("type-fest").Jsonifiable,
+          message?: string | Error | undefined,
         ): void;
       };
     };

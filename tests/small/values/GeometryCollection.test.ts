@@ -22,7 +22,7 @@ test("GeometryCollection を作成する", () => {
   ]);
 
   assert(collection instanceof GeometryCollection);
-  assert.jsonEqual(collection, {
+  assert.deepJsonEqual(collection, {
     type: "GeometryCollection",
     geometries: [
       {

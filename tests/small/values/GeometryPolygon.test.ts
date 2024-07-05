@@ -26,14 +26,14 @@ test("GeometryPolygon を作成する", () => {
   ]);
 
   assert(polygon instanceof GeometryPolygon);
-  assert.jsonEqual(polygon.exteriorRing, {
+  assert.deepJsonEqual(polygon.exteriorRing, {
     type: "LineString",
     coordinates: [
       // Point
       ["1", "2"],
     ],
   });
-  assert.jsonEqual(polygon.interiorRings, [
+  assert.deepJsonEqual(polygon.interiorRings, [
     {
       type: "LineString",
       coordinates: [
@@ -42,7 +42,7 @@ test("GeometryPolygon を作成する", () => {
       ],
     },
   ]);
-  assert.jsonEqual(polygon, {
+  assert.deepJsonEqual(polygon, {
     type: "Polygon",
     coordinates: [
       // LineString

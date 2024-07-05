@@ -30,7 +30,7 @@ test("GeometryMultiPolygon を作成する", () => {
   ]);
 
   assert(multiPolygon instanceof GeometryMultiPolygon);
-  assert.jsonEqual(multiPolygon, {
+  assert.deepJsonEqual(multiPolygon, {
     type: "MultiPolygon",
     coordinates: [
       // Polygon

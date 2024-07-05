@@ -9,7 +9,7 @@ test("GeometryLine を作成する", () => {
   const line = new GeometryLine([new GeometryPoint([1, 2])]);
 
   assert(line instanceof GeometryLine);
-  assert.jsonEqual(line, {
+  assert.deepJsonEqual(line, {
     type: "LineString",
     coordinates: [
       // Point

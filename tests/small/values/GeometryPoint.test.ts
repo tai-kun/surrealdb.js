@@ -11,7 +11,7 @@ test("GeometryPoint を作成する", () => {
   assert(point instanceof GeometryPoint);
   assert(point.x instanceof Decimal);
   assert(point.y instanceof Decimal);
-  assert.jsonEqual(point, {
+  assert.deepJsonEqual(point, {
     type: "Point",
     coordinates: ["1", "2"],
   });
@@ -24,7 +24,7 @@ test("GeometryPoint の座標を変更する", () => {
   point.y = "4";
 
   assert.notEqual(point.point, prevPoint, "配列自体が変更されている");
-  assert.jsonEqual(point, {
+  assert.deepJsonEqual(point, {
     type: "Point",
     coordinates: ["3", "4"],
   });

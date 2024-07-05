@@ -124,13 +124,13 @@ for (const { suiteName, formatter, initSurreal } of surreal) {
         const [output] = await db.query<[any]>(surql`
           RETURN ${input}
         `);
-        assert.jsonEqual(output, input);
+        assert.deepJsonEqual(output, input);
       }
       {
         const [output] = await db.query<[any]>(surql`
           RETURN ${surql.raw(toSurql(input))}
         `);
-        assert.jsonEqual(output, input);
+        assert.deepJsonEqual(output, input);
       }
     });
   });

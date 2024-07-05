@@ -1,41 +1,55 @@
 // @ts-check
 "use strict";
 
-import assert from "assert";
+import { strict } from "assert";
 
-export default Object.assign(assert.strict, {
+export default Object.assign(strict, {
   /**
-   * @param {*} actual
-   * @param {*} expected
-   * @param  {*} args
-   * @returns {*}
+   * @param {unknown} actual
+   * @param {import("type-fest").Jsonifiable} expected
+   * @param {string | Error | undefined} [message]
    */
-  jsonEqual(actual, expected, ...args) {
-    return assert.deepStrictEqual(
-      jsonify(actual),
-      jsonify(expected),
-      ...args,
+  jsonEqual(actual, expected, message) {
+    strict.equal(
+      JSON.stringify(actual),
+      JSON.stringify(expected),
+      message,
     );
   },
   /**
-   * @param {*} actual
-   * @param {*} expected
-   * @param  {*} args
-   * @returns {*}
+   * @param {unknown} actual
+   * @param {unknown} expected
+   * @param {string | Error | undefined} [message]
    */
-  jsonNotEqual(actual, expected, ...args) {
-    return assert.notDeepStrictEqual(
-      jsonify(actual),
-      jsonify(expected),
-      ...args,
+  notJsonEqual(actual, expected, message) {
+    strict.notEqual(
+      JSON.stringify(actual),
+      JSON.stringify(expected),
+      message,
+    );
+  },
+  /**
+   * @param {unknown} actual
+   * @param {import("type-fest").Jsonifiable} expected
+   * @param {string | Error | undefined} [message]
+   */
+  deepJsonEqual(actual, expected, message) {
+    strict.deepEqual(
+      JSON.parse(JSON.stringify(actual)),
+      JSON.parse(JSON.stringify(expected)),
+      message,
+    );
+  },
+  /**
+   * @param {unknown} actual
+   * @param {unknown} expected
+   * @param {string | Error | undefined} [message]
+   */
+  notDeepJsonEqual(actual, expected, message) {
+    strict.notDeepEqual(
+      JSON.parse(JSON.stringify(actual)),
+      JSON.parse(JSON.stringify(expected)),
+      message,
     );
   },
 });
-
-/**
- * @param {*} value
- * @returns {*}
- */
-function jsonify(value) {
-  return JSON.parse(JSON.stringify(value));
-}

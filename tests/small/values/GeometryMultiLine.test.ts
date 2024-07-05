@@ -17,7 +17,7 @@ test("GeometryMultiLine を作成する", () => {
   ]);
 
   assert(multiLine instanceof GeometryMultiLine);
-  assert.jsonEqual(multiLine, {
+  assert.deepJsonEqual(multiLine, {
     type: "MultiLineString",
     coordinates: [
       // LineString

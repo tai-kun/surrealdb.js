@@ -12,7 +12,7 @@ test("GeometryMultiPoint を作成する", () => {
   const multiPoint = new GeometryMultiPoint([new GeometryPoint([1, 2])]);
 
   assert(multiPoint instanceof GeometryMultiPoint);
-  assert.jsonEqual(multiPoint, {
+  assert.deepJsonEqual(multiPoint, {
     type: "MultiPoint",
     coordinates: [
       // Point

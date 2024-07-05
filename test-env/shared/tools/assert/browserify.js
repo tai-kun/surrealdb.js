@@ -13,6 +13,19 @@ build({
   platform: "browser",
   sourcemap: "inline",
   plugins: [
-    polyfillNode({}),
+    polyfillNode({
+      globals: {
+        buffer: true,
+        global: true,
+        process: true,
+        navigator: true,
+        __dirname: false,
+        __filename: false,
+      },
+      polyfills: {
+        assert: false,
+        "assert/strict": false,
+      },
+    }),
   ],
 });

@@ -137,9 +137,9 @@ export function init(
 }
 
 function toBigInt(value: number, power: bigint = 0n): bigint | null {
-  return Number.isNaN(value) || !Number.isFinite(value)
-    ? null
-    : BigInt(Math.trunc(value)) * (10n ** power);
+  return Number.isFinite(value)
+    ? BigInt(Math.trunc(value)) * (10n ** power)
+    : null;
 }
 
 function split(nsTime: bigint | null): [

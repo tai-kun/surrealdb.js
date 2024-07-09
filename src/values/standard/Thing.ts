@@ -54,7 +54,7 @@ export default class Thing extends Base implements SurqlValueSerializer {
     }
 
     if (typeof id === "number") {
-      if (Number.isNaN(id) || !Number.isFinite(id)) {
+      if (!Number.isFinite(id)) {
         throw new SurrealTypeError("Invalid ID", { cause: id });
       }
 

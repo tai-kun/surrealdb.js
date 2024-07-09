@@ -172,6 +172,7 @@ export default function initSurreal<T extends ClientConstructor>(
               break;
 
             case "number":
+              // Number.MAX_VALUE などを許容するため、Number.isFinite で十分。
               if (!Number.isFinite(x)) {
                 throw new SurrealTypeError(
                   "The number `" + x + "` is not finite.",

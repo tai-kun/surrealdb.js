@@ -54,11 +54,13 @@ export default class Thing extends Base implements SurqlValueSerializer {
     }
 
     if (typeof id === "number") {
+      // Number.MAX_VALUE などを許容するため、Number.isFinite で十分。
       if (!Number.isFinite(id)) {
         throw new SurrealTypeError("Invalid ID", { cause: id });
       }
 
-      if (Number.isInteger(id)) {
+      // 小数点や符号が無ければそのまま文字列にする。
+      if (Number.isInteger(id) && id >= 0) {
         return id.toString(10);
       }
 

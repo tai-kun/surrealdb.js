@@ -15,12 +15,12 @@ export default class SerialId {
    * @param max 最大値。
    */
   constructor(max: number | undefined = MAX_SAFE_INTEGER) {
-    if (Number.isFinite(max) && max > 0) {
+    if (Number.isSafeInteger(max) && max > 0) {
       this.#max = max;
     } else {
       throw new SurrealTypeError(
         `The "max" argument must be of a finite integer greater than 0,`
-          + `but got ${max}.`,
+          + `but received ${max}.`,
       );
     }
   }

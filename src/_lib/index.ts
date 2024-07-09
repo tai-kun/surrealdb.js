@@ -1,8 +1,14 @@
 export type * from "./collectErrors";
 export { default as collectErrors } from "./collectErrors";
 
+export type * from "./getTimeoutSignal";
+export { default as getTimeoutSignal } from "./getTimeoutSignal";
+
 export type * from "./isBrowser";
 export { default as isBrowser } from "./isBrowser";
+
+export type * from "./isSafeNumber";
+export { default as isSafeNumber } from "./isSafeNumber";
 
 export type * from "./makeAbortApi";
 export { default as makeAbortApi } from "./makeAbortApi";
@@ -27,6 +33,3 @@ export { default as TaskQueue } from "./TaskQueue";
 
 export type * from "./throwIfAborted";
 export { default as throwIfAborted } from "./throwIfAborted";
-
-export type * from "./getTimeoutSignal";
-export { default as getTimeoutSignal } from "./getTimeoutSignal";

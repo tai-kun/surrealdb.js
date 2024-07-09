@@ -1,3 +1,4 @@
+import isSafeNumber from "~/_lib/isSafeNumber";
 import { SurrealTypeError } from "~/errors";
 
 const POW_MS_TO_NS = 6n;
@@ -90,7 +91,7 @@ export function init(
     const [s, compact] = split(nsTime);
     date.setTime(s);
 
-    return Number.isNaN(date.setTime(s))
+    return isSafeNumber(date.setTime(s))
       ? [NaN, NaN]
       : compact;
   }
@@ -128,7 +129,7 @@ export function init(
     const [s, compact] = split(nsTime);
     date.setTime(s);
 
-    return Number.isNaN(date.setTime(s))
+    return isSafeNumber(date.setTime(s))
       ? [NaN, NaN]
       : compact;
   }
@@ -137,7 +138,7 @@ export function init(
 }
 
 function toBigInt(value: number, power: bigint = 0n): bigint | null {
-  return Number.isFinite(value)
+  return isSafeNumber(value)
     ? BigInt(Math.trunc(value)) * (10n ** power)
     : null;
 }

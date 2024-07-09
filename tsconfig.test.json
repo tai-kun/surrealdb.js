@@ -1,0 +1,25 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./src/*"],
+
+      "@tools/assert": ["./test-env/shared/tools/assert/index.js"],
+      "@tools/test": ["./test-env/node/tools/test/index.js"],
+
+      "@tai-kun/surreal": ["./src/index.ts"],
+      "@tai-kun/surreal/values/decode-only": [
+        "./src/values/decode-only/index.ts"
+      ],
+      "@tai-kun/surreal/values/encodable": [
+        "./src/values/encodable/index.ts"
+      ],
+      "@tai-kun/surreal/values/standard": [
+        "./src/values/standard/index.ts"
+      ],
+      "@tai-kun/surreal/values/full": [
+        "./src/values/full/index.ts"
+      ]
+    }
+  }
+}

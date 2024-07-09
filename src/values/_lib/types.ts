@@ -1,4 +1,4 @@
-import type { Jsonifiable } from "type-fest";
+import type { Jsonifiable, JsonObject } from "type-fest";
 
 /**
  * SurrealQL の値をエンコードするインターフェース。
@@ -16,4 +16,13 @@ export interface SurqlValueSerializer {
    * @returns SurrealQL に直接埋め込める文字列。
    */
   toSurql(): string;
+}
+
+/**
+ * SurrealQL の値をエンコードするインターフェース。
+ */
+export interface Encodable {
+  toJSON(): Jsonifiable;
+  toSurql(): string;
+  structure(): JsonObject;
 }

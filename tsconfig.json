@@ -18,14 +18,25 @@
       "@tai-kun/surreal/clients/standard": ["./src/clients/standard.ts"],
       "@tai-kun/surreal/clients/tiny": ["./src/clients/tiny.ts"],
       "@tai-kun/surreal/clients/full": ["./src/clients/full.ts"],
-      "@tai-kun/surreal/values/standard": ["./src/values/standard/index.ts"],
-      "@tai-kun/surreal/values/tiny": ["./src/values/tiny/index.ts"],
-      "@tai-kun/surreal/values/full": ["./src/values/full/index.ts"],
+      "@tai-kun/surreal/values/decode-only": [
+        "./src/values/decode-only/index.ts"
+      ],
+      "@tai-kun/surreal/values/encodable": [
+        "./src/values/encodable/index.ts"
+      ],
+      "@tai-kun/surreal/values/standard": [
+        "./src/values/standard/index.ts"
+      ],
+      "@tai-kun/surreal/values/full": [
+        "./src/values/full/index.ts"
+      ],
       "@tai-kun/surreal/engines": ["./src/engines/index.ts"],
       "@tai-kun/surreal/formatters": ["./src/formatters/index.ts"],
       "@tai-kun/surreal/validators": ["./src/validators/index.ts"],
       "@tai-kun/surreal/errors": ["./src/errors.ts"],
-      "@tai-kun/surreal/_lib": ["./src/_lib/index.ts"]
+      "@tai-kun/surreal/_lib": ["./src/_lib/index.ts"],
+
+      "@tai-kun/surreal/values/tiny": ["./src/values/tiny/index.ts"]
     }
   }
 }

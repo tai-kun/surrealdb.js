@@ -16,8 +16,10 @@ import {
   thingErrors,
   uuidErrors,
 } from "~/values/_lib/internal";
+import type { Datetime as DecodeOnlyDatetime } from "~/values/decode-only";
+import type { Datetime as EncodableDatetime } from "~/values/encodable";
 import type {
-  Datetime as DatetimeFull,
+  Datetime as FullDatetime,
   Decimal as DecimalFull,
   Duration as DurationFull,
   GeometryCollection as GeometryCollectionFull,
@@ -32,7 +34,7 @@ import type {
   Uuid as UuidFull,
 } from "~/values/full";
 import type {
-  Datetime,
+  Datetime as StandardDatetime,
   Decimal,
   Duration,
   GeometryCollection,
@@ -47,7 +49,6 @@ import type {
   Uuid,
 } from "~/values/standard";
 import type {
-  Datetime as DatetimeTiny,
   Decimal as DecimalTiny,
   Duration as DurationTiny,
   GeometryCollection as GeometryCollectionTiny,
@@ -97,10 +98,14 @@ function isValue(errors: Map<object, object>, value: any): boolean {
  * Datetime
  *****************************************************************************/
 
-export type DatetimeType = Datetime | DatetimeFull | DatetimeTiny;
+export type Datetime =
+  | DecodeOnlyDatetime
+  | EncodableDatetime
+  | StandardDatetime
+  | FullDatetime;
 
 // @ts-expect-error
-export const isDatetime: IsValue<DatetimeType> = value =>
+export const isDatetime: IsValue<Datetime> = value =>
   isValue(datetimeErrors, value);
 
 /******************************************************************************

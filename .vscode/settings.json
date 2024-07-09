@@ -20,5 +20,6 @@
     "editor.indentSize": 4,
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  }
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

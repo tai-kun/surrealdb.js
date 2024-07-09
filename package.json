@@ -93,6 +93,7 @@
     "esbuild": "^0.21.5",
     "size-limit": "^11.1.4",
     "tar": "^7.4.0",
+    "tsx": "^4.16.2",
     "type-fest": "^4.20.1",
     "typedoc": "^0.26.3",
     "typescript": "^5.5.2",
@@ -110,6 +111,7 @@
   "scripts": {
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
+    "test:watch": "npx tsx --tsconfig tsconfig.test.json --watch",
     "test:sm:bun": "node scripts/test.js bun small",
     "test:md:bun": "node scripts/test.js bun medium",
     "test:sm:deno": "node scripts/test.js deno small",
@@ -160,6 +162,6 @@
     }
   ],
   "volta": {
-    "node": "22.2.0"
+    "node": "22.4.0"
   }
 }

@@ -26,7 +26,7 @@ export { default as toSurql } from "./index/toSurql";
 export type * from "./index/types";
 
 export {
-  type DatetimeType,
+  type Datetime,
   type DecimalType,
   type DurationType,
   type GeometryCollectionType,

@@ -91,7 +91,7 @@ export function init(
     const [s, compact] = split(nsTime);
     date.setTime(s);
 
-    return isSafeNumber(date.setTime(s))
+    return Number.isNaN(date.setTime(s))
       ? [NaN, NaN]
       : compact;
   }
@@ -129,7 +129,7 @@ export function init(
     const [s, compact] = split(nsTime);
     date.setTime(s);
 
-    return isSafeNumber(date.setTime(s))
+    return Number.isNaN(date.setTime(s))
       ? [NaN, NaN]
       : compact;
   }

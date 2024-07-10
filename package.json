@@ -29,6 +29,16 @@
       "import": "./dist/clients/full.mjs",
       "require": "./dist/clients/full.cjs"
     },
+    "./values/decode-only": {
+      "tyes": "./dist/values/decode-only/index.d.ts",
+      "import": "./dist/values/decode-only/index.mjs",
+      "require": "./dist/values/decode-only/index.cjs"
+    },
+    "./values/encodable": {
+      "tyes": "./dist/values/encodable/index.d.ts",
+      "import": "./dist/values/encodable/index.mjs",
+      "require": "./dist/values/encodable/index.cjs"
+    },
     "./values/standard": {
       "tyes": "./dist/values/standard/index.d.ts",
       "import": "./dist/values/standard/index.mjs",

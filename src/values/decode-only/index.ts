@@ -9,8 +9,8 @@ export { default as Datetime } from "./Datetime";
 // export const Decimal = DecimalClass;
 // export type Decimal = DecimalJs;
 
-// export type * from "./Duration";
-// export { default as Duration } from "./Duration";
+export type * from "./Duration";
+export { default as Duration } from "./Duration";
 
 // export type * from "./gemetory/GeometryCollection";
 // export { default as GeometryCollection } from "./gemetory/GeometryCollection";

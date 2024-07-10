@@ -1,94 +1,195 @@
-import type { SurqlValueSerializer } from "../_lib/types";
-import Base from "../tiny/Duration";
+import { SurrealTypeError } from "~/errors";
+import {
+  SECONDS_PER_DAY,
+  SECONDS_PER_HOUR,
+  SECONDS_PER_MINUTE,
+  SECONDS_PER_WEEK,
+  SECONDS_PER_YEAR,
+  UINT_64_MAX,
+} from "../_lib/duration";
+import Base from "../encodable/Duration";
 
-const SECONDS_PER_MINUTE = 60n;
-const SECONDS_PER_HOUR = 60n * SECONDS_PER_MINUTE;
-const SECONDS_PER_DAY = 24n * SECONDS_PER_HOUR;
-const SECONDS_PER_WEEK = 7n * SECONDS_PER_DAY;
-const SECONDS_PER_YEAR = 365n * SECONDS_PER_DAY;
-const NANOSECONDS_PER_MILLISECOND = 1_000_000n;
-const NANOSECONDS_PER_MICROSECOND = 1_000n;
-
-export default class Duration extends Base implements SurqlValueSerializer {
-  // dprint-ignore
-  toJSON(): string {
-    // https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/duration.rs#L159-L217
-
-    // Split up the duration
-    let secs = BigInt(this.seconds);
-    let nano = BigInt(this.nanoseconds);
-
-    // Ensure no empty output
-    if (secs === 0n && nano === 0n) {
-      return "0ns"
-    }
-
-    let str = "";
-
-    // Calculate the total years
-    let year = secs / SECONDS_PER_YEAR;
-        secs = secs % SECONDS_PER_YEAR;
-    // Calculate the total weeks
-    let week = secs / SECONDS_PER_WEEK;
-        secs = secs % SECONDS_PER_WEEK;
-    // Calculate the total days
-    let days = secs / SECONDS_PER_DAY;
-        secs = secs % SECONDS_PER_DAY;
-    // Calculate the total hours
-    let hour = secs / SECONDS_PER_HOUR;
-        secs = secs % SECONDS_PER_HOUR;
-    // Calculate the total minutes
-    let mins = secs / SECONDS_PER_MINUTE;
-        secs = secs % SECONDS_PER_MINUTE;
-    // Calculate the total milliseconds
-    let msec = nano / NANOSECONDS_PER_MILLISECOND;
-        nano = nano % NANOSECONDS_PER_MILLISECOND;
-    // Calculate the total microseconds
-    let usec = nano / NANOSECONDS_PER_MICROSECOND;
-        nano = nano % NANOSECONDS_PER_MICROSECOND;
-
-    // Write the different parts
-
-    if (year > 0n) {
-      str += `${year}y`;
-    }
-
-    if (week > 0n) {
-      str += `${week}w`;
-    }
-
-    if (days > 0n) {
-      str += `${days}d`;
-    }
-
-    if (hour > 0n) {
-      str += `${hour}h`;
-    }
-
-    if (mins > 0n) {
-      str += `${mins}m`;
-    }
-
-    if (secs > 0n) {
-      str += `${secs}s`;
-    }
-
-    if (msec > 0n) {
-      str += `${msec}ms`;
-    }
-
-    if (usec > 0n) {
-      str += `${usec}µs`;
-    }
-
-    if (nano > 0n) {
-      str += `${nano}ns`;
-    }
-
-    return str
+export default class Duration extends Base {
+  override get seconds(): bigint {
+    return super.seconds;
   }
 
-  toSurql(): string {
-    return this.toJSON();
+  override set seconds(s: bigint) {
+    if (typeof s === "bigint" && s >= 0n && s <= UINT_64_MAX) {
+      this._seconds = s;
+    } else {
+      throw new SurrealTypeError("range error");
+    }
+  }
+
+  override get nanoseconds(): number {
+    return super.nanoseconds;
+  }
+
+  override set nanoseconds(ns: number) {
+    if (Number.isSafeInteger(ns) && ns >= 0) {
+      this._nanoseconds = ns === 0 ? 0 : ns % 1e9;
+
+      if (ns >= 1e9) {
+        this.seconds += BigInt(Math.floor(ns / 1e9));
+      }
+    } else {
+      throw new SurrealTypeError("range error");
+    }
+  }
+
+  getCompact(): [seconds: bigint, nanoseconds: number] {
+    return [this.seconds, this.nanoseconds];
+  }
+
+  setCompact(compact: readonly [seconds: bigint, nanoseconds: number]): this {
+    this.seconds = compact[0];
+    this.nanoseconds = compact[1];
+
+    return this;
+  }
+
+  getYears(): number {
+    return this.parse()["years"] || 0;
+  }
+
+  addYears(years: number): this {
+    this.seconds += BigInt(years) * SECONDS_PER_YEAR;
+
+    return this;
+  }
+
+  subYears(years: number): this {
+    this.seconds -= BigInt(years) * SECONDS_PER_YEAR;
+
+    return this;
+  }
+
+  getWeeks(): number {
+    return this.parse()["weeks"] || 0;
+  }
+
+  addWeeks(weeks: number): this {
+    this.seconds += BigInt(weeks) * SECONDS_PER_WEEK;
+
+    return this;
+  }
+
+  subWeeks(weeks: number): this {
+    this.seconds -= BigInt(weeks) * SECONDS_PER_WEEK;
+
+    return this;
+  }
+
+  getDays(): number {
+    return this.parse()["days"] || 0;
+  }
+
+  addDays(days: number): this {
+    this.seconds += BigInt(days) * SECONDS_PER_DAY;
+
+    return this;
+  }
+
+  subDays(days: number): this {
+    this.seconds -= BigInt(days) * SECONDS_PER_DAY;
+
+    return this;
+  }
+
+  getHours(): number {
+    return this.parse()["hours"] || 0;
+  }
+
+  addHours(hours: number): this {
+    this.seconds += BigInt(hours) * SECONDS_PER_HOUR;
+
+    return this;
+  }
+
+  subHours(hours: number): this {
+    this.seconds -= BigInt(hours) * SECONDS_PER_HOUR;
+
+    return this;
+  }
+
+  getMinutes(): number {
+    return this.parse()["minutes"] || 0;
+  }
+
+  addMinutes(minutes: number): this {
+    this.seconds += BigInt(minutes) * SECONDS_PER_MINUTE;
+
+    return this;
+  }
+
+  subMinutes(minutes: number): this {
+    this.seconds -= BigInt(minutes) * SECONDS_PER_MINUTE;
+
+    return this;
+  }
+
+  getSeconds(): number {
+    return this.parse()["seconds"] || 0;
+  }
+
+  addSeconds(seconds: number): this {
+    this.seconds += BigInt(seconds);
+
+    return this;
+  }
+
+  subSeconds(seconds: number): this {
+    this.seconds -= BigInt(seconds);
+
+    return this;
+  }
+
+  getMilliseconds(): number {
+    return this.parse()["milliseconds"] || 0;
+  }
+
+  addMilliseconds(milliseconds: number): this {
+    this.nanoseconds += milliseconds * 1_000_000;
+
+    return this;
+  }
+
+  subMilliseconds(milliseconds: number): this {
+    this.nanoseconds -= milliseconds * 1_000_000;
+
+    return this;
+  }
+
+  getMicroseconds(): number {
+    return this.parse()["microseconds"] || 0;
+  }
+
+  addMicroseconds(microseconds: number): this {
+    this.nanoseconds += microseconds * 1_000;
+
+    return this;
+  }
+
+  subMicroseconds(microseconds: number): this {
+    this.nanoseconds -= microseconds * 1_000;
+
+    return this;
+  }
+
+  getNanoseconds(): number {
+    return this.parse()["nanoseconds"] || 0;
+  }
+
+  addNanoseconds(nanoseconds: number): this {
+    this.nanoseconds += nanoseconds;
+
+    return this;
+  }
+
+  subNanoseconds(nanoseconds: number): this {
+    this.nanoseconds -= nanoseconds;
+
+    return this;
   }
 }

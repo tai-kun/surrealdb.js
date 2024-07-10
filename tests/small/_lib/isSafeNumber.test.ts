@@ -13,6 +13,7 @@ const safeNumbers = Object.entries({
   "-1": -1,
   "-Math.PI": -Math.PI,
   "Number.MIN_SAFE_INTEGER": Number.MIN_SAFE_INTEGER,
+  "365*24*60*60*1_000+0.123456780": 365 * 24 * 60 * 60 * 1_000 + 0.123456780,
 });
 
 const nonSafeNumbers = Object.entries({

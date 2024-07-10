@@ -22,7 +22,11 @@ const MAX_SAFE_INTEGER = [
 
 const MAX_SAFE_INTEGER_LENGTH = MAX_SAFE_INTEGER.length;
 
-export default function isSafeNumber(value: number): boolean {
+function isSafeNumber(value: number): boolean;
+
+function isSafeNumber(value: unknown): value is number;
+
+function isSafeNumber(value: unknown): boolean {
   if (
     // https://tc39.es/ecma262/multipage/numbers-and-dates.html#sec-number.isfinite
     // 1. value if not a Number -> false
@@ -38,7 +42,9 @@ export default function isSafeNumber(value: number): boolean {
 
   // (1e21).toString(10) -> int = "1e+21"
   // (1e21).toString( 8) -> int = "154327115334273650000000"
-  let [int, dec] = value.toString(8).split(".", 2) as [string, string?],
+  let [int, dec] = (value as number)
+      .toString(8)
+      .split(".", 2) as [string, string?],
     nChars = int.length,
     cursor = int.charCodeAt(0) === 45 /* "-" */ ? 1 : 0;
 
@@ -63,3 +69,5 @@ export default function isSafeNumber(value: number): boolean {
 
   return !dec;
 }
+
+export default isSafeNumber;

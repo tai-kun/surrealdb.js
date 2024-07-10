@@ -1,11 +1,11 @@
 import { isDatetime } from "@tai-kun/surreal";
+import { SurrealTypeError } from "@tai-kun/surreal/errors";
 import { Datetime as DecodeOnlyDatetime } from "@tai-kun/surreal/values/decode-only";
 import { Datetime as EncodableDatetime } from "@tai-kun/surreal/values/encodable";
 import { Datetime as FullDatetime } from "@tai-kun/surreal/values/full";
 import { Datetime as StandardDatetime } from "@tai-kun/surreal/values/standard";
 import assert from "@tools/assert";
 import { describe, test } from "@tools/test";
-import { SurrealTypeError } from "~/errors";
 
 const tests = {
   EncodableDatetime,

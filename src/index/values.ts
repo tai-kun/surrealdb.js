@@ -65,7 +65,7 @@ import type {
 
 type IsValue<T> = {
   /**
-   * @deprecated 恐らくこの使い方は間違っています。
+   * この使い方は間違っています。
    */
   (value: Primitive): value is never;
   /**

@@ -5,7 +5,7 @@ import { Datetime as EncodableDatetime } from "@tai-kun/surreal/values/encodable
 import { Datetime as FullDatetime } from "@tai-kun/surreal/values/full";
 import { Datetime as StandardDatetime } from "@tai-kun/surreal/values/standard";
 import assert from "@tools/assert";
-import { describe, test } from "@tools/test";
+import { describe, ENV, test } from "@tools/test";
 
 const tests = {
   EncodableDatetime,
@@ -188,6 +188,24 @@ for (const [name, Datetime] of Object.entries(tests)) {
       );
     });
 
+    test("WebKit ではミリ秒未満の精度が丸められる", {
+      skip: ENV !== "WebKit",
+    }, () => {
+      const dt = new Date("1969-12-31T23:59:59.9991Z");
+
+      assert.equal(dt.getTime(), 0, "time");
+      assert.equal(dt.toISOString(), "1970-01-01T00:00:00.000Z", "ISO");
+    });
+
+    test("WebKit 以外ではミリ秒未満の精度が丸められずに切り捨てられる", {
+      skip: ENV === "WebKit",
+    }, () => {
+      const dt = new Date("1969-12-31T23:59:59.9991Z");
+
+      assert.equal(dt.getTime(), -1, "time");
+      assert.equal(dt.toISOString(), "1969-12-31T23:59:59.999Z", "ISO");
+    });
+
     test("UNIXエポック以前の文字列を指定してエンコード可能な Datetime インスタンスを作成する", () => {
       const dt = new Datetime("1960-06-01T12:34:56.780123456Z");
 
@@ -200,7 +218,11 @@ for (const [name, Datetime] of Object.entries(tests)) {
         },
         "秒時刻とナノ秒時刻",
       );
-      assert.equal(dt.toJSON(), "1960-06-01T12:34:56.780000000Z", "JSON 表現");
+      assert.equal(
+        dt.toJSON(),
+        "1960-06-01T12:34:56.780000000Z",
+        "JSON 表現",
+      );
       assert.equal(
         dt.toSurql(),
         `d'1960-06-01T12:34:56.780000000Z'`,

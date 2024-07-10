@@ -16,12 +16,18 @@ import {
   thingErrors,
   uuidErrors,
 } from "~/values/_lib/internal";
-import type { Datetime as DecodeOnlyDatetime } from "~/values/decode-only";
-import type { Datetime as EncodableDatetime } from "~/values/encodable";
+import type {
+  Datetime as DecodeOnlyDatetime,
+  Duration as DecodeOnlyDuration,
+} from "~/values/decode-only";
+import type {
+  Datetime as EncodableDatetime,
+  Duration as EncodableDuration,
+} from "~/values/encodable";
 import type {
   Datetime as FullDatetime,
   Decimal as DecimalFull,
-  Duration as DurationFull,
+  Duration as FullDuration,
   GeometryCollection as GeometryCollectionFull,
   GeometryLine as GeometryLineFull,
   GeometryMultiLine as GeometryMultiLineFull,
@@ -36,7 +42,7 @@ import type {
 import type {
   Datetime as StandardDatetime,
   Decimal,
-  Duration,
+  Duration as StandardDuration,
   GeometryCollection,
   GeometryLine,
   GeometryMultiLine,
@@ -50,7 +56,6 @@ import type {
 } from "~/values/standard";
 import type {
   Decimal as DecimalTiny,
-  Duration as DurationTiny,
   GeometryCollection as GeometryCollectionTiny,
   GeometryLine as GeometryLineTiny,
   GeometryMultiLine as GeometryMultiLineTiny,
@@ -122,10 +127,14 @@ export const isDecimal: IsValue<DecimalType> = value =>
  * Duration
  *****************************************************************************/
 
-export type DurationType = Duration | DurationFull | DurationTiny;
+export type Duration =
+  | DecodeOnlyDuration
+  | EncodableDuration
+  | StandardDuration
+  | FullDuration;
 
 // @ts-expect-error
-export const isDuration: IsValue<DurationType> = value =>
+export const isDuration: IsValue<Duration> = value =>
   isValue(durationErrors, value);
 
 /******************************************************************************

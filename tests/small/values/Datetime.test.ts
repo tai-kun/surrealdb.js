@@ -169,21 +169,21 @@ for (const [name, Datetime] of Object.entries(tests)) {
     });
 
     test("文字列を指定してエンコード可能な Datetime インスタンスを作成する", () => {
-      const dt = new Datetime("2024-06-01T12:34:56.780123456Z");
+      const dt = new Datetime("2024-06-01T12:34:56.780123456789Z");
 
       assert(dt instanceof Datetime, "Datetime インスタンス");
       assert.deepEqual(
         dt.structure(),
         {
           seconds: 1717245296,
-          nanoseconds: 780_000_000, // マイクロ秒以下の精度は消える
+          nanoseconds: 780_123_456, // ナノ秒未満の精度は消える
         },
         "秒時刻とナノ秒時刻",
       );
-      assert.equal(dt.toJSON(), "2024-06-01T12:34:56.780000000Z", "JSON 表現");
+      assert.equal(dt.toJSON(), "2024-06-01T12:34:56.780123456Z", "JSON 表現");
       assert.equal(
         dt.toSurql(),
-        `d'2024-06-01T12:34:56.780000000Z'`,
+        `d'2024-06-01T12:34:56.780123456Z'`,
         "SurrealQL 表現",
       );
     });
@@ -207,25 +207,25 @@ for (const [name, Datetime] of Object.entries(tests)) {
     });
 
     test("UNIXエポック以前の文字列を指定してエンコード可能な Datetime インスタンスを作成する", () => {
-      const dt = new Datetime("1960-06-01T12:34:56.780123456Z");
+      const dt = new Datetime("1960-06-01T12:34:56.780123456789Z");
 
       assert(dt instanceof Datetime, "Datetime インスタンス");
       assert.deepEqual(
         dt.structure(),
         {
           seconds: -302441103,
-          nanoseconds: -220_000_000, // マイクロ秒以下の精度は消える
+          nanoseconds: -219_876_544, // ナノ秒未満の精度は消える
         },
         "秒時刻とナノ秒時刻",
       );
       assert.equal(
         dt.toJSON(),
-        "1960-06-01T12:34:56.780000000Z",
+        "1960-06-01T12:34:56.780123456Z",
         "JSON 表現",
       );
       assert.equal(
         dt.toSurql(),
-        `d'1960-06-01T12:34:56.780000000Z'`,
+        `d'1960-06-01T12:34:56.780123456Z'`,
         "SurrealQL 表現",
       );
     });

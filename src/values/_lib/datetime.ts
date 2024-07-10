@@ -79,7 +79,7 @@ export function init(
       : typeof v === "number"
       ? toBigInt(v, POW_MS_TO_NS)
       : typeof v === "string"
-      ? toBigInt(Date.parse(v), POW_MS_TO_NS)
+      ? parseDateString(v)
       : typeof v === "bigint"
       ? v
       : undefined;
@@ -135,6 +135,44 @@ export function init(
   }
 
   throw new SurrealTypeError("Invalid dateitme arguments");
+}
+
+const ISO8601REGEX =
+  /^((?:[+-][0-9]{2})?[0-9]{4})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])\.([0-9]{3,})Z$/;
+
+function parseDateString(s: string): bigint | null {
+  const m = s.match(ISO8601REGEX);
+
+  if (!m) {
+    return toBigInt(Date.parse(s), POW_MS_TO_NS);
+  }
+
+  const [
+    ,
+    YYYY,
+    MM,
+    DD,
+    HH,
+    mm,
+    ss,
+    sN,
+  ] = m as [string, string, string, string, string, string, string, string];
+  const msTime = Date.UTC(
+    Number(YYYY),
+    Number(MM) - 1,
+    Number(DD),
+    Number(HH),
+    Number(mm),
+    Number(ss),
+    Number(sN.substring(0, 3)),
+  );
+  let ns = toBigInt(msTime, POW_MS_TO_NS);
+
+  if (ns !== null) {
+    ns += BigInt((sN + "00000").substring(3, 9));
+  }
+
+  return ns;
 }
 
 function toBigInt(value: number, power: bigint = 0n): bigint | null {

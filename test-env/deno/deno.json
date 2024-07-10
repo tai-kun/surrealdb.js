@@ -12,13 +12,16 @@
     "@tai-kun/surreal/clients/standard": "__ROOT__/dist/clients/standard.mjs",
     "@tai-kun/surreal/clients/tiny": "__ROOT__/dist/clients/tiny.mjs",
     "@tai-kun/surreal/clients/full": "__ROOT__/dist/clients/full.mjs",
+    "@tai-kun/surreal/values/decode-only": "__ROOT__/dist/values/decode-only/index.mjs",
+    "@tai-kun/surreal/values/encodable": "__ROOT__/dist/values/encodable/index.mjs",
     "@tai-kun/surreal/values/standard": "__ROOT__/dist/values/standard/index.mjs",
-    "@tai-kun/surreal/values/tiny": "__ROOT__/dist/values/tiny/index.mjs",
     "@tai-kun/surreal/values/full": "__ROOT__/dist/values/full/index.mjs",
     "@tai-kun/surreal/engines": "__ROOT__/dist/engines/index.mjs",
     "@tai-kun/surreal/formatters": "__ROOT__/dist/formatters/index.mjs",
     "@tai-kun/surreal/validators": "__ROOT__/dist/validators/index.mjs",
     "@tai-kun/surreal/errors": "__ROOT__/dist/errors.mjs",
-    "@tai-kun/surreal/_lib": "__ROOT__/dist/_lib/index.mjs"
+    "@tai-kun/surreal/_lib": "__ROOT__/dist/_lib/index.mjs",
+
+    "@tai-kun/surreal/values/tiny": "__ROOT__/dist/values/tiny/index.mjs"
   }
 }

@@ -18,15 +18,17 @@ import {
 } from "~/values/_lib/internal";
 import type {
   Datetime as DecodeOnlyDatetime,
+  Decimal as DecodeOnlyDecimal,
   Duration as DecodeOnlyDuration,
 } from "~/values/decode-only";
 import type {
   Datetime as EncodableDatetime,
+  Decimal as EncodableDecimal,
   Duration as EncodableDuration,
 } from "~/values/encodable";
 import type {
   Datetime as FullDatetime,
-  Decimal as DecimalFull,
+  Decimal as FullDecimal,
   Duration as FullDuration,
   GeometryCollection as GeometryCollectionFull,
   GeometryLine as GeometryLineFull,
@@ -41,7 +43,7 @@ import type {
 } from "~/values/full";
 import type {
   Datetime as StandardDatetime,
-  Decimal,
+  Decimal as StandardDecimal,
   Duration as StandardDuration,
   GeometryCollection,
   GeometryLine,
@@ -55,7 +57,6 @@ import type {
   Uuid,
 } from "~/values/standard";
 import type {
-  Decimal as DecimalTiny,
   GeometryCollection as GeometryCollectionTiny,
   GeometryLine as GeometryLineTiny,
   GeometryMultiLine as GeometryMultiLineTiny,
@@ -117,10 +118,14 @@ export const isDatetime: IsValue<Datetime> = value =>
  * Decimal
  *****************************************************************************/
 
-export type DecimalType = Decimal | DecimalFull | DecimalTiny;
+export type Decimal =
+  | DecodeOnlyDecimal
+  | EncodableDecimal
+  | StandardDecimal
+  | FullDecimal;
 
 // @ts-expect-error
-export const isDecimal: IsValue<DecimalType> = value =>
+export const isDecimal: IsValue<Decimal> = value =>
   isValue(decimalErrors, value);
 
 /******************************************************************************

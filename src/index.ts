@@ -27,7 +27,7 @@ export type * from "./index/types";
 
 export {
   type Datetime,
-  type DecimalType,
+  type Decimal,
   type Duration,
   type GeometryCollectionType,
   type GeometryLineType,

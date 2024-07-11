@@ -1,13 +1,10 @@
 // main exports
 
-// import DecimalJs from "decimal.js-light";
-// import DecimalClass from "./Decimal";
-
 export type * from "./Datetime";
 export { default as Datetime } from "./Datetime";
 
-// export const Decimal = DecimalClass;
-// export type Decimal = DecimalJs;
+export type * from "./Decimal";
+export { default as Decimal } from "./Decimal";
 
 export type * from "./Duration";
 export { default as Duration } from "./Duration";

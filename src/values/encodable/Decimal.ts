@@ -11,6 +11,9 @@ export default class Decimal extends Base implements Encodable {
   [Symbol.toPrimitive](hint: string): string | number;
   [Symbol.toPrimitive](hint: string): string | number {
     switch (hint) {
+      case "number":
+        return Number(this.valueOf());
+
       case "string":
       case "default":
         return this.valueOf();

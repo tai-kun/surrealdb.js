@@ -44,6 +44,17 @@ for (const [name, Decimal] of Object.entries(tests)) {
       return;
     }
 
+    test("数値に変換", () => {
+      assert.equal(+new Decimal("3.14"), 3.14, "`+<Decimal>`");
+      assert.equal(Number(new Decimal("3.14")), 3.14, "`Number(Decimal)`");
+    });
+
+    test("整数長に変換", () => {
+      const d = new Decimal("9007199254740992"); // Number.MAX_SAFE_INTEGER + 1
+
+      assert.equal(BigInt(d as any), 9007199254740992n);
+    });
+
     test("文字列表現", () => {
       assert.equal(new Decimal(3.14).toString(), "3.14");
     });
@@ -58,12 +69,6 @@ for (const [name, Decimal] of Object.entries(tests)) {
 
     test("SurrealQL 表現", () => {
       assert.equal(new Decimal(3.14).toSurql(), "3.14dec");
-    });
-
-    test("数値に変換", {
-      skip: Decimal === EncodableDecimal,
-    }, () => {
-      assert.equal(+new Decimal("3.14"), 3.14);
     });
 
     test("decimal.js-light の静的メソッドにアクセスできる", {

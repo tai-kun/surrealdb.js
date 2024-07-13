@@ -20,54 +20,50 @@ import type {
   Datetime as DecodeOnlyDatetime,
   Decimal as DecodeOnlyDecimal,
   Duration as DecodeOnlyDuration,
+  GeometryCollectionBase as DecodeOnlyGeometryCollectionBase,
+  GeometryLineBase as DecodeOnlyGeometryLineBase,
+  GeometryMultiLineBase as DecodeOnlyGeometryMultiLineBase,
+  GeometryMultiPointBase as DecodeOnlyGeometryMultiPointBase,
+  GeometryMultiPolygonBase as DecodeOnlyGeometryMultiPolygonBase,
+  GeometryPointBase as DecodeOnlyGeometryPointBase,
+  GeometryPolygonBase as DecodeOnlyGeometryPolygonBase,
 } from "~/values/decode-only";
 import type {
   Datetime as EncodableDatetime,
   Decimal as EncodableDecimal,
   Duration as EncodableDuration,
+  GeometryCollectionBase as EncodableGeometryCollectionBase,
+  GeometryLineBase as EncodableGeometryLineBase,
+  GeometryMultiLineBase as EncodableGeometryMultiLineBase,
+  GeometryMultiPointBase as EncodableGeometryMultiPointBase,
+  GeometryMultiPolygonBase as EncodableGeometryMultiPolygonBase,
+  GeometryPointBase as EncodableGeometryPointBase,
+  GeometryPolygonBase as EncodableGeometryPolygonBase,
 } from "~/values/encodable";
 import type {
   Datetime as FullDatetime,
   Decimal as FullDecimal,
   Duration as FullDuration,
-  GeometryCollection as GeometryCollectionFull,
-  GeometryLine as GeometryLineFull,
-  GeometryMultiLine as GeometryMultiLineFull,
-  GeometryMultiPoint as GeometryMultiPointFull,
-  GeometryMultiPolygon as GeometryMultiPolygonFull,
-  GeometryPoint as GeometryPointFull,
-  GeometryPolygon as GeometryPolygonFull,
-  Table as TableFull,
-  Thing as ThingFull,
-  Uuid as UuidFull,
+  GeometryCollectionBase as FullGeometryCollectionBase,
+  GeometryLineBase as FullGeometryLineBase,
+  GeometryMultiLineBase as FullGeometryMultiLineBase,
+  GeometryMultiPointBase as FullGeometryMultiPointBase,
+  GeometryMultiPolygonBase as FullGeometryMultiPolygonBase,
+  GeometryPointBase as FullGeometryPointBase,
+  GeometryPolygonBase as FullGeometryPolygonBase,
 } from "~/values/full";
 import type {
   Datetime as StandardDatetime,
   Decimal as StandardDecimal,
   Duration as StandardDuration,
-  GeometryCollection,
-  GeometryLine,
-  GeometryMultiLine,
-  GeometryMultiPoint,
-  GeometryMultiPolygon,
-  GeometryPoint,
-  GeometryPolygon,
-  Table,
-  Thing,
-  Uuid,
+  GeometryCollectionBase as StandardGeometryCollectionBase,
+  GeometryLineBase as StandardGeometryLineBase,
+  GeometryMultiLineBase as StandardGeometryMultiLineBase,
+  GeometryMultiPointBase as StandardGeometryMultiPointBase,
+  GeometryMultiPolygonBase as StandardGeometryMultiPolygonBase,
+  GeometryPointBase as StandardGeometryPointBase,
+  GeometryPolygonBase as StandardGeometryPolygonBase,
 } from "~/values/standard";
-import type {
-  GeometryCollection as GeometryCollectionTiny,
-  GeometryLine as GeometryLineTiny,
-  GeometryMultiLine as GeometryMultiLineTiny,
-  GeometryMultiPoint as GeometryMultiPointTiny,
-  GeometryMultiPolygon as GeometryMultiPolygonTiny,
-  GeometryPoint as GeometryPointTiny,
-  GeometryPolygon as GeometryPolygonTiny,
-  Table as TableTiny,
-  Thing as ThingTiny,
-  Uuid as UuidTiny,
-} from "~/values/tiny";
 
 type IsValue<T> = {
   /**
@@ -146,116 +142,227 @@ export const isDuration: IsValue<Duration> = value =>
  * GeometryPoint
  *****************************************************************************/
 
-export type GeometryPointType =
-  | GeometryPoint
-  | GeometryPointFull
-  | GeometryPointTiny;
+type Coord = ((arg: any) => unknown) | (new(arg: any) => unknown);
+type DecodeOnlyGeometryPoint = DecodeOnlyGeometryPointBase<Coord>;
+type EncodableGeometryPoint = EncodableGeometryPointBase<Coord>;
+type StandardGeometryPoint = StandardGeometryPointBase<Coord>;
+type FullGeometryPoint = FullGeometryPointBase<Coord>;
+
+export type GeometryPoint =
+  | DecodeOnlyGeometryPoint
+  | EncodableGeometryPoint
+  | StandardGeometryPoint
+  | FullGeometryPoint;
 
 // @ts-expect-error
-export const isGeometryPoint: IsValue<GeometryPointType> = value =>
+export const isGeometryPoint: IsValue<GeometryPoint> = value =>
   isValue(geometryPointErrors, value);
 
 /******************************************************************************
  * GeometryLine
  *****************************************************************************/
 
-export type GeometryLineType =
-  | GeometryLine
-  | GeometryLineFull
-  | GeometryLineTiny;
+type DecodeOnlyGeometryLine = DecodeOnlyGeometryLineBase<
+  new(_: any) => DecodeOnlyGeometryPoint
+>;
+type EncodableGeometryLine = EncodableGeometryLineBase<
+  new(_: any) => EncodableGeometryPoint
+>;
+type StandardGeometryLine = StandardGeometryLineBase<
+  new(_: any) => StandardGeometryPoint
+>;
+type FullGeometryLine = FullGeometryLineBase<
+  new(_: any) => FullGeometryPoint
+>;
+
+export type GeometryLine =
+  | DecodeOnlyGeometryLine
+  | EncodableGeometryLine
+  | StandardGeometryLine
+  | FullGeometryLine;
 
 // @ts-expect-error
-export const isGeometryLine: IsValue<GeometryLineType> = value =>
+export const isGeometryLine: IsValue<GeometryLine> = value =>
   isValue(geometryLineErrors, value);
 
 /******************************************************************************
  * GeometryPolygon
  *****************************************************************************/
 
-export type GeometryPolygonType =
-  | GeometryPolygon
-  | GeometryPolygonFull
-  | GeometryPolygonTiny;
+type DecodeOnlyGeometryPolygon = DecodeOnlyGeometryPolygonBase<
+  new(_: any) => DecodeOnlyGeometryLine
+>;
+type EncodableGeometryPolygon = EncodableGeometryPolygonBase<
+  new(_: any) => EncodableGeometryLine
+>;
+type StandardGeometryPolygon = StandardGeometryPolygonBase<
+  new(_: any) => StandardGeometryLine
+>;
+type FullGeometryPolygon = FullGeometryPolygonBase<
+  new(_: any) => FullGeometryLine
+>;
+
+export type GeometryPolygon =
+  | DecodeOnlyGeometryPolygon
+  | EncodableGeometryPolygon
+  | StandardGeometryPolygon
+  | FullGeometryPolygon;
 
 // @ts-expect-error
-export const isGeometryPolygon: IsValue<GeometryPolygonType> = value =>
+export const isGeometryPolygon: IsValue<GeometryPolygon> = value =>
   isValue(geometryPolygonErrors, value);
 
 /******************************************************************************
  * GeometryMultiPoint
  *****************************************************************************/
 
-export type GeometryMultiPointType =
-  | GeometryMultiPoint
-  | GeometryMultiPointFull
-  | GeometryMultiPointTiny;
+type DecodeOnlyGeometryMultiPoint = DecodeOnlyGeometryMultiPointBase<
+  new(_: any) => DecodeOnlyGeometryPoint
+>;
+type EncodableGeometryMultiPoint = EncodableGeometryMultiPointBase<
+  new(_: any) => EncodableGeometryPoint
+>;
+type StandardGeometryMultiPoint = StandardGeometryMultiPointBase<
+  new(_: any) => StandardGeometryPoint
+>;
+type FullGeometryMultiPoint = FullGeometryMultiPointBase<
+  new(_: any) => FullGeometryPoint
+>;
+
+export type GeometryMultiPoint =
+  | DecodeOnlyGeometryMultiPoint
+  | EncodableGeometryMultiPoint
+  | StandardGeometryMultiPoint
+  | FullGeometryMultiPoint;
 
 // @ts-expect-error
-export const isGeometryMultiPoint: IsValue<GeometryMultiPointType> = value =>
+export const isGeometryMultiPoint: IsValue<GeometryMultiPoint> = value =>
   isValue(geometryMultiPointErrors, value);
 
 /******************************************************************************
  * GeometryMultiLine
  *****************************************************************************/
 
-export type GeometryMultiLineType =
-  | GeometryMultiLine
-  | GeometryMultiLineFull
-  | GeometryMultiLineTiny;
+type DecodeOnlyGeometryMultiLine = DecodeOnlyGeometryMultiLineBase<
+  new(_: any) => DecodeOnlyGeometryLine
+>;
+type EncodableGeometryMultiLine = EncodableGeometryMultiLineBase<
+  new(_: any) => EncodableGeometryLine
+>;
+type StandardGeometryMultiLine = StandardGeometryMultiLineBase<
+  new(_: any) => StandardGeometryLine
+>;
+type FullGeometryMultiLine = FullGeometryMultiLineBase<
+  new(_: any) => FullGeometryLine
+>;
+
+export type GeometryMultiLine =
+  | DecodeOnlyGeometryMultiLine
+  | EncodableGeometryMultiLine
+  | StandardGeometryMultiLine
+  | FullGeometryMultiLine;
 
 // @ts-expect-error
-export const isGeometryMultiLine: IsValue<GeometryMultiLineType> = value =>
+export const isGeometryMultiLine: IsValue<GeometryMultiLine> = value =>
   isValue(geometryMultiLineErrors, value);
 
 /******************************************************************************
  * GeometryMultiPolygon
  *****************************************************************************/
 
-export type GeometryMultiPolygonType =
-  | GeometryMultiPolygon
-  | GeometryMultiPolygonFull
-  | GeometryMultiPolygonTiny;
+type DecodeOnlyGeometryMultiPolygon = DecodeOnlyGeometryMultiPolygonBase<
+  new(_: any) => DecodeOnlyGeometryPolygon
+>;
+type EncodableGeometryMultiPolygon = EncodableGeometryMultiPolygonBase<
+  new(_: any) => EncodableGeometryPolygon
+>;
+type StandardGeometryMultiPolygon = StandardGeometryMultiPolygonBase<
+  new(_: any) => StandardGeometryPolygon
+>;
+type FullGeometryMultiPolygon = FullGeometryMultiPolygonBase<
+  new(_: any) => FullGeometryPolygon
+>;
+
+export type GeometryMultiPolygon =
+  | DecodeOnlyGeometryMultiPolygon
+  | EncodableGeometryMultiPolygon
+  | StandardGeometryMultiPolygon
+  | FullGeometryMultiPolygon;
 
 // @ts-expect-error
-export const isGeometryMultiPolygon: IsValue<GeometryMultiPolygonType> =
-  value => isValue(geometryMultiPolygonErrors, value);
+export const isGeometryMultiPolygon: IsValue<GeometryMultiPolygon> = value =>
+  isValue(geometryMultiPolygonErrors, value);
 
 /******************************************************************************
  * GeometryCollection
  *****************************************************************************/
 
-export type GeometryCollectionType =
-  | GeometryCollection
-  | GeometryCollectionFull
-  | GeometryCollectionTiny;
+type DecodeOnlyGeometryCollection = DecodeOnlyGeometryCollectionBase<
+  new(_: any) => DecodeOnlyGeometryPoint,
+  new(_: any) => DecodeOnlyGeometryMultiPoint,
+  new(_: any) => DecodeOnlyGeometryLine,
+  new(_: any) => DecodeOnlyGeometryMultiLine,
+  new(_: any) => DecodeOnlyGeometryPolygon,
+  new(_: any) => DecodeOnlyGeometryMultiPolygon
+>;
+type EncodableGeometryCollection = EncodableGeometryCollectionBase<
+  new(_: any) => EncodableGeometryPoint,
+  new(_: any) => EncodableGeometryMultiPoint,
+  new(_: any) => EncodableGeometryLine,
+  new(_: any) => EncodableGeometryMultiLine,
+  new(_: any) => EncodableGeometryPolygon,
+  new(_: any) => EncodableGeometryMultiPolygon
+>;
+type StandardGeometryCollection = StandardGeometryCollectionBase<
+  new(_: any) => StandardGeometryPoint,
+  new(_: any) => StandardGeometryMultiPoint,
+  new(_: any) => StandardGeometryLine,
+  new(_: any) => StandardGeometryMultiLine,
+  new(_: any) => StandardGeometryPolygon,
+  new(_: any) => StandardGeometryMultiPolygon
+>;
+type FullGeometryCollection = FullGeometryCollectionBase<
+  new(_: any) => FullGeometryPoint,
+  new(_: any) => FullGeometryMultiPoint,
+  new(_: any) => FullGeometryLine,
+  new(_: any) => FullGeometryMultiLine,
+  new(_: any) => FullGeometryPolygon,
+  new(_: any) => FullGeometryMultiPolygon
+>;
+
+export type GeometryCollection =
+  | DecodeOnlyGeometryCollection
+  | EncodableGeometryCollection
+  | StandardGeometryCollection
+  | FullGeometryCollection;
 
 // @ts-expect-error
-export const isGeometryCollection: IsValue<GeometryCollectionType> = value =>
+export const isGeometryCollection: IsValue<GeometryCollection> = value =>
   isValue(geometryCollectionErrors, value);
 
 /******************************************************************************
  * Table
  *****************************************************************************/
 
-export type TableType = Table | TableFull | TableTiny;
+export type Table = any;
 
 // @ts-expect-error
-export const isTable: IsValue<TableType> = value => isValue(tableErrors, value);
+export const isTable: IsValue<Table> = value => isValue(tableErrors, value);
 
 /******************************************************************************
  * Thing
  *****************************************************************************/
 
-export type ThingType = Thing | ThingFull | ThingTiny;
+export type Thing = any;
 
 // @ts-expect-error
-export const isThing: IsValue<ThingType> = value => isValue(thingErrors, value);
+export const isThing: IsValue<Thing> = value => isValue(thingErrors, value);
 
 /******************************************************************************
  * Uuid
  *****************************************************************************/
 
-export type UuidType = Uuid | UuidFull | UuidTiny;
+export type Uuid = any;
 
 // @ts-expect-error
-export const isUuid: IsValue<UuidType> = value => isValue(uuidErrors, value);
+export const isUuid: IsValue<Uuid> = value => isValue(uuidErrors, value);

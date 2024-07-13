@@ -9,26 +9,32 @@ export { default as Decimal } from "./Decimal";
 export type * from "./Duration";
 export { default as Duration } from "./Duration";
 
-// export type * from "./gemetory/GeometryCollection";
-// export { default as GeometryCollection } from "./gemetory/GeometryCollection";
+export type * from "./GeometryCollection";
+export {
+  GeometryCollection,
+  GeometryCollectionBase,
+} from "./GeometryCollection";
 
-// export type * from "./gemetory/GeometryLine";
-// export { default as GeometryLine } from "./gemetory/GeometryLine";
+export { GeometryLine, GeometryLineBase } from "./GeometryLine";
 
-// export type * from "./gemetory/GeometryMultiLine";
-// export { default as GeometryMultiLine } from "./gemetory/GeometryMultiLine";
+export type * from "./GeometryMultiLine";
+export { GeometryMultiLine, GeometryMultiLineBase } from "./GeometryMultiLine";
 
-// export type * from "./gemetory/GeometryMultiPoint";
-// export { default as GeometryMultiPoint } from "./gemetory/GeometryMultiPoint";
+export type * from "./GeometryMultiPoint";
+export {
+  GeometryMultiPoint,
+  GeometryMultiPointBase,
+} from "./GeometryMultiPoint";
 
-// export type * from "./gemetory/GeometryMultiPolygon";
-// export { default as GeometryMultiPolygon } from "./gemetory/GeometryMultiPolygon";
+export type * from "./GeometryMultiPolygon";
+export {
+  GeometryMultiPolygon,
+  GeometryMultiPolygonBase,
+} from "./GeometryMultiPolygon";
 
-// export type * from "./gemetory/GeometryPoint";
-// export { default as GeometryPoint } from "./gemetory/GeometryPoint";
+export { GeometryPoint, GeometryPointBase } from "./GeometryPoint";
 
-// export type * from "./gemetory/GeometryPolygon";
-// export { default as GeometryPolygon } from "./gemetory/GeometryPolygon";
+export { GeometryPolygon, GeometryPolygonBase } from "./GeometryPolygon";
 
 // export type * from "./Table";
 // export { default as Table } from "./Table";
@@ -41,7 +47,12 @@ export { default as Duration } from "./Duration";
 
 // lib exports
 
-export type * from "../_lib/geometry/Abc";
-export { default as GeometryAbc } from "../_lib/geometry/Abc";
+export type {
+  Coord,
+  CoordArg,
+  CoordValue,
+  GeometryType,
+} from "../_lib/geometry";
+export { coord, GeometryAbc } from "../_lib/geometry";
 
 export type * from "../_lib/types";

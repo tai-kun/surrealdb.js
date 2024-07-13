@@ -18,22 +18,11 @@ export interface SurqlValueSerializer {
   toSurql(): string;
 }
 
-export type StructurePrimitive = string | number | bigint | boolean | null;
-
-export type StructureObject = { [_ in string]?: StructureValue };
-
-export type StructureArray = StructureValue[];
-
-export type StructureValue =
-  | StructurePrimitive
-  | StructureObject
-  | StructureArray;
-
 /**
  * SurrealQL の値をエンコードするインターフェース。
  */
 export interface Encodable {
   toJSON(): Jsonifiable;
   toSurql(): string;
-  structure(): StructureObject;
+  structure(): Record<string, unknown>;
 }

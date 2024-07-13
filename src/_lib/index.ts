@@ -7,6 +7,9 @@ export { default as getTimeoutSignal } from "./getTimeoutSignal";
 export type * from "./isBrowser";
 export { default as isBrowser } from "./isBrowser";
 
+export type * from "./isCustomClass";
+export { default as isCustomClass } from "./isCustomClass";
+
 export type * from "./isSafeNumber";
 export { default as isSafeNumber } from "./isSafeNumber";
 

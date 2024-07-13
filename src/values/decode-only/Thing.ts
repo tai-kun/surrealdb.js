@@ -1,5 +1,5 @@
 import type { SurqlArray, SurqlValue } from "~/index/toSurql";
-import type { TableType } from "~/index/values";
+import type { Table } from "~/index/values";
 import { _defineAssertThing } from "../_lib/internal";
 
 /**
@@ -19,11 +19,17 @@ export type ThingId =
  * テーブル名とテーブル内のレコードの識別子から成るレコード ID を表すクラス。
  */
 export default class Thing {
+  readonly tb: string;
+
+  readonly id: ThingId;
+
   /**
    * @param tb テーブル名。
    * @param id テーブル内のレコードの識別子。
    */
-  constructor(public tb: string | TableType, public id: ThingId) {
+  constructor(tb: string | Table, id: ThingId) {
     _defineAssertThing(this);
+    this.tb = typeof tb === "string" ? tb : tb.name;
+    this.id = id;
   }
 }

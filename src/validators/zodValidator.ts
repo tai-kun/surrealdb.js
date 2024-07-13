@@ -62,9 +62,9 @@ import {
   isTable,
   isThing,
   isUuid,
-  type TableType,
-  type ThingType,
-  type UuidType,
+  type Table,
+  type Thing,
+  type Uuid,
 } from "~/index/values";
 import type { Validator } from "./_lib/types";
 
@@ -128,9 +128,9 @@ const JwtLike = z.string().refine(x => {
 const ReadonlyEmptyArray = z.tuple([])
   .readonly() as unknown as ZodType<readonly []>;
 
-const Table = z.custom<TableType>(isTable);
-const Thing = z.custom<ThingType>(isThing);
-const Uuid = z.custom<UuidType>(isUuid);
+const Table = z.custom<Table>(isTable);
+const Thing = z.custom<Thing>(isThing);
+const Uuid = z.custom<Uuid>(isUuid);
 
 /******************************************************************************
  * Query Types
@@ -282,7 +282,7 @@ const LiveAction: ZodType<LiveAction> = z.enum([
   "DELETE",
 ]);
 
-const LiveData = <T extends RecordData, I extends string | UuidType>(
+const LiveData = <T extends RecordData, I extends string | Uuid>(
   data: ZodType<T>,
   id: ZodType<I>,
 ): ZodType<LiveData<T, I>> =>
@@ -297,7 +297,7 @@ const LiveData = <T extends RecordData, I extends string | UuidType>(
 const LiveDiff = <
   T extends RecordData,
   P extends readonly Patch[],
-  I extends string | UuidType,
+  I extends string | Uuid,
 >(
   data: ZodType<T>,
   patch: ZodType<P>,
@@ -323,7 +323,7 @@ const LiveDiff = <
 const LiveResult = <
   T extends RecordData,
   P extends readonly Patch[],
-  I extends string | UuidType,
+  I extends string | Uuid,
 >(
   data: ZodType<T>,
   patch: ZodType<P>,

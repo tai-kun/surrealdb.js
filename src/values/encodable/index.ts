@@ -36,14 +36,14 @@ export { GeometryPoint, GeometryPointBase } from "./GeometryPoint";
 
 export { GeometryPolygon, GeometryPolygonBase } from "./GeometryPolygon";
 
-// export type * from "./Table";
-// export { default as Table } from "./Table";
+export type * from "./Table";
+export { default as Table } from "./Table";
 
-// export type * from "./Thing";
-// export { default as Thing } from "./Thing";
+export type * from "./Thing";
+export { default as Thing } from "./Thing";
 
-// export type * from "./Uuid";
-// export { default as Uuid } from "./Uuid";
+export type * from "./Uuid";
+export { default as Uuid } from "./Uuid";
 
 // lib exports
 

@@ -3,30 +3,15 @@ import { SurrealTypeError } from "~/errors";
 import { BRACKETL, BRACKETR, escapeRid, quoteStr } from "~/index/escape";
 import toSurql from "~/index/toSurql";
 import type { Table } from "~/index/values";
-import { _defineAssertThing } from "../_lib/internal";
 import type { Encodable } from "../_lib/types";
-import type { ThingId } from "../decode-only/Thing";
+import Base, { type ThingId } from "../decode-only/Thing";
 
 const I64_MAX = 9223372036854775807n;
 const I64_MIN = -9223372036854775808n;
 
-export type * from "../standard/Thing";
+export type * from "../decode-only/Thing";
 
-export default class Thing implements Encodable {
-  tb: string;
-
-  id: ThingId;
-
-  /**
-   * @param tb テーブル名。
-   * @param id テーブル内のレコードの識別子。
-   */
-  constructor(tb: string | Table, id: ThingId) {
-    _defineAssertThing(this);
-    this.tb = typeof tb === "string" ? tb : tb.name;
-    this.id = id;
-  }
-
+export default class Thing extends Base implements Encodable {
   /**
    * テーブル名をエスケープします。
    *

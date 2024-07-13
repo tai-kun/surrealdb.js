@@ -27,6 +27,9 @@ import type {
   GeometryMultiPolygonBase as DecodeOnlyGeometryMultiPolygonBase,
   GeometryPointBase as DecodeOnlyGeometryPointBase,
   GeometryPolygonBase as DecodeOnlyGeometryPolygonBase,
+  Table as DecodeOnlyTable,
+  Thing as DecodeOnlyThing,
+  Uuid as DecodeOnlyUuid,
 } from "~/values/decode-only";
 import type {
   Datetime as EncodableDatetime,
@@ -39,6 +42,9 @@ import type {
   GeometryMultiPolygonBase as EncodableGeometryMultiPolygonBase,
   GeometryPointBase as EncodableGeometryPointBase,
   GeometryPolygonBase as EncodableGeometryPolygonBase,
+  Table as EncodableTable,
+  Thing as EncodableThing,
+  Uuid as EncodableUuid,
 } from "~/values/encodable";
 import type {
   Datetime as FullDatetime,
@@ -51,6 +57,9 @@ import type {
   GeometryMultiPolygonBase as FullGeometryMultiPolygonBase,
   GeometryPointBase as FullGeometryPointBase,
   GeometryPolygonBase as FullGeometryPolygonBase,
+  Table as FullTable,
+  Thing as FullThing,
+  Uuid as FullUuid,
 } from "~/values/full";
 import type {
   Datetime as StandardDatetime,
@@ -63,6 +72,9 @@ import type {
   GeometryMultiPolygonBase as StandardGeometryMultiPolygonBase,
   GeometryPointBase as StandardGeometryPointBase,
   GeometryPolygonBase as StandardGeometryPolygonBase,
+  Table as StandardTable,
+  Thing as StandardThing,
+  Uuid as StandardUuid,
 } from "~/values/standard";
 
 type IsValue<T> = {
@@ -344,7 +356,11 @@ export const isGeometryCollection: IsValue<GeometryCollection> = value =>
  * Table
  *****************************************************************************/
 
-export type Table = any;
+export type Table =
+  | DecodeOnlyTable
+  | EncodableTable
+  | StandardTable
+  | FullTable;
 
 // @ts-expect-error
 export const isTable: IsValue<Table> = value => isValue(tableErrors, value);
@@ -353,7 +369,11 @@ export const isTable: IsValue<Table> = value => isValue(tableErrors, value);
  * Thing
  *****************************************************************************/
 
-export type Thing = any;
+export type Thing =
+  | DecodeOnlyThing
+  | EncodableThing
+  | StandardThing
+  | FullThing;
 
 // @ts-expect-error
 export const isThing: IsValue<Thing> = value => isValue(thingErrors, value);
@@ -362,7 +382,11 @@ export const isThing: IsValue<Thing> = value => isValue(thingErrors, value);
  * Uuid
  *****************************************************************************/
 
-export type Uuid = any;
+export type Uuid =
+  | DecodeOnlyUuid
+  | EncodableUuid
+  | StandardUuid
+  | FullUuid;
 
 // @ts-expect-error
 export const isUuid: IsValue<Uuid> = value => isValue(uuidErrors, value);

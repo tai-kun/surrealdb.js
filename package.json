@@ -73,12 +73,6 @@
       "tyes": "./dist/_lib/index.d.ts",
       "import": "./dist/_lib/index.mjs",
       "require": "./dist/_lib/index.cjs"
-    },
-
-    "./values/tiny": {
-      "tyes": "./dist/values/tiny/index.d.ts",
-      "import": "./dist/values/tiny/index.mjs",
-      "require": "./dist/values/tiny/index.cjs"
     }
   },
   "files": [

@@ -74,19 +74,38 @@ for (const { suiteName, formatter, initSurreal } of surreal) {
       await using db = new Surreal();
       await db.connect(endpoint);
       const geometryPoint = new GeometryPoint([1, "3.14"]);
-      const geometryLine = new GeometryLine([new GeometryPoint([1, 2])]);
+      const geometryLine = new GeometryLine([
+        new GeometryPoint([1, 2]),
+        new GeometryPoint([3, 4]),
+      ]);
       const geometryPolygon = new GeometryPolygon([
-        new GeometryLine([new GeometryPoint([1, 1])]),
-        new GeometryLine([new GeometryPoint([4, 1])]),
-        new GeometryLine([new GeometryPoint([4, 4])]),
-        new GeometryLine([new GeometryPoint([1, 4])]),
-        new GeometryLine([new GeometryPoint([1, 1])]),
+        new GeometryLine([
+          new GeometryPoint([1, 1]),
+          new GeometryPoint([1, 1]),
+        ]),
+        new GeometryLine([
+          new GeometryPoint([4, 1]),
+          new GeometryPoint([4, 1]),
+        ]),
+        new GeometryLine([
+          new GeometryPoint([4, 4]),
+          new GeometryPoint([4, 4]),
+        ]),
+        new GeometryLine([
+          new GeometryPoint([1, 4]),
+          new GeometryPoint([1, 4]),
+        ]),
+        new GeometryLine([
+          new GeometryPoint([1, 1]),
+          new GeometryPoint([1, 1]),
+        ]),
       ]);
       const geometryMultiPoint = new GeometryMultiPoint([
         new GeometryPoint([1, 2]),
       ]);
       const geometryMultiLine = new GeometryMultiLine([
         new GeometryLine([
+          new GeometryPoint([1, 2]),
           new GeometryPoint([1, 2]),
         ]),
       ]);

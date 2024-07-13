@@ -29,11 +29,7 @@ export class GeometryMultiLine
 
   constructor(
     lines:
-      | readonly [
-        ConstructorParameters<typeof GeometryLine>[0],
-        ConstructorParameters<typeof GeometryLine>[0],
-        ...ConstructorParameters<typeof GeometryLine>[0][],
-      ]
+      | readonly ConstructorParameters<typeof GeometryLine>[0][]
       | Readonly<Pick<GeometryMultiLine, "lines">>,
   ) {
     super(GeometryMultiLine, lines);

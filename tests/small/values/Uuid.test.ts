@@ -1,8 +1,9 @@
 import { isUuid } from "@tai-kun/surreal";
 import { SurrealTypeError } from "@tai-kun/surreal/errors";
+import { Uuid as DecodeOnlyUuid } from "@tai-kun/surreal/values/decode-only";
+import { Uuid as EncodableUuid } from "@tai-kun/surreal/values/encodable";
 import { Uuid } from "@tai-kun/surreal/values/full";
 import { Uuid as UuidStandard } from "@tai-kun/surreal/values/standard";
-import { Uuid as UuidTiny } from "@tai-kun/surreal/values/tiny";
 import assert from "@tools/assert";
 import { test } from "@tools/test";
 // @ts-expect-error
@@ -77,9 +78,10 @@ test("バイト配列は常にコピーされる", () => {
 });
 
 test("UUID クラスであると判定できる", () => {
-  assert(isUuid(new Uuid("26c80163-3b83-481b-93da-c473947cccbc")));
-  assert(isUuid(new UuidTiny("26c80163-3b83-481b-93da-c473947cccbc")));
+  assert(isUuid(new DecodeOnlyUuid("26c80163-3b83-481b-93da-c473947cccbc")));
+  assert(isUuid(new EncodableUuid("26c80163-3b83-481b-93da-c473947cccbc")));
   assert(isUuid(new UuidStandard("26c80163-3b83-481b-93da-c473947cccbc")));
+  assert(isUuid(new Uuid("26c80163-3b83-481b-93da-c473947cccbc")));
 
   assert(!isUuid("26c80163-3b83-481b-93da-c473947cccbc"));
   assert(!isUuid({}));

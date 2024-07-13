@@ -1,13 +1,13 @@
 import { Simplify } from "type-fest";
 import type { Patch, ReadonlyPatch, RecordData } from "~/index/types";
-import type { ThingType } from "~/index/values";
+import type { Thing } from "~/index/values";
 import type { ClientRpcOptions } from "./_lib/Abc";
 import Base from "./standard";
 
 // dprint-ignore
 export type ActionResult<T extends RecordData = RecordData>
   = "id" extends keyof T ? T
-  : Simplify<T & { readonly id: string | ThingType }>;
+  : Simplify<T & { readonly id: string | Thing }>;
 
 /**
  * パッチ操作のオプション。
@@ -74,12 +74,12 @@ export default class Client extends Base {
    * @returns 選択されたレコード。
    */
   async select<T extends RecordData = RecordData>(
-    thing: ThingType,
+    thing: Thing,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
   async select(
-    thing: string | ThingType,
+    thing: string | Thing,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("select", [thing], options);
@@ -112,13 +112,13 @@ export default class Client extends Base {
    * @returns 作成されたレコード。
    */
   async create<T extends RecordData = RecordData, U extends RecordData = T>(
-    thing: ThingType,
+    thing: Thing,
     data?: U | null | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
   async create(
-    thing: string | ThingType,
+    thing: string | Thing,
     data?: RecordData | null | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
@@ -152,13 +152,13 @@ export default class Client extends Base {
    * @returns 挿入されたレコード。
    */
   async insert<T extends RecordData = RecordData, U extends RecordData = T>(
-    thing: ThingType,
+    thing: Thing,
     data?: U | null | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
   async insert(
-    thing: string | ThingType,
+    thing: string | Thing,
     data?: RecordData | readonly RecordData[] | null | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
@@ -192,13 +192,13 @@ export default class Client extends Base {
    * @returns 更新されたレコード。
    */
   async update<T extends RecordData = RecordData, U extends RecordData = T>(
-    thing: ThingType,
+    thing: Thing,
     data?: U | null | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
   async update(
-    thing: string | ThingType,
+    thing: string | Thing,
     data?: RecordData | null | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
@@ -232,13 +232,13 @@ export default class Client extends Base {
    * @returns マージされたレコード。
    */
   async merge<T extends RecordData = RecordData, U extends RecordData = T>(
-    thing: ThingType,
+    thing: Thing,
     data: U,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
   async merge(
-    thing: string | ThingType,
+    thing: string | Thing,
     data: RecordData,
     options?: ClientRpcOptions | undefined,
   ) {
@@ -272,7 +272,7 @@ export default class Client extends Base {
    * @returns パッチされたレコード。
    */
   async patch<T extends RecordData = RecordData>(
-    thing: ThingType,
+    thing: Thing,
     patches: readonly ReadonlyPatch[],
     options?:
       | (ClientRpcOptions & { readonly diff?: false | null | undefined })
@@ -302,13 +302,13 @@ export default class Client extends Base {
    * @returns JSON パッチ。
    */
   async patch(
-    thing: ThingType,
+    thing: Thing,
     patches: readonly ReadonlyPatch[],
     options: ClientRpcOptions & { readonly diff: true },
   ): Promise<Patch[]>;
 
   async patch(
-    thing: string | ThingType,
+    thing: string | Thing,
     patches: readonly ReadonlyPatch[],
     options?: PatchOptions | undefined,
   ) {
@@ -339,12 +339,12 @@ export default class Client extends Base {
    * @returns 削除されたレコード。
    */
   async delete<T extends RecordData = RecordData>(
-    thing: ThingType,
+    thing: Thing,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
   async delete(
-    thing: string | ThingType,
+    thing: string | Thing,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("delete", [thing], options);
@@ -413,9 +413,9 @@ export default class Client extends Base {
    * @returns グラフエッジ。
    */
   async relate<T extends RecordData = RecordData, U extends RecordData = T>(
-    from: string | ThingType | readonly ThingType[],
+    from: string | Thing | readonly Thing[],
     thing: string,
-    to: string | ThingType | readonly ThingType[],
+    to: string | Thing | readonly Thing[],
     data?: U | null | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T[]>;
@@ -432,17 +432,17 @@ export default class Client extends Base {
    * @returns グラフエッジ。
    */
   async relate<T extends RecordData = RecordData, U extends RecordData = T>(
-    from: string | ThingType | readonly ThingType[],
-    thing: ThingType,
-    to: string | ThingType | readonly ThingType[],
+    from: string | Thing | readonly Thing[],
+    thing: Thing,
+    to: string | Thing | readonly Thing[],
     data?: U | null | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T>;
 
   async relate(
-    from: string | ThingType | readonly ThingType[],
-    thing: string | ThingType,
-    to: string | ThingType | readonly ThingType[],
+    from: string | Thing | readonly Thing[],
+    thing: string | Thing,
+    to: string | Thing | readonly Thing[],
     data?: RecordData | null | undefined,
     options?: ClientRpcOptions | undefined,
   ) {

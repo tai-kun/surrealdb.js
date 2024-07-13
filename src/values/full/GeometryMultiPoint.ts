@@ -30,11 +30,7 @@ export class GeometryMultiPoint
 
   constructor(
     points:
-      | readonly [
-        ConstructorParameters<typeof GeometryPoint>[0],
-        ConstructorParameters<typeof GeometryPoint>[0],
-        ...ConstructorParameters<typeof GeometryPoint>[0][],
-      ]
+      | readonly ConstructorParameters<typeof GeometryPoint>[0][]
       | Readonly<Pick<GeometryMultiPoint, "points">>,
   ) {
     super(GeometryMultiPoint, points);

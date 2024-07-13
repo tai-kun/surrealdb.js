@@ -1,7 +1,8 @@
 import { isTable } from "@tai-kun/surreal";
+import { Table as DecodeOnlyTable } from "@tai-kun/surreal/values/decode-only";
+import { Table as EncodableTable } from "@tai-kun/surreal/values/encodable";
 import { Table } from "@tai-kun/surreal/values/full";
-import { Table as TableStandard } from "@tai-kun/surreal/values/standard";
-import { Table as TableTiny } from "@tai-kun/surreal/values/tiny";
+import { Table as StandardTable } from "@tai-kun/surreal/values/standard";
 import assert from "@tools/assert";
 import { test } from "@tools/test";
 
@@ -57,9 +58,10 @@ test("10 進数または半角英数字とアンダースコア以外が含ま�
 });
 
 test("Table クラスであると判定できる", async () => {
+  assert(isTable(new DecodeOnlyTable("a")));
+  assert(isTable(new EncodableTable("a")));
+  assert(isTable(new StandardTable("a")));
   assert(isTable(new Table("a")));
-  assert(isTable(new TableTiny("a")));
-  assert(isTable(new TableStandard("a")));
 
   assert(!isTable("a"));
   assert(!isTable({ name: "a" }));

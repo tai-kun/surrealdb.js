@@ -20,8 +20,6 @@
     "@tai-kun/surreal/formatters": "__ROOT__/dist/formatters/index.mjs",
     "@tai-kun/surreal/validators": "__ROOT__/dist/validators/index.mjs",
     "@tai-kun/surreal/errors": "__ROOT__/dist/errors.mjs",
-    "@tai-kun/surreal/_lib": "__ROOT__/dist/_lib/index.mjs",
-
-    "@tai-kun/surreal/values/tiny": "__ROOT__/dist/values/tiny/index.mjs"
+    "@tai-kun/surreal/_lib": "__ROOT__/dist/_lib/index.mjs"
   }
 }

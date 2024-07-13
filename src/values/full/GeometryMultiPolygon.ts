@@ -29,11 +29,7 @@ export class GeometryMultiPolygon
 
   constructor(
     polygons:
-      | readonly [
-        ConstructorParameters<typeof GeometryPolygon>[0],
-        ConstructorParameters<typeof GeometryPolygon>[0],
-        ...ConstructorParameters<typeof GeometryPolygon>[0][],
-      ]
+      | readonly ConstructorParameters<typeof GeometryPolygon>[0][]
       | Readonly<Pick<GeometryMultiPolygon, "polygons">>,
   ) {
     super(GeometryMultiPolygon, polygons);

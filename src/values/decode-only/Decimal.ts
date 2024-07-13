@@ -10,7 +10,7 @@ const OCTAL_REGEX = /^0o([0-7]+(\.[0-7]*)?|\.[0-7]+)(p[+-]?\d+)?$/i;
 const DECIMAL_REGEX = /^(\d+(\.\d*)?|\.\d+)(e[+-]?\d+)?$/i;
 
 export default class Decimal {
-  #value: string;
+  protected _value: string;
 
   /**
    * @param value Decimal の値。10 進数以外の文字列と数値は自動的に 10 進数に変換されます。
@@ -27,17 +27,17 @@ export default class Decimal {
         || OCTAL_REGEX.test(value)
       )
     ) {
-      this.#value = value;
+      this._value = value;
     } else if (isSafeNumber(value as number)) {
-      this.#value = value.toString(10);
+      this._value = value.toString(10);
     } else if (isDecimal(value)) {
-      this.#value = value.valueOf();
+      this._value = value.valueOf();
     } else {
       throw new SurrealTypeError("Invalid Decimal value", { cause: value });
     }
   }
 
   valueOf(): string {
-    return this.#value;
+    return this._value;
   }
 }

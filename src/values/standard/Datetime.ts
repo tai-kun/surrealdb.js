@@ -11,7 +11,7 @@ import { _defineAssertDatetime } from "../_lib/internal";
 import type { Encodable } from "../_lib/types";
 
 export default class Datetime extends Date implements Encodable {
-  #nanoseconds: number;
+  protected _nanoseconds: number;
 
   constructor();
 
@@ -45,7 +45,7 @@ export default class Datetime extends Date implements Encodable {
 
   constructor(...args: Args) {
     super();
-    this.#nanoseconds = init(args, {
+    this._nanoseconds = init(args, {
       getTime: () => super.getTime(),
       setTime: t => super.setTime(t),
     })[1];
@@ -65,7 +65,7 @@ export default class Datetime extends Date implements Encodable {
   }
 
   get nanoseconds(): number {
-    return this.#nanoseconds;
+    return this._nanoseconds;
   }
 
   set nanoseconds(ns: number) {
@@ -83,7 +83,7 @@ export default class Datetime extends Date implements Encodable {
   setCompact(compact: readonly [seconds: number, nanoseconds: number]): number {
     const [msTime, [, nanoseconds]] = fromCompact(compact);
     const time = super.setTime(msTime);
-    this.#nanoseconds = Number.isNaN(time)
+    this._nanoseconds = Number.isNaN(time)
       ? NaN
       : nanoseconds === 0
       ? 0 // -0 を 0 にする

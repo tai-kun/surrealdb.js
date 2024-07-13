@@ -2,8 +2,8 @@ import { type Args, init } from "../_lib/datetime";
 import { _defineAssertDatetime } from "../_lib/internal";
 
 export default class Datetime {
-  #seconds: number;
-  #nanoseconds: number;
+  readonly seconds: number;
+  readonly nanoseconds: number;
 
   constructor();
 
@@ -36,15 +36,7 @@ export default class Datetime {
   );
 
   constructor(...args: Args) {
-    [this.#seconds, this.#nanoseconds] = init(args, new Date());
+    [this.seconds, this.nanoseconds] = init(args, new Date());
     _defineAssertDatetime(this);
-  }
-
-  get seconds(): number {
-    return this.#seconds;
-  }
-
-  get nanoseconds(): number {
-    return this.#nanoseconds;
   }
 }

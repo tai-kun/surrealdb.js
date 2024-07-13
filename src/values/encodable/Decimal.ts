@@ -3,7 +3,7 @@ import Base from "../decode-only/Decimal";
 
 export default class Decimal extends Base implements Encodable {
   override toString(): string {
-    return this.valueOf();
+    return this._value;
   }
 
   [Symbol.toPrimitive](hint: "default" | "string"): string;
@@ -12,11 +12,11 @@ export default class Decimal extends Base implements Encodable {
   [Symbol.toPrimitive](hint: string): string | number {
     switch (hint) {
       case "number":
-        return Number(this.valueOf());
+        return Number(this._value);
 
       case "string":
       case "default":
-        return this.valueOf();
+        return this._value;
 
       default:
         throw TypeError("Invalid hint: " + String(hint));
@@ -24,18 +24,18 @@ export default class Decimal extends Base implements Encodable {
   }
 
   toJSON(): string {
-    return this.valueOf();
+    return this._value;
   }
 
   toSurql(): string {
-    return this.valueOf() + "dec";
+    return this._value + "dec";
   }
 
   structure(): {
     value: string;
   } {
     return {
-      value: this.valueOf(),
+      value: this._value,
     };
   }
 }

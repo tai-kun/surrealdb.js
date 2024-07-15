@@ -71,7 +71,7 @@ const nonClasses = [
 
   // 構造化データ
   ArrayBuffer,
-  SharedArrayBuffer,
+  // SharedArrayBuffer,
   Atomics,
   DataView,
   JSON,

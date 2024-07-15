@@ -1,11 +1,5 @@
-// main exports
+export { default as emptyValidator } from "./empty";
 
-export type * from "./emptyValidator";
-export { default as emptyValidator } from "./emptyValidator";
+export { default as ZodValidator } from "./zod";
 
-export type * from "./zodValidator";
-export { default as zodValidator } from "./zodValidator";
-
-// lib exports
-
-export type * from "./_lib/types";
+export type * from "./_shared/types";

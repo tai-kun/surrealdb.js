@@ -1,4 +1,4 @@
-import { isDecimal } from "@tai-kun/surreal";
+import { isDecimal } from "@tai-kun/surreal/values";
 import { Decimal as DecodeOnlyDecimal } from "@tai-kun/surreal/values/decode-only";
 import { Decimal as EncodableDecimal } from "@tai-kun/surreal/values/encodable";
 import { Decimal as FullDecimal } from "@tai-kun/surreal/values/full";

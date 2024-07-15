@@ -1,4 +1,4 @@
-import { isGeometryPoint } from "@tai-kun/surreal";
+import { isGeometryPoint } from "@tai-kun/surreal/values";
 import {
   GeometryPoint as DecodeOnlyGeometryPoint,
   GeometryPointBase as DecodeOnlyGeometryPointBase,

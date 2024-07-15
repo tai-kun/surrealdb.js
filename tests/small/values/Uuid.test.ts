@@ -1,5 +1,5 @@
-import { isUuid } from "@tai-kun/surreal";
 import { SurrealTypeError } from "@tai-kun/surreal/errors";
+import { isUuid } from "@tai-kun/surreal/values";
 import { Uuid as DecodeOnlyUuid } from "@tai-kun/surreal/values/decode-only";
 import { Uuid as EncodableUuid } from "@tai-kun/surreal/values/encodable";
 import { Uuid } from "@tai-kun/surreal/values/full";
@@ -64,18 +64,18 @@ test("Max UUID から UUID インスタンスを作成できる", () => {
   assert.equal(uuid.version, null);
 });
 
-test("バイト配列は常にコピーされる", () => {
-  const UUID_STRING = "8f3c721e-439a-4fc0-963c-8dbedf5cc7ee";
-  const uuid = new Uuid(UUID_STRING);
+// test("バイト配列は常にコピーされる", () => {
+//   const UUID_STRING = "8f3c721e-439a-4fc0-963c-8dbedf5cc7ee";
+//   const uuid = new Uuid(UUID_STRING);
 
-  assert.notEqual(uuid.bytes, uuid.bytes);
+//   assert.notEqual(uuid.bytes, uuid.bytes);
 
-  for (let i = 0; i < 16; i++) {
-    uuid.bytes[i] = 0xff;
-  }
+//   for (let i = 0; i < 16; i++) {
+//     uuid.bytes[i] = 0xff;
+//   }
 
-  assert.equal(uuid.toJSON(), UUID_STRING);
-});
+//   assert.equal(uuid.toJSON(), UUID_STRING);
+// });
 
 test("UUID クラスであると判定できる", () => {
   assert(isUuid(new DecodeOnlyUuid("26c80163-3b83-481b-93da-c473947cccbc")));

@@ -1,8 +1,4 @@
-import {
-  copy,
-  jsonFormatter as formatter,
-  Payload,
-} from "@tai-kun/surreal/formatters";
+import formatter, { clone, Payload } from "@tai-kun/surreal/formatters/json";
 import assert from "@tools/assert";
 import { test } from "@tools/test";
 
@@ -19,9 +15,9 @@ test("JSON 文字列をデコードできる", async () => {
   assert.deepEqual(await formatter.decode(payload), { hello: "world" });
 });
 
-test("データをコピーできる", async () => {
+test("データを複製できる", async () => {
   const data = { hello: "world" };
-  const copied = await copy(formatter, data);
+  const copied = await clone(formatter, data);
 
   assert.notEqual(copied, data);
   assert.deepEqual(copied, data);

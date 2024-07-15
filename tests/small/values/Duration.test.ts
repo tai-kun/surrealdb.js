@@ -1,5 +1,5 @@
-import { isDuration } from "@tai-kun/surreal";
 import { SurrealTypeError } from "@tai-kun/surreal/errors";
+import { isDuration } from "@tai-kun/surreal/values";
 import { Duration as DecodeOnlyDuration } from "@tai-kun/surreal/values/decode-only";
 import { Duration as EncodableDuration } from "@tai-kun/surreal/values/encodable";
 import { Duration } from "@tai-kun/surreal/values/full";

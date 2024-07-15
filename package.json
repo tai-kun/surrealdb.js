@@ -10,69 +10,119 @@
   "module": "./dist/index.mjs",
   "exports": {
     ".": {
-      "tyes": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+      "types": "./dist/surreal/index.d.ts",
+      "import": "./dist/surreal/index.mjs",
+      "require": "./dist/surreal/index.cjs"
     },
-    "./clients/standard": {
-      "tyes": "./dist/clients/standard.d.ts",
-      "import": "./dist/clients/standard.mjs",
-      "require": "./dist/clients/standard.cjs"
+    "./errors": {
+      "types": "./dist/errors/index.d.ts",
+      "import": "./dist/errors/index.mjs",
+      "require": "./dist/errors/index.cjs"
+    },
+    "./clients": {
+      "types": "./dist/clients/index.d.ts",
+      "import": "./dist/clients/index.mjs",
+      "require": "./dist/clients/index.cjs"
     },
     "./clients/tiny": {
-      "tyes": "./dist/clients/tiny.d.ts",
-      "import": "./dist/clients/tiny.mjs",
-      "require": "./dist/clients/tiny.cjs"
+      "types": "./dist/clients/tiny/index.d.ts",
+      "import": "./dist/clients/tiny/index.mjs",
+      "require": "./dist/clients/tiny/index.cjs"
+    },
+    "./clients/standard": {
+      "types": "./dist/clients/standard/index.d.ts",
+      "import": "./dist/clients/standard/index.mjs",
+      "require": "./dist/clients/standard/index.cjs"
     },
     "./clients/full": {
-      "tyes": "./dist/clients/full.d.ts",
-      "import": "./dist/clients/full.mjs",
-      "require": "./dist/clients/full.cjs"
+      "types": "./dist/clients/full/index.d.ts",
+      "import": "./dist/clients/full/index.mjs",
+      "require": "./dist/clients/full/index.cjs"
+    },
+    "./engines": {
+      "types": "./dist/engines/index.d.ts",
+      "import": "./dist/engines/index.mjs",
+      "require": "./dist/engines/index.cjs"
+    },
+    "./engines/http": {
+      "types": "./dist/engines/http/index.d.ts",
+      "import": "./dist/engines/http/index.mjs",
+      "require": "./dist/engines/http/index.cjs"
+    },
+    "./engines/websocket": {
+      "types": "./dist/engines/websocket/index.d.ts",
+      "import": "./dist/engines/websocket/index.mjs",
+      "require": "./dist/engines/websocket/index.cjs"
+    },
+    "./formatters": {
+      "types": "./dist/formatters/index.d.ts",
+      "import": "./dist/formatters/index.mjs",
+      "require": "./dist/formatters/index.cjs"
+    },
+    "./formatters/cbor": {
+      "types": "./dist/formatters/cbor/index.d.ts",
+      "import": "./dist/formatters/cbor/index.mjs",
+      "require": "./dist/formatters/cbor/index.cjs"
+    },
+    "./formatters/json": {
+      "types": "./dist/formatters/json/index.d.ts",
+      "import": "./dist/formatters/json/index.mjs",
+      "require": "./dist/formatters/json/index.cjs"
+    },
+    "./formatters/safe-json": {
+      "types": "./dist/formatters/safe-json/index.d.ts",
+      "import": "./dist/formatters/safe-json/index.mjs",
+      "require": "./dist/formatters/safe-json/index.cjs"
+    },
+    "./values": {
+      "types": "./dist/values/index.d.ts",
+      "import": "./dist/values/index.mjs",
+      "require": "./dist/values/index.cjs"
     },
     "./values/decode-only": {
-      "tyes": "./dist/values/decode-only/index.d.ts",
+      "types": "./dist/values/decode-only/index.d.ts",
       "import": "./dist/values/decode-only/index.mjs",
       "require": "./dist/values/decode-only/index.cjs"
     },
     "./values/encodable": {
-      "tyes": "./dist/values/encodable/index.d.ts",
+      "types": "./dist/values/encodable/index.d.ts",
       "import": "./dist/values/encodable/index.mjs",
       "require": "./dist/values/encodable/index.cjs"
     },
     "./values/standard": {
-      "tyes": "./dist/values/standard/index.d.ts",
+      "types": "./dist/values/standard/index.d.ts",
       "import": "./dist/values/standard/index.mjs",
       "require": "./dist/values/standard/index.cjs"
     },
     "./values/full": {
-      "tyes": "./dist/values/full/index.d.ts",
+      "types": "./dist/values/full/index.d.ts",
       "import": "./dist/values/full/index.mjs",
       "require": "./dist/values/full/index.cjs"
     },
-    "./engines": {
-      "tyes": "./dist/engines/index.d.ts",
-      "import": "./dist/engines/index.mjs",
-      "require": "./dist/engines/index.cjs"
-    },
-    "./formatters": {
-      "tyes": "./dist/formatters/index.d.ts",
-      "import": "./dist/formatters/index.mjs",
-      "require": "./dist/formatters/index.cjs"
-    },
     "./validators": {
-      "tyes": "./dist/validators/index.d.ts",
+      "types": "./dist/validators/index.d.ts",
       "import": "./dist/validators/index.mjs",
       "require": "./dist/validators/index.cjs"
     },
-    "./errors": {
-      "tyes": "./dist/errors.d.ts",
-      "import": "./dist/errors.mjs",
-      "require": "./dist/errors.cjs"
+    "./validators/empty": {
+      "types": "./dist/validators/empty/index.d.ts",
+      "import": "./dist/validators/empty/index.mjs",
+      "require": "./dist/validators/empty/index.cjs"
     },
-    "./_lib": {
-      "tyes": "./dist/_lib/index.d.ts",
-      "import": "./dist/_lib/index.mjs",
-      "require": "./dist/_lib/index.cjs"
+    "./validators/zod": {
+      "types": "./dist/validators/zod/index.d.ts",
+      "import": "./dist/validators/zod/index.mjs",
+      "require": "./dist/validators/zod/index.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.mjs",
+      "require": "./dist/utils/index.cjs"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.cjs"
     }
   },
   "files": [
@@ -85,23 +135,23 @@
     "cbor-redux": "^1.0.0",
     "decimal.js": "^10.4.3",
     "decimal.js-light": "^2.5.1",
-    "ws": "^8.17.1",
+    "ws": "^8.18.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^11.1.4",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/node": "^20.14.9",
+    "@types/node": "^20.14.10",
     "@types/unzipper": "^0.10.9",
-    "@types/ws": "^8.5.10",
-    "dprint": "^0.46.3",
-    "esbuild": "^0.21.5",
+    "@types/ws": "^8.5.11",
+    "dprint": "^0.47.2",
+    "esbuild": "^0.23.0",
     "size-limit": "^11.1.4",
     "tar": "^7.4.0",
     "tsx": "^4.16.2",
-    "type-fest": "^4.20.1",
-    "typedoc": "^0.26.3",
-    "typescript": "^5.5.2",
+    "type-fest": "^4.21.0",
+    "typedoc": "^0.26.4",
+    "typescript": "^5.5.3",
     "unzipper": "^0.12.1",
     "uuid": "^10.0.0"
   },
@@ -116,7 +166,7 @@
   "scripts": {
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
-    "test:watch": "npx tsx --tsconfig tsconfig.test.json --watch",
+    "test:watch": "tsx --tsconfig tsconfig.test.json --watch",
     "test:sm:bun": "node scripts/test.js bun small",
     "test:md:bun": "node scripts/test.js bun medium",
     "test:sm:deno": "node scripts/test.js deno small",

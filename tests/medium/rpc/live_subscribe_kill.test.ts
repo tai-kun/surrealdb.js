@@ -1,4 +1,5 @@
-import { isUuid, type LiveResult } from "@tai-kun/surreal";
+import type { LiveResult } from "@tai-kun/surreal";
+import { isUuid } from "@tai-kun/surreal/values";
 import { Thing } from "@tai-kun/surreal/values/full";
 import assert from "@tools/assert";
 import { beforeAll, describe, test } from "@tools/test";

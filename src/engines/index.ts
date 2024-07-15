@@ -1,24 +1,27 @@
-// main exports
+export {
+  createEngine as createHttpEngine,
+  Engine as HttpEngine,
+  type EngineConfig as HttpEngineConfig,
+  type Fetcher as HttpEngineFetcher,
+  type FetchRequestInit as HttpEngineFetchRequestInit,
+  type FetchResponse as HttpEngineFetchResponse,
+} from "./http";
+export {
+  createEngine as createWebSocketEngine,
+  type CreateWebSocket,
+  Engine as WebSocketEngine,
+  type EngineConfig as WebSocketEngineConfig,
+} from "./websocket";
 
-export type * from "./createHttpEngine";
-export { default as createHttpEngine } from "./createHttpEngine";
-
-export type * from "./createWebSocketEngine";
-export { default as createWebSocketEngine } from "./createWebSocketEngine";
-
-// lib exports
-
-export type * from "./_lib/Abc";
 export {
   CLOSED,
   CLOSING,
   CONNECTING,
-  default as EngineAbc,
+  type ConnectionInfo,
+  type ConnectionState,
+  EngineAbc,
+  type EngineAbcConfig,
+  type EngineEvents,
   OPEN,
-} from "./_lib/Abc";
-
-export type * from "./_lib/HttpEngine";
-export { default as EngineHttp } from "./_lib/HttpEngine";
-
-export type * from "./_lib/WebSocketEngine";
-export { default as EngineWebSocket } from "./_lib/WebSocketEngine";
+  type TransitionArgs,
+} from "./_shared/Abc";

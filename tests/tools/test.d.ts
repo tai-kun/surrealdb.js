@@ -122,7 +122,7 @@ declare module "@tools/test" {
   export declare function afterEach(options: HookOptions, fn: Fn): unknown;
 
   /**
-   * テストケースをグルーピングする。
+   * テストテストスイートを宣言します。
    *
    * @param name テストの結果に表示されるテストスイートの名前。
    * @param fn テストケースを宣言する関数。
@@ -130,7 +130,7 @@ declare module "@tools/test" {
   export declare function describe(name: string, fn: () => void): unknown;
 
   /**
-   * テストケースをグルーピングする。
+   * テストテストスイートを宣言します。
    *
    * @param name テストの結果に表示されるテストスイートの名前。
    * @param options オプション。

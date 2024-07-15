@@ -4,11 +4,8 @@ import {
   createHttpEngine,
   createWebSocketEngine,
 } from "@tai-kun/surreal/engines";
-import {
-  createCborFormatter,
-  jsonFormatter,
-} from "@tai-kun/surreal/formatters";
-import { emptyValidator, zodValidator } from "@tai-kun/surreal/validators";
+import { CborFormatter, jsonFormatter } from "@tai-kun/surreal/formatters";
+import { emptyValidator, ZodValidator } from "@tai-kun/surreal/validators";
 import {
   Datetime,
   Decimal,
@@ -26,7 +23,7 @@ import {
 } from "@tai-kun/surreal/values/full";
 import { ready } from "@tools/surrealdb";
 
-const cborFormatter = createCborFormatter({
+const cborFormatter = new CborFormatter({
   Datetime,
   Decimal,
   Duration,
@@ -77,7 +74,7 @@ export default Object.assign(
             http: createHttpEngine,
           },
           formatter: jsonFormatter,
-          validator: zodValidator,
+          validator: new ZodValidator(),
         });
 
         return {
@@ -119,7 +116,7 @@ export default Object.assign(
             http: createHttpEngine,
           },
           formatter: cborFormatter,
-          validator: zodValidator,
+          validator: new ZodValidator(),
         });
 
         return {
@@ -161,7 +158,7 @@ export default Object.assign(
             ws: createWebSocketEngine,
           },
           formatter: jsonFormatter,
-          validator: zodValidator,
+          validator: new ZodValidator(),
         });
 
         return {
@@ -203,7 +200,7 @@ export default Object.assign(
             ws: createWebSocketEngine,
           },
           formatter: cborFormatter,
-          validator: zodValidator,
+          validator: new ZodValidator(),
         });
 
         return {

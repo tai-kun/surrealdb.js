@@ -1,61 +1,59 @@
 // main exports
 
 import DecimalJs from "decimal.js";
-import DecimalClass from "./Decimal";
+import DecimalClass from "./src/Decimal";
 
-export type * from "./Datetime";
-export { default as Datetime } from "./Datetime";
+export type * from "./src/Datetime";
+export { default as Datetime } from "./src/Datetime";
 
 export const Decimal = DecimalClass;
 export type Decimal = DecimalJs;
 
-export type * from "./Duration";
-export { default as Duration } from "./Duration";
+export type * from "./src/Duration";
+export { default as Duration } from "./src/Duration";
 
-export type * from "./GeometryCollection";
+export type * from "./src/GeometryCollection";
 export {
   GeometryCollection,
   GeometryCollectionBase,
-} from "./GeometryCollection";
+} from "./src/GeometryCollection";
 
-export { GeometryLine, GeometryLineBase } from "./GeometryLine";
+export { GeometryLine, GeometryLineBase } from "./src/GeometryLine";
 
-export type * from "./GeometryMultiLine";
-export { GeometryMultiLine, GeometryMultiLineBase } from "./GeometryMultiLine";
+export type * from "./src/GeometryMultiLine";
+export {
+  GeometryMultiLine,
+  GeometryMultiLineBase,
+} from "./src/GeometryMultiLine";
 
-export type * from "./GeometryMultiPoint";
+export type * from "./src/GeometryMultiPoint";
 export {
   GeometryMultiPoint,
   GeometryMultiPointBase,
-} from "./GeometryMultiPoint";
+} from "./src/GeometryMultiPoint";
 
-export type * from "./GeometryMultiPolygon";
+export type * from "./src/GeometryMultiPolygon";
 export {
   GeometryMultiPolygon,
   GeometryMultiPolygonBase,
-} from "./GeometryMultiPolygon";
+} from "./src/GeometryMultiPolygon";
 
-export { GeometryPoint, GeometryPointBase } from "./GeometryPoint";
+export { GeometryPoint, GeometryPointBase } from "./src/GeometryPoint";
 
-export { GeometryPolygon, GeometryPolygonBase } from "./GeometryPolygon";
+export { GeometryPolygon, GeometryPolygonBase } from "./src/GeometryPolygon";
 
-export type * from "./Table";
-export { default as Table } from "./Table";
+export type * from "./src/Table";
+export { default as Table } from "./src/Table";
 
-export type * from "./Thing";
-export { default as Thing } from "./Thing";
+export type * from "./src/Thing";
+export { default as Thing } from "./src/Thing";
 
-export type * from "./Uuid";
-export { default as Uuid } from "./Uuid";
+export type * from "./src/Uuid";
+export { default as Uuid } from "./src/Uuid";
 
 // lib exports
 
-export type {
-  Coord,
-  CoordArg,
-  CoordValue,
-  GeometryType,
-} from "../_lib/geometry";
-export { coord, GeometryAbc } from "../_lib/geometry";
+export type * from "../_shared/Geometry";
+export { default as GeometryAbc } from "../_shared/Geometry";
 
-export type * from "../_lib/types";
+export type * from "../_shared/types";

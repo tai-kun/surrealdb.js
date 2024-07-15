@@ -1,4 +1,4 @@
-import { isTable } from "@tai-kun/surreal";
+import { isTable } from "@tai-kun/surreal/values";
 import { Table as DecodeOnlyTable } from "@tai-kun/surreal/values/decode-only";
 import { Table as EncodableTable } from "@tai-kun/surreal/values/encodable";
 import { Table } from "@tai-kun/surreal/values/full";

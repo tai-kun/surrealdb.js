@@ -1,20 +1,7 @@
-// main exports
+export { type CborValues, default as CborFormatter } from "./cbor";
+export { default as jsonFormatter } from "./json";
+export { default as safeJsonFormatter } from "./safe-json";
 
-export type * from "./createCborFormatter";
-export { default as createCborFormatter } from "./createCborFormatter";
-
-export type * from "./jsonFormatter";
-export { default as jsonFormatter } from "./jsonFormatter";
-
-// lib exports
-
-export type * from "./_lib/copy";
-export { default as copy } from "./_lib/copy";
-
-export type * from "./_lib/isArrayBuffer";
-export { default as isArrayBuffer } from "./_lib/isArrayBuffer";
-
-export type * from "./_lib/Payload";
-export { default as Payload } from "./_lib/Payload";
-
-export type * from "./_lib/types";
+export { default as clone } from "./_shared/clone";
+export { default as Payload } from "./_shared/Payload";
+export type * from "./_shared/types";

@@ -34,11 +34,6 @@
       "import": "./dist/clients/standard/index.mjs",
       "require": "./dist/clients/standard/index.cjs"
     },
-    "./clients/full": {
-      "types": "./dist/clients/full/index.d.ts",
-      "import": "./dist/clients/full/index.mjs",
-      "require": "./dist/clients/full/index.cjs"
-    },
     "./engines": {
       "types": "./dist/engines/index.d.ts",
       "import": "./dist/engines/index.mjs",
@@ -132,7 +127,6 @@
     "is-plain-obj": "^4.1.0"
   },
   "optionalDependencies": {
-    "cbor-redux": "^1.0.0",
     "decimal.js": "^10.4.3",
     "decimal.js-light": "^2.5.1",
     "ws": "^8.18.0",
@@ -217,6 +211,6 @@
     }
   ],
   "volta": {
-    "node": "22.4.0"
+    "node": "22.5.1"
   }
 }

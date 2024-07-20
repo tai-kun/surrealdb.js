@@ -15,7 +15,6 @@
     "@tai-kun/surreal/clients": "__ROOT__/dist/clients/index.mjs",
     "@tai-kun/surreal/clients/tiny": "__ROOT__/dist/clients/tiny/index.mjs",
     "@tai-kun/surreal/clients/standard": "__ROOT__/dist/clients/standard/index.mjs",
-    "@tai-kun/surreal/clients/full": "__ROOT__/dist/clients/full/index.mjs",
 
     "@tai-kun/surreal/engines": "__ROOT__/dist/engines/index.mjs",
     "@tai-kun/surreal/engines/http": "__ROOT__/dist/engines/http/index.mjs",

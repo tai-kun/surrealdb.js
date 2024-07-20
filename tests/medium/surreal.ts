@@ -1,5 +1,5 @@
 import { initSurreal } from "@tai-kun/surreal";
-import Client from "@tai-kun/surreal/clients/full";
+import { StandardClient } from "@tai-kun/surreal/clients";
 import {
   createHttpEngine,
   createWebSocketEngine,
@@ -48,7 +48,7 @@ export default Object.assign(
       initSurreal: async function httpJsonEmpty() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             http: createHttpEngine,
           },
@@ -69,7 +69,7 @@ export default Object.assign(
       initSurreal: async function httpJsonZod() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             http: createHttpEngine,
           },
@@ -90,7 +90,7 @@ export default Object.assign(
       initSurreal: async function httpCborEmpty() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             http: createHttpEngine,
           },
@@ -111,7 +111,7 @@ export default Object.assign(
       initSurreal: async function httpCborZod() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             http: createHttpEngine,
           },
@@ -132,7 +132,7 @@ export default Object.assign(
       initSurreal: async function wsJsonEmpty() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             ws: createWebSocketEngine,
           },
@@ -153,7 +153,7 @@ export default Object.assign(
       initSurreal: async function wsJsonZod() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             ws: createWebSocketEngine,
           },
@@ -174,7 +174,7 @@ export default Object.assign(
       initSurreal: async function wsCborEmpty() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             ws: createWebSocketEngine,
           },
@@ -195,7 +195,7 @@ export default Object.assign(
       initSurreal: async function wsCborZod() {
         const endpoint = await ready;
         const surreal = initSurreal({
-          Client,
+          Client: StandardClient,
           engines: {
             ws: createWebSocketEngine,
           },

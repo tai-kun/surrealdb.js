@@ -1,3 +1,4 @@
+// import type { ToCBOR } from "@tai-kun/surreal/formatters/cbor";
 import type { Jsonifiable } from "type-fest";
 
 /**

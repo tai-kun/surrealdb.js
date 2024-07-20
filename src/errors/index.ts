@@ -19,8 +19,15 @@ export {
   WebSocketEngineError,
   type WebSocketEngineErrorCode,
 } from "./src/engine";
-export { CborError, DataFormatError, UnknownCborTag } from "./src/formatter";
 export {
+  CborSyntaxError,
+  CborTooLittleDataError,
+  CborWellFormednessError,
+  DataFormatError,
+} from "./src/formatter";
+export {
+  cast,
+  CastingError,
   unreachable,
   UnreachableError,
   UnsupportedRuntime,

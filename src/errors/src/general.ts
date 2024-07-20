@@ -1,5 +1,35 @@
 import { SurrealError, type SurrealErrorOptions } from "./shared";
 
+// export class AssertionError extends SurrealError {
+//   static {
+//     this.prototype.name = "AssertionError";
+//   }
+// }
+
+// export function assert(
+//   expression: unknown,
+//   message: string | undefined = "",
+// ): asserts expression {
+//   if (!expression) {
+//     throw new AssertionError(message);
+//   }
+// }
+
+export class CastingError extends SurrealError {
+  static {
+    this.prototype.name = "CastingError";
+  }
+}
+
+export function cast(
+  expression: unknown,
+  message: string | undefined = "",
+): asserts expression {
+  if (!expression) {
+    throw new CastingError(message);
+  }
+}
+
 /**
  * このエラーは、到達不能なコードに到達した場合に投げられます。
  */

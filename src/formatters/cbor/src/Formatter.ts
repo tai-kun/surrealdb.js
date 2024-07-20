@@ -1,26 +1,11 @@
-import { UnknownCborTag } from "@tai-kun/surreal/errors";
-import {
-  isDatetime,
-  isDecimal,
-  isDuration,
-  isGeometryCollection,
-  isGeometryLine,
-  isGeometryMultiLine,
-  isGeometryMultiPoint,
-  isGeometryMultiPolygon,
-  isGeometryPoint,
-  isGeometryPolygon,
-  isTable,
-  isThing,
-  isUuid,
-} from "@tai-kun/surreal/values";
-import { decode, encode, OMIT_VALUE, TaggedValue } from "cbor-redux";
 import type Payload from "../../_shared/Payload";
 import type { Formatter } from "../../_shared/types";
+import decode, { type DecodeOptions } from "./decode";
+import encode, { type EncodeOptions } from "./encode";
 
 // Tags from the spec - https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
-const TAG_SPEC_DATETIME = 0;
-const TAG_SPEC_UUID = 37;
+const TAG_IANA_DATETIME = 0; // text string
+const TAG_IANA_UUID = 37; // byte string
 
 // Custom tags
 const TAG_NONE = 6;
@@ -43,113 +28,44 @@ const TAG_GEOMETRY_MULTIPOLYGON = 93;
 const TAG_GEOMETRY_COLLECTION = 94;
 
 /**
- * COBR でエンコード/デコードする値。
+ * COBR エンコード/デコードする値。
  */
-export type CborValues = {
-  Datetime: new(value: any) => any;
-  Table: new(value: any) => any;
-  Thing: new(tb: any, id: any) => any;
-  Uuid: new(value: any) => any;
-  Decimal: new(value: any) => any;
-  Duration: new(value: any) => any;
-  GeometryPoint: new(value: any) => any;
-  GeometryLine: new(value: any) => any;
-  GeometryPolygon: new(value: any) => any;
-  GeometryMultiPoint: new(value: any) => any;
-  GeometryMultiLine: new(value: any) => any;
-  GeometryMultiPolygon: new(value: any) => any;
-  GeometryCollection: new(value: any) => any;
-};
+export interface CborDataTypes {
+  readonly Datetime: new(value: any) => any;
+  readonly Table: new(value: any) => any;
+  readonly Thing: new(tb: any, id: any) => any;
+  readonly Uuid: new(value: any) => any;
+  readonly Decimal: new(value: any) => any;
+  readonly Duration: new(value: any) => any;
+  readonly GeometryPoint: new(value: any) => any;
+  readonly GeometryLine: new(value: any) => any;
+  readonly GeometryPolygon: new(value: any) => any;
+  readonly GeometryMultiPoint: new(value: any) => any;
+  readonly GeometryMultiLine: new(value: any) => any;
+  readonly GeometryMultiPolygon: new(value: any) => any;
+  readonly GeometryCollection: new(value: any) => any;
+}
 
+export interface CborFormatterOptions extends CborDataTypes {
+  readonly encode?: EncodeOptions | undefined;
+  readonly decode?: DecodeOptions | undefined;
+}
+
+/**
+ * CBOR 形式のデータのシリアライザーとデシリアライザー。
+ */
 export default class CborFormatter implements Formatter {
-  readonly values: Readonly<CborValues>;
-  readonly mimeType = "application/cbor";
-  readonly wsFormat = "cbor";
+  protected dataTypes: CborDataTypes;
+  protected encodeOptions: EncodeOptions;
+  protected decodeOptions: DecodeOptions;
 
-  constructor(values: Readonly<CborValues>) {
-    this.values = values;
-  }
+  mimeType: string = "application/cbor";
+  wsFormat: string = "cbor";
 
-  encode(data: unknown): ArrayBuffer {
-    return encode(data, (k, v: unknown) => {
-      if (k === "__proto__" || k === "constructor" || k === "prototype") {
-        return OMIT_VALUE;
-      }
-
-      switch (true) {
-        case isDatetime(v):
-          // TODO(tai-kun): Handle invalid dates
-          return new TaggedValue(
-            [
-              v.seconds,
-              v.nanoseconds,
-            ],
-            TAG_CUSTOM_DATETIME,
-          );
-
-        case v instanceof Date:
-          // TODO(tai-kun): Handle invalid dates
-          return new TaggedValue(
-            [
-              Math.trunc(v.getTime() / 1000),
-              v.getUTCMilliseconds() * 1_000_000,
-            ],
-            TAG_CUSTOM_DATETIME,
-          );
-
-        case v === undefined:
-          return new TaggedValue(null, TAG_NONE);
-
-        case isTable(v):
-          return new TaggedValue(v.name, TAG_TABLE);
-
-        case isThing(v):
-          return new TaggedValue([v.tb, v.id], TAG_RECORDID);
-
-        case isUuid(v):
-          return new TaggedValue(v.bytes.buffer, TAG_SPEC_UUID);
-
-        case isDecimal(v):
-          return new TaggedValue(v.valueOf(), TAG_STRING_DECIMAL);
-
-        case isDuration(v):
-          return new TaggedValue(
-            [
-              v.seconds,
-              v.nanoseconds,
-            ],
-            TAG_CUSTOM_DURATION,
-          );
-
-        case isGeometryPoint(v):
-          return new TaggedValue(v.point, TAG_GEOMETRY_POINT);
-
-        case isGeometryLine(v):
-          return new TaggedValue(v.line, TAG_GEOMETRY_LINE);
-
-        case isGeometryPolygon(v):
-          return new TaggedValue(v.polygon, TAG_GEOMETRY_POLYGON);
-
-        case isGeometryMultiPoint(v):
-          return new TaggedValue(v.points, TAG_GEOMETRY_MULTIPOINT);
-
-        case isGeometryMultiLine(v):
-          return new TaggedValue(v.lines, TAG_GEOMETRY_MULTILINE);
-
-        case isGeometryMultiPolygon(v):
-          return new TaggedValue(v.polygons, TAG_GEOMETRY_MULTIPOLYGON);
-
-        case isGeometryCollection(v):
-          return new TaggedValue(v.collection, TAG_GEOMETRY_COLLECTION);
-
-        default:
-          return v;
-      }
-    });
-  }
-
-  async decode(payload: Payload): Promise<unknown> {
+  constructor(options: CborFormatterOptions) {
     const {
+      encode = {},
+      decode = {},
       Uuid,
       Table,
       Thing,
@@ -163,72 +79,100 @@ export default class CborFormatter implements Formatter {
       GeometryCollection,
       GeometryMultiPoint,
       GeometryMultiPolygon,
-    } = this.values;
+    } = options;
+    this.dataTypes = {
+      Uuid,
+      Table,
+      Thing,
+      Decimal,
+      Datetime,
+      Duration,
+      GeometryLine,
+      GeometryPoint,
+      GeometryPolygon,
+      GeometryMultiLine,
+      GeometryCollection,
+      GeometryMultiPoint,
+      GeometryMultiPolygon,
+    };
+    this.encodeOptions = encode;
+    this.decodeOptions = {
+      reviver: {
+        tagged: v => {
+          switch (v.tag) {
+            case TAG_IANA_DATETIME:
+              return new Datetime(v.value);
 
-    return decode(await payload.arrayBuffer(), (k, v) => {
-      if (k === "__proto__" || k === "constructor" || k === "prototype") {
-        return;
-      }
+            case TAG_IANA_UUID:
+              return new Uuid(v.value);
 
-      if (!(v instanceof TaggedValue)) {
-        return v;
-      }
+            case TAG_NONE:
+              return undefined;
 
-      switch (v.tag) {
-        case TAG_SPEC_DATETIME:
-          return new Datetime(v.value);
+            case TAG_TABLE:
+              return new Table(v.value);
 
-        case TAG_SPEC_UUID:
-          return new Uuid(new Uint8Array(v.value));
+            case TAG_RECORDID:
+              return new Thing((v.value as any)[0], (v.value as any)[1]);
 
-        case TAG_NONE:
-          return undefined;
+            case TAG_STRING_UUID:
+              return new Uuid(v.value);
 
-        case TAG_TABLE:
-          return new Table(v.value);
+            case TAG_STRING_DECIMAL:
+              return new Decimal(v.value);
 
-        case TAG_RECORDID:
-          return new Thing(v.value[0], v.value[1]);
+            case TAG_CUSTOM_DATETIME:
+              return new Datetime(v.value);
 
-        case TAG_STRING_UUID:
-          return new Uuid(v.value);
+            case TAG_STRING_DURATION:
+              return new Duration(v.value);
 
-        case TAG_STRING_DECIMAL:
-          return new Decimal(v.value);
+            case TAG_CUSTOM_DURATION:
+              return new Duration(v.value);
 
-        case TAG_CUSTOM_DATETIME:
-          return new Datetime(v.value);
+            case TAG_GEOMETRY_POINT:
+              return new GeometryPoint(v.value);
 
-        case TAG_STRING_DURATION:
-          return new Duration(v.value);
+            case TAG_GEOMETRY_LINE:
+              return new GeometryLine(v.value);
 
-        case TAG_CUSTOM_DURATION:
-          return new Duration(v.value);
+            case TAG_GEOMETRY_POLYGON:
+              return new GeometryPolygon(v.value);
 
-        case TAG_GEOMETRY_POINT:
-          return new GeometryPoint(v.value);
+            case TAG_GEOMETRY_MULTIPOINT:
+              return new GeometryMultiPoint(v.value);
 
-        case TAG_GEOMETRY_LINE:
-          return new GeometryLine(v.value);
+            case TAG_GEOMETRY_MULTILINE:
+              return new GeometryMultiLine(v.value);
 
-        case TAG_GEOMETRY_POLYGON:
-          return new GeometryPolygon(v.value);
+            case TAG_GEOMETRY_MULTIPOLYGON:
+              return new GeometryMultiPolygon(v.value);
 
-        case TAG_GEOMETRY_MULTIPOINT:
-          return new GeometryMultiPoint(v.value);
+            case TAG_GEOMETRY_COLLECTION:
+              return new GeometryCollection(v.value);
+          }
+        },
+      },
+      ...decode,
+    };
+  }
 
-        case TAG_GEOMETRY_MULTILINE:
-          return new GeometryMultiLine(v.value);
+  encode(data: unknown, options: EncodeOptions | undefined = {}): ArrayBuffer {
+    return encode(data, {
+      ...this.encodeOptions,
+      // TODO(tai-kun): options から undefined を持つプロパティを取り除く
+      ...options,
+    }).buffer;
+  }
 
-        case TAG_GEOMETRY_MULTIPOLYGON:
-          return new GeometryMultiPolygon(v.value);
-
-        case TAG_GEOMETRY_COLLECTION:
-          return new GeometryCollection(v.value);
-
-        default:
-          throw new UnknownCborTag(v.tag);
-      }
+  async decode(
+    payload: Payload,
+    options: DecodeOptions | undefined = {},
+  ): Promise<unknown> {
+    return decode(new Uint8Array(await payload.arrayBuffer()), {
+      ...this.decodeOptions,
+      // TODO(tai-kun): options から undefined を持つプロパティを取り除く
+      ...options,
     });
   }
 }

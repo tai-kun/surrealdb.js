@@ -1,4 +1,5 @@
-import formatter, { clone, Payload } from "@tai-kun/surreal/formatters/json";
+import { clone, Payload } from "@tai-kun/surreal/formatters";
+import formatter from "@tai-kun/surreal/formatters/json";
 import assert from "@tools/assert";
 import { test } from "@tools/test";
 

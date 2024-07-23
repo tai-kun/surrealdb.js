@@ -1,5 +1,0 @@
-{
-  "name": "@tools/browser-test",
-  "type": "module",
-  "main": "index.js"
-}

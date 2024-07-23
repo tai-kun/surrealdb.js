@@ -1,8 +1,0 @@
-{
-  "name": "@tools/test",
-  "type": "module",
-  "main": "index.js",
-  "dependencies": {
-    "@tools/browser-test": "file:../browser-test"
-  }
-}

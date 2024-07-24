@@ -129,6 +129,6 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
   },
-  // site: "https://tai-kun.github.io",
-  // base: "/surreal.js",
+  site: "https://tai-kun.github.io",
+  base: "/surreal.js",
 });

@@ -1,0 +1,37 @@
+---
+title: isBrowser
+---
+
+関数 `isBrowser` は現在実行してる JavaScript ランタイムがブラウザー環境がどうかを判定します。
+
+## インポート
+
+```ts
+import { isBrowser } from "@tai-kun/surreal/utils";
+```
+
+## 構文
+
+```ts
+function isBrowser(): Boolean;
+```
+
+#### 返値
+
+ブラウザー環境であれば `true`、そうでなければ `false` が返されます。
+
+## 例
+
+次の例では、ブラウザー環境がどうかを判定します:
+
+```ts
+import { isBrowser } from "@tai-kun/surreal/utils";
+
+if (isBrowser()) {
+  document;
+}
+```
+
+## 解説
+
+グローバル変数 `document` が `undefined` でなければブラウザーと判定します。例えば Deno では `window` オブジェクトををグローバルに追加するため、`window` オブジェクトの有無で判定するとサーバーランタイムでもブラウザーと誤判定します。Web フレームワークの Remix はこれを [Document Guard](https://remix.run/docs/en/main/guides/constraints#document-guard) と呼んでいます。

@@ -1,0 +1,89 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  function parse<T extends string>(slug: T): {
+    path: T extends `${string}/${infer U}` ? U : "",
+    lang: string,
+    // lang: T extends `${infer U}/${string}` ? U : T
+  } {
+    const i = slug.indexOf("/");
+
+    // @ts-expect-error
+    return i === -1
+      ? { path: "/", lang: slug }
+      : { path: slug.slice(i + 1), lang: slug.slice(0, i) }
+  }
+
+  const docs = await getCollection("docs");
+  const paths: Record<string, any> = {};
+
+  for (const { data, slug } of docs) {
+    if (data.draft) {
+      continue;
+    }
+
+    const { path, lang } = parse(slug);
+    (paths[path] ||= {
+      params: {
+        path,
+      },
+      props: {
+        title: data.title,
+        langs: [],
+      },
+    }).props.langs.push(lang);
+
+    if (lang === "en") {
+      paths[path].props.title = data.title;
+    }
+  }
+
+  return Object.values(paths);
+}
+
+type Props = {
+  title: string;
+  langs: string[];
+};
+
+const { path = "" } = Astro.params
+const {
+  title: titleText,
+  langs,
+} = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <title>{titleText}</title>
+    <script>
+      declare global {
+        var path: string
+        var langs: string[]
+      }
+    </script>
+    <script is:inline define:vars={{ path, langs }}>
+document.addEventListener("DOMContentLoaded", function() {
+  function redirect(lang) {
+    window.location.href = "/" + lang + "/" + path;
+  }
+
+  for (const lang of langs) {
+    if (navigator.language.startsWith(lang)) {
+      redirect(lang);
+      return;
+    }
+  }
+
+  redirect(langs.includes("en") ? "en" : langs[0]);
+});
+    </script>
+  </head>
+  <body>
+    <p>Redirecting based on your browser language...</p>
+  </body>
+</html>

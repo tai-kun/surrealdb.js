@@ -35,7 +35,8 @@
     "test:medium:bun": "node scripts/test.js bun medium",
     "test:medium:chromium": "node scripts/test.js chromium medium",
     "test:medium:firefox": "node scripts/test.js firefox medium",
-    "test:medium:webkit": "node scripts/test.js webkit medium"
+    "test:medium:webkit": "node scripts/test.js webkit medium",
+    "docs": "cd docs && npm run dev"
   },
   "volta": {
     "node": "20.15.1"

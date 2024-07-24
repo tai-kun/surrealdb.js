@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.8.2",
+    "@astrojs/starlight": "^0.25.1",
+    "astro": "^4.12.2",
+    "remark-definition-list": "^2.0.0",
+    "sharp": "^0.33.4",
+    "typescript": "^5.5.3"
+  },
+  "volta": {
+    "extends": "../package.json"
+  }
+}

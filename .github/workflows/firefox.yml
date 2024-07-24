@@ -1,0 +1,29 @@
+name: Firefox
+
+on: push
+
+jobs:
+  small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        playwright-version:
+          - "1.23" # Firefox 100
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Setup
+        run: |
+          npm ci
+          npm i -D playwright@${{ matrix.playwright-version }}
+          npx playwright install --with-deps firefox
+
+      - name: Test
+        run: VITEST_MODE='Firefox' npx vitest tests/small/

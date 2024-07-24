@@ -1,0 +1,26 @@
+name: Bun
+
+on: push
+
+jobs:
+  small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        bun-version:
+          - "1.1.13"
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ matrix.bun-version }}
+
+      - name: Setup
+        run: bun install
+
+      - name: Test
+        run: VITEST_MODE='Bun' bunx vitest tests/small/

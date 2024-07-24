@@ -1,0 +1,43 @@
+{
+  "name": "@tai-kun/surreal",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
+  "description": "The SurrealDB SDK for JavaScript",
+  "sideEffects": false,
+  "type": "module",
+  "devDependencies": {
+    "@tsconfig/strictest": "^2.0.5",
+    "@types/node": "^20.14.12",
+    "@types/unzipper": "^0.10.9",
+    "@vitest/browser": "^2.0.4",
+    "dprint": "^0.47.2",
+    "esbuild": "^0.23.0",
+    "glob": "^11.0.0",
+    "tar": "^7.4.1",
+    "typescript": "^5.5.4",
+    "unzipper": "^0.12.2",
+    "vite-tsconfig-paths": "^4.3.2",
+    "vitest": "^2.0.4",
+    "webdriverio": "^8.39.1"
+  },
+  "scripts": {
+    "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
+    "check": "tsc --noEmit && dprint check",
+    "test:small": "vitest tests/small/",
+    "test:small:nodejs": "node scripts/test.js nodejs small",
+    "test:small:deno": "exit 1",
+    "test:small:bun": "node scripts/test.js bun small",
+    "test:small:chromium": "node scripts/test.js chromium small",
+    "test:small:firefox": "node scripts/test.js firefox small",
+    "test:small:webkit": "node scripts/test.js webkit small",
+    "test:medium:nodejs": "node scripts/test.js nodejs medium",
+    "test:medium:deno": "exit 1",
+    "test:medium:bun": "node scripts/test.js bun medium",
+    "test:medium:chromium": "node scripts/test.js chromium medium",
+    "test:medium:firefox": "node scripts/test.js firefox medium",
+    "test:medium:webkit": "node scripts/test.js webkit medium"
+  },
+  "volta": {
+    "node": "20.15.1"
+  }
+}

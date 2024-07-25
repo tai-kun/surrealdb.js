@@ -7,7 +7,13 @@ export type StatefulPromiseExecutor<T> = (
   reject: (reason: unknown) => void,
 ) => void;
 
+/**
+ * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/)
+ */
 export default class StatefulPromise<T> implements PromiseLike<T> {
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#resolve-)
+   */
   static resolve<T = void>(value?: Promisable<T>) {
     if (value && typeof value === "object" && value.constructor === this) {
       return value as never;
@@ -16,10 +22,16 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
     return new this<T>(resolve => resolve(value!));
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#reject-)
+   */
   static reject<T = never>(reason?: unknown): StatefulPromise<T> {
     return new this<T>((_, reject) => reject(reason));
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#withresolvers-)
+   */
   static withResolvers<T>(): {
     promise: StatefulPromise<T>;
     resolve: (value: Promisable<T>) => void;
@@ -39,6 +51,9 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
     };
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#try-)
+   */
   static try<T, A extends readonly unknown[]>(
     func: (...args: A) => Promisable<T>,
     ...args: A
@@ -52,8 +67,14 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
     });
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#allrejected-)
+   */
   static allRejected(promises: Iterable<unknown>): StatefulPromise<unknown[]>;
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#allrejected-)
+   */
   static allRejected<T>(
     promises: Iterable<T>,
     extract: (item: T) => unknown,
@@ -91,6 +112,9 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   protected _state: StatefulPromiseState = "pending";
   protected _promise: Promise<void> | null;
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#constructor)
+   */
   constructor(executor: StatefulPromiseExecutor<T>) {
     this._promise = new Promise<void>(resolve => {
       executor(
@@ -108,10 +132,16 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
     });
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#state--)
+   */
   get state(): StatefulPromiseState {
     return this._state;
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/ja/reference/utils/stateful-promise/#then-)
+   */
   then<R1 = T, R2 = never>(
     onFulfilled?: ((value: T) => Promisable<R1>) | undefined | null,
     onRejected?: ((reason: unknown) => Promisable<R2>) | undefined | null,

@@ -1,3 +1,6 @@
+/**
+ * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/is-safe-number/)
+ */
 export default function isSafeNumber(value: number): boolean {
   return !(
     typeof value !== "number"

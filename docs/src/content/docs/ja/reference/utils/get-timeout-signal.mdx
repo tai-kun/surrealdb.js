@@ -27,7 +27,8 @@ function getTimeoutSignal(milliseconds: number): AbortSignal;
 
 #### 例外
 
-サーバーサイドのランタイムで `AbortSignal.timeout` 関数がない場合、`UnsupportedRuntimeError` が投げられます。これは、ポリフィルの実装コストが高いためです
+- `UnsupportedRuntimeError`
+  - サーバーサイドのランタイムで `AbortSignal.timeout` 関数がない場合に投げます。これは、ポリフィルの実装コストが高いためです。ブラウザはやや強引に実装しています。
 
 #### 例
 

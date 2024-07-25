@@ -46,15 +46,16 @@ test("onFulfilled 内で投げられた例外は onRejected で補足されな�
   await expect(fn).rejects.toBe(0);
 });
 
-test("(仕様確認) .try 無しで同期的に例外を投げると reject 判定にならない", async () => {
+test.fails("(仕様確認) .try 無しで同期的に例外を投げると reject 判定にならない", async () => {
   const fn = () => {
     throw new Error("test");
   };
+  const tryFn = fn;
   const fnTest = async () => {
-    await expect(fn).rejects.toThrowError("test");
+    await expect(tryFn).rejects.toThrowError("test");
   };
 
-  await expect(fnTest).rejects.toThrowError();
+  await fnTest();
 });
 
 test(".try 有りで同期的に例外を投げると reject 判定になる", async () => {

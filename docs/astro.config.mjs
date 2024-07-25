@@ -109,6 +109,10 @@ export default defineConfig({
                   slug: "reference/utils/is-browser",
                   label: "isBrowser",
                 },
+                {
+                  slug: "reference/utils/stateful-promise",
+                  label: "StatefulPromise",
+                },
               ],
             },
           ],

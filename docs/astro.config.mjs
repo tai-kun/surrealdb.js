@@ -109,6 +109,10 @@ export default defineConfig({
                   label: "isBrowser",
                 },
                 {
+                  slug: "reference/utils/is-safe-number",
+                  label: "isSafeNumber",
+                },
+                {
                   slug: "reference/utils/stateful-promise",
                   label: "StatefulPromise",
                 },

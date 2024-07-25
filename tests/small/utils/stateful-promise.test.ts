@@ -167,9 +167,9 @@ describe("ドキュメントの例", () => {
           setTimeout(() => reject("test"), 0);
         });
 
-        do {
-          await new Promise(r => setTimeout(r, 100));
-        } while (promise.state === "pending");
+        while (promise.state === "pending") {
+          await new Promise(r => setTimeout(r, 50));
+        }
 
         try {
           await promise;

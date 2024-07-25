@@ -1,0 +1,26 @@
+---
+title: throwIfAborted
+---
+
+`throwIfAborted` は引数に渡された中止シグナルが中止されている場合に、その理由を投げる関数です。`new AbortSignal().throwIfAborted()` が実装されていない環境のために提供されています。
+
+## インポート
+
+```ts
+import { throwIfAborted } from "@tai-kun/surreal/utils";
+```
+
+## 使い方
+
+```ts
+function throwIfAborted(signal: AbortSignal | null | undefined): void;
+```
+
+#### 引数
+
+`signal`
+:   中止シグナルです。
+
+#### 返値
+
+なし。

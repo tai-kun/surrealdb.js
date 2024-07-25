@@ -5,9 +5,7 @@ export type SurrealErrorOptions = "cause" extends keyof Error ? ErrorOptions
  * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#surrealerror)
  */
 export class SurrealError extends Error {
-  static {
-    this.prototype.name = "SurrealError";
-  }
+  override name = "SurrealError";
 
   constructor(message: string, options?: SurrealErrorOptions | undefined) {
     super(message, options);
@@ -22,9 +20,7 @@ export class SurrealError extends Error {
  * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#unsupportedruntimeerror)
  */
 export class UnsupportedRuntimeError extends SurrealError {
-  static {
-    this.prototype.name = "UnsupportedRuntimeError";
-  }
+  override name = "UnsupportedRuntimeError";
 
   constructor(reason: string, options?: SurrealErrorOptions | undefined) {
     super("Unsupported runtime. " + reason, options);

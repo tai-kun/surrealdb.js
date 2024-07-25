@@ -13,7 +13,7 @@
     "dprint": "^0.47.2",
     "esbuild": "^0.23.0",
     "glob": "^11.0.0",
-    "tar": "^7.4.1",
+    "tar": "^7.4.2",
     "typescript": "^5.5.4",
     "unzipper": "^0.12.2",
     "vite-tsconfig-paths": "^4.3.2",
@@ -39,6 +39,6 @@
     "docs": "cd docs && npm run dev"
   },
   "volta": {
-    "node": "20.15.1"
+    "node": "20.16.0"
   }
 }

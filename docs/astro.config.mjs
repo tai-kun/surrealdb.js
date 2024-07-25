@@ -106,6 +106,10 @@ export default defineConfig({
                 //   ],
                 // },
                 {
+                  slug: "reference/utils/is-array-buffer",
+                  label: "isArrayBuffer",
+                },
+                {
                   slug: "reference/utils/is-browser",
                   label: "isBrowser",
                 },

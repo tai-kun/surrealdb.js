@@ -86,8 +86,8 @@ try {
 
 ```ts
 then<R1, R2>(
-  onFulfilled?: ((value: T) => Promisable<R1>) | undefined | null,
-  onRejected?: ((reason: unknown) => Promisable<R2>) | undefined | null,
+  onFulfilled?: ((value: T) => R1 | PromiseLike<R1>) | undefined | null,
+  onRejected?: ((reason: unknown) => R2 | PromiseLike<R2>) | undefined | null,
 ): StatefulPromise<R1 | R2>;
 ```
 
@@ -104,7 +104,7 @@ then<R1, R2>(
 `.resolve` は与えられた値で解決された `StatefulPromise` を返します。
 
 ```ts
-resolve<T>(value?: Promisable<T>): StatefulPromise<Awaited<T>>;
+resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
 ```
 
 #### 引数
@@ -140,7 +140,7 @@ reject<T>(reason?: unknown): StatefulPromise<T>;
 ```ts
 withResolvers<T>(): {
   promise: StatefulPromise<T>;
-  resolve: (value: Promisable<T>) => void;
+  resolve: (value: T | PromiseLike<T>) => void;
   reject: (reason: unknown) => void;
 };
 ```
@@ -168,7 +168,7 @@ withResolvers<T>(): {
 
 ```ts
 try<T, A extends readonly unknown[]>(
-  func: (...args: A) => Promisable<T>,
+  func: (...args: A) => T | PromiseLike<T>,
   ...args: A
 ): StatefulPromise<T>;
 ```

@@ -24,5 +24,3 @@ export { default as isSafeNumber } from "./src/is-safe-number";
 
 export type * from "./src/stateful-promise";
 export { default as StatefulPromise } from "./src/stateful-promise";
-
-export type * from "./src/types";

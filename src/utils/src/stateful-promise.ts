@@ -1,9 +1,7 @@
-import type { Promisable } from "./types";
-
 export type StatefulPromiseState = "pending" | "fulfilled" | "rejected";
 
 export type StatefulPromiseExecutor<T> = (
-  resolve: (value: Promisable<T>) => void,
+  resolve: (value: T | PromiseLike<T>) => void,
   reject: (reason: unknown) => void,
 ) => void;
 
@@ -14,7 +12,7 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   /**
    * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/stateful-promise/#resolve-)
    */
-  static resolve<T = void>(value?: Promisable<T>) {
+  static resolve<T = void>(value?: T | PromiseLike<T>) {
     if (value && typeof value === "object" && value.constructor === this) {
       return value as never;
     }
@@ -34,10 +32,10 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
    */
   static withResolvers<T>(): {
     promise: StatefulPromise<T>;
-    resolve: (value: Promisable<T>) => void;
+    resolve: (value: T | PromiseLike<T>) => void;
     reject: (reason: unknown) => void;
   } {
-    let resolve: (value: Promisable<T>) => void;
+    let resolve: (value: T | PromiseLike<T>) => void;
     let reject: (reason: unknown) => void;
     const promise = new this<T>((res, rej) => {
       resolve = res;
@@ -55,7 +53,7 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
    * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/stateful-promise/#try-)
    */
   static try<T, A extends readonly unknown[]>(
-    func: (...args: A) => Promisable<T>,
+    func: (...args: A) => T | PromiseLike<T>,
     ...args: A
   ): StatefulPromise<T> {
     return new this<T>((resolve, reject) => {
@@ -143,8 +141,8 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
    * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/stateful-promise/#then-)
    */
   then<R1 = T, R2 = never>(
-    onFulfilled?: ((value: T) => Promisable<R1>) | undefined | null,
-    onRejected?: ((reason: unknown) => Promisable<R2>) | undefined | null,
+    onFulfilled?: ((value: T) => R1 | PromiseLike<R1>) | undefined | null,
+    onRejected?: ((reason: unknown) => R2 | PromiseLike<R2>) | undefined | null,
   ): StatefulPromise<R1 | R2> {
     const This = this.constructor as typeof StatefulPromise<R1 | R2>;
 

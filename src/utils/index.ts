@@ -13,6 +13,9 @@ export {
 export type * from "./src/is-array-buffer";
 export { default as isArrayBuffer } from "./src/is-array-buffer";
 
+export type * from "./src/get-timeout-signal";
+export { default as getTimeoutSignal } from "./src/get-timeout-signal";
+
 export type * from "./src/is-browser";
 export { default as isBrowser } from "./src/is-browser";
 

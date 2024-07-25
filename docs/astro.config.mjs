@@ -97,6 +97,10 @@ export default defineConfig({
                   label: "escapeIdent",
                 },
                 {
+                  slug: "reference/utils/get-timeout-signal",
+                  label: "getTimeoutSignal",
+                },
+                {
                   slug: "reference/utils/is-array-buffer",
                   label: "isArrayBuffer",
                 },
@@ -107,6 +111,18 @@ export default defineConfig({
                 {
                   slug: "reference/utils/stateful-promise",
                   label: "StatefulPromise",
+                },
+              ],
+            },
+            {
+              label: "errors",
+              items: [
+                {
+                  slug: "reference/errors/general",
+                  label: "General Errors",
+                  translations: {
+                    ja: "一般的なエラー",
+                  },
                 },
               ],
             },

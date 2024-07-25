@@ -80,31 +80,22 @@ export default defineConfig({
             {
               label: "utils",
               items: [
-                // {
-                //   slug: "reference/utils/collect-errors",
-                //   label: "collectErrors",
-                // },
-                // {
-                //   label: "escape",
-                //   items: [
-                //     {
-                //       slug: "reference/utils/escape/quote-str",
-                //       label: "quoteStr",
-                //     },
-                //     {
-                //       slug: "reference/utils/escape/escape-key",
-                //       label: "escapeKey",
-                //     },
-                //     {
-                //       slug: "reference/utils/escape/escape-rid",
-                //       label: "escapeRid",
-                //     },
-                //     {
-                //       slug: "reference/utils/escape/escape-ident",
-                //       label: "escapeIdent",
-                //     },
-                //   ],
-                // },
+                {
+                  slug: "reference/utils/quote-str",
+                  label: "quoteStr",
+                },
+                {
+                  slug: "reference/utils/escape-key",
+                  label: "escapeKey",
+                },
+                {
+                  slug: "reference/utils/escape-rid",
+                  label: "escapeRid",
+                },
+                {
+                  slug: "reference/utils/escape-ident",
+                  label: "escapeIdent",
+                },
                 {
                   slug: "reference/utils/is-array-buffer",
                   label: "isArrayBuffer",

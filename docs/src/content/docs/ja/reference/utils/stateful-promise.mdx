@@ -39,6 +39,8 @@ new StatefulPromise<T>(executor: StatefulPromiseExecutor<T>);
 次の例では、`StatefulPromise` が解決されるまで待機し、その結果を受け取ります:
 
 ```ts
+import { StatefulPromise } from "@tai-kun/surreal/utils";
+
 const promise = new StatefulPromise(resolve => {
   setTimeout(() => resolve("test"), 0);
 });
@@ -187,6 +189,8 @@ try<T, A extends readonly unknown[]>(
 次の例は、同期的に投げられたエラーが `StatefulPromise` によって補足されていることを示します:
 
 ```ts
+import { StatefulPromise } from "@tai-kun/surreal/utils";
+
 const promise = StatefulPromise.try(() => {
   throw "test";
 });

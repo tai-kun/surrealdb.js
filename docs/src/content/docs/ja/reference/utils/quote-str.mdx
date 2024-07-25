@@ -1,0 +1,113 @@
+---
+title: quoteStr
+---
+
+`quoteStr` は文字列を引用符で囲う関数です。便宜上、空の文字列に対しても引用符で囲います。
+
+## インポート
+
+```ts
+import { quoteStr } from "@tai-kun/surreal/utils";
+```
+
+## 使い方
+
+```ts
+function quoteStr(str: string): string;
+```
+
+文字列を引用符 (`"` または `'`) で囲います。
+
+#### 引数
+
+`str`
+:   引用符で囲う文字列。
+
+#### 返値
+
+引用符で囲われた文字列を返します。囲うための引用符は、与えられた文字列に一重引用符 (`'`) が含まれているかどうかで変わります:
+
+- 与えられた文字列が空の場合
+  - `''` を返します。
+- 与えられた文字列に一重引用符が含まれて**いない**場合
+  - 一重引用符で囲います。
+- 与えられた文字列に一重引用符が含まれて**いる**場合
+  - 二重引用符で囲います。
+- 与えられた文字列に一重引用符と二重引用符の両方が含まれている場合
+  - 二重引用符で囲います。
+  - 二重引用符はバックスラッシュ (`\`) でエスケープします。
+
+#### 例
+
+ここの例で使用する文字列の種類は次のとおりです:
+
+| 種類 | 表示 | `.length` | バイト配列 |
+| --- | --- | --- | --- |
+| ASCII | a | 1 | `[ 0x61 ]` |
+| サロゲートペア | 𩸽 | 2 | `[ 0xF0, 0xA9, 0xB8, 0xBD ]` |
+| 異体字セレクター | 👍🏽 | 4 | `[ 0xF0, 0x9F, 0x91, 0x8D, 0xF0, 0x9F, 0x8F, 0xBD ]` |
+| 結合文字 | パ | 2 | `[ 0xE3, 0x83, 0x8F, 0xE3, 0x82, 0x9A ]` |
+
+次の例では、一重引用符が含まれて**いない**文字列を一重引用符で囲います:
+
+```ts
+import { quoteStr } from "@tai-kun/surreal/utils";
+
+console.log(quoteStr(``));
+console.log(quoteStr(`a`));
+console.log(quoteStr(`𩸽`));
+console.log(quoteStr(`👍🏽`));
+console.log(quoteStr(`パ`));
+```
+
+出力:
+
+```js
+''
+'a'
+'𩸽'
+'👍🏽'
+'パ'
+```
+
+次の例では、一重引用符が含まれて**いる**文字列を二重引用符で囲います:
+
+```ts
+import { quoteStr } from "@tai-kun/surreal/utils";
+
+console.log(quoteStr(`cat's`));
+console.log(quoteStr(`𩸽's`));
+console.log(quoteStr(`'👍🏽`));
+console.log(quoteStr(`'パ`));
+```
+
+出力:
+
+```js
+"cat's"
+"𩸽's"
+"'👍🏽"
+"'パ"
+```
+
+次の例では、一重引用符と二重引用符の両方が含まれている文字列を二重引用符で囲い、必要であればエスケープします:
+
+```ts
+import { quoteStr } from "@tai-kun/surreal/utils";
+
+console.log(quoteStr(`cat's "toy"`));
+console.log(quoteStr(`'\\"\\`));
+console.log(quoteStr(`𩸽's "feed"`));
+console.log(quoteStr(`'👍🏽"`));
+console.log(quoteStr(`'パ"`));
+```
+
+出力:
+
+```js
+"cat's \"toy\""
+"'\\\"\\"
+"𩸽's \"feed\""
+"'👍🏽\""
+"'パ\""
+```

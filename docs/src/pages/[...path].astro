@@ -47,7 +47,6 @@ type Props = {
   langs: string[];
 };
 
-const { path = "" } = Astro.params
 const {
   title: titleText,
   langs,
@@ -62,14 +61,17 @@ const {
     <title>{titleText}</title>
     <script>
       declare global {
-        var path: string
         var langs: string[]
       }
     </script>
-    <script is:inline define:vars={{ path, langs }}>
+    <script is:inline define:vars={{ langs }}>
 document.addEventListener("DOMContentLoaded", function() {
   function redirect(lang) {
-    window.location.href = "/surreal.js/" + lang + "/" + path;
+    const pathname = window.location.pathname
+      .replace(/^\/surreal\.js(\/)?/, "/surreal.js/" + lang + "/");
+    window.location.pathname = window.location.pathname === pathname
+      ? "/404"
+      : pathname;
   }
 
   for (const lang of langs) {

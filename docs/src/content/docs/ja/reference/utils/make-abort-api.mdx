@@ -1,0 +1,98 @@
+---
+title: makeAbortApi
+---
+
+`makeAbortApi` は中止シグナルと、それに関連付けられた中止関数を作成する関数です。
+
+## インポート
+
+```ts
+import { makeAbortApi } from "@tai-kun/surreal/utils";
+```
+
+## 使い方
+
+```ts
+function makeAbortApi(signal?: AbortSignal | undefined): [
+  signal: AbortSignal,
+  abort: (reason?: unknown) => void,
+];
+```
+
+#### 引数
+
+`signal`
+:   関連付ける中止シグナルです。
+
+#### 返値
+
+次の順番で並んだ配列を返します。
+
+`signal`
+:   中止シグナルです。初期状態で中断されていることはありません。
+
+`abort`
+:   中止シグナルに `"abort"` イベントを発送します。オプションで 1 つの引数 `reason` を受け取ることができ、`"abort"` イベントを経由して中止の理由を伝えることができます。
+
+#### 例
+
+次の例では、引数なしで Abort API を作成します:
+
+```ts
+import { makeAbortApi } from "@tai-kun/surreal/utils";
+
+const [signal, abort] = makeAbortApi();
+abort();
+```
+
+上記の例は、`new AbortController()` とほとんど同じ意味を持ちます。`AbortController` と異なる点は、`makeAbortApi` がオブジェクトではなく配列を返すところです。
+
+次の例では、関連付ける中止シグナルを指定して Abort API を作成します:
+
+```ts
+import { makeAbortApi } from "@tai-kun/surreal/utils";
+
+const controller = new AbortController();
+controller.signal.addEventListener("abort", function() {
+  console.log("controller.signal", this.reason);
+});
+
+const [signal] = makeAbortApi(controller.signal);
+signal.addEventListener("abort", function() {
+  console.log("signal", this.reason);
+});
+
+controller.abort("test");
+```
+
+出力:
+
+```js
+controller.signal test
+signal test
+```
+
+中止イベントは Abort API から中止しても関連付けられた中止シグナルへ伝播します:
+
+```ts
+import { makeAbortApi } from "@tai-kun/surreal/utils";
+
+const controller = new AbortController();
+controller.signal.addEventListener("abort", function() {
+  console.log("controller.signal", this.reason);
+});
+
+const [signal, abort] = makeAbortApi(controller.signal);
+signal.addEventListener("abort", function() {
+  console.log("signal", this.reason);
+});
+
+abort("test");
+```
+
+出力:
+
+```js
+controller.signal test
+signal test
+```

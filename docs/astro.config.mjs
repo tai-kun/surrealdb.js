@@ -97,10 +97,6 @@ export default defineConfig({
                   label: "escapeIdent",
                 },
                 {
-                  slug: "reference/utils/get-timeout-signal",
-                  label: "getTimeoutSignal",
-                },
-                {
                   slug: "reference/utils/is-array-buffer",
                   label: "isArrayBuffer",
                 },
@@ -113,12 +109,20 @@ export default defineConfig({
                   label: "isSafeNumber",
                 },
                 {
-                  slug: "reference/utils/stateful-promise",
-                  label: "StatefulPromise",
+                  slug: "reference/utils/get-timeout-signal",
+                  label: "getTimeoutSignal",
+                },
+                {
+                  slug: "reference/utils/make-abort-api",
+                  label: "makeAbortApi",
                 },
                 {
                   slug: "reference/utils/throw-if-aborted",
                   label: "throwIfAborted",
+                },
+                {
+                  slug: "reference/utils/stateful-promise",
+                  label: "StatefulPromise",
                 },
               ],
             },

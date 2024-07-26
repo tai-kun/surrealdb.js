@@ -128,6 +128,10 @@ export default defineConfig({
                   slug: "reference/utils/task-queue",
                   label: "TaskQueue",
                 },
+                {
+                  slug: "reference/utils/task-emitter",
+                  label: "TaskEmitter",
+                },
               ],
             },
             {

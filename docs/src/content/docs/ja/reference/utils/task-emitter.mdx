@@ -1,0 +1,205 @@
+---
+title: TaskEmitter
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+`TaskEmitter` は `TaskQueue` によって管理される非同期タスクのためのイベントエミッタークラスです。
+
+## インポート
+
+```ts
+import { TaskEmitter } from "@tai-kun/surreal/utils";
+```
+
+## 使い方
+
+### constructor
+
+```ts
+new TaskEmitter<T>();
+```
+
+#### 引数
+
+`T`
+:   イベント名とイベントが取る引数 (配列) を key-value で表した型です。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`TaskEmitter` はそのインスタンスを返します。
+
+### .on <Badge variant="instance" /><Badge variant="method" />
+
+`.on` はイベントエミッターにイベントリスナーを登録する関数です。同じイベントに同じ関数を複数回登録しようとすると、最初の 1 度以外は登録が無視されます。
+
+```ts
+on(event: string | number, listener: TaskListener): void;
+```
+
+#### 引数
+
+`event`
+:   イベントリスナーを登録するイベントの名前です。
+
+`listener`
+:   登録するイベントリスナーです。この関数には `TaskQueue` のタスクランナーと同じ引数が与えられ、以降は `.emit` に渡された引数が可変長で渡されます。
+
+#### 返値
+
+なし。
+
+#### 例
+
+次の例では、"log" イベントを補足して、エミッターに渡された値を標準出力します:
+
+```ts
+type Events = {
+  log: string[];
+};
+
+const emitter = new TaskEmitter<Events>();
+
+emitter.on("log", (_, ...args) => {
+  console.log(...args);
+});
+
+emitter.emit("log", "Hello");
+emitter.emit("log", "World", "!!!");
+
+await emitter.idle();
+```
+
+出力:
+
+```js
+Hello
+World !!!
+```
+
+### .off <Badge variant="instance" /><Badge variant="method" />
+
+`.off` はイベントエミッターからイベントリスナーを登録解除する関数です。イベントリスナーを省略した場合、対象のイベント名に登録されているすべてのイベントリスナーが登録解除されます。
+
+```ts
+off(event: string | number, listener?: TaskListener): void;
+```
+
+#### 引数
+
+`event`
+:   イベントリスナーを登録解除するイベントの名前です。
+
+`listener`
+:   登録解除するイベントリスナーです。これを省略した場合、対象の `event` に登録されているすべてのイベントリスナーが登録解除されます。
+
+#### 返値
+
+なし。
+
+### .once <Badge variant="instance" /><Badge variant="method" />
+
+`.once` は `.on` と似ていますが、エベントを 1 度だけ補足します。またコールバック関数ではなく、返値の `StatefulPromise` で値を受け取ります。
+
+```ts
+once(
+  event: string | Number,
+  options?: TaskListenerOptions,
+): StatefulPromise<unknown[]>;
+```
+
+#### 例
+
+次の例では、"log" イベントを 1 度だけ補足して、エミッターに渡された値を標準出力します:
+
+```ts
+type Events = {
+  log: string[];
+};
+
+const emitter = new TaskEmitter<Events>();
+
+const promise = emitter.once("log");
+
+emitter.emit("log", "Hello");
+emitter.emit("log", "World", "!!!");
+
+const recived = await promise;
+console.log(recived);
+
+await emitter.idle();
+```
+
+出力:
+
+```js
+[ 'Hello' ]
+```
+
+#### 引数
+
+`event`
+:   待機するイベントの名前です。
+
+`options`
+:   イベントリスナーのオプションです。中止シグナルを渡すことができます。
+
+#### 返値
+
+`.emit` の引数 (配列) で解決される `StatefulPromise` を返します。
+
+### .emit <Badge variant="instance" /><Badge variant="method" />
+
+`.emit` はイベントリスナーに値を発送する関数です。
+
+```ts
+emit(
+  event: string | number,
+  ...args: unknown[]
+): undefined | StatefulPromise<unknown>[];
+```
+
+#### 引数
+
+`event`
+:   発送先のイベント名です。
+
+`args`
+:   発送先のイベントリスナーに宛てた値です。
+
+#### 返値
+
+イベントリスナーが無ければ `undefined` を返します。イベントリスナーがあれば、それが解決/拒否されるまで待機する `StatefulPromise` の配列を返します。通常この `StatefulPromise` をハンドリングする必要はありません。イベントによって引き起こされる副作用を現在のコンテクストで待機する必要があるか、イベントリスナーの解決/拒否に関心があるときなどに使用できます。
+
+### .idle <Badge variant="instance" /><Badge variant="method" />
+
+`.idle` は現在実行中の全イベントリスナーの完了を待機する関数です。
+
+```ts
+idle(): StatefulPromise<void>;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+`void` で解決される `StatefulPromise` を返します。
+
+### .abort <Badge variant="instance" /><Badge variant="method" />
+
+`.abort` は全イベントリスナーの `signal` に中止イベントを発送する関数です。
+
+```ts
+abort(reason?: unknown): void;
+```
+
+#### 引数
+
+`reason`
+:   中止の理由です。
+
+#### 返値
+
+なし。

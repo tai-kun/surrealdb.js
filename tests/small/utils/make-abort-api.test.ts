@@ -30,6 +30,15 @@ test("中止する", async () => {
   expect(signal.reason).toBe(reason);
 });
 
+test("中止イベントを受け取る", async () => {
+  const [signal, abort] = makeAbortApi();
+  const listener = vi.fn();
+  signal.addEventListener("abort", listener);
+  abort();
+
+  expect(listener.mock.calls).toHaveLength(1);
+});
+
 test("複数回中止した場合は最初の 1 回だけ実行される", () => {
   const [signal, abort] = makeAbortApi();
   abort({});

@@ -28,5 +28,8 @@ export { default as makeAbortApi } from "./src/make-abort-api";
 export type * from "./src/stateful-promise";
 export { default as StatefulPromise } from "./src/stateful-promise";
 
+export type * from "./src/task-queue";
+export { default as TaskQueue } from "./src/task-queue";
+
 export type * from "./src/throw-if-aborted";
 export { default as throwIfAborted } from "./src/throw-if-aborted";

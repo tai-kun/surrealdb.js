@@ -124,6 +124,10 @@ export default defineConfig({
                   slug: "reference/utils/stateful-promise",
                   label: "StatefulPromise",
                 },
+                {
+                  slug: "reference/utils/task-queue",
+                  label: "TaskQueue",
+                },
               ],
             },
             {

@@ -80,7 +80,7 @@ try {
 - `fulfilled`: 解決されたことを示します。
 - `rejected`: 拒否されたことを示します。
 
-### .then <Badge variant="instance" /><Badge variant="property" />
+### .then <Badge variant="instance" /><Badge variant="method" />
 
 `.then` は `StatefulPromise` が成功した場合と失敗した場合のコールバック関数を取り、`Promise` オブジェクトを返します。
 
@@ -195,7 +195,6 @@ const promise = StatefulPromise.try(() => {
   throw "test";
 });
 
-console.log(promise.state); // "rejected"
 await promise.then(null, e => {
   console.log(e); // "test"
 });

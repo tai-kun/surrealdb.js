@@ -114,20 +114,16 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
    * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/stateful-promise/#constructor)
    */
   constructor(executor: StatefulPromiseExecutor<T>) {
-    this._promise = new Promise<void>(resolve => {
-      executor(
-        value => {
-          this._value = value;
-          this._state = "fulfilled";
-          resolve();
-        },
-        reason => {
-          this._value = reason;
-          this._state = "rejected";
-          resolve();
-        },
-      );
-    });
+    this._promise = new Promise<T>(executor).then(
+      value => {
+        this._value = value;
+        this._state = "fulfilled";
+      },
+      reason => {
+        this._value = reason;
+        this._state = "rejected";
+      },
+    );
   }
 
   /**

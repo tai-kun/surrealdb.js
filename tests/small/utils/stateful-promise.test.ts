@@ -46,6 +46,21 @@ test("onFulfilled 内で投げられた例外は onRejected で補足されな�
   await expect(fn).rejects.toBe(0);
 });
 
+test("Promise で解決できる", async () => {
+  const { promise, resolve } = StatefulPromise.withResolvers<string>();
+
+  expect(promise.state).toBe("pending");
+
+  resolve(Promise.resolve("test"));
+  const handleFulfilled = vi.fn();
+  promise.then(handleFulfilled);
+  await vi.waitUntil(() => handleFulfilled.mock.calls.length > 0);
+
+  expect(handleFulfilled.mock.calls).toStrictEqual([
+    ["test"],
+  ]);
+});
+
 test.fails("(仕様確認) .try 無しで同期的に例外を投げると reject 判定にならない", async () => {
   const fn = () => {
     throw new Error("test");
@@ -148,9 +163,7 @@ describe("ドキュメントの例", () => {
       // Test
       {
         expect(spy.mock.calls).toStrictEqual([
-          [
-            "test",
-          ],
+          ["test"],
         ]);
       }
     } finally {
@@ -182,9 +195,7 @@ describe("ドキュメントの例", () => {
       // Test
       {
         expect(spy.mock.calls).toStrictEqual([
-          [
-            "test",
-          ],
+          ["test"],
         ]);
       }
     } finally {
@@ -204,7 +215,6 @@ describe("ドキュメントの例", () => {
           throw "test";
         });
 
-        console.log(promise.state); // "rejected"
         await promise.then(null, e => {
           console.log(e); // "test"
         });
@@ -213,12 +223,7 @@ describe("ドキュメントの例", () => {
       // Test
       {
         expect(spy.mock.calls).toStrictEqual([
-          [
-            "rejected",
-          ],
-          [
-            "test",
-          ],
+          ["test"],
         ]);
       }
     } finally {

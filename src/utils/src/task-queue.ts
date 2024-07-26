@@ -6,21 +6,26 @@ interface Task<T = unknown> {
   readonly abort: (reason?: unknown) => void;
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#add)
+ */
 export interface TaskRunnerArgs {
   signal: AbortSignal;
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#add)
+ */
 export interface TaskOptions {
   readonly signal?: AbortSignal | undefined;
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/)
+ */
 export default class TaskQueue {
   protected _queue: Task[] = [];
   protected _empty: (() => void)[] = [];
-
-  get count(): number {
-    return this._queue.length;
-  }
 
   protected rm(task: Task): void {
     const i = this._queue.indexOf(task);
@@ -36,6 +41,16 @@ export default class TaskQueue {
     }
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#count)
+   */
+  get count(): number {
+    return this._queue.length;
+  }
+
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#add)
+   */
   add<T>(
     runner: (args: TaskRunnerArgs) => T | PromiseLike<T>,
     options: TaskOptions | undefined = {},
@@ -65,6 +80,9 @@ export default class TaskQueue {
     return task.promise;
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#empty)
+   */
   empty(): StatefulPromise<void> {
     if (this._queue.length <= 0) {
       return StatefulPromise.resolve();
@@ -75,6 +93,9 @@ export default class TaskQueue {
     });
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#abort)
+   */
   abort(reason?: unknown): void {
     for (const t of this._queue) {
       t.abort(reason);

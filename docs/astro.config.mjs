@@ -132,6 +132,10 @@ export default defineConfig({
                   slug: "reference/utils/task-emitter",
                   label: "TaskEmitter",
                 },
+                {
+                  slug: "reference/utils/serial",
+                  label: "Serial",
+                },
               ],
             },
             {

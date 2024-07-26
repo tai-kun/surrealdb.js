@@ -25,6 +25,9 @@ export { default as isSafeNumber } from "./src/is-safe-number";
 export type * from "./src/make-abort-api";
 export { default as makeAbortApi } from "./src/make-abort-api";
 
+export type * from "./src/serial";
+export { default as Serial } from "./src/serial";
+
 export type * from "./src/stateful-promise";
 export { default as StatefulPromise } from "./src/stateful-promise";
 

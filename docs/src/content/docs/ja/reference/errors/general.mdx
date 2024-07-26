@@ -18,6 +18,24 @@ title: 一般的なエラー
 `.cause`
 :   エラーが発生した原因やコンテクストが設定される場合があります。
 
+## NumberRangeError
+
+継承元: `SurrealError`
+
+このエラーは、数値が範囲外の値を取った場合に投げられます。
+
+`.name`
+:   `"NumberRangeError"` です。
+
+`.range`
+:   期待する範囲です。
+
+`.actual`
+:   時祭の数値です。
+
+`.integer`
+:   `true` の場合、整数を期待します。
+
 ## UnsupportedRuntimeError
 
 継承元: `SurrealError`

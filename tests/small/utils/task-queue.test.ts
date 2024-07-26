@@ -83,7 +83,7 @@ describe("ドキュメントの例", () => {
 
       console.log(queue.count);
 
-      await queue.empty();
+      await queue.idle();
 
       console.log(queue.count);
       console.log(results);

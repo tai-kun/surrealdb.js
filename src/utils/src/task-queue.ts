@@ -24,8 +24,8 @@ export interface TaskOptions {
  * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/)
  */
 export default class TaskQueue {
-  protected _queue: Task[] = [];
-  protected _empty: (() => void)[] = [];
+  protected readonly _queue: Task[] = [];
+  protected readonly _idle: (() => void)[] = [];
 
   protected rm(task: Task): void {
     const i = this._queue.indexOf(task);
@@ -34,8 +34,8 @@ export default class TaskQueue {
       this._queue.splice(i, 1);
 
       if (this._queue.length <= 0) {
-        while (this._empty.length > 0) {
-          this._empty.shift()!();
+        while (this._idle.length > 0) {
+          this._idle.shift()!();
         }
       }
     }
@@ -81,15 +81,15 @@ export default class TaskQueue {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#empty)
+   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-queue/#idle)
    */
-  empty(): StatefulPromise<void> {
+  idle(): StatefulPromise<void> {
     if (this._queue.length <= 0) {
       return StatefulPromise.resolve();
     }
 
     return new StatefulPromise(resolve => {
-      this._empty.push(resolve);
+      this._idle.push(resolve);
     });
   }
 

@@ -5,6 +5,8 @@ title: TaskQueue
 import { Aside } from "@astrojs/starlight/components";
 import Badge from "~/components/ja/Badge.astro";
 
+`TaskQueue` は非同期タスクを管理するクラスです。同時実行性を制御する方法はありません。すべてのタスクランナーは非同期的に実行されます。
+
 ## インポート
 
 ```ts
@@ -23,7 +25,7 @@ new TaskQueue();
 
 なし。
 
-#### 返り値
+#### 返値
 
 `new` を通じて呼び出された場合、`TaskQueue` はそのインスタンスを返します。
 
@@ -73,16 +75,16 @@ const text = await promise;
 console.log(text);
 ```
 
-### .empty <Badge variant="instance" /><Badge variant="method" />
+### .idle <Badge variant="instance" /><Badge variant="method" />
 
-`.empty` はキューが空になるまで待機するための関数です。キューからタスクランナーが削除されるのは、タスクランナーが解決/拒否問わず完了直後です。したがって、キューが空になるということは、すべてのタスクランナーの実行が完了したことを意味します。
+`.idle` はキューが空になるまで待機するための関数です。キューからタスクランナーが削除されるのは、タスクランナーが解決/拒否問わず完了直後です。したがって、キューが空になるということは、すべてのタスクランナーの実行が完了したことを意味します。
 
 ```ts
-empty(): StatefulPromise<void>;
+idle(): StatefulPromise<void>;
 ```
 
 <Aside type="caution">
-  `.empty` は `.add` メソッドで追加したタスクランナーが投げるエラーを補足しません。タスクランナーは `StatefulPromise` 内で実行されるため、エラーハンドリングなしでタスクランナーのエラーに気づくことはできません。
+  `.idle` は `.add` メソッドで追加したタスクランナーが投げるエラーを補足しません。タスクランナーは `StatefulPromise` 内で実行されるため、エラーハンドリングなしでタスクランナーのエラーに気づくことはできません。
 </Aside>
 
 #### 引数
@@ -111,7 +113,7 @@ queue.add(() => {
 
 console.log(queue.count);
 
-await queue.empty();
+await queue.idle();
 
 console.log(queue.count);
 console.log(results);

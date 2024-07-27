@@ -78,6 +78,39 @@ export default defineConfig({
             //   ],
             // },
             {
+              label: "formatters",
+              items: [
+                {
+                  label: "cbor",
+                  items: [
+                    {
+                      slug: "reference/formatters/cbor/encode",
+                      label: "encode",
+                    },
+                    {
+                      slug: "reference/formatters/cbor/decode",
+                      label: "decode",
+                    },
+                    {
+                      slug: "reference/formatters/cbor/tagged",
+                      label: "Tagged",
+                    },
+                    {
+                      slug: "reference/formatters/cbor/simple",
+                      label: "Simple",
+                    },
+                    {
+                      slug: "reference/formatters/cbor/others",
+                      label: "Other tools",
+                      translations: {
+                        ja: "その他のツール",
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+            {
               label: "utils",
               items: [
                 {
@@ -139,16 +172,11 @@ export default defineConfig({
               ],
             },
             {
-              label: "errors",
-              items: [
-                {
-                  slug: "reference/errors/general",
-                  label: "General Errors",
-                  translations: {
-                    ja: "一般的なエラー",
-                  },
-                },
-              ],
+              slug: "reference/errors",
+              label: "Errors",
+              translations: {
+                ja: "エラー",
+              },
             },
           ],
         },

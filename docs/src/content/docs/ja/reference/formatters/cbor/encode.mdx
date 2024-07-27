@@ -1,0 +1,51 @@
+---
+title: encode
+---
+
+`encode` は JavaScript の値を CBOR 形式のバイト配列にエンコードする関数です。
+
+### インポート
+
+```ts
+import { encode } from "@tai-kun/surreal/formatters/cbor";
+```
+
+### 構文
+
+```ts
+function encode(value: unknown, options?: EncodeOptions): Uint8Array;
+```
+
+#### 引数
+
+##### `value`
+
+CBOR 形式のバイト配列にエンコードするための JavaScript の値です。`value` に渡せる JavaScript の値は次のとおりです:
+
+- プリミティブな値 (`number`, `bigint`, `string`, `boolean`, `null`, `undefined`)
+- 配列または `Set`
+- プレーンなオブジェクトまたは `Map`
+- バイト配列 (`Uint8Array`)
+
+プリミティブな値でなく、`toCBOR` プロパティが関数であれば、それを呼び出します。
+
+##### `options`
+
+エンコードオプションです。
+
+`isSafeMapKey?: (key: unknown, map: Map<unknown, unknown>) => boolean`
+:   このオプションは、`Map` オブジェクトのキーが安全であるか検証する関数です。関数は `key` と `map` の 2 つの引数を受け取ります。`key` はキーの値で、`map` 検証している `Map` オブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。
+
+`isSafeObjectKey?: (key: unknown, obj: Record<string, unknown>) => boolean`
+:   このオプションは、プレーンオブジェクトのキーが安全であるか検証する関数です。関数は `key` と `obj` の 2 つの引数を受け取ります。`key` はキーの値で、`obj` 検証しているプレーンオブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。
+
+`chunkSize?: number`
+:   このオプションは、不定長であるエンコードされたバイト配列を蓄積する際、一度に確保するメモリーサイズ (`Uint8Array` の長さ) です。デフォルト値は `2048` です。
+:   `encode` 関数は JavaScript の値を都度エンコードしていくため、エンコードされたバイト配列の長さを知れるのは、すべてのエンコードが完了した後です。エンコード毎に新しくバイト配列を作成するのは実行速度の低下が考えられるため、一度のバイト配列の作成である程度まとまったサイズを確保するようにしています。
+
+`maxDepth?: number`
+:   オブジェクトの最大深さを指定します。オブジェクトまたは配列に入る度に深さが 1 増加します。デフォルト値は `64` です。エンコードには再帰処理が使われていないため、深さに上限値はありませんが、あまり大きくしないことを推奨します。
+
+#### 返値
+
+JavaScript の値が CBOR 形式にエンコードされたバイト配列です。

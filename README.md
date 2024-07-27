@@ -1,6 +1,6 @@
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surreal.js/nodejs.yml?branch=main&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surreal.js/actions/workflows/nodejs.yml)
-<!-- [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surreal.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surreal.js/actions/workflows/deno.yml) -->
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surreal.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surreal.js/actions/workflows/bun.yml)
+<!-- [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surreal.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surreal.js/actions/workflows/deno.yml) -->
 
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surreal.js/chromium.yml?branch=main&logo=googlechrome&label=Chromium)](https://github.com/tai-kun/surreal.js/actions/workflows/chromium.yml)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surreal.js/firefox.yml?branch=main&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surreal.js/actions/workflows/firefox.yml)

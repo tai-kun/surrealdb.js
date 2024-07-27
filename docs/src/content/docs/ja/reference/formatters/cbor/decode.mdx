@@ -1,0 +1,48 @@
+---
+title: decode
+---
+
+`decode` は CBOR 形式のバイト配列を JavaScript の値にデコードする関数です。
+
+### インポート
+
+```ts
+import { decode } from "@tai-kun/surreal/formatters/cbor";
+```
+
+### 構文
+
+```ts
+function decode(input: Uint8Array, options?: DecodeOptions): ZodUnknown;
+```
+
+#### 引数
+
+##### `input`
+
+JavaScript の値にデコードするための CBOR 形式のバイト配列です。
+
+##### `options`
+
+デコードオプションです。
+
+`map?: boolean`
+:   `true` にすると、key-value で表される値をプレーンオブジェクトではなく `Map` オブジェクトで作成します。デフォルトは `false` です。プレーンオブジェクトのキーは文字列または数値のみを受け取ることがてきますが、このオプションを `true` にしてデコードすると、キーはデコードされたすべての値を受け取ることができます。
+
+`reviver?: Reviver | ReviverObject | (Reviver | ReviverObject)[]`
+:   このオプションは、CBOR の単純なデータアイテムまたはタグ付きデータアイテムを JavaScript の値に変換するために使用します。単純なデータアイテムは 0 から 19 および 32 から 255 までの値に限定されます。タグ付きデータアイテムのタグは 0 から 2^64-1 までの `number` または `bigint` です。
+
+`isSafeMapKey?: (key: unknown, map: Map<unknown, unknown>) => boolean`
+:   このオプションは、`Map` オブジェクトのキーが安全であるか検証する関数です。関数は `key` と `map` の 2 つの引数を受け取ります。`key` はキーの値で、`map` 検証している `Map` オブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。
+
+`isSafeObjectKey?: (key: unknown, obj: Record<string | number, unknown>) => boolean`
+:   このオプションは、プレーンオブジェクトのキーが安全であるか検証する関数です。関数は `key` と `obj` の 2 つの引数を受け取ります。`key` はキーの値で、`obj` 検証しているプレーンオブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。
+
+`isSafeObjectKey?: (key: string, obj: Record<string, unknown>) => boolean`
+
+`maxDepth?: number`
+:   オブジェクトの最大深さを指定します。オブジェクトまたは配列に入る度に深さが 1 増加します。デフォルト値は `64` です。デコードには再帰処理が使われていないため、深さに上限値はありませんが、あまり大きくしないことを推奨します。
+
+#### 返値
+
+CBOR 形式のバイト配列からデコードされた JavaScript の値です。

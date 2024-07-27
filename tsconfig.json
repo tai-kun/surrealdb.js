@@ -14,7 +14,7 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
-      "@tai-kun/surreal/formatters/cbor": ["src/formatters/cbor/index.ts"],
+      "@tai-kun/surreal/cbor": ["src/cbor/index.ts"],
 
       "@tai-kun/surreal/utils": ["src/utils/index.ts"],
       "@tai-kun/surreal/errors": ["src/errors/index.ts"]

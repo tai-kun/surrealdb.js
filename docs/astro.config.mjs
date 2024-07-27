@@ -78,35 +78,30 @@ export default defineConfig({
             //   ],
             // },
             {
-              label: "formatters",
+              label: "cbor",
               items: [
                 {
-                  label: "cbor",
-                  items: [
-                    {
-                      slug: "reference/formatters/cbor/encode",
-                      label: "encode",
-                    },
-                    {
-                      slug: "reference/formatters/cbor/decode",
-                      label: "decode",
-                    },
-                    {
-                      slug: "reference/formatters/cbor/tagged",
-                      label: "Tagged",
-                    },
-                    {
-                      slug: "reference/formatters/cbor/simple",
-                      label: "Simple",
-                    },
-                    {
-                      slug: "reference/formatters/cbor/others",
-                      label: "Other tools",
-                      translations: {
-                        ja: "その他のツール",
-                      },
-                    },
-                  ],
+                  slug: "reference/cbor/encode",
+                  label: "encode",
+                },
+                {
+                  slug: "reference/cbor/decode",
+                  label: "decode",
+                },
+                {
+                  slug: "reference/cbor/tagged",
+                  label: "Tagged",
+                },
+                {
+                  slug: "reference/cbor/simple",
+                  label: "Simple",
+                },
+                {
+                  slug: "reference/cbor/others",
+                  label: "Other tools",
+                  translations: {
+                    ja: "その他のツール",
+                  },
                 },
               ],
             },

@@ -6,7 +6,7 @@ export {
   CborTooMuchDataError,
   CborUnsafeMapKeyError,
   CborWellFormednessError,
-} from "./src/formatter";
+} from "./src/cbor";
 
 export {
   NumberRangeError,

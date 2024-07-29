@@ -91,7 +91,7 @@ export function writeInteger(w: Writer, value: number | bigint): void {
 
     // 整数とヘッダーの書き込み処理は同じなので、それぞれの意味は異なるけど再利用する。
     if (value >= 0) {
-      writeHeader(w, MT_UNSIGNED_INTEGER, value === -0 ? 0 : value);
+      writeHeader(w, MT_UNSIGNED_INTEGER, value === 0 ? 0 : value);
     } else {
       writeHeader(w, MT_NEGATIVE_INTEGER, -value - 1);
     }

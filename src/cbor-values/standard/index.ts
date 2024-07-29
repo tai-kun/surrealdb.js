@@ -1,2 +1,5 @@
 export type * from "./src/datetime";
 export { default as Datetime } from "./src/datetime";
+
+export type * from "./src/decimal";
+export { default as Decimal } from "./src/decimal";

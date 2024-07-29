@@ -23,7 +23,7 @@ type Suite = {
 };
 
 const suites: Record<string, Suite> = {
-  "WebKit ではミリ秒未満の精度が丸められる": {
+  "(仕様確認) WebKit ではミリ秒未満の精度が丸められる": {
     args: ["1969-12-31T23:59:59.9991Z"],
     seconds: 0,
     nanoseconds: 0,
@@ -31,7 +31,7 @@ const suites: Record<string, Suite> = {
     iso: "1970-01-01T00:00:00.000000000Z",
     skip: process.env.RUNTIME !== "webkit",
   },
-  "WebKit 以外ではミリ秒未満の精度が丸められずに切り捨てられる": {
+  "(仕様確認) WebKit 以外ではミリ秒未満の精度が丸められずに切り捨てられる": {
     args: ["1969-12-31T23:59:59.9991Z"],
     seconds: -1,
     nanoseconds: 999000000,
@@ -46,12 +46,21 @@ const suites: Record<string, Suite> = {
     nanoTime: 1717245296_780000000n,
     iso: "2024-06-01T12:34:56.780000000Z",
   },
-  "UNIX エポック以前の文字列": {
+  "UNIX エポック以前の文字列 (WebKit のみ)": {
+    args: ["1960-06-01T12:34:56.780123456789Z"],
+    seconds: -302441103 - 1,
+    nanoseconds: 781_000_000, // ミリ秒未満の精度は消える
+    nanoTime: -302441103_219000000n,
+    iso: "1960-06-01T12:34:56.781000000Z",
+    skip: process.env.RUNTIME !== "webkit",
+  },
+  "UNIX エポック以前の文字列 (WebKit 以外)": {
     args: ["1960-06-01T12:34:56.780123456789Z"],
     seconds: -302441103 - 1,
     nanoseconds: 780_000_000, // ミリ秒未満の精度は消える
     nanoTime: -302441103_220000000n,
     iso: "1960-06-01T12:34:56.780000000Z",
+    skip: process.env.RUNTIME === "webkit",
   },
   "無効な文字列": {
     args: ["2024年の6月ついたち、正午すぎ"],

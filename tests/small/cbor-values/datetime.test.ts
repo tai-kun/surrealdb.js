@@ -124,8 +124,8 @@ describe("decode-only/encodable", () => {
       );
 
       test("CBOR でエンコード/デコードできる", () => {
-        const input = new EncodableDatetime([1717245296, 780123456]);
-        const output = new EncodableDatetime([1717245296, 780123456]);
+        const input = new EncodableDatetime(...c.args as [any]);
+        const output = new EncodableDatetime(...c.args as [any]);
         const bytes = encode(input);
         const dt = decode(bytes, {
           reviver: {
@@ -330,8 +330,8 @@ describe("standard", () => {
       );
 
       test("CBOR でエンコード/デコードできる", () => {
-        const input = new Datetime([1717245296, 780123456]);
-        const output = new Datetime([1717245296, 780123456]);
+        const input = new Datetime(...c.args);
+        const output = new Datetime(...c.args);
         const bytes = encode(input);
         const dt = decode(bytes, {
           reviver: {

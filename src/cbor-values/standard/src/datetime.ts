@@ -6,6 +6,7 @@ import {
 import { SurrealTypeError } from "@tai-kun/surreal/errors";
 import { isSafeNumber, quoteStr } from "@tai-kun/surreal/utils";
 import { toISOString } from "~/cbor-values/datetime";
+import { defineAsDatetime } from "~/cbor-values/define";
 
 const MILLISECONDS_PER_SECOND = 1e3;
 const NANOSECONDS_PER_SECOND = 1e9;
@@ -191,6 +192,8 @@ export default class Datetime extends Date implements Encodable {
         String(args),
       );
     }
+
+    defineAsDatetime(this);
   }
 
   get seconds(): number {

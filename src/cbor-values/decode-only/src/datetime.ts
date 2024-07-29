@@ -1,4 +1,5 @@
 import type { DataItem } from "@tai-kun/surreal/cbor";
+import { defineAsDatetime } from "~/cbor-values/define";
 
 // See: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
 // SurrealDB では日時にタグ 100, 1, 1004 を使っていない模様
@@ -76,5 +77,7 @@ export default class Datetime {
 
     this.seconds = s === 0 ? 0 : s;
     this.nanoseconds = ns === 0 ? ns : ns;
+
+    defineAsDatetime(this);
   }
 }

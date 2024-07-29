@@ -287,8 +287,10 @@ export function write(
               if (tagged.length === 2) {
                 writeTag(w, tagged[0]);
                 value = tagged[1];
+                continue; // loop ではないので抜け出さないようにする。
               } else if (tagged.length === 1) {
                 value = tagged[0];
+                continue; // loop ではないので抜け出さないようにする。
               } else {
                 throw new SurrealTypeError(
                   "an array of length 1 or 2",

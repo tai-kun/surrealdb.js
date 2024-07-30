@@ -27,6 +27,9 @@ switch (runtime) {
 }
 
 export default defineConfig({
+  esbuild: {
+    target: "safari15", // static を使うために必要なオプション
+  },
   test: {
     browser: {
       enabled: browser,

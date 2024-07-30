@@ -1,17 +1,23 @@
 import { SurrealError, type SurrealErrorOptions } from "./general";
 
 export class CborError extends SurrealError {
-  override name = "CborError";
+  static {
+    this.prototype.name = "CborError";
+  }
 }
 
 // https://www.rfc-editor.org/rfc/rfc8949.html#name-well-formedness-errors-and-
 export class CborWellFormednessError extends CborError {
-  override name = "CborWellFormednessError";
+  static {
+    this.prototype.name = "CborWellFormednessError";
+  }
 }
 
 // https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-2.2
 export class CborTooMuchDataError extends CborWellFormednessError {
-  override name = "CborTooMuchDataError";
+  static {
+    this.prototype.name = "CborTooMuchDataError";
+  }
 
   constructor(options?: SurrealErrorOptions | undefined) {
     super("There are input bytes left that were not consumed.", options);
@@ -20,7 +26,9 @@ export class CborTooMuchDataError extends CborWellFormednessError {
 
 // https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-2.4
 export class CborTooLittleDataError extends CborWellFormednessError {
-  override name = "CborTooLittleDataError";
+  static {
+    this.prototype.name = "CborTooLittleDataError";
+  }
 
   constructor(options?: SurrealErrorOptions | undefined) {
     super("There are input bytes left that were not consumed.", options);
@@ -29,11 +37,15 @@ export class CborTooLittleDataError extends CborWellFormednessError {
 
 // https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-2.6
 export class CborSyntaxError extends CborWellFormednessError {
-  override name = "CborSyntaxError";
+  static {
+    this.prototype.name = "CborSyntaxError";
+  }
 }
 
 export class CborMaxDepthReachedError extends CborError {
-  override name = "CborMaxDepthReachedError";
+  static {
+    this.prototype.name = "CborMaxDepthReachedError";
+  }
 
   constructor(
     public maxDepth: number,
@@ -44,7 +56,9 @@ export class CborMaxDepthReachedError extends CborError {
 }
 
 export class CborUnsafeMapKeyError extends CborError {
-  override name = "CborUnsafeMapKey";
+  static {
+    this.prototype.name = "CborUnsafeMapKey";
+  }
 
   constructor(
     public key: unknown,

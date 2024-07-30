@@ -10,7 +10,9 @@ export interface SurrealErrorOptions extends ErrorOptionsBase {}
  * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#surrealerror)
  */
 export class SurrealError extends Error {
-  override name = "SurrealError";
+  static {
+    this.prototype.name = "SurrealError";
+  }
 
   constructor(message: string, options?: SurrealErrorOptions | undefined) {
     super(message, options);
@@ -22,7 +24,9 @@ export class SurrealError extends Error {
 }
 
 export class SurrealTypeError extends SurrealError {
-  override name = "SurrealTypeError";
+  static {
+    this.prototype.name = "SurrealTypeError";
+  }
 
   constructor(
     expected: string,
@@ -34,7 +38,9 @@ export class SurrealTypeError extends SurrealError {
 }
 
 export class CircularReferenceError extends SurrealError {
-  override name = "CircularReferenceError";
+  static {
+    this.prototype.name = "CircularReferenceError";
+  }
 }
 
 /**
@@ -48,7 +54,9 @@ export interface NumberRangeErrorOptions extends SurrealErrorOptions {
  * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#numberrangeerror)
  */
 export class NumberRangeError extends SurrealError {
-  override name = "NumberRangeError";
+  static {
+    this.prototype.name = "NumberRangeError";
+  }
 
   public integer: boolean;
 
@@ -71,7 +79,9 @@ export class NumberRangeError extends SurrealError {
  * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#unsupportedruntimeerror)
  */
 export class UnsupportedRuntimeError extends SurrealError {
-  override name = "UnsupportedRuntimeError";
+  static {
+    this.prototype.name = "UnsupportedRuntimeError";
+  }
 
   constructor(reason: string, options?: SurrealErrorOptions | undefined) {
     super("Unsupported runtime. " + reason, options);
@@ -79,7 +89,9 @@ export class UnsupportedRuntimeError extends SurrealError {
 }
 
 export class UnreachableError extends SurrealError {
-  override name = "UnreachableError";
+  static {
+    this.prototype.name = "UnreachableError";
+  }
 
   constructor(options?: SurrealErrorOptions | undefined) {
     super("Unreachable code reached.", options);

@@ -18,8 +18,8 @@ export function ianaReplacer(value: unknown): unknown {
 
 export function ianaReviver(t: Tagged): unknown {
   switch (t.tag) {
-    case TAG_DATETIME:
-      return new Date(t.value as string);
+    // case TAG_DATETIME:
+    //   return new Date(t.value as string);
 
     default:
       return CONTINUE;

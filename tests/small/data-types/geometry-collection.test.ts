@@ -1,12 +1,12 @@
 import { decode, encode } from "@tai-kun/surreal/cbor";
 import {
-  TAG_GEOMETRY_COLLECTION,
-  TAG_GEOMETRY_LINE,
-  TAG_GEOMETRY_MULTILINE,
-  TAG_GEOMETRY_MULTIPOINT,
-  TAG_GEOMETRY_MULTIPOLYGON,
-  TAG_GEOMETRY_POINT,
-  TAG_GEOMETRY_POLYGON,
+  CBOR_TAG_GEOMETRY_COLLECTION,
+  CBOR_TAG_GEOMETRY_LINE,
+  CBOR_TAG_GEOMETRY_MULTILINE,
+  CBOR_TAG_GEOMETRY_MULTIPOINT,
+  CBOR_TAG_GEOMETRY_MULTIPOLYGON,
+  CBOR_TAG_GEOMETRY_POINT,
+  CBOR_TAG_GEOMETRY_POLYGON,
 } from "@tai-kun/surreal/data-types/encodable";
 import {
   GeometryCollection,
@@ -222,25 +222,25 @@ test(".toCBOR", () => {
     reviver: {
       tagged(t) {
         switch (t.tag) {
-          case TAG_GEOMETRY_POINT:
+          case CBOR_TAG_GEOMETRY_POINT:
             return new GeometryPoint(t.value as any);
 
-          case TAG_GEOMETRY_LINE:
+          case CBOR_TAG_GEOMETRY_LINE:
             return new GeometryLine(t.value as any);
 
-          case TAG_GEOMETRY_POLYGON:
+          case CBOR_TAG_GEOMETRY_POLYGON:
             return new GeometryPolygon(t.value as any);
 
-          case TAG_GEOMETRY_MULTIPOINT:
+          case CBOR_TAG_GEOMETRY_MULTIPOINT:
             return new GeometryMultiPoint(t.value as any);
 
-          case TAG_GEOMETRY_MULTILINE:
+          case CBOR_TAG_GEOMETRY_MULTILINE:
             return new GeometryMultiLine(t.value as any);
 
-          case TAG_GEOMETRY_MULTIPOLYGON:
+          case CBOR_TAG_GEOMETRY_MULTIPOLYGON:
             return new GeometryMultiPolygon(t.value as any);
 
-          case TAG_GEOMETRY_COLLECTION:
+          case CBOR_TAG_GEOMETRY_COLLECTION:
             return new GeometryCollection(t.value as any);
 
           default:

@@ -6,7 +6,7 @@ import {
   GeometryPolygon,
   type GeometryPolygonBase,
 } from "./geometry-polygon";
-import { type Encodable, TAG_GEOMETRY_MULTIPOLYGON } from "./spec";
+import { CBOR_TAG_GEOMETRY_MULTIPOLYGON, type Encodable } from "./spec";
 
 export type GeoJsonMultiPolygon = {
   type: "MultiPolygon";
@@ -25,8 +25,11 @@ export class GeometryMultiPolygonBase<P extends new(arg: any) => Polygon>
     return map(this.polygons, p => p.coordinates);
   }
 
-  toCBOR(): [tag: typeof TAG_GEOMETRY_MULTIPOLYGON, value: this["polygons"]] {
-    return [TAG_GEOMETRY_MULTIPOLYGON, this.polygons];
+  toCBOR(): [
+    tag: typeof CBOR_TAG_GEOMETRY_MULTIPOLYGON,
+    value: this["polygons"],
+  ] {
+    return [CBOR_TAG_GEOMETRY_MULTIPOLYGON, this.polygons];
   }
 
   toJSON(): GeoJsonMultiPolygon {

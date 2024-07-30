@@ -6,7 +6,7 @@ import {
   GeometryLine,
   type GeometryLineBase,
 } from "./geometry-line";
-import { type Encodable, TAG_GEOMETRY_POLYGON } from "./spec";
+import { CBOR_TAG_GEOMETRY_POLYGON, type Encodable } from "./spec";
 
 export type GeoJsonPolygon = {
   type: "Polygon";
@@ -30,8 +30,8 @@ export class GeometryPolygonBase<L extends new(arg: any) => Line>
     return map(this.polygon, l => l.coordinates);
   }
 
-  toCBOR(): [tag: typeof TAG_GEOMETRY_POLYGON, value: this["polygon"]] {
-    return [TAG_GEOMETRY_POLYGON, this.polygon];
+  toCBOR(): [tag: typeof CBOR_TAG_GEOMETRY_POLYGON, value: this["polygon"]] {
+    return [CBOR_TAG_GEOMETRY_POLYGON, this.polygon];
   }
 
   toJSON(): GeoJsonPolygon {

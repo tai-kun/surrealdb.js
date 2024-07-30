@@ -1,5 +1,5 @@
 import { decode, encode } from "@tai-kun/surreal/cbor";
-import { TAG_GEOMETRY_POINT } from "@tai-kun/surreal/data-types/encodable";
+import { CBOR_TAG_GEOMETRY_POINT } from "@tai-kun/surreal/data-types/encodable";
 import { GeometryPoint } from "@tai-kun/surreal/data-types/standard";
 import { expect, test } from "vitest";
 
@@ -46,7 +46,7 @@ test(".toCBOR", () => {
     reviver: {
       tagged(t) {
         switch (t.tag) {
-          case TAG_GEOMETRY_POINT:
+          case CBOR_TAG_GEOMETRY_POINT:
             return new GeometryPoint(t.value as any);
 
           default:

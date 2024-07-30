@@ -1,6 +1,6 @@
 import {
+  CBOR_TAG_STRING_DECIMAL,
   type Encodable,
-  TAG_STRING_DECIMAL,
 } from "@tai-kun/surreal/data-types/encodable";
 import { Big as Decimal } from "big.js";
 import { defineAsDecimal } from "~/data-types/define";
@@ -12,7 +12,7 @@ interface EncodableBig extends Omit<Encodable, "toJSON"> {
     (hint: string): string | number;
   };
   toCBOR(): [
-    tag: typeof TAG_STRING_DECIMAL,
+    tag: typeof CBOR_TAG_STRING_DECIMAL,
     value: string,
   ];
 }
@@ -37,11 +37,11 @@ Object.assign<any, EncodableBig>(Decimal.prototype, {
     }
   },
   toCBOR(this: Decimal): [
-    tag: typeof TAG_STRING_DECIMAL,
+    tag: typeof CBOR_TAG_STRING_DECIMAL,
     value: string,
   ] {
     return [
-      TAG_STRING_DECIMAL,
+      CBOR_TAG_STRING_DECIMAL,
       this.toString(),
     ];
   },

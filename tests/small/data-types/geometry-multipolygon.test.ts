@@ -1,9 +1,9 @@
 import { decode, encode } from "@tai-kun/surreal/cbor";
 import {
-  TAG_GEOMETRY_LINE,
-  TAG_GEOMETRY_MULTIPOLYGON,
-  TAG_GEOMETRY_POINT,
-  TAG_GEOMETRY_POLYGON,
+  CBOR_TAG_GEOMETRY_LINE,
+  CBOR_TAG_GEOMETRY_MULTIPOLYGON,
+  CBOR_TAG_GEOMETRY_POINT,
+  CBOR_TAG_GEOMETRY_POLYGON,
 } from "@tai-kun/surreal/data-types/encodable";
 import {
   GeometryLine,
@@ -222,16 +222,16 @@ test(".toCBOR", () => {
     reviver: {
       tagged(t) {
         switch (t.tag) {
-          case TAG_GEOMETRY_POINT:
+          case CBOR_TAG_GEOMETRY_POINT:
             return new GeometryPoint(t.value as any);
 
-          case TAG_GEOMETRY_LINE:
+          case CBOR_TAG_GEOMETRY_LINE:
             return new GeometryLine(t.value as any);
 
-          case TAG_GEOMETRY_POLYGON:
+          case CBOR_TAG_GEOMETRY_POLYGON:
             return new GeometryPolygon(t.value as any);
 
-          case TAG_GEOMETRY_MULTIPOLYGON:
+          case CBOR_TAG_GEOMETRY_MULTIPOLYGON:
             return new GeometryMultiPolygon(t.value as any);
 
           default:

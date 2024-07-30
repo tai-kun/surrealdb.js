@@ -6,7 +6,7 @@ import {
   GeometryLine,
   type GeometryLineBase,
 } from "./geometry-line";
-import { type Encodable, TAG_GEOMETRY_MULTILINE } from "./spec";
+import { CBOR_TAG_GEOMETRY_MULTILINE, type Encodable } from "./spec";
 
 export type GeoJsonMultiLine = {
   type: "MultiLineString";
@@ -25,8 +25,8 @@ export class GeometryMultiLineBase<P extends new(arg: any) => Line>
     return map(this.lines, p => p.coordinates);
   }
 
-  toCBOR(): [tag: typeof TAG_GEOMETRY_MULTILINE, value: this["lines"]] {
-    return [TAG_GEOMETRY_MULTILINE, this.lines];
+  toCBOR(): [tag: typeof CBOR_TAG_GEOMETRY_MULTILINE, value: this["lines"]] {
+    return [CBOR_TAG_GEOMETRY_MULTILINE, this.lines];
   }
 
   toJSON(): GeoJsonMultiLine {

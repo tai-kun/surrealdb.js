@@ -1,7 +1,7 @@
 import { GeometryPointBase as Base } from "@tai-kun/surreal/data-types/decode-only";
 import { toSurql } from "@tai-kun/surreal/utils";
 import { type Coord, type CoordValue, map } from "~/data-types/geometry";
-import { type Encodable, TAG_GEOMETRY_POINT } from "./spec";
+import { CBOR_TAG_GEOMETRY_POINT, type Encodable } from "./spec";
 
 export type GeoJsonPoint = {
   type: "Point";
@@ -25,8 +25,8 @@ export class GeometryPointBase<C extends Coord> extends Base<C>
     return this.point;
   }
 
-  toCBOR(): [tag: typeof TAG_GEOMETRY_POINT, value: this["point"]] {
-    return [TAG_GEOMETRY_POINT, this.point];
+  toCBOR(): [tag: typeof CBOR_TAG_GEOMETRY_POINT, value: this["point"]] {
+    return [CBOR_TAG_GEOMETRY_POINT, this.point];
   }
 
   toJSON(): GeoJsonPoint {

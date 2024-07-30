@@ -1,6 +1,6 @@
 import { Duration as Base } from "@tai-kun/surreal/data-types/decode-only";
 import { NumberRangeError } from "@tai-kun/surreal/errors";
-import { type Encodable, TAG_CUSTOM_DURATION } from "./spec";
+import { CBOR_TAG_CUSTOM_DURATION, type Encodable } from "./spec";
 
 const SECONDS_PER_MINUTE = 60n;
 const SECONDS_PER_HOUR = 60n * SECONDS_PER_MINUTE;
@@ -129,11 +129,11 @@ export default class Duration extends Base implements Encodable {
   }
 
   toCBOR(): [
-    tag: typeof TAG_CUSTOM_DURATION,
+    tag: typeof CBOR_TAG_CUSTOM_DURATION,
     value: [seconds: bigint, nanoseconds: number],
   ] {
     return [
-      TAG_CUSTOM_DURATION,
+      CBOR_TAG_CUSTOM_DURATION,
       [this.seconds, this.nanoseconds],
     ];
   }

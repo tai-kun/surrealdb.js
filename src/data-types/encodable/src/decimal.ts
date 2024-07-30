@@ -1,5 +1,5 @@
 import { Decimal as Base } from "@tai-kun/surreal/data-types/decode-only";
-import { type Encodable, TAG_STRING_DECIMAL } from "./spec";
+import { CBOR_TAG_STRING_DECIMAL, type Encodable } from "./spec";
 
 export default class Decimal extends Base implements Encodable {
   [Symbol.toPrimitive](hint: "default" | "string"): string;
@@ -20,11 +20,11 @@ export default class Decimal extends Base implements Encodable {
   }
 
   toCBOR(): [
-    tag: typeof TAG_STRING_DECIMAL,
+    tag: typeof CBOR_TAG_STRING_DECIMAL,
     value: string,
   ] {
     return [
-      TAG_STRING_DECIMAL,
+      CBOR_TAG_STRING_DECIMAL,
       this._value,
     ];
   }

@@ -1,7 +1,7 @@
 import { decode, encode } from "@tai-kun/surreal/cbor";
 import {
-  TAG_GEOMETRY_MULTIPOINT,
-  TAG_GEOMETRY_POINT,
+  CBOR_TAG_GEOMETRY_MULTIPOINT,
+  CBOR_TAG_GEOMETRY_POINT,
 } from "@tai-kun/surreal/data-types/encodable";
 import {
   GeometryMultiPoint,
@@ -66,10 +66,10 @@ test(".toCBOR", () => {
     reviver: {
       tagged(t) {
         switch (t.tag) {
-          case TAG_GEOMETRY_POINT:
+          case CBOR_TAG_GEOMETRY_POINT:
             return new GeometryPoint(t.value as any);
 
-          case TAG_GEOMETRY_MULTIPOINT:
+          case CBOR_TAG_GEOMETRY_MULTIPOINT:
             return new GeometryMultiPoint(t.value as any);
 
           default:

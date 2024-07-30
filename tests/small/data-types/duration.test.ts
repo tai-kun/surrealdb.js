@@ -1,5 +1,5 @@
 import { decode, encode } from "@tai-kun/surreal/cbor";
-import { TAG_CUSTOM_DURATION } from "@tai-kun/surreal/data-types/encodable";
+import { CBOR_TAG_CUSTOM_DURATION } from "@tai-kun/surreal/data-types/encodable";
 import { Duration } from "@tai-kun/surreal/data-types/standard";
 import { describe, expect, test } from "vitest";
 
@@ -261,7 +261,7 @@ for (const [i, t] of valid) {
         reviver: {
           tagged(t) {
             switch (t.tag) {
-              case TAG_CUSTOM_DURATION:
+              case CBOR_TAG_CUSTOM_DURATION:
                 return new Duration(t.value as any);
 
               default:

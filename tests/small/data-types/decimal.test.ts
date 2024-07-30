@@ -1,7 +1,7 @@
 import { decode, encode } from "@tai-kun/surreal/cbor";
 import {
+  CBOR_TAG_STRING_DECIMAL,
   Decimal as EncodableDecimal,
-  TAG_STRING_DECIMAL,
 } from "@tai-kun/surreal/data-types/encodable";
 import { Decimal } from "@tai-kun/surreal/data-types/standard";
 import { describe, expect, test } from "vitest";
@@ -56,7 +56,7 @@ describe("decode-only/encodable", () => {
             reviver: {
               tagged(t) {
                 switch (t.tag) {
-                  case TAG_STRING_DECIMAL:
+                  case CBOR_TAG_STRING_DECIMAL:
                     return new EncodableDecimal(t.value as any);
 
                   default:
@@ -128,7 +128,7 @@ describe("standard", () => {
             reviver: {
               tagged(t) {
                 switch (t.tag) {
-                  case TAG_STRING_DECIMAL:
+                  case CBOR_TAG_STRING_DECIMAL:
                     return new Decimal(t.value as any);
 
                   default:

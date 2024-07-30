@@ -6,7 +6,7 @@ import {
   GeometryPoint,
   type GeometryPointBase,
 } from "./geometry-point";
-import { type Encodable, TAG_GEOMETRY_LINE } from "./spec";
+import { CBOR_TAG_GEOMETRY_LINE, type Encodable } from "./spec";
 
 export type GeoJsonLineString = {
   type: "LineString";
@@ -32,8 +32,8 @@ export class GeometryLineBase<P extends new(arg: any) => Point> extends Base<P>
     return map(this.line, p => p.coordinates);
   }
 
-  toCBOR(): [tag: typeof TAG_GEOMETRY_LINE, value: this["line"]] {
-    return [TAG_GEOMETRY_LINE, this.line];
+  toCBOR(): [tag: typeof CBOR_TAG_GEOMETRY_LINE, value: this["line"]] {
+    return [CBOR_TAG_GEOMETRY_LINE, this.line];
   }
 
   toJSON(): GeoJsonLineString {

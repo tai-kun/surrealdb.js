@@ -6,7 +6,7 @@ import {
   GeometryPoint,
   type GeometryPointBase,
 } from "./geometry-point";
-import { type Encodable, TAG_GEOMETRY_MULTIPOINT } from "./spec";
+import { CBOR_TAG_GEOMETRY_MULTIPOINT, type Encodable } from "./spec";
 
 export type GeoJsonMultiPoint = {
   type: "MultiPoint";
@@ -25,8 +25,8 @@ export class GeometryMultiPointBase<P extends new(arg: any) => Point>
     return map(this.points, p => p.coordinates);
   }
 
-  toCBOR(): [tag: typeof TAG_GEOMETRY_MULTIPOINT, value: this["points"]] {
-    return [TAG_GEOMETRY_MULTIPOINT, this.points];
+  toCBOR(): [tag: typeof CBOR_TAG_GEOMETRY_MULTIPOINT, value: this["points"]] {
+    return [CBOR_TAG_GEOMETRY_MULTIPOINT, this.points];
   }
 
   toJSON(): GeoJsonMultiPoint {

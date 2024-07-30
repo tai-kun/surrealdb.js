@@ -31,7 +31,7 @@ import {
   GeometryPolygon,
   type GeometryPolygonBase,
 } from "./geometry-polygon";
-import { type Encodable, TAG_GEOMETRY_COLLECTION } from "./spec";
+import { CBOR_TAG_GEOMETRY_COLLECTION, type Encodable } from "./spec";
 
 export type GeoJsonCollection = {
   type: "GeometryCollection";
@@ -68,8 +68,11 @@ export class GeometryCollectionBase<
     return this.collection.map(p => p.toJSON());
   }
 
-  toCBOR(): [tag: typeof TAG_GEOMETRY_COLLECTION, value: this["collection"]] {
-    return [TAG_GEOMETRY_COLLECTION, this.collection];
+  toCBOR(): [
+    tag: typeof CBOR_TAG_GEOMETRY_COLLECTION,
+    value: this["collection"],
+  ] {
+    return [CBOR_TAG_GEOMETRY_COLLECTION, this.collection];
   }
 
   toJSON(): GeoJsonCollection {

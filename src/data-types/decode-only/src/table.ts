@@ -6,8 +6,8 @@ export type TableSource = DataItem.Utf8String.FixedLength["value"];
 export default class Table<T extends TableSource = TableSource> {
   readonly name: T;
 
-  constructor(tb: T) {
-    this.name = tb;
+  constructor(value: T) {
+    this.name = value;
     defineAsTable(this);
   }
 }

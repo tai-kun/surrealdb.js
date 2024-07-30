@@ -11,8 +11,8 @@ export default class Table<T extends TableSource = TableSource>
   // @ts-expect-error readonly を外すだけ。
   name: T;
 
-  constructor(tb: T | TableLike<T>) {
-    super(typeof tb === "string" ? tb : tb.name);
+  constructor(value: T | TableLike<T>) {
+    super(typeof value === "string" ? value : value.name);
   }
 
   clone(): this {

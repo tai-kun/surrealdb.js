@@ -1,0 +1,45 @@
+import {
+  Table as Base,
+  type TableSource,
+} from "@tai-kun/surreal/data-types/decode-only";
+import { escapeIdent } from "@tai-kun/surreal/utils";
+import { CBOR_TAG_TABLE, type Encodable } from "./spec";
+
+export default class Table<T extends TableSource = TableSource> extends Base<T>
+  implements Encodable
+{
+  override valueOf(): T {
+    return this.name;
+  }
+
+  override toString(): T {
+    return this.name;
+  }
+
+  [Symbol.toPrimitive](hint: "default" | "string"): T;
+  [Symbol.toPrimitive](hint: string): T;
+  [Symbol.toPrimitive](hint: string): T {
+    switch (hint) {
+      case "string":
+      case "default":
+        return this.name;
+
+      default:
+        throw TypeError("Invalid hint: " + String(hint));
+    }
+  }
+
+  toCBOR(): [tag: typeof CBOR_TAG_TABLE, value: T] {
+    return [CBOR_TAG_TABLE, this.name];
+  }
+
+  toJSON(): T {
+    return this.name;
+  }
+
+  toSurql(): string {
+    // SurrealDB では String を escape_ident でエスケープしている:
+    // https://github.com/surrealdb/surrealdb/blob/v2.0.0-alpha.7/core/src/sql/table.rs#L78
+    return escapeIdent(this.name);
+  }
+}

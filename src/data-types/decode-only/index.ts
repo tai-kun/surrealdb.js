@@ -26,3 +26,6 @@ export {
 } from "./src/geometry-multipolygon";
 export { GeometryPoint, GeometryPointBase } from "./src/geometry-point";
 export { GeometryPolygon, GeometryPolygonBase } from "./src/geometry-polygon";
+
+export type * from "./src/table";
+export { default as Table } from "./src/table";

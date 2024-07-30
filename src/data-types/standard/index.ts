@@ -43,6 +43,9 @@ export {
   GeometryPolygonBase,
 } from "./src/geometry-polygon";
 
+export type * from "./src/table";
+export { default as Table } from "./src/table";
+
 export {
   CBOR_TAG_CUSTOM_DATETIME,
   CBOR_TAG_CUSTOM_DURATION,

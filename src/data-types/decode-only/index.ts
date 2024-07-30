@@ -32,3 +32,6 @@ export { default as Table } from "./src/table";
 
 export type * from "./src/thing";
 export { default as Thing } from "./src/thing";
+
+export type * from "./src/uuid";
+export { default as Uuid } from "./src/uuid";

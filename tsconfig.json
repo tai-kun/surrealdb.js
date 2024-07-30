@@ -16,14 +16,14 @@
     "paths": {
       "~/*": ["src/*"],
       "@tai-kun/surreal/cbor": ["src/cbor/index.ts"],
-      "@tai-kun/surreal/cbor-values/decode-only": [
-        "src/cbor-values/decode-only/index.ts"
+      "@tai-kun/surreal/data-types/decode-only": [
+        "src/data-types/decode-only/index.ts"
       ],
-      "@tai-kun/surreal/cbor-values/encodable": [
-        "src/cbor-values/encodable/index.ts"
+      "@tai-kun/surreal/data-types/encodable": [
+        "src/data-types/encodable/index.ts"
       ],
-      "@tai-kun/surreal/cbor-values/standard": [
-        "src/cbor-values/standard/index.ts"
+      "@tai-kun/surreal/data-types/standard": [
+        "src/data-types/standard/index.ts"
       ],
       "@tai-kun/surreal/utils": ["src/utils/index.ts"],
       "@tai-kun/surreal/errors": ["src/errors/index.ts"]

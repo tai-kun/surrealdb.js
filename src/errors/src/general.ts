@@ -49,8 +49,8 @@ export class NumberRangeError extends SurrealError {
   public integer: boolean;
 
   constructor(
-    public range: [from: number, to: number],
-    public actual: number,
+    public range: [from: number | bigint, to: number | bigint],
+    public actual: number | bigint,
     options: NumberRangeErrorOptions | undefined = {},
   ) {
     super(

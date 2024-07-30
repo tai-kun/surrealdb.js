@@ -48,6 +48,7 @@ export type * from "./src/tagged";
 export { default as Tagged } from "./src/tagged";
 
 export {
+  type Replacer,
   write,
   writeBoolean,
   writeByteString,

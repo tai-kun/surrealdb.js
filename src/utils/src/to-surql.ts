@@ -66,6 +66,10 @@ export default function toSurql(value: unknown): string {
       return s;
     }
 
+    if (o instanceof Date) {
+      return "d" + quoteStr(o.toISOString());
+    }
+
     if (typeof o["toJSON"] === "function") {
       c.seen.add(o);
       const s = o["toJSON"]();
@@ -108,10 +112,6 @@ export default function toSurql(value: unknown): string {
       c.seen.delete(o);
 
       return s;
-    }
-
-    if (o instanceof Date) {
-      return "d" + quoteStr(o.toISOString());
     }
 
     throw new SurrealTypeError("Object", String(o));

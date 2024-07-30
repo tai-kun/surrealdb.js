@@ -4,6 +4,7 @@ import {
   CborUnsafeMapKeyError,
   unreachable,
 } from "@tai-kun/surreal/errors";
+import { ianaReviver } from "./iana";
 import {
   AI_EIGHT_BYTES,
   AI_FOUR_BYTES,
@@ -140,6 +141,7 @@ export class Decoder {
     } = options;
     this.map = map;
     this.revivers = toRevivers(reviver);
+    this.revivers.tagged = [...this.revivers.tagged, ianaReviver];
     this.isSafeMapKey = isSafeMapKey;
     this.isSafeObjectKey = isSafeObjectKey;
     this.clear(); // init

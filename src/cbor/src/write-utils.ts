@@ -6,6 +6,7 @@ import {
   unreachable,
 } from "@tai-kun/surreal/errors";
 import isPlainObject from "is-plain-obj";
+import { ianaReplacer } from "./iana";
 import {
   AI_EIGHT_BYTES,
   AI_FOUR_BYTES,
@@ -215,7 +216,12 @@ type Loop = {
   length: number;
 };
 
+const CONTINUE = Symbol.for("@tai-kun/surreal/cbor/continue"); // decorder.ts と同じ
+
+export type Replacer = (value: symbol | object) => unknown | typeof CONTINUE;
+
 export interface WriteOptions {
+  readonly replacer?: Replacer | readonly Replacer[] | undefined;
   readonly isSafeMapKey?:
     | ((key: unknown, map: Map<unknown, unknown>) => boolean)
     | undefined;
@@ -233,9 +239,13 @@ export function write(
   options: WriteOptions | undefined = {},
 ): void {
   const {
+    replacer = [],
     isSafeMapKey = k => k !== "__proto__" && k !== "constructor",
     isSafeObjectKey = k => k !== "__proto__" && k !== "constructor",
   } = options;
+  const replacers: Replacer[] = typeof replacer === "function"
+    ? [replacer, ianaReplacer]
+    : [...replacer, ianaReplacer];
   let loop: Loop | undefined;
   const loopParents: Loop[] = [];
 
@@ -256,6 +266,8 @@ export function write(
   }
 
   while (true) {
+    let replace = false;
+
     switch (typeof value) {
       case "number":
         writeNumber(w, value);
@@ -347,23 +359,34 @@ export function write(
             break;
 
           default:
-            throw new SurrealTypeError(
-              "Object | Array | Map | Set | Uint8Array",
-              String(value),
-            );
+            replace = true;
         }
 
         break;
 
-      case "symbol":
-      case "function":
-        throw new SurrealTypeError(
-          "number | bigint | string | boolean | object | undefined | null",
-          typeof value,
-        );
-
       default:
-        unreachable();
+        replace = true;
+    }
+
+    if (replace) {
+      replace = false;
+
+      for (let i = 0, ret; i < replacers.length; i++) {
+        if ((ret = replacers[i]!(value as symbol | object)) !== CONTINUE) {
+          value = ret;
+          replace = true;
+          break;
+        }
+      }
+
+      if (replace) {
+        continue;
+      }
+
+      throw new SurrealTypeError(
+        "number | bigint | string | boolean | object | undefined | null",
+        typeof value,
+      );
     }
 
     if (!loop) {

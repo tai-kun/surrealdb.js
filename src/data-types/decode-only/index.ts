@@ -29,3 +29,6 @@ export { GeometryPolygon, GeometryPolygonBase } from "./src/geometry-polygon";
 
 export type * from "./src/table";
 export { default as Table } from "./src/table";
+
+export type * from "./src/thing";
+export { default as Thing } from "./src/thing";

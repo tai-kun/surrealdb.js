@@ -287,10 +287,8 @@ export function write(
               if (tagged.length === 2) {
                 writeTag(w, tagged[0]);
                 value = tagged[1];
-                continue; // loop ではないので抜け出さないようにする。
               } else if (tagged.length === 1) {
                 value = tagged[0];
-                continue; // loop ではないので抜け出さないようにする。
               } else {
                 throw new SurrealTypeError(
                   "an array of length 1 or 2",
@@ -299,7 +297,7 @@ export function write(
               }
             }
 
-            break;
+            continue; // loop ではないので抜け出さないようにする。
           }
 
           case Array.isArray(value):
@@ -307,16 +305,15 @@ export function write(
             const array = [...value];
             writeHeader(w, MT_ARRAY, array.length);
 
-            if (array.length <= 0) {
-              break;
+            if (array.length > 0) {
+              begin({
+                mode: MODE.ARRAY,
+                value: array,
+                index: 0,
+                length: array.length,
+              });
             }
 
-            begin({
-              mode: MODE.ARRAY,
-              value: array,
-              index: 0,
-              length: array.length,
-            });
             break;
           }
 
@@ -327,19 +324,18 @@ export function write(
               : Object.entries(value);
             writeHeader(w, MT_MAP, entries.length);
 
-            if (entries.length <= 0) {
-              break;
+            if (entries.length > 0) {
+              begin({
+                mode: MODE.MAP,
+                prop: true,
+                isMap: value instanceof Map,
+                value,
+                index: 0,
+                length: entries.length,
+                entries,
+              });
             }
 
-            begin({
-              mode: MODE.MAP,
-              prop: true,
-              isMap: value instanceof Map,
-              value,
-              index: 0,
-              length: entries.length,
-              entries,
-            });
             break;
 
           case value instanceof Uint8Array:

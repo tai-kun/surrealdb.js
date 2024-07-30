@@ -1,5 +1,5 @@
 import { decode, encode, Tagged } from "@tai-kun/surreal/cbor";
-import { describe, expect, test } from "vitest";
+import { expect, test } from "vitest";
 
 // https://github.com/cbor/test-vectors より JavaScript 向けに編集
 for (
@@ -580,6 +580,12 @@ for (
       .match(/.{1,2}/g)!
       .map(byte => parseInt(byte, 16)),
   );
+  const taggedBytes = new Uint8Array([
+    0b110_01010, // mt: 6, ai: 10
+    ...hex
+      .match(/.{1,2}/g)!
+      .map(byte => parseInt(byte, 16)),
+  ]);
   const toHexArray = (bytes: Uint8Array) =>
     [...bytes].map(byte => byte.toString(16).padStart(2, "0"));
 
@@ -590,22 +596,19 @@ for (
   test(`encode(${hex})`, { fails: !encodeOk }, () => {
     expect(toHexArray(encode(value))).toStrictEqual(toHexArray(bytes));
   });
-}
 
-describe("Tagged(10, 20)", () => {
-  const value = new Tagged(10, 20);
-  const bytes = new Uint8Array([
-    0b110_01010, // mt: 6, ai: 10
-    0b000_10100, // mt: 0, ai: 20
-  ]);
-
-  test("decode", () => {
-    expect(decode(bytes)).toStrictEqual(value);
+  test(`decode(tagged(10, ${hex}))`, { fails: !decodeOk }, () => {
+    expect(decode(taggedBytes)).toStrictEqual(new Tagged(10, value));
   });
 
-  test("reviver", () => {
+  test(`encode(tagged(10, ${hex}))`, { fails: !encodeOk }, () => {
+    expect(toHexArray(encode(new Tagged(10, value))))
+      .toStrictEqual(toHexArray(taggedBytes));
+  });
+
+  test(`decode(tagged(10, ${hex})) with reviver`, { fails: !decodeOk }, () => {
     expect(
-      decode(bytes, {
+      decode(taggedBytes, {
         reviver: {
           tagged(t) {
             switch (t.tag) {
@@ -619,10 +622,6 @@ describe("Tagged(10, 20)", () => {
         },
       }),
     )
-      .toStrictEqual(20);
+      .toStrictEqual(value);
   });
-
-  test("encode", () => {
-    expect(encode(value)).toStrictEqual(bytes);
-  });
-});
+}

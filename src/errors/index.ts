@@ -9,6 +9,7 @@ export {
 } from "./src/cbor";
 
 export {
+  CircularReferenceError,
   NumberRangeError,
   type NumberRangeErrorOptions,
   SurrealError,

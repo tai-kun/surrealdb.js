@@ -12,6 +12,7 @@ export const TAG_SPEC_DATETIME = 0; // decode
 export const TAG_SPEC_UUID = 37; // encode / decode
 
 // SurrealDB Custom Tags
+// See: https://github.com/surrealdb/surrealdb/blob/v2.0.0-alpha.7/core/src/rpc/format/cbor/convert.rs
 export const TAG_NONE = 6 as const; // encode / decode
 export const TAG_TABLE = 7 as const; // encode / decode
 export const TAG_RECORDID = 8 as const; // encode / decode

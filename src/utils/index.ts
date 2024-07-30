@@ -40,4 +40,7 @@ export { default as TaskQueue } from "./src/task-queue";
 export type * from "./src/throw-if-aborted";
 export { default as throwIfAborted } from "./src/throw-if-aborted";
 
+export type * from "./src/to-surql";
+export { default as toSurql } from "./src/to-surql";
+
 export type * from "./src/types";

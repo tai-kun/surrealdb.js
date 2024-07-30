@@ -21,7 +21,7 @@ export class SurrealError extends Error {
   }
 }
 
-export class SurrealTypeError extends Error {
+export class SurrealTypeError extends SurrealError {
   override name = "SurrealTypeError";
 
   constructor(
@@ -31,6 +31,10 @@ export class SurrealTypeError extends Error {
   ) {
     super(`Expected type ${expected} but got ${actual}.`, options);
   }
+}
+
+export class CircularReferenceError extends SurrealError {
+  override name = "CircularReferenceError";
 }
 
 /**

@@ -2,7 +2,7 @@ function defineAsValue(o: {}, id: string): void {
   Object.defineProperty(
     o,
     "$$datatype",
-    { value: Symbol.for("@tai-kun/surreal/data-types/" + id) },
+    { value: Symbol.for("@tai-kun/surrealdb/data-types/" + id) },
   );
 }
 

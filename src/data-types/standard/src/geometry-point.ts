@@ -1,4 +1,4 @@
-import { GeometryPointBase as Base } from "@tai-kun/surreal/data-types/encodable";
+import { GeometryPointBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import {
   type Coord,
   coord,
@@ -17,7 +17,7 @@ function clone(v: unknown): unknown {
     : v;
 }
 
-export type { GeoJsonPoint } from "@tai-kun/surreal/data-types/encodable";
+export type { GeoJsonPoint } from "@tai-kun/surrealdb/data-types/encodable";
 
 export class GeometryPointBase<C extends Coord> extends Base<C> {
   // @ts-expect-error readonly を外すだけ。

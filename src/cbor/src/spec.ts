@@ -18,7 +18,7 @@ export const AI_FOUR_BYTES = 26 as const;
 export const AI_EIGHT_BYTES = 27 as const;
 export const AI_INDEFINITE_NUM_BYTES = 31 as const;
 
-export const BREAK = Symbol.for("@tai-kun/surreal/cbor/break");
+export const BREAK = Symbol.for("@tai-kun/surrealdb/cbor/break");
 
 export const CBOR_MAX_UNSIGNED_INTEGER = 18446744073709551615n; // 2^64-1
 export const CBOR_MIN_NEGATIVE_INTEGER = -18446744073709551616n; // -(2^64)
@@ -41,7 +41,7 @@ export const HEADER_NULL = 0xf6; // (MT_SIMPLE_FLOAT << 5) | AI_SIMPLE_NULL;
 export const HEADER_UNDEFINED = 0xf7; // (MT_SIMPLE_FLOAT << 5) | AI_SIMPLE_UNDEFINED;
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/formatters/cbor/simple/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/simple/)
  */
 export class Simple {
   /**

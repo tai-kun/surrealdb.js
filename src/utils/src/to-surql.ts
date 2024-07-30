@@ -2,7 +2,7 @@ import {
   CircularReferenceError,
   SurrealTypeError,
   unreachable,
-} from "@tai-kun/surreal/errors";
+} from "@tai-kun/surrealdb/errors";
 import isPlainObject from "is-plain-obj";
 import { escapeKey, quoteStr } from "./escape";
 

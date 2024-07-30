@@ -3,7 +3,7 @@ import {
   CborTooLittleDataError,
   CborUnsafeMapKeyError,
   unreachable,
-} from "@tai-kun/surreal/errors";
+} from "@tai-kun/surrealdb/errors";
 import { ianaReviver } from "./iana";
 import {
   AI_EIGHT_BYTES,
@@ -90,7 +90,7 @@ function toRevivers(reviver: DecoderOptions["reviver"]): {
   };
 }
 
-export const CONTINUE = Symbol.for("@tai-kun/surreal/cbor/continue");
+export const CONTINUE = Symbol.for("@tai-kun/surrealdb/cbor/continue");
 
 export type TaggedItemReviver = (tagged: Tagged) => unknown | typeof CONTINUE;
 

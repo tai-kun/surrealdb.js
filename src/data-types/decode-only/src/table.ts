@@ -1,4 +1,4 @@
-import type { DataItem } from "@tai-kun/surreal/cbor";
+import type { DataItem } from "@tai-kun/surrealdb/cbor";
 import { defineAsTable } from "~/data-types/define";
 
 export type TableSource = DataItem.Utf8String.FixedLength["value"];

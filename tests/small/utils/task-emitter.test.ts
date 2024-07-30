@@ -1,4 +1,4 @@
-import { TaskEmitter } from "@tai-kun/surreal/utils";
+import { TaskEmitter } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test, vi } from "vitest";
 
 test("イベントリスナーを登録して、イベントを補足する", async () => {

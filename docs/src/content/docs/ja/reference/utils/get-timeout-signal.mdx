@@ -7,7 +7,7 @@ title: getTimeoutSignal
 ## インポート
 
 ```ts
-import { getTimeoutSignal } from "@tai-kun/surreal/utils";
+import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 ```
 
 ## 使い方
@@ -35,7 +35,7 @@ function getTimeoutSignal(milliseconds: number): AbortSignal;
 次の例では、`fetch` が 5 秒でタイムアウトするようにしています:
 
 ```ts
-import { getTimeoutSignal } from "@tai-kun/surreal/utils";
+import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 
 const resp = await fetch("https://example.com/", {
   signal: getTimeoutSignal(5000),

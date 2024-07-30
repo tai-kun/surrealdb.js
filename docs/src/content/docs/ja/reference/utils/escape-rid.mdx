@@ -7,7 +7,7 @@ title: escapeRid
 ## インポート
 
 ```ts
-import { escapeRid } from "@tai-kun/surreal/utils";
+import { escapeRid } from "@tai-kun/surrealdb/utils";
 ```
 
 ## 使い方
@@ -48,7 +48,7 @@ function escapeRid(rid: string): string;
 次の例では、文字列が数字で始まらず、英数字とアンダースコアのみで構成されるため、そのままの文字列を得ます
 
 ```ts
-import { escapeRid } from "@tai-kun/surreal/utils";
+import { escapeRid } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeRid(`foo_123`));
 ```
@@ -62,7 +62,7 @@ foo_123
 次の例では、文字列をブラケット (`⟨⟩`) で囲い、必要であればエスケープします:
 
 ```ts
-import { escapeRid } from "@tai-kun/surreal/utils";
+import { escapeRid } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeRid(``));
 console.log(escapeRid(`123`));

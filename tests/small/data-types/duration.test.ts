@@ -1,6 +1,6 @@
-import { decode, encode } from "@tai-kun/surreal/cbor";
-import { CBOR_TAG_CUSTOM_DURATION } from "@tai-kun/surreal/data-types/encodable";
-import { Duration } from "@tai-kun/surreal/data-types/standard";
+import { decode, encode } from "@tai-kun/surrealdb/cbor";
+import { CBOR_TAG_CUSTOM_DURATION } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/data-types/standard";
 import { describe, expect, test } from "vitest";
 
 const valid = Object.entries({

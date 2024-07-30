@@ -1,4 +1,4 @@
-import { isArrayBuffer } from "@tai-kun/surreal/utils";
+import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
 import { expect, test } from "vitest";
 
 test("ArrayBuffer であると判定する", async () => {

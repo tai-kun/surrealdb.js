@@ -1,5 +1,8 @@
-import { CONTINUE, decode, encode } from "@tai-kun/surreal/cbor";
-import { CBOR_TAG_RECORDID, Thing } from "@tai-kun/surreal/data-types/standard";
+import { CONTINUE, decode, encode } from "@tai-kun/surrealdb/cbor";
+import {
+  CBOR_TAG_RECORDID,
+  Thing,
+} from "@tai-kun/surrealdb/data-types/standard";
 import { expect, test } from "vitest";
 
 test(".tb, .id", () => {

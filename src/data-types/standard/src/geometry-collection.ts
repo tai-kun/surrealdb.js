@@ -1,4 +1,4 @@
-import { GeometryCollectionBase as Base } from "@tai-kun/surreal/data-types/encodable";
+import { GeometryCollectionBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import { type Coord, isGeometryCollection } from "~/data-types/geometry";
 import { GeometryLine, type GeometryLineBase } from "./geometry-line";
 import {
@@ -23,7 +23,7 @@ type MultiLine = GeometryMultiLineBase<new(_: any) => any>;
 type Polygon = GeometryPolygonBase<new(_: any) => any>;
 type MultiPolygon = GeometryMultiPolygonBase<new(_: any) => any>;
 
-export type { GeoJsonCollection } from "@tai-kun/surreal/data-types/encodable";
+export type { GeoJsonCollection } from "@tai-kun/surrealdb/data-types/encodable";
 
 export class GeometryCollectionBase<
   Pt extends new(arg: any) => Point,

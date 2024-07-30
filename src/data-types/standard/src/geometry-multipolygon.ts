@@ -4,7 +4,7 @@ import { GeometryPolygon, type GeometryPolygonBase } from "./geometry-polygon";
 
 type Polygon = GeometryPolygonBase<new(_: any) => any>;
 
-export type { GeoJsonMultiPolygon } from "@tai-kun/surreal/data-types/encodable";
+export type { GeoJsonMultiPolygon } from "@tai-kun/surrealdb/data-types/encodable";
 
 export class GeometryMultiPolygonBase<P extends new(arg: any) => Polygon>
   extends Base<P>

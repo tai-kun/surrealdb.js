@@ -1,4 +1,4 @@
-import { StatefulPromise } from "@tai-kun/surreal/utils";
+import { StatefulPromise } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test, vi } from "vitest";
 
 test("`resolve` で解決できる", async () => {

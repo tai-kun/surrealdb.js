@@ -2,7 +2,7 @@ import type { DataItem } from "./spec";
 import type { ToCBOR } from "./writer";
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/formatters/cbor/tagged/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/tagged/)
  */
 export default class Tagged<T = unknown> implements ToCBOR {
   constructor(

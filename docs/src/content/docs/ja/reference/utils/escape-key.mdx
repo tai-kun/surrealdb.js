@@ -7,7 +7,7 @@ title: escapeKey
 ## インポート
 
 ```ts
-import { escapeKey } from "@tai-kun/surreal/utils";
+import { escapeKey } from "@tai-kun/surrealdb/utils";
 ```
 
 ## 使い方
@@ -50,7 +50,7 @@ function escapeKey(key: string): string;
 次の例では、文字列が英数字とアンダースコアのみで構成されるため、そのままの文字列を得ます:
 
 ```ts
-import { escapeKey } from "@tai-kun/surreal/utils";
+import { escapeKey } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeKey(`123`));
 console.log(escapeKey(`foo_bar`));
@@ -66,7 +66,7 @@ foo_bar
 次の例では、文字列を二重引用符で囲い、必要であればエスケープします:
 
 ```ts
-import { escapeKey } from "@tai-kun/surreal/utils";
+import { escapeKey } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeKey(``));
 console.log(escapeKey(`foo-bar`));

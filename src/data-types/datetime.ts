@@ -1,4 +1,4 @@
-import { NumberRangeError } from "@tai-kun/surreal/errors";
+import { NumberRangeError } from "@tai-kun/surrealdb/errors";
 
 const MAX_NANOSECONDS = 999_999_999;
 const MAX_DATE_MILLISECONDS = 8_640_000_000_000_000;

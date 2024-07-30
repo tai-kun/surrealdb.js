@@ -7,7 +7,7 @@ title: quoteStr
 ## インポート
 
 ```ts
-import { quoteStr } from "@tai-kun/surreal/utils";
+import { quoteStr } from "@tai-kun/surrealdb/utils";
 ```
 
 ## 使い方
@@ -51,7 +51,7 @@ function quoteStr(str: string): string;
 次の例では、一重引用符が含まれて**いない**文字列を一重引用符で囲います:
 
 ```ts
-import { quoteStr } from "@tai-kun/surreal/utils";
+import { quoteStr } from "@tai-kun/surrealdb/utils";
 
 console.log(quoteStr(``));
 console.log(quoteStr(`a`));
@@ -73,7 +73,7 @@ console.log(quoteStr(`パ`));
 次の例では、一重引用符が含まれて**いる**文字列を二重引用符で囲います:
 
 ```ts
-import { quoteStr } from "@tai-kun/surreal/utils";
+import { quoteStr } from "@tai-kun/surrealdb/utils";
 
 console.log(quoteStr(`cat's`));
 console.log(quoteStr(`𩸽's`));
@@ -93,7 +93,7 @@ console.log(quoteStr(`'パ`));
 次の例では、一重引用符と二重引用符の両方が含まれている文字列を二重引用符で囲い、必要であればエスケープします:
 
 ```ts
-import { quoteStr } from "@tai-kun/surreal/utils";
+import { quoteStr } from "@tai-kun/surrealdb/utils";
 
 console.log(quoteStr(`cat's "toy"`));
 console.log(quoteStr(`'\\"\\`));

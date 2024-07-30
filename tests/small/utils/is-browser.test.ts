@@ -1,4 +1,4 @@
-import { isBrowser } from "@tai-kun/surreal/utils";
+import { isBrowser } from "@tai-kun/surrealdb/utils";
 import { expect, test } from "vitest";
 
 test("ブラウザかどうかを判定する", () => {

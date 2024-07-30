@@ -1,10 +1,10 @@
-import { GeometryLineBase as Base } from "@tai-kun/surreal/data-types/encodable";
+import { GeometryLineBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import { type Coord, isGeometryLine, map } from "~/data-types/geometry";
 import { GeometryPoint, type GeometryPointBase } from "./geometry-point";
 
 type Point = GeometryPointBase<Coord>;
 
-export type { GeoJsonLineString } from "@tai-kun/surreal/data-types/encodable";
+export type { GeoJsonLineString } from "@tai-kun/surrealdb/data-types/encodable";
 
 export class GeometryLineBase<P extends new(arg: any) => Point>
   extends Base<P>

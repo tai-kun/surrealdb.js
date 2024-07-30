@@ -1,5 +1,5 @@
-import { Duration as Base } from "@tai-kun/surreal/data-types/decode-only";
-import { NumberRangeError } from "@tai-kun/surreal/errors";
+import { Duration as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { NumberRangeError } from "@tai-kun/surrealdb/errors";
 import { CBOR_TAG_CUSTOM_DURATION, type Encodable } from "./spec";
 
 const SECONDS_PER_MINUTE = 60n;
@@ -26,7 +26,7 @@ export default class Duration extends Base implements Encodable {
     microseconds?: number;
     nanoseconds?: number;
   } {
-    // https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/duration.rs#L159-L217
+    // https://github.com/surrealdbdb/surrealdbdb/blob/v1.5.2/core/src/sql/duration.rs#L159-L217
 
     let secs = this.seconds;
     let nano = BigInt(this.nanoseconds);
@@ -83,7 +83,7 @@ export default class Duration extends Base implements Encodable {
 
   // dprint-ignore
   override toString(): string {
-    // https://github.com/surrealdb/surrealdb/blob/v1.5.2/core/src/sql/duration.rs#L159-L217
+    // https://github.com/surrealdbdb/surrealdbdb/blob/v1.5.2/core/src/sql/duration.rs#L159-L217
 
     const o = this.parse();
     let s = "";

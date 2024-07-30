@@ -1,4 +1,4 @@
-import { decode, encode, Tagged } from "@tai-kun/surreal/cbor";
+import { decode, encode, Tagged } from "@tai-kun/surrealdb/cbor";
 import { expect, test } from "vitest";
 
 const value = new Tagged(10, [new Tagged(11, 20)]);

@@ -1,4 +1,4 @@
-import type { DataItem } from "@tai-kun/surreal/cbor";
+import type { DataItem } from "@tai-kun/surrealdb/cbor";
 import { defineAsDatetime } from "~/data-types/define";
 
 // See: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml

@@ -1,4 +1,4 @@
-import { isSafeNumber } from "@tai-kun/surreal/utils";
+import { isSafeNumber } from "@tai-kun/surrealdb/utils";
 import { expect, test } from "vitest";
 
 test.for([

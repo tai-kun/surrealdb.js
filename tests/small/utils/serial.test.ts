@@ -1,4 +1,4 @@
-import { Serial } from "@tai-kun/surreal/utils";
+import { Serial } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test, vi } from "vitest";
 
 test("増分 ID を生成する", () => {

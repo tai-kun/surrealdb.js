@@ -7,7 +7,7 @@ title: その他のツール
 ### インポート
 
 ```ts
-import { write } from "@tai-kun/surreal/cbor";
+import { write } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -54,7 +54,7 @@ CBOR 形式のバイト配列にエンコードするための JavaScript の値
 ### インポート
 
 ```ts
-import { writeNumber } from "@tai-kun/surreal/cbor";
+import { writeNumber } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -84,7 +84,7 @@ writeNumber(writer: Writer, value: number | bigint): void;
 ### インポート
 
 ```ts
-import { writeInteger } from "@tai-kun/surreal/cbor";
+import { writeInteger } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -114,7 +114,7 @@ writeInteger(writer: Writer, value: number | bigint): void;
 ### インポート
 
 ```ts
-import { writeFloat } from "@tai-kun/surreal/cbor";
+import { writeFloat } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -144,7 +144,7 @@ writeFloat(writer: Writer, value: number): void;
 ### インポート
 
 ```ts
-import { writeByteString } from "@tai-kun/surreal/cbor";
+import { writeByteString } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -174,7 +174,7 @@ writeByteString(writer: Writer, value: ): void;
 ### インポート
 
 ```ts
-import { writeUtf8String } from "@tai-kun/surreal/cbor";
+import { writeUtf8String } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -204,7 +204,7 @@ UTF-8 形式の文字列です。
 ### インポート
 
 ```ts
-import { writeEncodedUtf8String } from "@tai-kun/surreal/cbor";
+import { writeEncodedUtf8String } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -234,7 +234,7 @@ UTF-8 でエンコードされた文字列 (バイト配列) です。
 ### インポート
 
 ```ts
-import { writeTag } from "@tai-kun/surreal/cbor";
+import { writeTag } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -264,7 +264,7 @@ writeTag(writer: Writer, value: number | bigint): void;
 ### インポート
 
 ```ts
-import { writeBoolean } from "@tai-kun/surreal/cbor";
+import { writeBoolean } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -294,7 +294,7 @@ writeBoolean(writer: Writer, value: boolean): void;
 ### インポート
 
 ```ts
-import { writeNullable } from "@tai-kun/surreal/cbor";
+import { writeNullable } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -324,7 +324,7 @@ writeNullable(writer: Writer, value: null | undefined): void;
 ### インポート
 
 ```ts
-import { writeHeader } from "@tai-kun/surreal/cbor";
+import { writeHeader } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文
@@ -358,7 +358,7 @@ CBOR のメジャータイプです。0 から 7 までの整数値である必�
 ### インポート
 
 ```ts
-import { writePayload } from "@tai-kun/surreal/cbor";
+import { writePayload } from "@tai-kun/surrealdb/cbor";
 ```
 
 ### 構文

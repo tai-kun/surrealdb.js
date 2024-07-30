@@ -1,5 +1,5 @@
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/is-safe-number/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/is-safe-number/)
  */
 export default function isSafeNumber(value: number): boolean {
   return !(

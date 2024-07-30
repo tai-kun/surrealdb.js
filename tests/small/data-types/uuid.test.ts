@@ -1,4 +1,4 @@
-import { Uuid } from "@tai-kun/surreal/data-types/standard";
+import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
 // @ts-expect-error
 import * as uuids from "uuid";
 import { expect, test } from "vitest";

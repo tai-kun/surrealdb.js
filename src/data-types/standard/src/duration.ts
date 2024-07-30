@@ -1,11 +1,11 @@
-import type { DurationSource } from "@tai-kun/surreal/data-types/decode-only";
-import { Duration as Base } from "@tai-kun/surreal/data-types/encodable";
+import type { DurationSource } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Duration as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import {
   NumberRangeError,
   SurrealTypeError,
   unreachable,
-} from "@tai-kun/surreal/errors";
-import { isSafeNumber } from "@tai-kun/surreal/utils";
+} from "@tai-kun/surrealdb/errors";
+import { isSafeNumber } from "@tai-kun/surrealdb/utils";
 
 export interface DurationLike {
   seconds: bigint;

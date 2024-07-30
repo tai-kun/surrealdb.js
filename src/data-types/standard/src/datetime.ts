@@ -1,10 +1,10 @@
-import type { DatetimeSource } from "@tai-kun/surreal/data-types/decode-only";
+import type { DatetimeSource } from "@tai-kun/surrealdb/data-types/decode-only";
 import {
   CBOR_TAG_CUSTOM_DATETIME,
   type Encodable,
-} from "@tai-kun/surreal/data-types/encodable";
-import { SurrealTypeError } from "@tai-kun/surreal/errors";
-import { isSafeNumber, quoteStr } from "@tai-kun/surreal/utils";
+} from "@tai-kun/surrealdb/data-types/encodable";
+import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { isSafeNumber, quoteStr } from "@tai-kun/surrealdb/utils";
 import { toISOString } from "~/data-types/datetime";
 import { defineAsDatetime } from "~/data-types/define";
 

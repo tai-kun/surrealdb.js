@@ -1,8 +1,8 @@
 import {
   Table as Base,
   type TableSource,
-} from "@tai-kun/surreal/data-types/decode-only";
-import { escapeIdent } from "@tai-kun/surreal/utils";
+} from "@tai-kun/surrealdb/data-types/decode-only";
+import { escapeIdent } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_TABLE, type Encodable } from "./spec";
 
 export default class Table<T extends TableSource = TableSource> extends Base<T>
@@ -39,7 +39,7 @@ export default class Table<T extends TableSource = TableSource> extends Base<T>
 
   toSurql(): string {
     // SurrealDB では String を escape_ident でエスケープしている:
-    // https://github.com/surrealdb/surrealdb/blob/v2.0.0-alpha.7/core/src/sql/table.rs#L78
+    // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/src/sql/table.rs#L78
     return escapeIdent(this.name);
   }
 }

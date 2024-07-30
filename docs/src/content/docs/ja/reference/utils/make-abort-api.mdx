@@ -7,7 +7,7 @@ title: makeAbortApi
 ## インポート
 
 ```ts
-import { makeAbortApi } from "@tai-kun/surreal/utils";
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 ```
 
 ## 使い方
@@ -39,7 +39,7 @@ function makeAbortApi(signal?: AbortSignal | undefined): [
 次の例では、引数なしで Abort API を作成します:
 
 ```ts
-import { makeAbortApi } from "@tai-kun/surreal/utils";
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 
 const [signal, abort] = makeAbortApi();
 abort();
@@ -50,7 +50,7 @@ abort();
 次の例では、関連付ける中止シグナルを指定して Abort API を作成します:
 
 ```ts
-import { makeAbortApi } from "@tai-kun/surreal/utils";
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 
 const controller = new AbortController();
 controller.signal.addEventListener("abort", function() {
@@ -75,7 +75,7 @@ signal test
 中止イベントは Abort API から中止しても関連付けられた中止シグナルへ伝播します:
 
 ```ts
-import { makeAbortApi } from "@tai-kun/surreal/utils";
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 
 const controller = new AbortController();
 controller.signal.addEventListener("abort", function() {

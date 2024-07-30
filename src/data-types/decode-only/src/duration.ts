@@ -1,5 +1,5 @@
-import type { DataItem } from "@tai-kun/surreal/cbor";
-import { NumberRangeError } from "@tai-kun/surreal/errors";
+import type { DataItem } from "@tai-kun/surrealdb/cbor";
+import { NumberRangeError } from "@tai-kun/surrealdb/errors";
 import { defineAsDuration } from "~/data-types/define";
 
 export type DurationSource =

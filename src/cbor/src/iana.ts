@@ -2,7 +2,7 @@
 
 import Tagged from "./tagged";
 
-const CONTINUE = Symbol.for("@tai-kun/surreal/cbor/continue"); // decorder.ts と同じ
+const CONTINUE = Symbol.for("@tai-kun/surrealdb/cbor/continue"); // decorder.ts と同じ
 
 const TAG_DATETIME = 0;
 

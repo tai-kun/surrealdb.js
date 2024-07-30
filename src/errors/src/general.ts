@@ -7,7 +7,7 @@ type ErrorOptionsBase =
 export interface SurrealErrorOptions extends ErrorOptionsBase {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#surrealerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/general/#surrealdberror)
  */
 export class SurrealError extends Error {
   static {
@@ -44,14 +44,14 @@ export class CircularReferenceError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#numberrangeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/general/#numberrangeerror)
  */
 export interface NumberRangeErrorOptions extends SurrealErrorOptions {
   readonly integer?: boolean | undefined;
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#numberrangeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/general/#numberrangeerror)
  */
 export class NumberRangeError extends SurrealError {
   static {
@@ -76,7 +76,7 @@ export class NumberRangeError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/errors/general/#unsupportedruntimeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/general/#unsupportedruntimeerror)
  */
 export class UnsupportedRuntimeError extends SurrealError {
   static {

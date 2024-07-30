@@ -7,7 +7,7 @@ title: escapeIdent
 ## インポート
 
 ```ts
-import { escapeIdent } from "@tai-kun/surreal/utils";
+import { escapeIdent } from "@tai-kun/surrealdb/utils";
 ```
 
 ## 使い方
@@ -48,7 +48,7 @@ function escapeIdent(ident: string): string;
 次の例では、文字列が数字で始まらず、英数字とアンダースコアのみで構成されるため、そのままの文字列を得ます
 
 ```ts
-import { escapeIdent } from "@tai-kun/surreal/utils";
+import { escapeIdent } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeIdent(`foo_123`));
 ```
@@ -62,7 +62,7 @@ foo_123
 次の例では、文字列をバックティック (<code>`</code>) で囲い、必要であればエスケープします:
 
 ```ts
-import { escapeIdent } from "@tai-kun/surreal/utils";
+import { escapeIdent } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeIdent(""));
 console.log(escapeIdent("123"));

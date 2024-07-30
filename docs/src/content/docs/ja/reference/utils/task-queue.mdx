@@ -10,7 +10,7 @@ import Badge from "~/components/ja/Badge.astro";
 ## インポート
 
 ```ts
-import { TaskQueue } from "@tai-kun/surreal/utils";
+import { TaskQueue } from "@tai-kun/surrealdb/utils";
 ```
 
 ## 使い方
@@ -63,7 +63,7 @@ add<T>(
 #### 例
 
 ```ts
-import { TaskQueue } from "@tai-kun/surreal/utils";
+import { TaskQueue } from "@tai-kun/surrealdb/utils";
 
 const queue = new TaskQueue();
 const promise = queue.add(async ({ signal }) => {
@@ -100,7 +100,7 @@ idle(): StatefulPromise<void>;
 次の例では、キューに追加したタスクランナーの解決/拒否に関わらず終了するのを待ちます:
 
 ```ts
-import { TaskQueue } from "@tai-kun/surreal/utils";
+import { TaskQueue } from "@tai-kun/surrealdb/utils";
 
 const queue = new TaskQueue();
 const results: string[] = [];

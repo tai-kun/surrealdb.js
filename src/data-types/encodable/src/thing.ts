@@ -1,9 +1,9 @@
 import {
   Thing as Base,
   type ThingSource,
-} from "@tai-kun/surreal/data-types/decode-only";
-import { SurrealTypeError } from "@tai-kun/surreal/errors";
-import { escapeRid, quoteStr, toSurql } from "@tai-kun/surreal/utils";
+} from "@tai-kun/surrealdb/data-types/decode-only";
+import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { escapeRid, quoteStr, toSurql } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_RECORDID, type Encodable } from "./spec";
 
 function escapeId(id: unknown): string {
@@ -59,7 +59,7 @@ export default class Thing<T extends ThingSource[0] = ThingSource[0]>
 
   override toString(): string {
     // SurrealDB では String を escape_rid でエスケープしている:
-    // https://github.com/surrealdb/surrealdb/blob/v2.0.0-alpha.7/core/src/sql/thing.rs#L97
+    // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/src/sql/thing.rs#L97
     return escapeRid(this.tb) + ":" + escapeId(this.id);
   }
 

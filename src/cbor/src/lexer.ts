@@ -3,7 +3,7 @@ import {
   CborSyntaxError,
   CborTooLittleDataError,
   unreachable,
-} from "@tai-kun/surreal/errors";
+} from "@tai-kun/surrealdb/errors";
 import { getFloat16 } from "./float";
 import {
   type AdditionalInfo,

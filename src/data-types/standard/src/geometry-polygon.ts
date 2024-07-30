@@ -1,10 +1,10 @@
-import { GeometryPolygonBase as Base } from "@tai-kun/surreal/data-types/encodable";
+import { GeometryPolygonBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import { isGeometryPolygon, map } from "~/data-types/geometry";
 import { GeometryLine, type GeometryLineBase } from "./geometry-line";
 
 type Line = GeometryLineBase<new(_: any) => any>;
 
-export type { GeoJsonPolygon } from "@tai-kun/surreal/data-types/encodable";
+export type { GeoJsonPolygon } from "@tai-kun/surrealdb/data-types/encodable";
 
 export class GeometryPolygonBase<L extends new(arg: any) => Line>
   extends Base<L>

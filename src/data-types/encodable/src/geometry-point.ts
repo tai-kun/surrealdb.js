@@ -1,5 +1,5 @@
-import { GeometryPointBase as Base } from "@tai-kun/surreal/data-types/decode-only";
-import { toSurql } from "@tai-kun/surreal/utils";
+import { GeometryPointBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { toSurql } from "@tai-kun/surrealdb/utils";
 import { type Coord, type CoordValue, map } from "~/data-types/geometry";
 import { CBOR_TAG_GEOMETRY_POINT, type Encodable } from "./spec";
 

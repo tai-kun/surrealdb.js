@@ -1,4 +1,4 @@
-import { makeAbortApi } from "@tai-kun/surreal/utils";
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test, vi } from "vitest";
 
 test("AbortSignal オブジェクトと関数を返す", () => {

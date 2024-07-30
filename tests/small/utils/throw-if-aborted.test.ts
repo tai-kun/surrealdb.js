@@ -1,4 +1,4 @@
-import { throwIfAborted } from "@tai-kun/surreal/utils";
+import { throwIfAborted } from "@tai-kun/surrealdb/utils";
 import { expect, test } from "vitest";
 
 test("中止されていないシグナルを渡すと例外を投げない", () => {

@@ -6,9 +6,9 @@ import remarkDefList, { defListHastHandlers } from "remark-definition-list";
 export default defineConfig({
   integrations: [
     starlight({
-      title: "surreal.js",
+      title: "surrealdb.js",
       social: {
-        github: "https://github.com/tai-kun/surreal.js",
+        github: "https://github.com/tai-kun/surrealdb.js",
       },
       defaultLocale: "ja",
       locales: {
@@ -192,5 +192,5 @@ export default defineConfig({
     prefetchAll: true,
   },
   site: "https://tai-kun.github.io",
-  base: "/surreal.js",
+  base: "/surrealdb.js",
 });

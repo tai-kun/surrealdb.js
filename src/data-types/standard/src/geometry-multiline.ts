@@ -4,7 +4,7 @@ import { GeometryLine, type GeometryLineBase } from "./geometry-line";
 
 type Line = GeometryLineBase<new(_: any) => any>;
 
-export type { GeoJsonMultiLine } from "@tai-kun/surreal/data-types/encodable";
+export type { GeoJsonMultiLine } from "@tai-kun/surrealdb/data-types/encodable";
 
 export class GeometryMultiLineBase<P extends new(arg: any) => Line>
   extends Base<P>

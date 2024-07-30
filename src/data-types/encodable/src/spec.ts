@@ -1,5 +1,5 @@
-import type { ToCBOR } from "@tai-kun/surreal/cbor";
-import type { Jsonifiable } from "@tai-kun/surreal/utils";
+import type { ToCBOR } from "@tai-kun/surrealdb/cbor";
+import type { Jsonifiable } from "@tai-kun/surrealdb/utils";
 
 export interface Encodable extends ToCBOR {
   toJSON(): Jsonifiable;
@@ -12,7 +12,7 @@ export const CBOR_TAG_SPEC_DATETIME = 0; // decode
 export const CBOR_TAG_SPEC_UUID = 37; // encode / decode
 
 // SurrealDB Custom Tags
-// See: https://github.com/surrealdb/surrealdb/blob/v2.0.0-alpha.7/core/src/rpc/format/cbor/convert.rs
+// See: https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/src/rpc/format/cbor/convert.rs
 export const CBOR_TAG_NONE = 6 as const; // encode / decode
 export const CBOR_TAG_TABLE = 7 as const; // encode / decode
 export const CBOR_TAG_RECORDID = 8 as const; // encode / decode

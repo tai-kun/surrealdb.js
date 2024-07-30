@@ -80,7 +80,7 @@ function isValue(o: unknown, id: string): boolean {
   return !!o
     && typeof o === "object"
     // @ts-expect-error
-    && o["$$datatype"] === Symbol.for("@tai-kun/surreal/data-types/" + id);
+    && o["$$datatype"] === Symbol.for("@tai-kun/surrealdb/data-types/" + id);
 }
 
 /** @internal */

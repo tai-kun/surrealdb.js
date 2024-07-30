@@ -1,4 +1,4 @@
-import { getTimeoutSignal } from "@tai-kun/surreal/utils";
+import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 import { expect, test, vi } from "vitest";
 
 test("指定時間経過後に中止される", async () => {

@@ -1,5 +1,5 @@
-import type { TableSource } from "@tai-kun/surreal/data-types/decode-only";
-import { Table as Base } from "@tai-kun/surreal/data-types/encodable";
+import type { TableSource } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Table as Base } from "@tai-kun/surrealdb/data-types/encodable";
 
 export interface TableLike<T extends TableSource = TableSource> {
   readonly name: T;

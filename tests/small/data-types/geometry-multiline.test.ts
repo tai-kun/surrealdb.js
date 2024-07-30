@@ -1,14 +1,14 @@
-import { decode, encode } from "@tai-kun/surreal/cbor";
+import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_GEOMETRY_LINE,
   CBOR_TAG_GEOMETRY_MULTILINE,
   CBOR_TAG_GEOMETRY_POINT,
-} from "@tai-kun/surreal/data-types/encodable";
+} from "@tai-kun/surrealdb/data-types/encodable";
 import {
   GeometryLine,
   GeometryMultiLine,
   GeometryPoint,
-} from "@tai-kun/surreal/data-types/standard";
+} from "@tai-kun/surrealdb/data-types/standard";
 import { expect, test } from "vitest";
 
 test(".lines", () => {

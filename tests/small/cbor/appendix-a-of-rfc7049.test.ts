@@ -1,4 +1,4 @@
-import { decode, encode, Tagged } from "@tai-kun/surreal/cbor";
+import { decode, encode, Tagged } from "@tai-kun/surrealdb/cbor";
 import { expect, test } from "vitest";
 
 // https://github.com/cbor/test-vectors より JavaScript 向けに編集

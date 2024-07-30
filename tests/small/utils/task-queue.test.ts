@@ -1,4 +1,4 @@
-import { TaskQueue } from "@tai-kun/surreal/utils";
+import { TaskQueue } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test, vi } from "vitest";
 
 test("タスクランナーをキューに追加する", async () => {

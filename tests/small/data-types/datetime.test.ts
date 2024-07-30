@@ -1,9 +1,9 @@
-import { decode, encode } from "@tai-kun/surreal/cbor";
+import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_CUSTOM_DATETIME,
   Datetime as EncodableDatetime,
-} from "@tai-kun/surreal/data-types/encodable";
-import { Datetime } from "@tai-kun/surreal/data-types/standard";
+} from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
 import { describe, expect, test } from "vitest";
 
 type Suite = {

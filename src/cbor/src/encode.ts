@@ -2,12 +2,12 @@ import { write, type WriteOptions } from "./write-utils";
 import { Writer, type WriterOptions } from "./writer";
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/formatters/cbor/encode/#options)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/encode/#options)
  */
 export interface EncodeOptions extends WriterOptions, WriteOptions {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/formatters/cbor/encode/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/encode/)
  */
 export default function encode(
   value: unknown,

@@ -15,18 +15,18 @@
     "moduleResolution": "Bundler",
     "paths": {
       "~/*": ["src/*"],
-      "@tai-kun/surreal/cbor": ["src/cbor/index.ts"],
-      "@tai-kun/surreal/data-types/decode-only": [
+      "@tai-kun/surrealdb/cbor": ["src/cbor/index.ts"],
+      "@tai-kun/surrealdb/data-types/decode-only": [
         "src/data-types/decode-only/index.ts"
       ],
-      "@tai-kun/surreal/data-types/encodable": [
+      "@tai-kun/surrealdb/data-types/encodable": [
         "src/data-types/encodable/index.ts"
       ],
-      "@tai-kun/surreal/data-types/standard": [
+      "@tai-kun/surrealdb/data-types/standard": [
         "src/data-types/standard/index.ts"
       ],
-      "@tai-kun/surreal/utils": ["src/utils/index.ts"],
-      "@tai-kun/surreal/errors": ["src/errors/index.ts"]
+      "@tai-kun/surrealdb/utils": ["src/utils/index.ts"],
+      "@tai-kun/surrealdb/errors": ["src/errors/index.ts"]
     }
   }
 }

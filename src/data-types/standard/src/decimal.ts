@@ -1,7 +1,7 @@
 import {
   CBOR_TAG_STRING_DECIMAL,
   type Encodable,
-} from "@tai-kun/surreal/data-types/encodable";
+} from "@tai-kun/surrealdb/data-types/encodable";
 import { Big as Decimal } from "big.js";
 import { defineAsDecimal } from "~/data-types/define";
 

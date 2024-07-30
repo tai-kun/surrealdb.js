@@ -1,4 +1,4 @@
-import { SurrealTypeError } from "@tai-kun/surreal/errors";
+import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { defineAsUuid } from "~/data-types/define";
 import { isValidBytes } from "~/data-types/uuid";
 

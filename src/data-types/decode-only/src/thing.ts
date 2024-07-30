@@ -1,4 +1,4 @@
-import { DataItem } from "@tai-kun/surreal/cbor";
+import { DataItem } from "@tai-kun/surrealdb/cbor";
 import { defineAsThing } from "~/data-types/define";
 
 export type ThingSource<

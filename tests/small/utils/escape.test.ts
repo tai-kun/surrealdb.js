@@ -3,7 +3,7 @@ import {
   escapeKey,
   escapeRid,
   quoteStr,
-} from "@tai-kun/surreal/utils";
+} from "@tai-kun/surrealdb/utils";
 import { describe, expect, test } from "vitest";
 
 describe("仕様確認", () => {

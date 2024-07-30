@@ -68,7 +68,7 @@ const {
 document.addEventListener("DOMContentLoaded", function() {
   function redirect(lang) {
     const pathname = window.location.pathname
-      .replace(/^\/surreal\.js(\/)?/, "/surreal.js/" + lang + "/");
+      .replace(/^\/surrealdb\.js(\/)?/, "/surrealdb.js/" + lang + "/");
     window.location.pathname = window.location.pathname === pathname
       ? "/404"
       : pathname;

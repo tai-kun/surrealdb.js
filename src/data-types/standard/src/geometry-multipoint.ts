@@ -4,7 +4,7 @@ import { GeometryPoint, type GeometryPointBase } from "./geometry-point";
 
 type Point = GeometryPointBase<Coord>;
 
-export type { GeoJsonMultiPoint } from "@tai-kun/surreal/data-types/encodable";
+export type { GeoJsonMultiPoint } from "@tai-kun/surrealdb/data-types/encodable";
 
 export class GeometryMultiPointBase<P extends new(arg: any) => Point>
   extends Base<P>

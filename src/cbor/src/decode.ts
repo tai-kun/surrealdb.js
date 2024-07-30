@@ -2,12 +2,12 @@ import { Decoder, type DecoderOptions } from "./decoder";
 import { Lexer, type LexerOptions } from "./lexer";
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/formatters/cbor/decode/#options)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/decode/#options)
  */
 export interface DecodeOptions extends LexerOptions, DecoderOptions {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/formatters/cbor/decode/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/decode/)
  */
 export default function decode(
   input: Uint8Array,

@@ -1,5 +1,5 @@
-import { GeometryMultiPolygonBase as Base } from "@tai-kun/surreal/data-types/decode-only";
-import { toSurql } from "@tai-kun/surreal/utils";
+import { GeometryMultiPolygonBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { toSurql } from "@tai-kun/surrealdb/utils";
 import { map } from "~/data-types/geometry";
 import {
   type GeoJsonPolygon,

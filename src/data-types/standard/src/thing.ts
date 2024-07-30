@@ -1,5 +1,5 @@
-import type { ThingSource } from "@tai-kun/surreal/data-types/decode-only";
-import { Thing as Base } from "@tai-kun/surreal/data-types/encodable";
+import type { ThingSource } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Thing as Base } from "@tai-kun/surrealdb/data-types/encodable";
 
 export interface ThingLike<T extends ThingSource[0] = ThingSource[0]> {
   readonly tb: T;

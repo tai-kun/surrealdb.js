@@ -10,7 +10,7 @@ interface TypedMap<T> {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/)
  */
 export type TaskListener<A extends unknown[]> = (
   runnerArgs: TaskRunnerArgs,
@@ -18,12 +18,12 @@ export type TaskListener<A extends unknown[]> = (
 ) => void | PromiseLike<void>;
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/#once)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#once)
  */
 export interface TaskListenerOptions extends TaskOptions {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/)
  */
 export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   protected readonly _queue = new TaskQueue();
@@ -37,7 +37,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   >;
 
   /**
-   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/#on)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#on)
    */
   on<K extends keyof T>(
     event: K,
@@ -58,7 +58,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/#off)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#off)
    */
   off<K extends keyof T>(event: K, listener?: TaskListener<T[K]>): void {
     const listeners = this._listeners.get(event);
@@ -81,7 +81,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/#once)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#once)
    */
   once<K extends keyof T>(
     event: K,
@@ -123,7 +123,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/#emit)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#emit)
    */
   emit<K extends keyof T>(
     event: K,
@@ -138,14 +138,14 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/#idle)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#idle)
    */
   idle(): StatefulPromise<void> {
     return this._queue.idle();
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surreal.js/reference/utils/task-emitter/#abort)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#abort)
    */
   abort(reason?: unknown): void {
     this._queue.abort(reason);

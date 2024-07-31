@@ -28,3 +28,42 @@ jobs:
 
       - name: Test
         run: VITEST_MODE='Chromium' npx vitest tests/small/
+
+  # TODO(tai-kun): ネットにつながらない？
+  # medium:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       playwright-version:
+  #         # よくわからないが 1.22 以前では依存関係のインストールに失敗する。
+  #         - "1.23" # Chromium 104
+  #         - "latest"
+  #       surrealdb-version:
+  #         - "alpha"
+  #         # - "v2.0.0"
+  #         # - "latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
+
+  #     - uses: oven-sh/setup-bun@v2
+
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "20.x"
+
+  #     - name: Setup
+  #       run: |
+  #         npm ci
+  #         npm i -D playwright@${{ matrix.playwright-version }}
+  #         npx playwright install --with-deps chromium
+
+  #     - name: Test
+  #       run: |
+  #         bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
+  #         VITEST_MODE='Chromium' npx vitest tests/medium/
+
+  #     - name: Logs
+  #       run: cat /tmp/logs
+  #       if: always()

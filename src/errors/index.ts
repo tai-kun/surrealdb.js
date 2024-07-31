@@ -9,8 +9,8 @@ export {
 } from "./src/cbor";
 
 export {
-  // ConnectionConflictError,
   CircularEngineReferenceError,
+  ConnectionConflictError,
   DatabaseConflictError,
   Disconnected,
   EngineNotFoundError,

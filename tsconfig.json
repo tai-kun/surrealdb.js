@@ -25,8 +25,15 @@
       "@tai-kun/surrealdb/data-types/standard": [
         "src/data-types/standard/index.ts"
       ],
+      "@tai-kun/surrealdb/clients/basic": [
+        "src/clients/basic/index.ts"
+      ],
+      "@tai-kun/surrealdb/clients/standard": [
+        "src/clients/standard/index.ts"
+      ],
       "@tai-kun/surrealdb/types": ["src/types/index.ts"],
       "@tai-kun/surrealdb/utils": ["src/utils/index.ts"],
+      "@tai-kun/surrealdb/client": ["src/client/index.ts"],
       "@tai-kun/surrealdb/engine": ["src/engine/index.ts"],
       "@tai-kun/surrealdb/errors": ["src/errors/index.ts"],
       "@tai-kun/surrealdb/formatter": ["src/formatter/index.ts"],

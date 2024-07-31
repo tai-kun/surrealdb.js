@@ -19,9 +19,10 @@ import {
   type TaskListenerOptions,
 } from "@tai-kun/surrealdb/utils";
 import type { Validator } from "@tai-kun/surrealdb/validator";
-import type { Promisable } from "type-fest";
 
-export type CreateEngine = (config: EngineAbcConfig) => Promisable<EngineAbc>;
+export type CreateEngine = (config: EngineAbcConfig) =>
+  | EngineAbc
+  | PromiseLike<EngineAbc>;
 
 export type ClientEngines = {
   readonly [_ in string]?: CreateEngine | string | undefined;

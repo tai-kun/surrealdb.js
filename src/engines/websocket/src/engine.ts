@@ -33,17 +33,16 @@ import {
   throwIfAborted,
 } from "@tai-kun/surrealdb/utils";
 import { isLiveResult, isRpcResponse } from "@tai-kun/surrealdb/validator";
-import type { Promisable, ValueOf } from "type-fest";
 import type { WebSocket as WsWebSocket } from "ws";
 
 type GlobalWebSocket = typeof globalThis extends
   { WebSocket: new(...args: any) => infer R } ? R
   : never;
 
-export type CreateWebSocket = (
-  address: URL,
-  protocol: string | undefined,
-) => Promisable<GlobalWebSocket | WsWebSocket>;
+export type CreateWebSocket = (address: URL, protocol: string | undefined) =>
+  | GlobalWebSocket
+  | WsWebSocket
+  | PromiseLike<GlobalWebSocket | WsWebSocket>;
 
 export interface EngineConfig extends EngineAbcConfig {
   readonly createWebSocket: CreateWebSocket;
@@ -429,15 +428,13 @@ export default class WebSocketEngine extends EngineAbc {
           request,
           endpoint: new URL(conn.endpoint),
         }),
-      } as ValueOf<
-        {
-          [M in (typeof request)["method"]]: {
-            method: M;
-            params: RpcParams<M>;
-            result: RpcResult<M>;
-          };
-        }
-      >;
+      } as {
+        [M in (typeof request)["method"]]: {
+          method: M;
+          params: RpcParams<M>;
+          result: RpcResult<M>;
+        };
+      }[(typeof request)["method"]];
 
       switch (rpc.method) {
         case "use": {

@@ -14,7 +14,6 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "paths": {
-      "~/*": ["src/*"],
       "@tai-kun/surrealdb": ["src/surreal/index.ts"],
       "@tai-kun/surrealdb/cbor": ["src/cbor/index.ts"],
       "@tai-kun/surrealdb/data-types/decode-only": [
@@ -53,7 +52,8 @@
       "@tai-kun/surrealdb/engine": ["src/engine/index.ts"],
       "@tai-kun/surrealdb/errors": ["src/errors/index.ts"],
       "@tai-kun/surrealdb/formatter": ["src/formatter/index.ts"],
-      "@tai-kun/surrealdb/validator": ["src/validator/index.ts"]
+      "@tai-kun/surrealdb/validator": ["src/validator/index.ts"],
+      "~/*": ["src/*"]
     }
   }
 }

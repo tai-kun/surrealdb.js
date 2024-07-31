@@ -22,26 +22,24 @@ import type {
 import {
   getTimeoutSignal,
   mutex,
-  TaskEmitter,
   type TaskRunnerArgs,
 } from "@tai-kun/surrealdb/utils";
 
-function defaultErrorHandler(
-  this: ClientAbc,
-  _args: TaskRunnerArgs,
-  ...[error]: EngineEvents["error"]
-): void {
-  if (error.fatal) {
-    console.error("[FATAL]", error);
-    this.disconnect({ force: true }).then(null, reason => {
-      console.error(reason);
-    });
-  } else {
-    console.warn("[WARNING]", error);
-  }
-}
-
 export default class BasicClient extends ClientAbc {
+  private defaultErrorHandler(
+    _args: TaskRunnerArgs,
+    ...[error]: EngineEvents["error"]
+  ): void {
+    if (error.fatal) {
+      console.error("[FATAL]", error);
+      this.disconnect({ force: true }).then(null, reason => {
+        console.error(reason);
+      });
+    } else {
+      console.warn("[WARNING]", error);
+    }
+  }
+
   @mutex
   async connect(
     endpoint: string | URL,
@@ -66,13 +64,12 @@ export default class BasicClient extends ClientAbc {
       throw new ConnectionConflictError(conn.endpoint, endpoint);
     }
 
-    this.ee.on("error", (...args) => {
-      defaultErrorHandler.apply(this, args);
-    });
+    this.ee.on("error", this.defaultErrorHandler);
     const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
-    const engine = this.eng = await this.createEngine(protocol);
+    const engine = await this.createEngine(protocol);
     const { signal = getTimeoutSignal(15_000) } = options;
     await engine.connect({ endpoint, signal });
+    this.eng = engine;
   }
 
   @mutex
@@ -97,14 +94,14 @@ export default class BasicClient extends ClientAbc {
 
       try {
         await this.eng.disconnect({ signal });
-      } catch (error) {
-        errors.push(error);
+      } catch (e) {
+        errors.push(e);
       }
 
       try {
         await this.ee.idle();
-      } catch (error) {
-        errors.push(error);
+      } catch (e) {
+        errors.push(e);
       }
 
       switch (errors.length) {
@@ -115,6 +112,7 @@ export default class BasicClient extends ClientAbc {
           throw errors[0];
 
         case 2:
+          // TODO(tai-kun): これいらんかも
           throw new SurrealAggregateError(
             "Failed to disconnect and dispose resources.",
             errors,
@@ -124,7 +122,6 @@ export default class BasicClient extends ClientAbc {
           unreachable();
       }
     } finally {
-      this.ee = new TaskEmitter();
       this.eng = null;
     }
   }

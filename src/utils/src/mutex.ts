@@ -30,8 +30,10 @@ export default function mutex<T extends (...args: any) => PromiseLike<any>>(
       dequeue = () => queue.shift()?.();
 
     if (queue.length) {
-      ({ promise, resolve } = Promise.withResolvers<void>());
-      queue.push(resolve);
+      promise = new Promise(arg0 => {
+        resolve = arg0;
+      });
+      queue.push(resolve!);
     } else {
       // キューが空の場合は後続のタスクが上の条件に入ることができるように queue に dequeue を追加。
       // dequeue は Promise の解決後にも呼び出されるが、2 回連続で dequeue を呼び出すことで、

@@ -1,9 +1,10 @@
-import type {
-  ConnectionInfo,
-  ConnectionState,
-  EngineAbc,
-  EngineAbcConfig,
-  EngineEvents,
+import {
+  CLOSED,
+  type ConnectionInfo,
+  type ConnectionState,
+  type EngineAbc,
+  type EngineAbcConfig,
+  type EngineEvents,
 } from "@tai-kun/surrealdb/engine";
 import {
   CircularEngineReferenceError,
@@ -48,9 +49,9 @@ export interface ClientRpcOptions {
 }
 
 export default abstract class ClientAbc {
-  protected ee: TaskEmitter<EngineEvents> = new TaskEmitter();
-  protected fmt: Formatter;
-  protected v8n: Validator;
+  protected readonly ee: TaskEmitter<EngineEvents> = new TaskEmitter();
+  protected readonly fmt: Formatter;
+  protected readonly v8n: Validator;
   protected eng: EngineAbc | null = null;
 
   private readonly _engines: ClientEngines;
@@ -90,8 +91,8 @@ export default abstract class ClientAbc {
     });
   }
 
-  get state(): ConnectionState | undefined {
-    return this.eng?.state;
+  get state(): ConnectionState {
+    return this.eng?.state ?? CLOSED;
   }
 
   get endpoint(): URL | null | undefined {

@@ -37,6 +37,9 @@
       "@tai-kun/surrealdb/formatters/json": [
         "src/formatters/json/index.ts"
       ],
+      "@tai-kun/surrealdb/validators/noop": [
+        "src/validators/noop/index.ts"
+      ],
       "@tai-kun/surrealdb/types": ["src/types/index.ts"],
       "@tai-kun/surrealdb/utils": ["src/utils/index.ts"],
       "@tai-kun/surrealdb/client": ["src/client/index.ts"],

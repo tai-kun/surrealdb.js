@@ -39,10 +39,10 @@ jobs:
           bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
           VITEST_MODE='Node.js' npx vitest tests/ --run --coverage
 
-      # - uses: codecov/codecov-action@v4
-      #   with:
-      #     files: ./coverage/coverage-final.json
-      #     token: ${{ secrets.CODECOV_TOKEN }}
+      - uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Logs
         run: cat /tmp/logs

@@ -12,11 +12,20 @@ on:
       - "*.ts"
 
 jobs:
-  small:
+  coverage:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        surrealdb-version:
+          - "alpha"
+          # - "v2.0.0"
+          # - "latest"
     steps:
       - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
 
       - uses: actions/setup-node@v4
         with:
@@ -26,9 +35,15 @@ jobs:
         run: npm ci
 
       - name: Run
-        run: VITEST_MODE='Node.js' npx vitest tests/small/ --run --coverage
+        run: |
+          bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
+          VITEST_MODE='Node.js' npx vitest tests/ --run --coverage
 
-      - uses: codecov/codecov-action@v4
-        with:
-          files: ./coverage/coverage-final.json
-          token: ${{ secrets.CODECOV_TOKEN }}
+      # - uses: codecov/codecov-action@v4
+      #   with:
+      #     files: ./coverage/coverage-final.json
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Logs
+        run: cat /tmp/logs
+        if: always()

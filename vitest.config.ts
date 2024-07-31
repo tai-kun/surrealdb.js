@@ -43,7 +43,9 @@ export default defineConfig({
     ],
     coverage: {
       include: ["src/**/*"],
-      reporter: process.env["CI"] ? ["json"] : ["html"],
+      reporter: process.env["CI"]
+        ? ["json", "text-summary", "text"]
+        : ["html", "text-summary"],
     },
   },
   define: {

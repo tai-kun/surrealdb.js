@@ -160,4 +160,8 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
         .then(resolve, reject);
     });
   }
+
+  get [Symbol.toStringTag](): string {
+    return "StatefulPromise";
+  }
 }

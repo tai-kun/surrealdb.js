@@ -33,7 +33,24 @@ export class SurrealTypeError extends SurrealError {
     actual: string,
     options?: SurrealErrorOptions | undefined,
   ) {
-    super(`Expected type ${expected} but got ${actual}.`, options);
+    super(`Expected ${expected} but got ${actual}.`, options);
+  }
+}
+
+export class SurrealAggregateError extends SurrealError {
+  static {
+    this.prototype.name = "SurrealAggregateError";
+  }
+
+  override cause: unknown[];
+
+  constructor(
+    message: string,
+    errors: readonly unknown[],
+    options?: Omit<SurrealErrorOptions, "cause"> | undefined,
+  ) {
+    super(message, options);
+    this.cause = errors.slice();
   }
 }
 

@@ -27,7 +27,10 @@
       ],
       "@tai-kun/surrealdb/types": ["src/types/index.ts"],
       "@tai-kun/surrealdb/utils": ["src/utils/index.ts"],
-      "@tai-kun/surrealdb/errors": ["src/errors/index.ts"]
+      "@tai-kun/surrealdb/engine": ["src/engine/index.ts"],
+      "@tai-kun/surrealdb/errors": ["src/errors/index.ts"],
+      "@tai-kun/surrealdb/formatter": ["src/formatter/index.ts"],
+      "@tai-kun/surrealdb/validator": ["src/validator/index.ts"]
     }
   }
 }

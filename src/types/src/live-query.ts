@@ -6,8 +6,8 @@ export type LiveData<
   T extends { [p: string]: unknown } = { [p: string]: unknown },
   I = unknown,
 > = {
-  action: LiveAction;
   id: I;
+  action: LiveAction;
   result: T;
 };
 
@@ -16,12 +16,12 @@ export type LiveDiff<
   P extends Patch[] = Patch[],
   I = unknown,
 > = {
-  action: "CREATE" | "UPDATE";
   id: I;
+  action: "CREATE" | "UPDATE";
   result: P;
 } | {
-  action: "DELETE";
   id: I;
+  action: "DELETE";
   result: T;
 };
 

@@ -41,6 +41,10 @@ export default defineConfig({
     include: [
       "tests/**/*.test.ts",
     ],
+    coverage: {
+      include: ["src/**/*"],
+      reporter: process.env["CI"] ? ["json"] : ["html"],
+    },
   },
   define: {
     "process.env.RUNTIME": JSON.stringify(runtime),

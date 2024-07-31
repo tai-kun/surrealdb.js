@@ -1,0 +1,34 @@
+name: Codecov
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/codecov.yml"
+      - "src/**"
+      - "tests/**"
+      - "*.json"
+      - "*.ts"
+
+jobs:
+  small:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: Setup
+        run: npm ci
+
+      - name: Run
+        run: VITEST_MODE='Node.js' npx vitest tests/small/ --run --coverage
+
+      - uses: codecov/codecov-action@v4
+        with:
+          files: ./coverage/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}

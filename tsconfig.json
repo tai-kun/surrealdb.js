@@ -31,6 +31,12 @@
       "@tai-kun/surrealdb/clients/standard": [
         "src/clients/standard/index.ts"
       ],
+      "@tai-kun/surrealdb/formatters/cbor": [
+        "src/formatters/cbor/index.ts"
+      ],
+      "@tai-kun/surrealdb/formatters/json": [
+        "src/formatters/json/index.ts"
+      ],
       "@tai-kun/surrealdb/types": ["src/types/index.ts"],
       "@tai-kun/surrealdb/utils": ["src/utils/index.ts"],
       "@tai-kun/surrealdb/client": ["src/client/index.ts"],

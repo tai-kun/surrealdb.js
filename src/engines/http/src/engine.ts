@@ -261,7 +261,7 @@ export default class HttpEngine extends EngineAbc {
         signal,
       });
     } else {
-      rpcResp = this.fmt.decodeSync(resp);
+      rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
       // throwIfAborted(signal);
     }
 

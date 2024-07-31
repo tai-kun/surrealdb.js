@@ -46,12 +46,12 @@ jobs:
           bun-version: ${{ matrix.bun-version }}
 
       - name: Setup
-        run: npm ci
+        run: bun install
 
       - name: Test
         run: |
           bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
-          VITEST_MODE='Bun' npx vitest tests/medium/
+          VITEST_MODE='Bun' bunx vitest tests/medium/
 
       - name: Logs
         run: cat /tmp/logs

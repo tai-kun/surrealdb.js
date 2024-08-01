@@ -1,5 +1,6 @@
 import type { ThingSource } from "@tai-kun/surrealdb/data-types/decode-only";
 import { Thing as Base } from "@tai-kun/surrealdb/data-types/encodable";
+import type { TableLike } from "./table";
 
 export interface ThingLike<T extends ThingSource[0] = ThingSource[0]> {
   readonly tb: T;
@@ -17,11 +18,15 @@ export default class Thing<T extends ThingSource[0] = ThingSource[0]>
 
   constructor(value: ThingSource<T> | ThingLike<T>);
 
-  constructor(...args: ThingSource<T>);
+  constructor(tb: T | TableLike<T>, id: ThingSource<T>[1]);
 
-  constructor(...args: [ThingSource<T> | ThingLike<T>] | ThingSource<T>) {
+  constructor(
+    ...args:
+      | [ThingSource<T> | ThingLike<T>]
+      | [tb: T | TableLike<T>, id: ThingSource<T>[1]]
+  ) {
     const value: readonly [T, any] = args.length === 2
-      ? args
+      ? [typeof args[0] === "string" ? args[0] : args[0].name, args[1]]
       : Array.isArray(args[0])
       ? args[0]
       : [args[0].tb, args[0].id];

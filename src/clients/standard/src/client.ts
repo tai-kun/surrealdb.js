@@ -119,9 +119,9 @@ export default class Client extends Base {
 
     if (typeof args[0] === "string" || args[0] == null) {
       const [ns, arg1, arg2] = args;
-      const [db, opts] = typeof arg1 === "string"
+      const [db, opts] = typeof arg1 === "string" || arg1 == null
         ? [arg1, arg2]
-        : [null, arg1 || arg2];
+        : [undefined, arg2];
       namespace = ns;
       database = db;
       options = opts;

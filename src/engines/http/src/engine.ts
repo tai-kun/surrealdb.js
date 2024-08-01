@@ -226,8 +226,9 @@ export default class HttpEngine extends EngineAbc {
       },
     });
     const cause = {
-      // params には機微情報が含まれている可能性があるので、method のみにしておく。
       method: request.method,
+      // TODO(tai-kun): params には機微情報が含まれている可能性があるので、method のみにしておく？
+      params: request.params,
       endpoint: conn.endpoint.href,
       database: conn.db,
       namespace: conn.ns,

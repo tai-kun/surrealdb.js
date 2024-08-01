@@ -9,8 +9,8 @@ export type RpcPingRequest = {
 export type RpcUseRequest = {
   readonly method: "use";
   readonly params: readonly [
-    ns?: string | null | undefined,
-    db?: string | null | undefined,
+    ns: string | null | undefined,
+    db: string | null | undefined,
   ];
 };
 

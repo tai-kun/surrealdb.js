@@ -159,6 +159,12 @@ export default class BasicClient extends ClientAbc {
       return resp.result;
     }
 
-    throw new RpcResponseError(resp);
+    throw new RpcResponseError(resp, {
+      cause: {
+        method,
+        // TODO(tai-kun): params には機微情報が含まれている可能性があるので、method のみにしておく？
+        params,
+      },
+    });
   }
 }

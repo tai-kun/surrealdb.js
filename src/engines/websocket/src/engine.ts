@@ -391,6 +391,31 @@ export default class WebSocketEngine extends EngineAbc {
           throw new MissingNamespaceError(db);
         }
 
+        // (1) JSON では null と undefined を区別しないけど、SurealDB は区別する。
+        //     null は選択中の名前空間またはデータベースを未選択にするので、undefined を使える
+        //     CBOR フォーマッターと同じような使い方を JSON フォーマッターですると事故る可能性が高い。
+        //
+        // (2) あと名前空間とデータベースが両方選択されている状態で CBOR で
+        //     [ "名前空間", undefined ] をリクエストするとデータベースが未選択になる。
+        //     (これは SurrealDB のバグ？)
+        //
+        // という動機があって、undefined を文字列に置き換えるように努力する。
+        {
+          if (namespace === undefined && conn.ns !== null) {
+            request = {
+              ...request,
+              params: [conn.ns, request.params[1]],
+            };
+          }
+
+          if (database === undefined && conn.db !== null) {
+            request = {
+              ...request,
+              params: [request.params[0], conn.db],
+            };
+          }
+        }
+
         break;
       }
 

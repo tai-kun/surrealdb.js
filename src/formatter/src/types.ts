@@ -1,6 +1,7 @@
-import type { Data } from "ws";
-
-export type { Data } from "ws";
+export type Data = typeof globalThis extends
+  { Buffer: new(...args: any) => infer Buff }
+  ? string | ArrayBuffer | Uint8Array | Buff | Buff[]
+  : string | ArrayBuffer | Uint8Array;
 
 export interface DecodeArgs {
   reader: ReadableStreamDefaultReader<Uint8Array>;

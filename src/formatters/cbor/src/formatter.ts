@@ -157,59 +157,36 @@ export default class CborFormatter implements Formatter {
     };
   }
 
-  encodeSync(
-    data: unknown,
-    options: EncodeOptions | undefined = {},
-  ): Uint8Array {
-    return encode(data, {
-      ...this.encodeOptions,
-      // TODO(tai-kun): options から undefined を持つプロパティを取り除く
-      ...options,
-    });
+  encodeSync(data: unknown): Uint8Array {
+    return encode(data, this.encodeOptions);
   }
 
-  decodeSync(
-    data: Data,
-    options: DecodeOptions | undefined = {},
-  ): unknown {
-    if (typeof data === "string") {
-      data = stringToArrayBuffer(data);
-    } else if (!isBrowser()) {
-      if (data instanceof Buffer) {
-        data = bufferToArrayBuffer(data);
-      } else if (Array.isArray(data)) {
-        data = buffersToArrayBuffer(data);
-      }
-    }
-
-    if (!isArrayBuffer(data)) {
-      throw new SurrealTypeError(
-        "string | ArrayBuffer | Buffer | Buffer[]",
-        typeof data,
-      );
-    }
-
-    return decode(new Uint8Array(data), {
-      ...this.decodeOptions,
-      // TODO(tai-kun): options から undefined を持つプロパティを取り除く
-      ...options,
-    });
+  decodeSync(data: Data): unknown {
+    return decode(toUint8Array(data), this.decodeOptions);
   }
 }
 
 const encoder = /* @__PURE__ */ new TextEncoder();
 
-function stringToArrayBuffer(string: string): ArrayBuffer {
-  return encoder.encode(string).buffer;
-}
+function toUint8Array(data: Data): Uint8Array {
+  switch (true) {
+    case data instanceof Uint8Array:
+      return data;
 
-function bufferToArrayBuffer(buffer: Buffer): ArrayBuffer {
-  return buffer.buffer.slice(
-    buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength,
-  );
-}
+    case isArrayBuffer(data):
+      return new Uint8Array(data);
 
-function buffersToArrayBuffer(buffers: Buffer[]): ArrayBuffer {
-  return bufferToArrayBuffer(Buffer.concat(buffers));
+    case !isBrowser()
+      && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
+      return Buffer.concat(data);
+
+    case typeof data === "string":
+      return encoder.encode(data);
+
+    default:
+      throw new SurrealTypeError(
+        "string | Buffer | ArrayBuffer | Uint8Array | Buffer[]",
+        String(data),
+      );
+  }
 }

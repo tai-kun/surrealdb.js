@@ -10,37 +10,28 @@ export default class JsonFormatter implements Formatter {
   }
 
   decodeSync(data: Data): unknown {
-    if (isArrayBuffer(data)) {
-      data = arrayBufferToString(data);
-    } else if (!isBrowser()) {
-      if (data instanceof Buffer) {
-        data = bufferToString(data);
-      } else if (Array.isArray(data)) {
-        data = buffersToString(data);
-      }
-    }
-
-    if (typeof data !== "string") {
-      throw new SurrealTypeError(
-        "string | ArrayBuffer | Buffer | Buffer[]",
-        typeof data,
-      );
-    }
-
-    return JSON.parse(data);
+    return JSON.parse(toString(data));
   }
 }
 
 const decoder = /* @__PURE__ */ new TextDecoder();
 
-function arrayBufferToString(buffer: ArrayBuffer): string {
-  return decoder.decode(buffer);
-}
+function toString(data: Data): string {
+  switch (true) {
+    case typeof data === "string":
+      return data;
 
-function bufferToString(buffer: Buffer): string {
-  return buffer.toString("utf-8");
-}
+    case data instanceof Uint8Array || isArrayBuffer(data):
+      return decoder.decode(data);
 
-function buffersToString(buffers: Buffer[]): string {
-  return bufferToString(Buffer.concat(buffers));
+    case !isBrowser()
+      && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
+      return decoder.decode(Buffer.concat(data));
+
+    default:
+      throw new SurrealTypeError(
+        "string | Buffer | ArrayBuffer | Uint8Array | Buffer[]",
+        String(data),
+      );
+  }
 }

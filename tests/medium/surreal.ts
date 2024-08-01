@@ -1,64 +1,95 @@
-import { initSurreal } from "@tai-kun/surrealdb";
+import { type InitializedSurreal, initSurreal } from "@tai-kun/surrealdb";
 import Client from "@tai-kun/surrealdb/clients/standard";
-import {
-  Datetime,
-  Decimal,
-  Duration,
-  GeometryCollection,
-  GeometryLine,
-  GeometryMultiLine,
-  GeometryMultiPoint,
-  GeometryMultiPolygon,
-  GeometryPoint,
-  GeometryPolygon,
-  Table,
-  Thing,
-  Uuid,
-} from "@tai-kun/surrealdb/data-types/standard";
+import * as dataTypes from "@tai-kun/surrealdb/data-types/standard";
 import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
+import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
 import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
 import { beforeAll, vi } from "vitest";
+import { WebSocket } from "ws";
+
+const engines = {
+  http: HttpEngine,
+  websocket: WebSocketEngine,
+} as const;
+
+const formatters = {
+  cbor: CborFormatter,
+  json: JsonFormatter,
+} as const;
+
+const validators = {
+  noop: NoOpValidator,
+} as const;
 
 export default [
-  define({
-    engine: "http",
-    formatter: "cbor",
-    validator: "noop",
-    initSurreal() {
-      return initSurreal({
+  define("http", "cbor", "noop"),
+  define("http", "json", "noop"),
+  define("websocket", "cbor", "noop"),
+  define("websocket", "json", "noop"),
+];
+
+////////////////////////////////////////////////////////////////////////////////
+
+type Engines = keyof typeof engines;
+type Formatters = keyof typeof formatters;
+type Validators = keyof typeof validators;
+
+function define(
+  eng: Engines,
+  fmt: Formatters,
+  v8n: Validators,
+): InitializedSurreal<typeof Client> & {
+  eng: Engines;
+  fmt: Formatters;
+  v8n: Validators;
+} & {
+  suite: `${Engines}_${Formatters}_${Validators}`;
+  url(): `${"http" | "ws"}://localhost:${number}`;
+} {
+  let surreal: InitializedSurreal<typeof Client>;
+  let formatter;
+  let validator;
+
+  switch (fmt) {
+    case "cbor":
+      formatter = new CborFormatter(dataTypes);
+      break;
+
+    case "json":
+      formatter = new JsonFormatter();
+      break;
+
+    default:
+      throw new Error(`unreachable: ${fmt}`);
+  }
+
+  switch (v8n) {
+    case "noop":
+      validator = new NoOpValidator();
+      break;
+
+    default:
+      throw new Error(`unreachable: ${v8n}`);
+  }
+
+  switch (eng) {
+    case "http":
+      surreal = initSurreal({
         Client,
         engines: {
           http(config) {
             return new HttpEngine(config);
           },
         },
-        validator: new NoOpValidator(),
-        formatter: new CborFormatter({
-          Uuid,
-          Table,
-          Thing,
-          Decimal,
-          Datetime,
-          Duration,
-          GeometryLine,
-          GeometryPoint,
-          GeometryPolygon,
-          GeometryMultiLine,
-          GeometryCollection,
-          GeometryMultiPoint,
-          GeometryMultiPolygon,
-        }),
+        formatter,
+        validator,
       });
-    },
-  }),
-  define({
-    engine: "websocket",
-    formatter: "cbor",
-    validator: "noop",
-    initSurreal() {
-      return initSurreal({
+      break;
+
+    case "websocket":
+      surreal = initSurreal({
         Client,
         engines: {
           ws(config) {
@@ -69,63 +100,26 @@ export default [
                   return new globalThis.WebSocket(addr, proto);
                 }
 
-                const { WebSocket } = await import("ws");
                 return new WebSocket(addr, proto);
               },
             });
           },
         },
-        validator: new NoOpValidator(),
-        formatter: new CborFormatter({
-          Uuid,
-          Table,
-          Thing,
-          Decimal,
-          Datetime,
-          Duration,
-          GeometryLine,
-          GeometryPoint,
-          GeometryPolygon,
-          GeometryMultiLine,
-          GeometryCollection,
-          GeometryMultiPoint,
-          GeometryMultiPolygon,
-        }),
+        formatter,
+        validator,
       });
-    },
-  }),
-];
+      break;
 
-////////////////////////////////////////////////////////////////////////////////
+    default:
+      throw new Error(`unreachable: ${eng}`);
+  }
 
-function define<
-  const E extends "http" | "websocket",
-  const F extends string,
-  const V extends string,
-  T,
->(
-  def: {
-    engine: E;
-    formatter: F;
-    validator: V;
-    initSurreal(): T;
-  },
-): T & {
-  engine: E;
-  formatter: F;
-  validator: V;
-} & {
-  suite: `${E}_${F}_${V}`;
-  url(): `${"http" | "ws"}://localhost:${number}`;
-} {
   return {
-    ...def.initSurreal(),
-
-    engine: def.engine,
-    formatter: def.formatter,
-    validator: def.validator,
-
-    suite: `${def.engine}_${def.formatter}_${def.validator}`,
+    ...surreal,
+    eng,
+    fmt,
+    v8n,
+    suite: `${eng}_${fmt}_${v8n}`,
     url(): `${"http" | "ws"}://localhost:${number}` {
       if (typeof port !== "number") {
         throw new Error(
@@ -133,7 +127,7 @@ function define<
         );
       }
 
-      return def.engine === "http"
+      return eng === "http"
         ? `http://localhost:${port}`
         : `ws://localhost:${port}`;
     },

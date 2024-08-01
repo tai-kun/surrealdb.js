@@ -1,4 +1,4 @@
-export type RootAccessAuth = {
+export type RootUserAuth = {
   readonly ns?: undefined;
   readonly db?: undefined;
   readonly ac?: undefined;
@@ -6,7 +6,7 @@ export type RootAccessAuth = {
   readonly pass: string;
 };
 
-export type NamespaceAccessAuth = {
+export type NamespaceUserAuth = {
   readonly ns: string;
   readonly db?: undefined;
   readonly ac?: undefined;
@@ -14,7 +14,7 @@ export type NamespaceAccessAuth = {
   readonly pass: string;
 };
 
-export type DatabaseAccessAuth = {
+export type DatabaseUserAuth = {
   readonly ns: string;
   readonly db: string;
   readonly ac?: undefined;
@@ -29,13 +29,13 @@ export type RecordAccessAuth = {
   readonly [p: string]: unknown;
 };
 
-// export type SystemAccessAuth =
+// export type SystemUserAuth =
 //   | RootAccessAuth
 //   | NamespaceAccessAuth
 //   | DatabaseAccessAuth;
 
 export type AccessAuth =
-  | RootAccessAuth
-  | NamespaceAccessAuth
-  | DatabaseAccessAuth
+  | RootUserAuth
+  | NamespaceUserAuth
+  | DatabaseUserAuth
   | RecordAccessAuth;

@@ -14,7 +14,7 @@ await Promise.all(["esm", "cjs"].map(async format => {
     outbase: "src",
     outdir: "dist",
     platform: "browser",
-    target: "es2020",
+    target: "safari15",
     write: true,
     sourcemap: "inline",
     plugins: [

@@ -88,7 +88,11 @@ export function resolve(options) {
       const getBuiltPath = createGetBuiltPath(resolvers);
       const __filename = fileURLToPath(import.meta.url);
       const __dirname = path.dirname(__filename);
-      const srcDir = path.join(__dirname, "..", "..", "src");
+      const rootDir = path.join(__dirname, "..", "..");
+      const srcDir = path.join(rootDir, "src");
+      const { compilerOptions: { paths } } = JSON.parse(
+        fs.readFileSync(path.join(rootDir, "tsconfig.json"), "utf8"),
+      );
 
       build.onResolve({ filter: /.*/ }, async args => {
         const { namespace, kind, path: pkg, resolveDir } = args;
@@ -99,6 +103,26 @@ export function resolve(options) {
 
           case pkg.startsWith("~/"): {
             const builtPath = getBuiltPath(srcDir, pkg.slice(2));
+
+            if (builtPath) {
+              return {
+                path: toOutFilePath(resolveDir, builtPath),
+                external: true,
+              };
+            }
+
+            return {
+              errors: [
+                {
+                  text: `Cannot resolve "${pkg}"`,
+                },
+              ],
+            };
+          }
+
+          case pkg.startsWith("@tai-kun/surrealdb/"): {
+            const filepath = paths[pkg][0].replace(/\.ts$/, "");
+            const builtPath = getBuiltPath(rootDir, filepath);
 
             if (builtPath) {
               return {

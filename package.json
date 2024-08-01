@@ -5,6 +5,13 @@
   "description": "The SurrealDB SDK for JavaScript",
   "sideEffects": false,
   "type": "module",
+  "main": "./dist/surreal/index.cjs",
+  "types": "./dist/surreal/index.d.ts",
+  "module": "./dist/surreal/index.mjs",
+  "files": [
+    "dist",
+    "src"
+  ],
   "dependencies": {
     "@petamoriken/float16": "^3.8.7",
     "@types/big.js": "^6.2.2",
@@ -23,6 +30,7 @@
     "esbuild": "^0.23.0",
     "glob": "^11.0.0",
     "tar": "^7.4.3",
+    "tsc-alias": "^1.8.10",
     "typescript": "^5.5.4",
     "unzipper": "^0.12.2",
     "uuid": "^10.0.0",
@@ -31,7 +39,7 @@
     "webdriverio": "^8.39.1"
   },
   "scripts": {
-    "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",
+    "build": "node scripts/build/source.js && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "check": "tsc --noEmit && dprint check",
     "test:small": "vitest tests/small/",
     "test:small:nodejs": "node scripts/test.js nodejs small",
@@ -50,5 +58,102 @@
   },
   "volta": {
     "node": "20.16.0"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/surreal/index.d.ts",
+      "import": "./dist/surreal/index.mjs",
+      "require": "./dist/surreal/index.cjs"
+    },
+    "./cbor": {
+      "types": "./dist/cbor/index.d.ts",
+      "import": "./dist/cbor/index.mjs",
+      "require": "./dist/cbor/index.cjs"
+    },
+    "./types": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/types/index.mjs",
+      "require": "./dist/types/index.cjs"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "import": "./dist/utils/index.mjs",
+      "require": "./dist/utils/index.cjs"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "import": "./dist/client/index.mjs",
+      "require": "./dist/client/index.cjs"
+    },
+    "./engine": {
+      "types": "./dist/engine/index.d.ts",
+      "import": "./dist/engine/index.mjs",
+      "require": "./dist/engine/index.cjs"
+    },
+    "./errors": {
+      "types": "./dist/errors/index.d.ts",
+      "import": "./dist/errors/index.mjs",
+      "require": "./dist/errors/index.cjs"
+    },
+    "./formatter": {
+      "types": "./dist/formatter/index.d.ts",
+      "import": "./dist/formatter/index.mjs",
+      "require": "./dist/formatter/index.cjs"
+    },
+    "./validator": {
+      "types": "./dist/validator/index.d.ts",
+      "import": "./dist/validator/index.mjs",
+      "require": "./dist/validator/index.cjs"
+    },
+    "./data-types/decode-only": {
+      "types": "./dist/data-types/decode-only/index.d.ts",
+      "import": "./dist/data-types/decode-only/index.mjs",
+      "require": "./dist/data-types/decode-only/index.cjs"
+    },
+    "./data-types/encodable": {
+      "types": "./dist/data-types/encodable/index.d.ts",
+      "import": "./dist/data-types/encodable/index.mjs",
+      "require": "./dist/data-types/encodable/index.cjs"
+    },
+    "./data-types/standard": {
+      "types": "./dist/data-types/standard/index.d.ts",
+      "import": "./dist/data-types/standard/index.mjs",
+      "require": "./dist/data-types/standard/index.cjs"
+    },
+    "./engines/http": {
+      "types": "./dist/engines/http/index.d.ts",
+      "import": "./dist/engines/http/index.mjs",
+      "require": "./dist/engines/http/index.cjs"
+    },
+    "./engines/websocket": {
+      "types": "./dist/engines/websocket/index.d.ts",
+      "import": "./dist/engines/websocket/index.mjs",
+      "require": "./dist/engines/websocket/index.cjs"
+    },
+    "./clients/basic": {
+      "types": "./dist/clients/basic/index.d.ts",
+      "import": "./dist/clients/basic/index.mjs",
+      "require": "./dist/clients/basic/index.cjs"
+    },
+    "./clients/standard": {
+      "types": "./dist/clients/standard/index.d.ts",
+      "import": "./dist/clients/standard/index.mjs",
+      "require": "./dist/clients/standard/index.cjs"
+    },
+    "./formatters/cbor": {
+      "types": "./dist/formatters/cbor/index.d.ts",
+      "import": "./dist/formatters/cbor/index.mjs",
+      "require": "./dist/formatters/cbor/index.cjs"
+    },
+    "./formatters/json": {
+      "types": "./dist/formatters/json/index.d.ts",
+      "import": "./dist/formatters/json/index.mjs",
+      "require": "./dist/formatters/json/index.cjs"
+    },
+    "./validators/noop": {
+      "types": "./dist/validators/noop/index.d.ts",
+      "import": "./dist/validators/noop/index.mjs",
+      "require": "./dist/validators/noop/index.cjs"
+    }
   }
 }

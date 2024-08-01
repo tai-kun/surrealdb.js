@@ -1,6 +1,6 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { Data, Formatter } from "@tai-kun/surrealdb/formatter";
-import { isArrayBuffer, isBrowser } from "@tai-kun/surrealdb/utils";
+import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
 
 export default class JsonFormatter implements Formatter {
   mimeType = "application/json";
@@ -24,7 +24,7 @@ function toString(data: Data): string {
     case data instanceof Uint8Array || isArrayBuffer(data):
       return decoder.decode(data);
 
-    case !isBrowser()
+    case typeof Buffer !== "undefined"
       && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
       return decoder.decode(Buffer.concat(data));
 

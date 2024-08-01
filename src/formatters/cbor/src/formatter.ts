@@ -33,7 +33,7 @@ import {
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { Data, Formatter } from "@tai-kun/surrealdb/formatter";
-import { isArrayBuffer, isBrowser } from "@tai-kun/surrealdb/utils";
+import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
 
 export interface CborDataTypes {
   readonly Uuid: new(_: UuidSource) => any;
@@ -171,14 +171,19 @@ const encoder = /* @__PURE__ */ new TextEncoder();
 function toUint8Array(data: Data): Uint8Array {
   switch (true) {
     case data instanceof Uint8Array:
-      return data;
+      return typeof Buffer === "undefined"
+        ? new Uint8Array(data)
+        : data instanceof Buffer
+        ? new Uint8Array(data)
+        : data;
 
     case isArrayBuffer(data):
       return new Uint8Array(data);
 
-    case !isBrowser()
+    case typeof Buffer !== "undefined"
       && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
-      return Buffer.concat(data);
+      // return Buffer.concat(data);
+      return new Uint8Array(Buffer.concat(data));
 
     case typeof data === "string":
       return encoder.encode(data);

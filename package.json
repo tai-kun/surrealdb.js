@@ -9,12 +9,14 @@
     "@petamoriken/float16": "^3.8.7",
     "@types/big.js": "^6.2.2",
     "big.js": "^6.2.1",
-    "is-plain-obj": "^4.1.0"
+    "is-plain-obj": "^4.1.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "^20.14.12",
     "@types/unzipper": "^0.10.9",
+    "@types/ws": "^8.5.12",
     "@vitest/browser": "^2.0.4",
     "@vitest/coverage-v8": "^2.0.4",
     "dprint": "^0.47.2",
@@ -26,8 +28,7 @@
     "uuid": "^10.0.0",
     "vite-tsconfig-paths": "^4.3.2",
     "vitest": "^2.0.4",
-    "webdriverio": "^8.39.1",
-    "ws": "^8.18.0"
+    "webdriverio": "^8.39.1"
   },
   "scripts": {
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json",

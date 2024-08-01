@@ -36,7 +36,7 @@ jobs:
           # TODO(tai-kun): v18 だけなんか失敗する。要調査。
           # - "18.x"
           - "20.x"
-          - "22.x"
+          - "^22.5.1"
         surrealdb-version:
           - "alpha"
           # - "v2.0.0"

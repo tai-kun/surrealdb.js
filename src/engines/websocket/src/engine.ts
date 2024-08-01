@@ -187,7 +187,11 @@ export default class WebSocketEngine extends EngineAbc {
     });
     ws.addEventListener("message", async evt => {
       try {
-        const rpcResp = this.fmt.decodeSync(evt.data);
+        // Node.js v22 と ws v8.18.0 以降は Blob も来る。
+        const data = evt.data instanceof Blob
+          ? await (evt.data as Blob).arrayBuffer()
+          : evt.data;
+        const rpcResp = this.fmt.decodeSync(data);
 
         if (!isRpcResponse(rpcResp)) {
           throw new ResponseError("Missing rpc response.", {

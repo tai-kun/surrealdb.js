@@ -191,8 +191,10 @@ export default class WebSocketEngine extends EngineAbc {
 
         if (!isRpcResponse(rpcResp)) {
           throw new ResponseError("Missing rpc response.", {
+            // cause: (evt.data as Buffer).map(v => v).join(),
             cause: {
               endpoint: endpoint.href,
+              response: rpcResp,
               // TODO(tai-kun): 情報を追加
               // ...cause,
             },
@@ -206,6 +208,7 @@ export default class WebSocketEngine extends EngineAbc {
             throw new ResponseError("Missing live result", {
               cause: {
                 endpoint: endpoint.href,
+                liveResult: rpcResp.result,
                 // TODO(tai-kun): 情報を追加
                 // ...cause,
               },
@@ -409,7 +412,7 @@ export default class WebSocketEngine extends EngineAbc {
     });
 
     if (typeof body !== "string" && !(body instanceof Uint8Array)) {
-      throw new SurrealTypeError("string | Uint8Array", typeof body);
+      throw new SurrealTypeError("string | Uint8Array", String(body));
     }
 
     const resp = this.ee.once(`rpc_${id}`, { signal });

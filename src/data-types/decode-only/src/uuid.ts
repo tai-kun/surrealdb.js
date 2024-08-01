@@ -11,11 +11,11 @@ export default class Uuid {
     defineAsUuid(this);
 
     if (!(value instanceof Uint8Array)) {
-      throw new SurrealTypeError("string | Uint8Array", typeof value);
+      throw new SurrealTypeError("Uint8Array", typeof value);
     }
 
     if (!isValidBytes(value)) {
-      throw new SurrealTypeError("valid uuid", `[${Array.from(value)}]`);
+      throw new SurrealTypeError("a valid uuid", `[${Array.from(value)}]`);
     }
 
     this._bytes = value;

@@ -208,7 +208,7 @@ export default class HttpEngine extends EngineAbc {
     const body: unknown = this.fmt.encodeSync(request);
 
     if (typeof body !== "string" && !(body instanceof Uint8Array)) {
-      throw new SurrealTypeError("string | Uint8Array", typeof body);
+      throw new SurrealTypeError("string | Uint8Array", String(body));
     }
 
     const resp: unknown = await this.fetch(conn.endpoint.href, {

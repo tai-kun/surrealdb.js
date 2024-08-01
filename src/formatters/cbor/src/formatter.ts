@@ -26,9 +26,9 @@ import {
   CBOR_TAG_GEOMETRY_POLYGON,
   CBOR_TAG_NONE,
   CBOR_TAG_RECORDID,
+  CBOR_TAG_SPEC_UUID,
   CBOR_TAG_STRING_DECIMAL,
   CBOR_TAG_STRING_DURATION,
-  CBOR_TAG_STRING_UUID,
   CBOR_TAG_TABLE,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
@@ -112,7 +112,7 @@ export default class CborFormatter implements Formatter {
             case CBOR_TAG_RECORDID:
               return new Thing(t.value);
 
-            case CBOR_TAG_STRING_UUID:
+            case CBOR_TAG_SPEC_UUID:
               return new Uuid(t.value);
 
             case CBOR_TAG_STRING_DECIMAL:

@@ -1,6 +1,7 @@
 import {
   CborMaxDepthReachedError,
   CborUnsafeMapKeyError,
+  CircularReferenceError,
   NumberRangeError,
   SurrealTypeError,
   unreachable,
@@ -203,6 +204,7 @@ const MODE = {
 
 type Loop = {
   mode: typeof MODE.MAP;
+  seen: Set<unknown>;
   prop: boolean;
   isMap: boolean;
   value: unknown;
@@ -211,6 +213,7 @@ type Loop = {
   entries: readonly [unknown, unknown][];
 } | {
   mode: typeof MODE.ARRAY;
+  seen: Set<unknown>;
   value: readonly unknown[];
   index: number;
   length: number;
@@ -320,6 +323,7 @@ export function write(
             if (array.length > 0) {
               begin({
                 mode: MODE.ARRAY,
+                seen: loop?.seen || new Set([value]),
                 value: array,
                 index: 0,
                 length: array.length,
@@ -339,6 +343,7 @@ export function write(
             if (entries.length > 0) {
               begin({
                 mode: MODE.MAP,
+                seen: loop?.seen || new Set([value]),
                 prop: true,
                 isMap: value instanceof Map,
                 value,
@@ -399,6 +404,11 @@ export function write(
           loop.prop = false;
           value = loop.entries[loop.index]![0];
 
+          if (loop.seen.has(value)) {
+            // TODO(tai-kun): エラーメッセージを改善
+            throw new CircularReferenceError(String(value));
+          }
+
           if (
             loop.isMap
               ? !isSafeMapKey(value, loop.value as any)
@@ -410,6 +420,11 @@ export function write(
           loop.prop = true;
           value = loop.entries[loop.index]![1];
 
+          if (loop.seen.has(value)) {
+            // TODO(tai-kun): エラーメッセージを改善
+            throw new CircularReferenceError(String(value));
+          }
+
           if (++loop.index === loop.length) {
             end();
           }
@@ -419,6 +434,11 @@ export function write(
 
       case MODE.ARRAY:
         value = loop.value[loop.index];
+
+        if (loop.seen.has(value)) {
+          // TODO(tai-kun): エラーメッセージを改善
+          throw new CircularReferenceError(String(value));
+        }
 
         if (++loop.index === loop.length) {
           end();

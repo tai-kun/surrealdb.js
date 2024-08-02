@@ -12,6 +12,14 @@
     "dist",
     "src"
   ],
+  "homepage": "https://tai-kun.github.io/surrealdb.js/getting-started/",
+  "repository": {
+    "url": "https://github.com/tai-kun/surrealdb.js"
+  },
+  "keywords": [
+    "surreal",
+    "surrealdb"
+  ],
   "dependencies": {
     "@petamoriken/float16": "^3.8.7",
     "@types/big.js": "^6.2.2",

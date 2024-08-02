@@ -1,19 +1,28 @@
 import { SurrealError, type SurrealErrorOptions } from "./general";
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cborerror)
+ */
 export class CborError extends SurrealError {
   static {
     this.prototype.name = "CborError";
   }
 }
 
-// https://www.rfc-editor.org/rfc/rfc8949.html#name-well-formedness-errors-and-
+// https://datatracker.ietf.org/doc/html/rfc8949#name-well-formedness-errors-and-
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cborwellformednesserror)
+ */
 export class CborWellFormednessError extends CborError {
   static {
     this.prototype.name = "CborWellFormednessError";
   }
 }
 
-// https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-2.2
+// https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.2
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cbortoomuchdataerror)
+ */
 export class CborTooMuchDataError extends CborWellFormednessError {
   static {
     this.prototype.name = "CborTooMuchDataError";
@@ -24,7 +33,10 @@ export class CborTooMuchDataError extends CborWellFormednessError {
   }
 }
 
-// https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-2.4
+// https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.4
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cbortoolittledataerror)
+ */
 export class CborTooLittleDataError extends CborWellFormednessError {
   static {
     this.prototype.name = "CborTooLittleDataError";
@@ -35,13 +47,19 @@ export class CborTooLittleDataError extends CborWellFormednessError {
   }
 }
 
-// https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-2.6
+// https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.6
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cborsyntaxerror)
+ */
 export class CborSyntaxError extends CborWellFormednessError {
   static {
     this.prototype.name = "CborSyntaxError";
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cbormaxdepthreachederror)
+ */
 export class CborMaxDepthReachedError extends CborError {
   static {
     this.prototype.name = "CborMaxDepthReachedError";
@@ -55,6 +73,9 @@ export class CborMaxDepthReachedError extends CborError {
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cborunsafemapkeyerror)
+ */
 export class CborUnsafeMapKeyError extends CborError {
   static {
     this.prototype.name = "CborUnsafeMapKey";

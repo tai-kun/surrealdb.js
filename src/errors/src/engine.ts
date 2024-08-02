@@ -1,9 +1,16 @@
-import { SurrealError, type SurrealErrorOptions } from "./general";
+import {
+  SurrealAggregateError,
+  SurrealError,
+  type SurrealErrorOptions,
+} from "./general";
 
 export interface EngineSurrealErrorOptions extends SurrealErrorOptions {
   readonly fatal?: boolean | undefined;
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#engineerror)
+ */
 export class EngineError extends SurrealError {
   static {
     this.prototype.name = "EngineError";
@@ -20,6 +27,9 @@ export class EngineError extends SurrealError {
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#httpengineerror)
+ */
 export class HttpEngineError extends EngineError {
   static {
     this.prototype.name = "HttpEngineError";
@@ -62,10 +72,16 @@ export namespace WebSocketEngineStatusCode {
     | 3154;
 }
 
+/**
+ * {@link WebSocketEngineError}
+ */
 export type WebSocketEngineStatusCode =
   | WebSocketEngineStatusCode.Defined
   | WebSocketEngineStatusCode.Custom;
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#websocketengineerror)
+ */
 export class WebSocketEngineError extends EngineError {
   static {
     this.prototype.name = "WebSocketEngineError";
@@ -80,7 +96,10 @@ export class WebSocketEngineError extends EngineError {
   }
 }
 
-export class StateTransitionError extends SurrealError {
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#statetransitionerror)
+ */
+export class StateTransitionError extends SurrealAggregateError {
   static {
     this.prototype.name = "StateTransitionError";
   }
@@ -89,16 +108,21 @@ export class StateTransitionError extends SurrealError {
     public from: number,
     public to: number,
     public fallback: number,
-    options?: SurrealErrorOptions | undefined,
+    errors: readonly unknown[],
+    options?: Omit<SurrealErrorOptions, "cause"> | undefined,
   ) {
     super(
       `The transition from \`${from}\` to \`${to}\` failed, `
         + `falling back to \`${fallback}\`.`,
+      errors,
       options,
     );
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#connectionunavailableerror)
+ */
 export class ConnectionUnavailableError extends SurrealError {
   static {
     this.prototype.name = "ConnectionUnavailableError";

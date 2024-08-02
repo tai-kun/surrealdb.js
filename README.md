@@ -11,6 +11,75 @@
 [![License](https://img.shields.io/npm/l/%40tai-kun%2Fsurrealdb?style=flat&logo=apache&color=rgb(40%2C%2038%2C%2097))](https://opensource.org/licenses/Apache-2.0)
 [![Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb?style=flat&logo=npm)](https://www.npmjs.com/package/@tai-kun/surrealdb)
 
+## Install
+
+```sh
+npm i @tai-kun/surrealdb
+```
+## Quick Start
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
+
+await db.signin({ user: "root", pass: "root" });
+
+const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
+console.log(results); // [ 42 ]
+
+await db.disconnect();
+```
+
+## Customization
+
+```ts
+import { initSurreal } from "@tai-kun/surrealdb";
+import Client from "@tai-kun/surrealdb/clients/standard";
+import HttpEngine from "@tai-kun/surrealdb/engines/http";
+import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
+
+const { Surreal } = initSurreal({
+  Client: Client,
+  engines: {
+    http: config => new HttpEngine(config),
+    https: "http",
+  },
+  formatter: new JsonFormatter(),
+  validator: new NoOpValidator(),
+});
+```
+
+## Requirements
+
+SurrealDB v2.0.0 (currently in alpha)
+
+## Recommended environment
+
+| Env | Version |
+| --- | --- |
+| Node.js | `^20.x`,`^22.5.1` |
+| Deno | `^1.44.3` (not tested) |
+| Bun | `^1.1.13` |
+| Chromium | `>=104` (Probably works with `>=67`) |
+| Firefox | `>=100` (Probably works with `>=68`) |
+| WebKit | `>=15.4` (Probably works with `>=14`) |
+
+and:
+
+Do not expect sub-millisecond precision for dates prior to the UNIX epoch.
+
+## TODO
+
+- [x] Implement basic features
+- [ ] Add functionality to improve query handling
+- [ ] Add connection pooling
+- [ ] Add tests
+- [ ] Improve documentation
+- [ ] Add benchmarks
+
 ## License
 
 [Apache-2.0](https://github.com/tai-kun/surrealdb.js/blob/main/LICENSE)

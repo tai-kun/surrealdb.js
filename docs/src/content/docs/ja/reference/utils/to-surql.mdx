@@ -1,0 +1,77 @@
+---
+title: toSurql
+---
+
+`toSurql` は JavaScript の値を SurrealQL 文字列に変換する関数です。
+
+### インポート
+
+```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+```
+
+### 使い方
+
+```ts
+function toSurql(value: unlnown): string;
+```
+
+#### 引数
+
+##### `value`
+
+JavaScript の値です。次の値のうちいずれかを受け付けます:
+
+- `string`
+- `number`
+- `bigint`
+- `boolean`
+- `undefined`
+- `null`
+- `{ toSurql(): string }`
+- `Date`
+- `{ toJSON(): string }`
+- `unknown[]`
+- `{ [key: string]: unknown }`
+- `Set<unknown>`
+- `Map<unknown, unknown>`
+
+`unknown` は上記の型で構成される値を示しています。
+
+変換にあたっては、上記の順番が優先順位を示します。つまりプレーンオブジェクトが `.toJSON` 関数を持ってるとしても、`.toSurql` 関数も持っていれば、そちらが優先されます。
+
+プレーンオブジェクトの判定には [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) を使用しています。したがって、プレーンオブジェクトが `.toSurql` や `.toJSON` を持たず、かつ `Symbol.toStringTag` や `Symbol.iterator` を持っている場合は、オブジェクトとして判定せず、エラーを投げます。
+
+#### 返値
+
+SurrealQL 文字列です。
+
+#### 例
+
+```ts
+const surql = toSurql({
+  bigint: 9007199254740992n, // Number.MAX_SAFE_INTEGER + 1
+  boolean: [true, false],
+  date: new Date("2024-06-01T12:34:56.789Z"),
+  map: new Map([
+    [0, {
+      toJSON: () => [0, 1],
+    }],
+  ]),
+  null: null,
+  number: 123,
+  set: new Set([{
+    toSurql: () => `<bytes>"hello"`,
+  }]),
+  string: "文字列",
+  undefined: undefined,
+});
+
+console.log(surql);
+```
+
+出力:
+
+```text
+{bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'文字列',undefined:NONE}
+```

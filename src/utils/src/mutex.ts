@@ -2,6 +2,9 @@ import { UnsupportedRuntimeError } from "@tai-kun/surrealdb/errors";
 
 const MUTEX_QUEUE = /* @__PURE__ */ Symbol();
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/mutex/)
+ */
 export default function mutex<T extends (...args: any) => PromiseLike<any>>(
   target: T,
   context: ClassMethodDecoratorContext,

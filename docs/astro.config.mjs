@@ -109,20 +109,12 @@ export default defineConfig({
               label: "utils",
               items: [
                 {
-                  slug: "reference/utils/quote-str",
-                  label: "quoteStr",
+                  slug: "reference/utils/escape",
+                  label: "escape",
                 },
                 {
-                  slug: "reference/utils/escape-key",
-                  label: "escapeKey",
-                },
-                {
-                  slug: "reference/utils/escape-rid",
-                  label: "escapeRid",
-                },
-                {
-                  slug: "reference/utils/escape-ident",
-                  label: "escapeIdent",
+                  slug: "reference/utils/get-timeout-signal",
+                  label: "getTimeoutSignal",
                 },
                 {
                   slug: "reference/utils/is-array-buffer",
@@ -137,16 +129,16 @@ export default defineConfig({
                   label: "isSafeNumber",
                 },
                 {
-                  slug: "reference/utils/get-timeout-signal",
-                  label: "getTimeoutSignal",
-                },
-                {
                   slug: "reference/utils/make-abort-api",
                   label: "makeAbortApi",
                 },
                 {
-                  slug: "reference/utils/throw-if-aborted",
-                  label: "throwIfAborted",
+                  slug: "reference/utils/mutex",
+                  label: "mutex",
+                },
+                {
+                  slug: "reference/utils/serial",
+                  label: "Serial",
                 },
                 {
                   slug: "reference/utils/stateful-promise",
@@ -161,8 +153,12 @@ export default defineConfig({
                   label: "TaskEmitter",
                 },
                 {
-                  slug: "reference/utils/serial",
-                  label: "Serial",
+                  slug: "reference/utils/throw-if-aborted",
+                  label: "throwIfAborted",
+                },
+                {
+                  slug: "reference/utils/to-surql",
+                  label: "toSurql",
                 },
               ],
             },

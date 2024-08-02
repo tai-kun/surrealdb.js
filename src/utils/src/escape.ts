@@ -74,7 +74,7 @@ function escapeNumeric(
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/quote-str/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/escape/#quotestr)
  */
 export function quoteStr(str: string): string {
   if (!str) {
@@ -95,7 +95,7 @@ export function quoteStr(str: string): string {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/escape-key/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/escape/#escapekey)
  */
 export function escapeKey(key: string): string {
   if (!key) {
@@ -106,7 +106,7 @@ export function escapeKey(key: string): string {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/escape-rid/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/escape/#escaperid)
  */
 export function escapeRid(rid: string): string {
   if (!rid) {
@@ -117,7 +117,7 @@ export function escapeRid(rid: string): string {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/escape-ident/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/escape/#escapeident)
  */
 export function escapeIdent(ident: string): string {
   if (!ident) {

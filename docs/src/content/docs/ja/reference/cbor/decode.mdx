@@ -13,7 +13,7 @@ import { decode } from "@tai-kun/surrealdb/cbor";
 ### 構文
 
 ```ts
-function decode(input: Uint8Array, options?: DecodeOptions): ZodUnknown;
+function decode(input: Uint8Array, options?: DecodeOptions): unknown;
 ```
 
 #### 引数
@@ -27,7 +27,7 @@ JavaScript の値にデコードするための CBOR 形式のバイト配列で
 デコードオプションです。
 
 `map?: boolean`
-:   `true` にすると、key-value で表される値をプレーンオブジェクトではなく `Map` オブジェクトで作成します。デフォルトは `false` です。プレーンオブジェクトのキーは文字列または数値のみを受け取ることがてきますが、このオプションを `true` にしてデコードすると、キーはデコードされたすべての値を受け取ることができます。
+:   `true` にすると、key-value で表される値をプレーンオブジェクトではなく `Map` オブジェクトで作成します。デフォルトは `false` です。プレーンオブジェクトのキーは文字列または数値のみを受け取ることができますが、このオプションを `true` にしてデコードすると、キーはデコードされたすべての値を受け取ることができます。
 
 `reviver?: Reviver | ReviverObject | (Reviver | ReviverObject)[]`
 :   このオプションは、CBOR の単純なデータアイテムまたはタグ付きデータアイテムを JavaScript の値に変換するために使用します。単純なデータアイテムは 0 から 19 および 32 から 255 までの値に限定されます。タグ付きデータアイテムのタグは 0 から 2^64-1 までの `number` または `bigint` です。

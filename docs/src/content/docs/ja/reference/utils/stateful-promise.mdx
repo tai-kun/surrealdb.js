@@ -6,13 +6,11 @@ import Badge from "~/components/ja/Badge.astro";
 
 `StatefulPromise` はハンドリングされていない状態で拒否されてもエラーを投げない `PromiseLike` を実装するクラスです。
 
-## インポート
+### インポート
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
 ```
-
-## 使い方
 
 ### constructor
 
@@ -22,11 +20,9 @@ new StatefulPromise<T>(executor: StatefulPromiseExecutor<T>);
 
 #### 引数
 
-`executor`
-:   `StatefulPromise` に対して `Promise()` コンストラクター の [`executor`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise#executor) と同じ役割を果たします。
+##### `executor`
 
-`T`
-:   `StatefulPromise` が解決される値の型です。
+`StatefulPromise` に対して `Promise()` コンストラクター の [`executor`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise#executor) と同じ役割を果たします。
 
 #### 返値
 
@@ -82,11 +78,11 @@ try {
 
 ### .then <Badge variant="instance" /><Badge variant="method" />
 
-`.then` は `StatefulPromise` が成功した場合と失敗した場合のコールバック関数を取り、`Promise` オブジェクトを返します。
+`.then` は `StatefulPromise` が成功した場合と失敗した場合のコールバック関数を取り、`StatefulPromise` オブジェクトを返します。
 
 ```ts
 then<R1, R2>(
-  onFulfilled?: ((value: T) => R1 | PromiseLike<R1>) | undefined | null,
+  onFulfilled?: ((value: any) => R1 | PromiseLike<R1>) | undefined | null,
   onRejected?: ((reason: unknown) => R2 | PromiseLike<R2>) | undefined | null,
 ): StatefulPromise<R1 | R2>;
 ```
@@ -109,8 +105,9 @@ resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
 
 #### 引数
 
-`value`
-:   解決する値。デフォルト値は `undefined` です。
+##### `value`
+
+解決する値。デフォルト値は `undefined` です。
 
 #### 返値
 
@@ -126,8 +123,9 @@ reject<T>(reason?: unknown): StatefulPromise<T>;
 
 #### 引数
 
-`reason`
-:   拒否する理由。デフォルト値は `undefined` です。
+##### `reason`
+
+拒否する理由。デフォルト値は `undefined` です。
 
 #### 返値
 
@@ -153,14 +151,17 @@ withResolvers<T>(): {
 
 以下のプロパティーを含むプレーンオブジェクトです。
 
-`promise`
-:   新しい `StatefulPromise` オブジェクトです。
+##### `promise`
 
-`resolve`
-:   `promise` を解決する関数です。
+新しい `StatefulPromise` オブジェクトです。
 
-`reject`
-:   `promise` を拒否する関数です。
+##### `resolve`
+
+`promise` を解決する関数です。
+
+##### `reject`
+
+`promise` を拒否する関数です。
 
 ### .try <Badge variant="static" /><Badge variant="method" />
 
@@ -175,8 +176,9 @@ try<T, A extends readonly unknown[]>(
 
 #### 引数
 
-`func`
-:   呼び出される関数です。この関数は `StatefulPromise` 以外の値を返すことができます。また関数内で同期的にエラーを投げることもできます。
+##### `func`
+
+呼び出される関数です。この関数は `StatefulPromise` 以外の値を返すことができます。また関数内で同期的にエラーを投げることもできます。
 
 #### 返値
 
@@ -214,11 +216,13 @@ allRejected<T>(
 
 #### 引数
 
-`promises`
-:   反復可能オブジェクトです。`StatefulPromise` オブジェクト以外を含むこともできますが、それらはエラーとして判定されません。また通常の `Promise` も同様に無視されます。
+##### `promises`
 
-`extract`
-:   `promises` から `StatefulPromise` オブジェクトを取り出す関数です。
+反復可能オブジェクトです。`StatefulPromise` オブジェクト以外を含むこともできますが、それらはエラーとして判定されません。また通常の `Promise` も同様に無視されます。
+
+##### `extract`
+
+`promises` から `StatefulPromise` オブジェクトを取り出す関数です。
 
 #### 返値
 

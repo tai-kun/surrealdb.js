@@ -4,8 +4,6 @@ title: はじめる
 
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 
-(注) まだ動かないです。
-
 ## インストール
 
 <Tabs>
@@ -30,3 +28,39 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
     ```
   </TabItem>
 </Tabs>
+
+## 使ってみる
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
+
+await db.signin({ user: "root", pass: "root" });
+
+const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
+console.log(results); // [ 42 ]
+
+await db.disconnect();
+```
+
+## カスタマイズ
+
+```ts
+import { initSurreal } from "@tai-kun/surrealdb";
+import Client from "@tai-kun/surrealdb/clients/standard";
+import HttpEngine from "@tai-kun/surrealdb/engines/http";
+import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
+
+const { Surreal } = initSurreal({
+  Client: Client,
+  engines: {
+    http: config => new HttpEngine(config),
+    https: "http",
+  },
+  formatter: new JsonFormatter(),
+  validator: new NoOpValidator(),
+});
+```

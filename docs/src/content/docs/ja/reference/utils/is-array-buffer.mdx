@@ -4,13 +4,13 @@ title: isBrowser
 
 `isArrayBuffer` は引数に与えられた値が `ArrayBuffer` オブジェクトどうかを判定する関数です。
 
-## インポート
+### インポート
 
 ```ts
 import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
 ```
 
-## 使い方
+### 使い方
 
 ```ts
 function isArrayBuffer(value: unknown): value is ArrayBuffer;
@@ -18,8 +18,9 @@ function isArrayBuffer(value: unknown): value is ArrayBuffer;
 
 #### 引数
 
-`value`
-:   `ArrayBuffer` オブジェクトを期待する値。
+##### `value`
+
+`ArrayBuffer` オブジェクトを期待する値。
 
 #### 返値
 
@@ -27,4 +28,4 @@ function isArrayBuffer(value: unknown): value is ArrayBuffer;
 
 ### 解説
 
-Firefox でバージョンによっては `fetch` のレスポンスボディを `ArrayBuffer` オブジェクトにすると、メソッドは備えているものの `instanceof` で判定できないようなので、タグ名で判定します。これは lodash の挙動に似ています。
+Firefox でバージョンによっては `fetch` のレスポンスボディを `ArrayBuffer` オブジェクトにすると、メソッドこそ備えているものの `instanceof` で判定できない場合があるようなので、タグ名で判定します。これは lodash の挙動に似ています。

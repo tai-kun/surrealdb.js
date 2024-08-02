@@ -6,6 +6,9 @@ import {
 import isPlainObject from "is-plain-obj";
 import { escapeKey, quoteStr } from "./escape";
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/to-surql/)
+ */
 export default function toSurql(value: unknown): string {
   function inner(
     x: unknown,

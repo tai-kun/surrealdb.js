@@ -1,5 +1,11 @@
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#state)
+ */
 export type StatefulPromiseState = "pending" | "fulfilled" | "rejected";
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#constructor)
+ */
 export type StatefulPromiseExecutor<T> = (
   resolve: (value: T | PromiseLike<T>) => void,
   reject: (reason: unknown) => void,

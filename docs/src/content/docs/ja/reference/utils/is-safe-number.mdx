@@ -4,13 +4,13 @@ title: isSafeNumber
 
 `isSafeNumber` は引数に渡された数値が、演算上安全な数値であるかを検証します。
 
-## インポート
+### インポート
 
 ```ts
 import { isSafeNumber } from "@tai-kun/surrealdb/utils";
 ```
 
-## 使い方
+### 使い方
 
 ```ts
 function isSafeNumber(value: number): boolean;
@@ -18,8 +18,9 @@ function isSafeNumber(value: number): boolean;
 
 #### 引数
 
-`value`
-:   検証する数値です。
+##### `value`
+
+検証する数値です。
 
 #### 返値
 
@@ -27,4 +28,4 @@ function isSafeNumber(value: number): boolean;
 
 - `NaN`
 - 無限
-- 2^53-1 の範囲を超える
+- ±2^53-1 の範囲を超える

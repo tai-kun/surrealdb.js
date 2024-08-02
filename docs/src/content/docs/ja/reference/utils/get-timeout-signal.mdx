@@ -4,13 +4,13 @@ title: getTimeoutSignal
 
 `getTimeoutSignal` は指定されたミリ秒数後にタイムアウトする `AbortSignal` オブジェクトを返す関数です。`AbortSignal.timeout()` が実装されていない環境のために提供されています。
 
-## インポート
+### インポート
 
 ```ts
 import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 ```
 
-## 使い方
+### 使い方
 
 ```ts
 function getTimeoutSignal(milliseconds: number): AbortSignal;
@@ -18,8 +18,9 @@ function getTimeoutSignal(milliseconds: number): AbortSignal;
 
 #### 引数
 
-`milliseconds`
-:   タイムアウトするまでのミリ秒数を設定します。
+##### `milliseconds`
+
+タイムアウトするまでのミリ秒数を設定します。
 
 #### 返値
 
@@ -27,8 +28,7 @@ function getTimeoutSignal(milliseconds: number): AbortSignal;
 
 #### 例外
 
-- `UnsupportedRuntimeError`
-  - サーバーサイドのランタイムで `AbortSignal.timeout` 関数がない場合に投げます。これは、ポリフィルの実装コストが高いためです。ブラウザはやや強引に実装しています。
+サーバーサイドのランタイムで `AbortSignal.timeout` 関数がない場合はエラーを投げます。これは、ポリフィルの実装コストが高いためです。ブラウザーではやや強引に実装しています。
 
 #### 例
 

@@ -4,16 +4,16 @@ title: makeAbortApi
 
 `makeAbortApi` は中止シグナルと、それに関連付けられた中止関数を作成する関数です。
 
-## インポート
+### インポート
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 ```
 
-## 使い方
+### 使い方
 
 ```ts
-function makeAbortApi(signal?: AbortSignal | undefined): [
+function makeAbortApi(signal?: AbortSignal): [
   signal: AbortSignal,
   abort: (reason?: unknown) => void,
 ];
@@ -21,18 +21,21 @@ function makeAbortApi(signal?: AbortSignal | undefined): [
 
 #### 引数
 
-`signal`
-:   関連付ける中止シグナルです。
+##### `signal`
+
+関連付ける中止シグナルです。
 
 #### 返値
 
-次の順番で並んだ配列を返します。
+次の順番に並んだ配列を返します。
 
-`signal`
-:   中止シグナルです。初期状態で中断されていることはありません。
+##### `signal`
 
-`abort`
-:   中止シグナルに `"abort"` イベントを発送します。オプションで 1 つの引数 `reason` を受け取ることができ、`"abort"` イベントを経由して中止の理由を伝えることができます。
+中止シグナルです。初期状態で中断されていることはありません。
+
+##### `abort`
+
+中止シグナルに `"abort"` イベントを発送します。オプションで 1 つの引数 `reason` を受け取ることができ、`"abort"` イベントを経由して中止の理由を伝えることができます。
 
 #### 例
 

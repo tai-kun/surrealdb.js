@@ -175,10 +175,8 @@ export abstract class EngineAbc {
     fallback: () => TransitionArgs,
   ): StatefulPromise<void> {
     return new StatefulPromise<void>((resolve, reject) => {
-      this._conn = transArgsToConnInfo(args);
-
       const fromState = this.state;
-      const toState = this._conn.state;
+      const toState = (this._conn = transArgsToConnInfo(args)).state;
       const hooks = this.ee.emit(toState, {
         state: toState as never,
       });
@@ -190,15 +188,8 @@ export abstract class EngineAbc {
       StatefulPromise.allRejected(hooks).then(errors => {
         if (errors.length > 0) {
           const args = fallback();
-          this._conn = transArgsToConnInfo(args);
-          reject(
-            new StateTransitionError(
-              fromState,
-              toState,
-              this._conn.state,
-              { cause: errors },
-            ),
-          );
+          const fbState = (this._conn = transArgsToConnInfo(args)).state;
+          reject(new StateTransitionError(fromState, toState, fbState, errors));
         } else {
           resolve();
         }

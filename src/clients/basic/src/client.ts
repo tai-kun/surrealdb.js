@@ -10,8 +10,6 @@ import {
   ConnectionUnavailableError,
   Disconnected,
   RpcResponseError,
-  SurrealAggregateError,
-  unreachable,
 } from "@tai-kun/surrealdb/errors";
 import type {
   RpcMethod,
@@ -90,36 +88,10 @@ export default class BasicClient extends ClientAbc {
         this.ee.abort(new Disconnected("force disconnect"));
       }
 
-      const errors: unknown[] = [];
-
       try {
         await this.eng.disconnect({ signal });
-      } catch (e) {
-        errors.push(e);
-      }
-
-      try {
-        await this.ee.idle();
-      } catch (e) {
-        errors.push(e);
-      }
-
-      switch (errors.length) {
-        case 0:
-          break;
-
-        case 1:
-          throw errors[0];
-
-        case 2:
-          // TODO(tai-kun): これいらんかも
-          throw new SurrealAggregateError(
-            "Failed to disconnect and dispose resources.",
-            errors,
-          );
-
-        default:
-          unreachable();
+      } finally {
+        await this.ee.idle(); // エラーを投げない。
       }
     } finally {
       this.eng = null;

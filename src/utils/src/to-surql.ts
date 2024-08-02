@@ -72,7 +72,7 @@ export default function toSurql(value: unknown): string {
 
     if (typeof o["toJSON"] === "function") {
       c.seen.add(o);
-      const s = o["toJSON"]();
+      const s = inner(o["toJSON"](), c);
       c.seen.delete(o);
 
       return s;
@@ -88,7 +88,7 @@ export default function toSurql(value: unknown): string {
       }
 
       s += "]";
-      c.seen.delete(x);
+      c.seen.delete(o);
 
       return s;
     }
@@ -106,6 +106,42 @@ export default function toSurql(value: unknown): string {
       ) {
         i && (s += ",");
         s += escapeKey(kys[i]!) + ":" + inner(o[kys[i]!], c);
+      }
+
+      s += "}";
+      c.seen.delete(o);
+
+      return s;
+    }
+
+    if (o instanceof Set) {
+      c.seen.add(o);
+      let s = "[";
+
+      for (let i = 0, arr = Array.from(o), len = arr.length; i < len; i++) {
+        i && (s += ",");
+        s += inner(arr[i], c);
+      }
+
+      s += "]";
+      c.seen.delete(o);
+
+      return s;
+    }
+
+    if (o instanceof Map) {
+      c.seen.add(o);
+      let s = "{";
+
+      for (
+        let i = 0,
+          kys = Array.from(o.keys()).sort(),
+          len = kys.length;
+        i < len;
+        i++
+      ) {
+        i && (s += ",");
+        s += inner(kys[i]!, c) + ":" + inner(o.get(kys[i]!), c);
       }
 
       s += "}";

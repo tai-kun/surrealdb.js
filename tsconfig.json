@@ -18,7 +18,6 @@
       "@tai-kun/surrealdb/cbor": ["src/cbor/index.ts"],
       "@tai-kun/surrealdb/types": ["src/types/index.ts"],
       "@tai-kun/surrealdb/utils": ["src/utils/index.ts"],
-      "@tai-kun/surrealdb/client": ["src/client/index.ts"],
       "@tai-kun/surrealdb/engine": ["src/engine/index.ts"],
       "@tai-kun/surrealdb/errors": ["src/errors/index.ts"],
       "@tai-kun/surrealdb/formatter": ["src/formatter/index.ts"],

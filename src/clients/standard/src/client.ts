@@ -1,5 +1,4 @@
-import type { ClientRpcOptions } from "@tai-kun/surrealdb/client";
-import Base from "@tai-kun/surrealdb/clients/basic";
+import Base, { type ClientRpcOptions } from "@tai-kun/surrealdb/clients/basic";
 import { QueryFailedError } from "@tai-kun/surrealdb/errors";
 import type {
   AccessAuth,
@@ -14,6 +13,9 @@ import type {
 } from "@tai-kun/surrealdb/types";
 import type { TaskListener } from "@tai-kun/surrealdb/utils";
 
+// re-exports
+export type * from "@tai-kun/surrealdb/clients/basic";
+
 export interface LiveOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
 }
@@ -24,19 +26,19 @@ export type LiveHandler<T extends LiveResult<any, any> = LiveResult> =
 // dprint-ignore
 export type InferLiveResult<
   I extends string | object,
-  T extends Record<string, unknown> = Record<string, unknown>,
+  T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
   P extends Patch[] = Patch[]
->
-  = I extends { __diff: true }  ? LiveDiff<T, P>
+> = I extends { __diff: true }  ? LiveDiff<T, P>
   : I extends { __diff: false } ? LiveData<T>
   : LiveResult<T, P>
 
 type Simplify<T> = { [P in keyof T]: T[P] } & {};
 
 // dprint-ignore
-export type ActionResult<T extends { [p: string]: unknown } = { [p: string]: unknown }>
-  = "id" extends keyof T ? T
-  : Simplify<T & { readonly id: string | object }>;
+export type ActionResult<T extends { readonly [p: string]: unknown } = { [p: string]: unknown }>
+  = "id" extends keyof T
+  ? T
+  : Simplify<T & { id: string | object }>;
 
 export interface PatchOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
@@ -246,7 +248,7 @@ export default class Client extends Base {
       readonly text: string;
       readonly vars?: { readonly [p: string]: unknown } | undefined;
     },
-    vars?: { [p: string]: unknown } | undefined,
+    vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T> {
     const results: readonly QueryResult[] = await this.rpc(
@@ -261,28 +263,28 @@ export default class Client extends Base {
   async query<T extends readonly unknown[]>(
     surql: string | {
       readonly text: string;
-      readonly vars?: { [p: string]: unknown } | undefined;
+      readonly vars?: { readonly [p: string]: unknown } | undefined;
       readonly __type: T;
     },
-    vars?: { [p: string]: unknown } | undefined,
+    vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T>;
 
   async query<T extends readonly unknown[] = unknown[]>(
     surql: string | {
       readonly text: string;
-      readonly vars?: { [p: string]: unknown } | undefined;
+      readonly vars?: { readonly [p: string]: unknown } | undefined;
     },
-    vars?: { [p: string]: unknown } | undefined,
+    vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T>;
 
   async query(
     surql: string | {
       readonly text: string;
-      readonly vars?: { [p: string]: unknown } | undefined;
+      readonly vars?: { readonly [p: string]: unknown } | undefined;
     },
-    vars?: { [p: string]: unknown } | undefined,
+    vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<unknown[]> {
     const results = await this.queryRaw(surql, vars, options);
@@ -319,12 +321,16 @@ export default class Client extends Base {
     await this.rpc("unset", [name], options);
   }
 
-  async select<T extends { [p: string]: unknown } = { [p: string]: unknown }>(
+  async select<
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+  >(
     thing: string,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>[]>;
 
-  async select<T extends { [p: string]: unknown } = { [p: string]: unknown }>(
+  async select<
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+  >(
     thing: object,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
@@ -337,8 +343,8 @@ export default class Client extends Base {
   }
 
   async create<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: string,
     data?: U | undefined,
@@ -346,8 +352,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<T>[]>;
 
   async create<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: object,
     data?: U | undefined,
@@ -356,15 +362,15 @@ export default class Client extends Base {
 
   async create(
     thing: string | object,
-    data?: { [p: string]: unknown } | undefined,
+    data?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("create", [thing, data], options);
   }
 
   async insert<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: string,
     data?: U | readonly U[] | undefined,
@@ -372,8 +378,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<T>[]>;
 
   async insert<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: object,
     data?: U | undefined,
@@ -383,8 +389,8 @@ export default class Client extends Base {
   async insert(
     thing: string | object,
     data?:
-      | { [p: string]: unknown }
-      | readonly { [p: string]: unknown }[]
+      | { readonly [p: string]: unknown }
+      | readonly { readonly [p: string]: unknown }[]
       | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
@@ -392,8 +398,8 @@ export default class Client extends Base {
   }
 
   async update<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: string,
     data?: U | undefined,
@@ -401,8 +407,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<T>[]>;
 
   async update<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: object,
     data?: U | undefined,
@@ -411,15 +417,15 @@ export default class Client extends Base {
 
   async update(
     thing: string | object,
-    data?: { [p: string]: unknown } | undefined,
+    data?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("update", [thing, data], options);
   }
 
   async upsert<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: string,
     data?: U | undefined,
@@ -427,8 +433,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<T>[]>;
 
   async upsert<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: object,
     data?: U | undefined,
@@ -437,15 +443,15 @@ export default class Client extends Base {
 
   async upsert(
     thing: string | object,
-    data?: { [p: string]: unknown } | undefined,
+    data?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("upsert", [thing, data], options);
   }
 
   async merge<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: string,
     data: U,
@@ -453,8 +459,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<T>[]>;
 
   async merge<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     thing: object,
     data: U,
@@ -463,13 +469,15 @@ export default class Client extends Base {
 
   async merge(
     thing: string | object,
-    data: { [p: string]: unknown },
+    data: { readonly [p: string]: unknown },
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("merge", [thing, data], options);
   }
 
-  async patch<T extends { [p: string]: unknown } = { [p: string]: unknown }>(
+  async patch<
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+  >(
     thing: string,
     patches: readonly ReadonlyPatch[],
     options?:
@@ -477,7 +485,9 @@ export default class Client extends Base {
       | undefined,
   ): Promise<ActionResult<T>[]>;
 
-  async patch<T extends { [p: string]: unknown } = { [p: string]: unknown }>(
+  async patch<
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+  >(
     thing: object,
     patches: readonly ReadonlyPatch[],
     options?:
@@ -507,12 +517,16 @@ export default class Client extends Base {
     return await this.rpc("patch", [thing, patches, diff], rest);
   }
 
-  async delete<T extends { [p: string]: unknown } = { [p: string]: unknown }>(
+  async delete<
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+  >(
     thing: string,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>[]>;
 
-  async delete<T extends { [p: string]: unknown } = { [p: string]: unknown }>(
+  async delete<
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+  >(
     thing: object,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
@@ -553,8 +567,8 @@ export default class Client extends Base {
   }
 
   async relate<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     from: string | object | readonly object[],
     thing: string,
@@ -564,8 +578,8 @@ export default class Client extends Base {
   ): Promise<T[]>;
 
   async relate<
-    T extends { [p: string]: unknown } = { [p: string]: unknown },
-    U extends { [p: string]: unknown } = T,
+    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    U extends { readonly [p: string]: unknown } = T,
   >(
     from: string | object | readonly object[],
     thing: object,
@@ -578,7 +592,7 @@ export default class Client extends Base {
     from: string | object | readonly object[],
     thing: string | object,
     to: string | object | readonly object[],
-    data?: { [p: string]: unknown } | undefined,
+    data?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("relate", [from, thing, to, data], options);

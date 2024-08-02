@@ -87,11 +87,6 @@
       "import": "./dist/utils/index.mjs",
       "require": "./dist/utils/index.cjs"
     },
-    "./client": {
-      "types": "./dist/client/index.d.ts",
-      "import": "./dist/client/index.mjs",
-      "require": "./dist/client/index.cjs"
-    },
     "./engine": {
       "types": "./dist/engine/index.d.ts",
       "import": "./dist/engine/index.mjs",

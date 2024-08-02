@@ -1,16 +1,22 @@
 import {
-  ClientAbc,
-  type ClientConnectOptions,
-  type ClientDisconnectOptions,
-  type ClientRpcOptions,
-} from "@tai-kun/surrealdb/client";
-import { type EngineEvents, OPEN } from "@tai-kun/surrealdb/engine";
+  CLOSED,
+  type ConnectionInfo,
+  type ConnectionState,
+  type EngineAbc,
+  type EngineAbcConfig,
+  type EngineEvents,
+  OPEN,
+} from "@tai-kun/surrealdb/engine";
 import {
+  CircularEngineReferenceError,
   ConnectionConflictError,
   ConnectionUnavailableError,
   Disconnected,
+  EngineNotFoundError,
   RpcResponseError,
+  SurrealTypeError,
 } from "@tai-kun/surrealdb/errors";
+import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import type {
   RpcMethod,
   RpcParams,
@@ -20,10 +26,153 @@ import type {
 import {
   getTimeoutSignal,
   mutex,
+  type StatefulPromise,
+  TaskEmitter,
+  type TaskListener,
+  type TaskListenerOptions,
   type TaskRunnerArgs,
 } from "@tai-kun/surrealdb/utils";
+import type { Validator } from "@tai-kun/surrealdb/validator";
 
-export default class BasicClient extends ClientAbc {
+export type CreateEngine = (config: EngineAbcConfig) =>
+  | EngineAbc
+  | PromiseLike<EngineAbc>;
+
+export type ClientEngines = {
+  readonly [_ in string]?: CreateEngine | string | undefined;
+};
+
+export interface ClientConfig {
+  readonly engines: ClientEngines;
+  readonly formatter: Formatter;
+  readonly validator: Validator;
+}
+
+export interface ClientConnectOptions {
+  readonly signal?: AbortSignal | undefined;
+}
+
+export interface ClientDisconnectOptions {
+  readonly force?: boolean | undefined;
+  readonly signal?: AbortSignal | undefined;
+}
+
+export interface ClientRpcOptions {
+  readonly signal?: AbortSignal | undefined;
+}
+
+export default class BasicClient {
+  protected readonly ee: TaskEmitter<EngineEvents> = new TaskEmitter();
+  protected readonly fmt: Formatter;
+  protected readonly v8n: Validator;
+  protected eng: EngineAbc | null = null;
+
+  private readonly _engines: ClientEngines;
+
+  constructor(config: ClientConfig) {
+    const {
+      engines,
+      formatter,
+      validator,
+    } = config;
+    this.fmt = formatter;
+    this.v8n = validator;
+    this._engines = { ...engines }; // Shallow copy
+  }
+
+  protected async createEngine(protocol: string): Promise<EngineAbc> {
+    let engine = this._engines[protocol];
+    const seen: string[] = [];
+
+    while (typeof engine === "string") {
+      if (seen.includes(engine)) {
+        throw new CircularEngineReferenceError(seen);
+      }
+
+      seen.push(engine);
+      engine = this._engines[engine];
+    }
+
+    if (!engine) {
+      throw new EngineNotFoundError(protocol);
+    }
+
+    return await engine({
+      emitter: this.ee,
+      formatter: this.fmt,
+      validator: this.v8n,
+    });
+  }
+
+  get state(): ConnectionState {
+    return this.eng?.state ?? CLOSED;
+  }
+
+  get endpoint(): URL | null | undefined {
+    return this.eng?.endpoint;
+  }
+
+  get namespace(): string | null | undefined {
+    return this.eng?.namespace;
+  }
+
+  set namespace(ns: string | null) {
+    if (this.eng) {
+      this.eng.namespace = ns;
+    }
+  }
+
+  get database(): string | null | undefined {
+    return this.eng?.database;
+  }
+
+  set database(db: string | null) {
+    if (this.eng) {
+      this.eng.database = db;
+    }
+  }
+
+  get token(): string | null | undefined {
+    return this.eng?.token;
+  }
+
+  set token(token: string | null) {
+    if (this.eng) {
+      this.eng.token = token;
+    }
+  }
+
+  getConnectionInfo(): ConnectionInfo | undefined {
+    return this.eng?.getConnectionInfo();
+  }
+
+  on<K extends keyof EngineEvents>(
+    event: K,
+    listener: TaskListener<EngineEvents[K]>,
+  ): void {
+    this.ee.on(event, listener);
+  }
+
+  off<K extends keyof EngineEvents>(
+    event: K,
+    listener: TaskListener<EngineEvents[K]>,
+  ): void {
+    // 誤ってすべてのイベントリスナーを解除してしまわないようにするため、
+    // listener が無い場合はエラーを投げる。
+    if (typeof listener !== "function") {
+      throw new SurrealTypeError("function", typeof listener);
+    }
+
+    this.ee.off(event, listener);
+  }
+
+  once<K extends keyof EngineEvents>(
+    event: K,
+    options?: TaskListenerOptions | undefined,
+  ): StatefulPromise<EngineEvents[K]> {
+    return this.ee.once(event, options);
+  }
+
   private defaultErrorHandler(
     _args: TaskRunnerArgs,
     ...[error]: EngineEvents["error"]

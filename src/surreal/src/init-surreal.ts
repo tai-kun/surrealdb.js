@@ -1,8 +1,9 @@
-import type { ClientAbc, ClientAbcConfig } from "@tai-kun/surrealdb/client";
+import type ClientBase from "@tai-kun/surrealdb/clients/basic";
+import type { ClientConfig } from "@tai-kun/surrealdb/clients/basic";
 
-type CC = new(config: ClientAbcConfig) => any;
+type CC = new(config: ClientConfig) => ClientBase;
 
-export interface SurrealInit<C extends CC> extends ClientAbcConfig {
+export interface SurrealInit<C extends CC> extends ClientConfig {
   readonly Client: C;
 }
 
@@ -34,9 +35,7 @@ export default function initSurreal<C extends CC>(
       });
     }
 
-    async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")](
-      this: ClientAbc,
-    ) {
+    async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")]() {
       await this.disconnect();
     }
   }

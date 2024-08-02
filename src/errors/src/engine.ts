@@ -58,7 +58,8 @@ export namespace WebSocketEngineStatusCode {
     | 3150
     | 3151
     | 3152
-    | 3153;
+    | 3153
+    | 3154;
 }
 
 export type WebSocketEngineStatusCode =

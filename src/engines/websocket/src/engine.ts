@@ -47,7 +47,6 @@ export type CreateWebSocket = (address: URL, protocol: string | undefined) =>
 export interface EngineConfig extends EngineAbcConfig {
   readonly createWebSocket: CreateWebSocket;
   readonly pingInterval?: number | undefined;
-  readonly onCaughtError?: (error: unknown) => void;
 }
 
 export default class WebSocketEngine extends EngineAbc {
@@ -57,13 +56,11 @@ export default class WebSocketEngine extends EngineAbc {
   protected readonly id = new Serial();
   protected readonly newWs: CreateWebSocket;
   protected readonly pingInterval: number;
-  protected readonly onCaughtError: (error: unknown) => void;
 
   constructor(config: EngineConfig) {
     super(config);
     this.newWs = config.createWebSocket;
     this.pingInterval = Math.max(1_000, config.pingInterval ?? 30_000);
-    this.onCaughtError = config.onCaughtError || console.error;
   }
 
   @mutex
@@ -154,7 +151,17 @@ export default class WebSocketEngine extends EngineAbc {
       try {
         await this.transition(CLOSED, () => CLOSED);
       } catch (e) {
-        this.onCaughtError(e);
+        this.ee.emit(
+          "error",
+          new WebSocketEngineError(
+            3154,
+            "An error occurred within the handler for the \"close\" event.",
+            {
+              cause: e,
+              fatal: false,
+            },
+          ),
+        );
       }
     });
     ws.addEventListener("open", async () => {

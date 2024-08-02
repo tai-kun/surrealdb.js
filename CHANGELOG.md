@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.1](https://github.com/tai-kun/surrealdb.js/compare/v1.0.0...v1.0.1) (2024-08-02)
+
+
+### Bug Fixes
+
+* **cbor:** エンコード時の循環参照エラーを追加 ([259061f](https://github.com/tai-kun/surrealdb.js/commit/259061fb70113bd3950af0b8f313fc5a8900eb45))
+* **engines/websocket:** 3000 番台のステータスコードで iana に登録されているコードを避ける ([7fa876d](https://github.com/tai-kun/surrealdb.js/commit/7fa876d9b15b1a7bb9cbb5d5502f901c264fe6a0))
+* **engines/websocket:** close イベント内のエラーを送信する ([c416eb7](https://github.com/tai-kun/surrealdb.js/commit/c416eb75ca6f3147294d7a0444ba728d2e767393))
+* **engines/websocket:** 予約済みのステータスコードをエラーとして扱わない ([2e6d97d](https://github.com/tai-kun/surrealdb.js/commit/2e6d97dbb4dfc027e35c2783e0d3755a4d2f523b))
+* **engine:** 遷移時の状態をエラーメッセージに反映できていなかった不具合を修正 ([e955a5f](https://github.com/tai-kun/surrealdb.js/commit/e955a5f29ac886baa059e0ff469a6ea6ce47e194))
+* **utils:** toSurql CBOR 形式にできる値を受け入れるようにする ([58e0351](https://github.com/tai-kun/surrealdb.js/commit/58e03519bb26071be4594a189f1fb01d2780bdc9))
+
 ## 1.0.0 (2024-08-01)
 
 

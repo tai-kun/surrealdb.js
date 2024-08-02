@@ -28,7 +28,7 @@ export {
   ResponseError,
   StateTransitionError,
   WebSocketEngineError,
-  type WebSocketEngineErrorCode,
+  type WebSocketEngineStatusCode,
 } from "./src/engine";
 
 export {

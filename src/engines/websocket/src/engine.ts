@@ -101,7 +101,7 @@ export default class WebSocketEngine extends EngineAbc {
       this.ee.emit(
         "error",
         new WebSocketEngineError(
-          3000,
+          3150,
           // イベントに message プロパティが含まれているかどうかは分かりません。
           //
           // - Mozilla: https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/error_event#event_type
@@ -174,8 +174,8 @@ export default class WebSocketEngine extends EngineAbc {
           "error",
           new WebSocketEngineError(
             // open イベントハンドラー内で発生したエラーを、
-            // カスタムエラーコード 3001 として報告します。
-            3001,
+            // カスタムエラーコード 3151 として報告します。
+            3151,
             "An error occurred within the handler for the \"open\" event.",
             {
               cause: e,
@@ -241,8 +241,8 @@ export default class WebSocketEngine extends EngineAbc {
           "error",
           new WebSocketEngineError(
             // message イベントハンドラー内で発生したエラーを、
-            // カスタムエラーコード 3002 として報告します。
-            3002,
+            // カスタムエラーコード 3152 として報告します。
+            3152,
             "An error occurred within the handler for the \"message\" event.",
             {
               cause: e,
@@ -286,8 +286,8 @@ export default class WebSocketEngine extends EngineAbc {
           "error",
           new WebSocketEngineError(
             // ping メッセージの送信に失敗したエラーを、
-            // カスタムエラーコード 3003 として報告します。
-            3003,
+            // カスタムエラーコード 3153 として報告します。
+            3153,
             "Failed to send a ping message.",
             {
               cause: e,

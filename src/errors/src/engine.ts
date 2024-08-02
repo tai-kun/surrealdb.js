@@ -33,7 +33,9 @@ export class HttpEngineError extends EngineError {
   }
 }
 
-export namespace WebSocketEngineErrorCode {
+// See: https://developer.mozilla.org/docs/Web/API/CloseEvent/code
+// See: https://www.iana.org/assignments/websocket/websocket.xml#close-code-number
+export namespace WebSocketEngineStatusCode {
   export type Defined =
     // | 1000
     // | 1004
@@ -53,15 +55,15 @@ export namespace WebSocketEngineErrorCode {
     | 1015;
 
   export type Custom =
-    | 3000
-    | 3001
-    | 3002
-    | 3003;
+    | 3150
+    | 3151
+    | 3152
+    | 3153;
 }
 
-export type WebSocketEngineErrorCode =
-  | WebSocketEngineErrorCode.Defined
-  | WebSocketEngineErrorCode.Custom;
+export type WebSocketEngineStatusCode =
+  | WebSocketEngineStatusCode.Defined
+  | WebSocketEngineStatusCode.Custom;
 
 export class WebSocketEngineError extends EngineError {
   static {
@@ -69,7 +71,7 @@ export class WebSocketEngineError extends EngineError {
   }
 
   constructor(
-    public code: WebSocketEngineErrorCode,
+    public code: WebSocketEngineStatusCode,
     message: string,
     options?: EngineSurrealErrorOptions | undefined,
   ) {

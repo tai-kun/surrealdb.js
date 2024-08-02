@@ -40,6 +40,7 @@ export namespace WebSocketEngineStatusCode {
     // | 1000
     // | 1004
     // | 1005
+    // | 1015
     // | 1001
     // | 1006
     | 1002
@@ -51,8 +52,7 @@ export namespace WebSocketEngineStatusCode {
     | 1011
     | 1012
     | 1013
-    | 1014
-    | 1015;
+    | 1014;
 
   export type Custom =
     | 3150

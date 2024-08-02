@@ -124,12 +124,15 @@ export default class WebSocketEngine extends EngineAbc {
       this.id.reset();
 
       switch (evt.code) {
+        // 正常系
         case 1000: // Normal Closure
-        case 1004: // Reserved (Not Used)
-        case 1005: // No Status Received
+        // 予約済み
+        case 1004: // Reserved
+        case 1005: // No Status
+        case 1015: // TLS Handshake
         // 早期の切断に由来するエラーコードをエラーとして扱いません。
         case 1001: // Going Away
-        case 1006: // Abnormal Closure
+        case 1006: // Abnormal Closure (かつ、予約済み)
           break;
 
         case 1002: // Protocol Error
@@ -142,7 +145,6 @@ export default class WebSocketEngine extends EngineAbc {
         case 1012: // Service Restart
         case 1013: // Try Again Later
         case 1014: // Bad Gateway
-        case 1015: // TLS Handshake
           this.ee.emit(
             "error",
             new WebSocketEngineError(evt.code, evt.reason),

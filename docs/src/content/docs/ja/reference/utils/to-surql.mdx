@@ -49,6 +49,8 @@ SurrealQL 文字列です。
 #### 例
 
 ```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+
 const surql = toSurql({
   bigint: 9007199254740992n, // Number.MAX_SAFE_INTEGER + 1
   boolean: [true, false],

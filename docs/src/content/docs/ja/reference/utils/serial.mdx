@@ -33,6 +33,8 @@ new Serial(max?: number);
 次の例では基本的な使い方を示しています:
 
 ```ts
+import { Serial } from "@tai-kun/surrealdb/utils";
+
 const id = new Serial(3);
 
 console.log(id.next());

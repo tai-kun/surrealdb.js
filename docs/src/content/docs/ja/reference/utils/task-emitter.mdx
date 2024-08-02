@@ -55,6 +55,8 @@ on(event: string | number, listener: TaskListener): void;
 次の例では、"log" イベントを補足して、エミッターに渡された値を標準出力します:
 
 ```ts
+import { TaskEmitter } from "@tai-kun/surrealdb/utils";
+
 type Events = {
   log: string[];
 };
@@ -116,6 +118,8 @@ once(
 次の例では、"log" イベントを 1 度だけ補足して、エミッターに渡された値を標準出力します:
 
 ```ts
+import { TaskEmitter } from "@tai-kun/surrealdb/utils";
+
 type Events = {
   log: string[];
 };

@@ -30,7 +30,6 @@ import {
   TaskEmitter,
   type TaskListener,
   type TaskListenerOptions,
-  type TaskRunnerArgs,
 } from "@tai-kun/surrealdb/utils";
 import type { Validator } from "@tai-kun/surrealdb/validator";
 
@@ -46,6 +45,7 @@ export interface ClientConfig {
   readonly engines: ClientEngines;
   readonly formatter: Formatter;
   readonly validator: Validator;
+  readonly disableDefaultErrorHandler?: boolean | undefined;
 }
 
 export interface ClientConnectOptions {
@@ -74,10 +74,24 @@ export default class BasicClient {
       engines,
       formatter,
       validator,
+      disableDefaultErrorHandler,
     } = config;
     this.fmt = formatter;
     this.v8n = validator;
     this._engines = { ...engines }; // Shallow copy
+
+    if (!disableDefaultErrorHandler) {
+      this.ee.on("error", (_, e) => {
+        if (e.fatal) {
+          console.error("[@tai-kun/surrealdb]", "FATAL", e);
+          this.disconnect({ force: true }).then(null, reason => {
+            console.error("[@tai-kun/surrealdb]", reason);
+          });
+        } else {
+          console.warn("[@tai-kun/surrealdb]", "WARNING", e);
+        }
+      });
+    }
   }
 
   protected async createEngine(protocol: string): Promise<EngineAbc> {
@@ -173,20 +187,6 @@ export default class BasicClient {
     return this.ee.once(event, options);
   }
 
-  private defaultErrorHandler(
-    _args: TaskRunnerArgs,
-    ...[error]: EngineEvents["error"]
-  ): void {
-    if (error.fatal) {
-      console.error("[FATAL]", error);
-      this.disconnect({ force: true }).then(null, reason => {
-        console.error(reason);
-      });
-    } else {
-      console.warn("[WARNING]", error);
-    }
-  }
-
   @mutex
   async connect(
     endpoint: string | URL,
@@ -211,7 +211,6 @@ export default class BasicClient {
       throw new ConnectionConflictError(conn.endpoint, endpoint);
     }
 
-    this.ee.on("error", this.defaultErrorHandler);
     const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
     const engine = await this.createEngine(protocol);
     const { signal = getTimeoutSignal(15_000) } = options;

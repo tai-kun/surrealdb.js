@@ -27,6 +27,7 @@ export {
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
+  surql,
   Surreal,
   Table,
   Thing,

@@ -12,6 +12,9 @@
     "singleBodyPosition": "nextLine",
     "arrowFunction.useParentheses": "preferNone"
   },
+  "json": {
+    "lineWidth": 999
+  },
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.91.4.wasm",
     "https://plugins.dprint.dev/json-0.19.3.wasm"

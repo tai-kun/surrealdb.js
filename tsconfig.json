@@ -22,36 +22,22 @@
       "@tai-kun/surrealdb/errors": ["src/errors/index.ts"],
       "@tai-kun/surrealdb/formatter": ["src/formatter/index.ts"],
       "@tai-kun/surrealdb/validator": ["src/validator/index.ts"],
-      "@tai-kun/surrealdb/data-types/decode-only": [
-        "src/data-types/decode-only/index.ts"
-      ],
-      "@tai-kun/surrealdb/data-types/encodable": [
-        "src/data-types/encodable/index.ts"
-      ],
-      "@tai-kun/surrealdb/data-types/standard": [
-        "src/data-types/standard/index.ts"
-      ],
-      "@tai-kun/surrealdb/engines/http": [
-        "src/engines/http/index.ts"
-      ],
-      "@tai-kun/surrealdb/engines/websocket": [
-        "src/engines/websocket/index.ts"
-      ],
-      "@tai-kun/surrealdb/clients/basic": [
-        "src/clients/basic/index.ts"
-      ],
-      "@tai-kun/surrealdb/clients/standard": [
-        "src/clients/standard/index.ts"
-      ],
-      "@tai-kun/surrealdb/formatters/cbor": [
-        "src/formatters/cbor/index.ts"
-      ],
-      "@tai-kun/surrealdb/formatters/json": [
-        "src/formatters/json/index.ts"
-      ],
-      "@tai-kun/surrealdb/validators/noop": [
-        "src/validators/noop/index.ts"
-      ],
+
+      "@tai-kun/surrealdb/clients/basic": ["src/clients/basic/index.ts"],
+      "@tai-kun/surrealdb/clients/standard": ["src/clients/standard/index.ts"],
+
+      "@tai-kun/surrealdb/data-types/decode-only": ["src/data-types/decode-only/index.ts"],
+      "@tai-kun/surrealdb/data-types/encodable": ["src/data-types/encodable/index.ts"],
+      "@tai-kun/surrealdb/data-types/standard": ["src/data-types/standard/index.ts"],
+
+      "@tai-kun/surrealdb/engines/http": ["src/engines/http/index.ts"],
+      "@tai-kun/surrealdb/engines/websocket": ["src/engines/websocket/index.ts"],
+
+      "@tai-kun/surrealdb/formatters/cbor": ["src/formatters/cbor/index.ts"],
+      "@tai-kun/surrealdb/formatters/json": ["src/formatters/json/index.ts"],
+
+      "@tai-kun/surrealdb/validators/noop": ["src/validators/noop/index.ts"],
+
       "~/*": ["src/*"]
     }
   }

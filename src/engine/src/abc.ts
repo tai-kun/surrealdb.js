@@ -43,8 +43,8 @@ export namespace ConnectionInfo {
   type Info<S extends ConnectionState, E, N, D, T> = {
     state: S;
     endpoint: E;
-    ns: N;
-    db: D;
+    namespace: N;
+    database: D;
     token: T;
   };
 
@@ -157,11 +157,11 @@ export abstract class EngineAbc {
   protected v8n: Validator;
 
   private _conn: ConnectionInfo = {
-    ns: null,
-    db: null,
     token: null,
     state: CLOSED,
     endpoint: null,
+    database: null,
+    namespace: null,
   };
 
   constructor(config: EngineAbcConfig) {
@@ -206,22 +206,22 @@ export abstract class EngineAbc {
   }
 
   get namespace(): string | null {
-    return this._conn.ns;
+    return this._conn.namespace;
   }
 
   set namespace(ns: string | null) {
     if (this._conn.state === OPEN) {
-      this._conn.ns = ns;
+      this._conn.namespace = ns;
     }
   }
 
   get database(): string | null {
-    return this._conn.db;
+    return this._conn.database;
   }
 
   set database(db: string | null) {
     if (this._conn.state === OPEN) {
-      this._conn.db = db;
+      this._conn.database = db;
     }
   }
 

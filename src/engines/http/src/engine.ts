@@ -143,23 +143,23 @@ export default class HttpEngine extends EngineAbc {
 
     switch (request.method) {
       case "use": {
-        let { ns, db } = conn;
-        const [namespace, database] = request.params;
+        let { namespace, database } = conn;
+        const [ns, db] = request.params;
 
-        if (namespace !== undefined) {
-          ns = namespace;
+        if (ns !== undefined) {
+          namespace = ns;
         }
 
-        if (database !== undefined) {
-          db = database;
+        if (db !== undefined) {
+          database = db;
         }
 
-        if (ns === null && db !== null) {
-          throw new MissingNamespaceError(db);
+        if (namespace === null && database !== null) {
+          throw new MissingNamespaceError(database);
         }
 
-        this.namespace = ns;
-        this.database = db;
+        this.namespace = namespace;
+        this.database = database;
 
         return {
           result: null,
@@ -197,8 +197,8 @@ export default class HttpEngine extends EngineAbc {
       }
     }
 
-    if (conn.ns === null && conn.db !== null) {
-      throw new MissingNamespaceError(conn.db);
+    if (conn.namespace === null && conn.database !== null) {
+      throw new MissingNamespaceError(conn.database);
     }
 
     if (!this.fmt.mimeType) {
@@ -218,8 +218,8 @@ export default class HttpEngine extends EngineAbc {
       headers: {
         Accept: this.fmt.mimeType,
         "Content-Type": this.fmt.mimeType,
-        ...(conn.ns != null ? { "Surreal-NS": conn.ns } : {}),
-        ...(conn.db != null ? { "Surreal-DB": conn.db } : {}),
+        ...(conn.namespace != null ? { "Surreal-NS": conn.namespace } : {}),
+        ...(conn.database != null ? { "Surreal-DB": conn.database } : {}),
         ...(conn.token ? { Authorization: `Bearer ${conn.token}` } : {}),
       },
     });
@@ -228,8 +228,8 @@ export default class HttpEngine extends EngineAbc {
       // TODO(tai-kun): params には機微情報が含まれている可能性があるので、method のみにしておく？
       params: request.params,
       endpoint: conn.endpoint.href,
-      database: conn.db,
-      namespace: conn.ns,
+      database: conn.database,
+      namespace: conn.namespace,
     };
 
     if (!(resp instanceof Response) || resp.body === null) {

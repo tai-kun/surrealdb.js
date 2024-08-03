@@ -386,19 +386,19 @@ export default class WebSocketEngine extends EngineAbc {
 
     switch (request.method) {
       case "use": {
-        let { ns, db } = conn;
-        const [namespace, database] = request.params;
+        let { namespace, database } = conn;
+        const [ns, db] = request.params;
 
-        if (namespace !== undefined) {
-          ns = namespace;
+        if (ns !== undefined) {
+          namespace = ns;
         }
 
-        if (database !== undefined) {
-          db = database;
+        if (db !== undefined) {
+          namespace = db;
         }
 
-        if (ns === null && db !== null) {
-          throw new MissingNamespaceError(db);
+        if (namespace === null && database !== null) {
+          throw new MissingNamespaceError(database);
         }
 
         // (1) JSON では null と undefined を区別しないけど、SurealDB は区別する。
@@ -411,17 +411,17 @@ export default class WebSocketEngine extends EngineAbc {
         //
         // という動機があって、undefined を文字列に置き換えるように努力する。
         {
-          if (namespace === undefined && conn.ns !== null) {
+          if (ns === undefined && conn.namespace !== null) {
             request = {
               ...request,
-              params: [conn.ns, request.params[1]],
+              params: [conn.namespace, request.params[1]],
             };
           }
 
-          if (database === undefined && conn.db !== null) {
+          if (db === undefined && conn.database !== null) {
             request = {
               ...request,
-              params: [request.params[0], conn.db],
+              params: [request.params[0], conn.database],
             };
           }
         }
@@ -484,8 +484,8 @@ export default class WebSocketEngine extends EngineAbc {
 
           // `.rpc` メソッドの実行開始直後の名前空間から変更がなければ更新する。
           if (ns !== undefined) {
-            if (this.namespace !== conn.ns && this.namespace !== ns) {
-              throw new NamespaceConflictError(this.namespace, conn.ns);
+            if (this.namespace !== conn.namespace && this.namespace !== ns) {
+              throw new NamespaceConflictError(this.namespace, conn.namespace);
             }
 
             this.namespace = ns;
@@ -493,8 +493,8 @@ export default class WebSocketEngine extends EngineAbc {
 
           // `.rpc` メソッドの実行開始直後のデータベースから変更がなければ更新する。
           if (db !== undefined) {
-            if (this.database !== conn.db && this.database !== db) {
-              throw new DatabaseConflictError(this.database, conn.db);
+            if (this.database !== conn.database && this.database !== db) {
+              throw new DatabaseConflictError(this.database, conn.database);
             }
 
             this.database = db;

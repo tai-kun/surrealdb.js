@@ -42,13 +42,21 @@ export default defineConfig({
             },
           ],
         },
-        // {
-        //   label: "Guides",
-        //   translations: {
-        //     ja: "ガイド"
-        //   },
-        //   items: [],
-        // },
+        {
+          label: "Guides",
+          translations: {
+            ja: "ガイド",
+          },
+          items: [
+            // {
+            //   slug: "guides/",
+            //   label: "",
+            //   translations: {
+            //     ja: "",
+            //   },
+            // },
+          ],
+        },
         {
           label: "Reference",
           translations: {

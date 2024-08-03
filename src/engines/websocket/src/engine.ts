@@ -394,7 +394,7 @@ export default class WebSocketEngine extends EngineAbc {
         }
 
         if (db !== undefined) {
-          namespace = db;
+          database = db;
         }
 
         if (namespace === null && database !== null) {

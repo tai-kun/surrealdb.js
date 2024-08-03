@@ -91,11 +91,11 @@ export type TransitionArgs = {
 }[ConnectionState];
 
 function transArgsToConnInfo(args: TransitionArgs): ConnectionInfo {
-  const conn = {
-    ns: null,
-    db: null,
+  const conn: ConnectionInfo = {
     token: null,
     endpoint: null,
+    database: null,
+    namespace: null,
     ...(typeof args === "number" ? { state: args } : args),
   };
 

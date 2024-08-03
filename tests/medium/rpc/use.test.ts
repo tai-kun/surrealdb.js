@@ -30,8 +30,8 @@ for (const { suite, url, Surreal } of surreal) {
           },
         ]);
         expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          ns: null,
-          db: null,
+          namespace: null,
+          database: null,
         }));
       }
 
@@ -58,8 +58,8 @@ for (const { suite, url, Surreal } of surreal) {
           },
         ]);
         expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          ns: "my_namespace",
-          db: null,
+          namespace: "my_namespace",
+          database: null,
         }));
       }
     });
@@ -94,8 +94,8 @@ for (const { suite, url, Surreal } of surreal) {
           },
         ]);
         expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          ns: "my_namespace",
-          db: "my_database",
+          namespace: "my_namespace",
+          database: "my_database",
         }));
       }
     });
@@ -132,8 +132,8 @@ for (const { suite, url, Surreal } of surreal) {
           },
         ]);
         expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          ns: "my_namespace_2",
-          db: "my_database",
+          namespace: "my_namespace_2",
+          database: "my_database",
         }));
       }
     });
@@ -170,8 +170,8 @@ for (const { suite, url, Surreal } of surreal) {
           },
         ]);
         expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          ns: "my_namespace",
-          db: "my_database_2",
+          namespace: "my_namespace",
+          database: "my_database_2",
         }));
       }
     });
@@ -205,8 +205,8 @@ for (const { suite, url, Surreal } of surreal) {
           },
         ]);
         expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          ns: "my_namespace",
-          db: null,
+          namespace: "my_namespace",
+          database: null,
         }));
       }
     });
@@ -220,8 +220,8 @@ for (const { suite, url, Surreal } of surreal) {
         .rejects
         .toThrowError(MissingNamespaceError);
       expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-        ns: null,
-        db: null,
+        namespace: null,
+        database: null,
       }));
     });
 
@@ -236,8 +236,8 @@ for (const { suite, url, Surreal } of surreal) {
         .rejects
         .toThrowError(MissingNamespaceError);
       expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-        ns: "my_namespace",
-        db: "my_database",
+        namespace: "my_namespace",
+        database: "my_database",
       }));
     });
 
@@ -268,8 +268,8 @@ for (const { suite, url, Surreal } of surreal) {
           },
         ]);
         expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          ns: null,
-          db: null,
+          namespace: null,
+          database: null,
         }));
       }
     });

@@ -338,6 +338,16 @@ export default class Datetime extends Date implements Encodable {
     return "d" + quoteStr(iso);
   }
 
+  structure(): {
+    seconds: number;
+    nanoseconds: number;
+  } {
+    return {
+      seconds: this.seconds,
+      nanoseconds: this.nanoseconds,
+    };
+  }
+
   clone(): this {
     const This = this.constructor as typeof Datetime;
 

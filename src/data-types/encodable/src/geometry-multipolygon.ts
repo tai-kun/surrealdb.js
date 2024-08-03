@@ -45,6 +45,10 @@ export class GeometryMultiPolygonBase<P extends new(arg: any) => Polygon>
       coordinates: this.coordinates,
     });
   }
+
+  structure(): GeoJsonMultiPolygon {
+    return this.toJSON();
+  }
 }
 
 export class GeometryMultiPolygon

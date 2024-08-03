@@ -36,4 +36,12 @@ export default class Decimal extends Base implements Encodable {
   toSurql(): string {
     return this._value + "dec";
   }
+
+  structure(): {
+    value: string;
+  } {
+    return {
+      value: this._value,
+    };
+  }
 }

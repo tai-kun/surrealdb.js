@@ -4,7 +4,7 @@ import type { Jsonifiable } from "@tai-kun/surrealdb/utils";
 export interface Encodable extends ToCBOR {
   toJSON(): Jsonifiable;
   toSurql(): string;
-  // toPlainObject(): Record<string, unknown>;
+  structure(): Record<string, unknown>;
 }
 
 // See: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml

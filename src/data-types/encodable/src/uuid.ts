@@ -54,7 +54,7 @@ export default class Uuid extends Base implements Encodable {
   }
 
   toCBOR(): [tag: typeof CBOR_TAG_SPEC_UUID, value: Uint8Array] {
-    return [CBOR_TAG_SPEC_UUID, this._bytes];
+    return [CBOR_TAG_SPEC_UUID, this.bytes];
   }
 
   toJSON(): string {
@@ -63,5 +63,13 @@ export default class Uuid extends Base implements Encodable {
 
   toSurql(): string {
     return "u" + quoteStr(unsafe_toString36(this.bytes));
+  }
+
+  structure(): {
+    bytes: Uint8Array;
+  } {
+    return {
+      bytes: this.bytes,
+    };
   }
 }

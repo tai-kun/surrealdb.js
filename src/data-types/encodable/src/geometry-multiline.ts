@@ -42,6 +42,10 @@ export class GeometryMultiLineBase<P extends new(arg: any) => Line>
       coordinates: this.coordinates,
     });
   }
+
+  structure(): GeoJsonMultiLine {
+    return this.toJSON();
+  }
 }
 
 export class GeometryMultiLine

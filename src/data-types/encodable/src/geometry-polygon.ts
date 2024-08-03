@@ -47,6 +47,10 @@ export class GeometryPolygonBase<L extends new(arg: any) => Line>
       coordinates: this.coordinates,
     });
   }
+
+  structure(): GeoJsonPolygon {
+    return this.toJSON();
+  }
 }
 
 export class GeometryPolygon extends GeometryPolygonBase<typeof GeometryLine> {

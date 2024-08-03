@@ -48,6 +48,13 @@ Object.assign<any, EncodableBig>(Decimal.prototype, {
   toSurql(this: Decimal): string {
     return this.toString() + "dec";
   },
+  structure(this: Decimal): {
+    value: string;
+  } {
+    return {
+      value: this.valueOf(),
+    };
+  },
 });
 
 export default Decimal;

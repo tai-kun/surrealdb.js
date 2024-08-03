@@ -88,6 +88,10 @@ export class GeometryCollectionBase<
       geometries: this.collection,
     });
   }
+
+  structure(): GeoJsonCollection {
+    return this.toJSON();
+  }
 }
 
 export class GeometryCollection extends GeometryCollectionBase<

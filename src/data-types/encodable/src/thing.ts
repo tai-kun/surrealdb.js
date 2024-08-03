@@ -87,4 +87,62 @@ export default class Thing<T extends ThingSource[0] = ThingSource[0]>
   toSurql(): string {
     return "r" + quoteStr(this.toString());
   }
+
+  structure(
+    options?: {
+      readonly escape?: undefined | false | {
+        readonly tb?: boolean | undefined;
+        readonly id?: false | undefined;
+      };
+    },
+  ): {
+    tb: string;
+    id: unknown;
+  };
+
+  structure(
+    options?: {
+      readonly escape?: undefined | true | {
+        readonly tb?: boolean | undefined;
+        readonly id: true;
+      };
+    },
+  ): {
+    tb: string;
+    id: string;
+  };
+
+  structure(
+    options: {
+      readonly escape?: undefined | boolean | {
+        readonly tb?: boolean | undefined;
+        readonly id?: boolean | undefined;
+      };
+    } = {},
+  ): {
+    tb: string;
+    id: any;
+  } {
+    let tb: string = this.tb, id: unknown = this.id;
+    const escape = options.escape && (
+      options.escape === true
+        ? { tb: true, id: true }
+        : options.escape
+    );
+
+    if (escape) {
+      if (escape.tb) {
+        tb = escapeRid(tb);
+      }
+
+      if (escape.id) {
+        tb = escapeId(id);
+      }
+    }
+
+    return {
+      tb,
+      id,
+    };
+  }
 }

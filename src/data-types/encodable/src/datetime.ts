@@ -55,4 +55,14 @@ export default class Datetime extends Base implements Encodable {
 
     return "d" + quoteStr(iso);
   }
+
+  structure(): {
+    seconds: number;
+    nanoseconds: number;
+  } {
+    return {
+      seconds: this.seconds,
+      nanoseconds: this.nanoseconds,
+    };
+  }
 }

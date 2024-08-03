@@ -42,6 +42,10 @@ export class GeometryPointBase<C extends Coord> extends Base<C>
       coordinates: this.coordinates,
     });
   }
+
+  structure(): GeoJsonPoint {
+    return this.toJSON();
+  }
 }
 
 export class GeometryPoint extends GeometryPointBase<typeof Number> {

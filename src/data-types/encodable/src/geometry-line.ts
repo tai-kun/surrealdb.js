@@ -49,6 +49,10 @@ export class GeometryLineBase<P extends new(arg: any) => Point> extends Base<P>
       coordinates: this.coordinates,
     });
   }
+
+  structure(): GeoJsonLineString {
+    return this.toJSON();
+  }
 }
 
 export class GeometryLine extends GeometryLineBase<typeof GeometryPoint> {

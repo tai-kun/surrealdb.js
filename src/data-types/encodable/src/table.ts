@@ -8,6 +8,9 @@ import { CBOR_TAG_TABLE, type Encodable } from "./spec";
 export default class Table<T extends TableSource = TableSource> extends Base<T>
   implements Encodable
 {
+  structure(): Record<string, unknown> {
+    throw new Error("Method not implemented.");
+  }
   override valueOf(): T {
     return this.name;
   }
@@ -41,5 +44,13 @@ export default class Table<T extends TableSource = TableSource> extends Base<T>
     // SurrealDB では String を escape_ident でエスケープしている:
     // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/src/sql/table.rs#L78
     return escapeIdent(this.name);
+  }
+
+  structrue(): {
+    name: string;
+  } {
+    return {
+      name: this.name,
+    };
   }
 }

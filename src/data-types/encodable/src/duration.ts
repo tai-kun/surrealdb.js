@@ -145,4 +145,14 @@ export default class Duration extends Base implements Encodable {
   toSurql(): string {
     return this.toString();
   }
+
+  structure(): {
+    seconds: bigint;
+    nanoseconds: number;
+  } {
+    return {
+      seconds: this.seconds,
+      nanoseconds: this.nanoseconds,
+    };
+  }
 }

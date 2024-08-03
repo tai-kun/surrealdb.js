@@ -42,6 +42,10 @@ export class GeometryMultiPointBase<P extends new(arg: any) => Point>
       coordinates: this.coordinates,
     });
   }
+
+  structure(): GeoJsonMultiPoint {
+    return this.toJSON();
+  }
 }
 
 export class GeometryMultiPoint

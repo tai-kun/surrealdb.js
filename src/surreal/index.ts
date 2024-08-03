@@ -36,4 +36,7 @@ export {
 export type * from "./src/init-surreal";
 export { default as initSurreal } from "./src/init-surreal";
 
+export type * from "./src/rpc";
+export { default as rpc } from "./src/rpc";
+
 export type * from "@tai-kun/surrealdb/types";

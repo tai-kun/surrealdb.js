@@ -67,7 +67,7 @@ export type RpcQueryRequest = {
   readonly params: readonly [
     surql: string | {
       readonly text: string;
-      readonly vars?: { readonly [p: string]: unknown } | null | undefined;
+      readonly vars?: { readonly [p: string]: unknown } | undefined;
     },
     vars?: { readonly [p: string]: unknown } | undefined,
   ];

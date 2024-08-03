@@ -1,7 +1,7 @@
 import { decode, encode, Tagged } from "@tai-kun/surrealdb/cbor";
 import { expect, test } from "vitest";
 
-// https://github.com/cbor/test-vectors より JavaScript 向けに編集
+// https://github.com/cbor/test-vectors より JavaScript 向けに編集 & 加筆
 for (
   const c of [
     {
@@ -566,6 +566,147 @@ for (
       },
       decode: true,
       encode: false, // 固定長配列でエンコードするので hex と一致しない
+    },
+    // -------------------------------------------------------------------------
+    // 境界
+    // -------------------------------------------------------------------------
+    {
+      hex: "00",
+      value: 0, // 0 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "17",
+      value: 23, // 0 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "1818",
+      value: 24, // 1 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "18ff",
+      value: 255, // 1 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "190100",
+      value: 256, // 2 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "19ffff",
+      value: 65535, // 2 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "1a00010000",
+      value: 65536, // 4 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "1affffffff",
+      value: 4294967295, // 4 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "1b0000000100000000",
+      value: 4294967296, // 8 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "1b001fffffffffffff",
+      value: Number.MAX_SAFE_INTEGER, // 8 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "1b0020000000000000",
+      value: BigInt(Number.MAX_SAFE_INTEGER) + 1n, // 8 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "20",
+      value: -1, // 0 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "37",
+      value: -24, // 0 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "3818",
+      value: -25, // 1 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "38ff",
+      value: -256, // 1 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "390100",
+      value: -257, // 2 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "39ffff",
+      value: -65536, // 2 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "3a00010000",
+      value: -65537, // 4 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "3affffffff",
+      value: -4294967296, // 4 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "3b0000000100000000",
+      value: -4294967297, // 8 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "3b001ffffffffffffe",
+      value: Number.MIN_SAFE_INTEGER, // 8 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "3b001fffffffffffff",
+      value: BigInt(Number.MIN_SAFE_INTEGER) - 1n, // 8 バイト
+      decode: true,
+      encode: true,
+    },
+    {
+      hex: "3b0020000000000000",
+      value: BigInt(Number.MIN_SAFE_INTEGER) - 2n, // 8 バイト
+      decode: true,
+      encode: true,
     },
   ]
 ) {

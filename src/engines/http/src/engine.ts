@@ -218,11 +218,9 @@ export default class HttpEngine extends EngineAbc {
       headers: {
         Accept: this.fmt.mimeType,
         "Content-Type": this.fmt.mimeType,
-        ...(conn.ns ? { "Surreal-NS": conn.ns } : {}),
-        ...(conn.db ? { "Surreal-DB": conn.db } : {}),
-        ...(conn.token
-          ? { Authorization: `Bearer ${conn.token}` }
-          : {}),
+        ...(conn.ns != null ? { "Surreal-NS": conn.ns } : {}),
+        ...(conn.db != null ? { "Surreal-DB": conn.db } : {}),
+        ...(conn.token ? { Authorization: `Bearer ${conn.token}` } : {}),
       },
     });
     const cause = {

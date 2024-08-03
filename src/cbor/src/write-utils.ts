@@ -36,7 +36,7 @@ import utf8 from "./utf8";
 import type { ToCBOR, Writer } from "./writer";
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writeheader)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeheader)
  */
 export function writeHeader(
   w: Writer,
@@ -70,14 +70,14 @@ export function writeHeader(
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writepayload)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writepayload)
  */
 export function writePayload(w: Writer, value: Uint8Array): void {
   w.writeBytes(value);
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writeinteger)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeinteger)
  */
 export function writeInteger(w: Writer, value: number | bigint): void {
   if (
@@ -110,7 +110,7 @@ export function writeInteger(w: Writer, value: number | bigint): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writebytestring)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writebytestring)
  */
 export function writeByteString(w: Writer, value: Uint8Array): void {
   writeHeader(w, MT_BYTE_STRING, value.length);
@@ -118,7 +118,7 @@ export function writeByteString(w: Writer, value: Uint8Array): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writeutf8string)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeutf8string)
  */
 export function writeUtf8String(w: Writer, value: string): void {
   const bytes = utf8.encode(value);
@@ -126,7 +126,7 @@ export function writeUtf8String(w: Writer, value: string): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writeencodedutf8string)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeencodedutf8string)
  */
 export function writeEncodedUtf8String(w: Writer, value: Uint8Array): void {
   writeHeader(w, MT_UTF8_STRING, value.length);
@@ -134,21 +134,21 @@ export function writeEncodedUtf8String(w: Writer, value: Uint8Array): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writetag)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writetag)
  */
 export function writeTag(w: Writer, value: DataItem.Tag["value"]): void {
   writeHeader(w, MT_TAG, value);
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writenullable)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writenullable)
  */
 export function writeNullable(w: Writer, value: null | undefined): void {
   w.writeUint8(value === null ? HEADER_NULL : HEADER_UNDEFINED);
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writeboolean)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeboolean)
  */
 export function writeBoolean(w: Writer, value: boolean): void {
   w.writeUint8(value ? HEADER_TRUE : HEADER_FALSE);
@@ -170,7 +170,7 @@ function writeFloat64(w: Writer, value: number): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writefloat)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writefloat)
  */
 export function writeFloat(w: Writer, value: number): void {
   if (
@@ -186,7 +186,7 @@ export function writeFloat(w: Writer, value: number): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#writenumber)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writenumber)
  */
 export function writeNumber(w: Writer, value: number | bigint): void {
   if (typeof value === "bigint" || Number.isInteger(value)) {
@@ -242,7 +242,7 @@ export interface WriteOptions {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/formatters/cbor/others/#write)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#write)
  */
 export function write(
   w: Writer,

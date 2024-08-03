@@ -197,25 +197,34 @@ export function writeNumber(w: Writer, value: number | bigint): void {
 }
 
 const MODE = {
-  MAP: 0 as const,
-  ARRAY: 1 as const,
+  SET: 0 as const,
+  MAP: 1 as const,
+  OBJ: 2 as const,
 };
 
 type Loop = {
-  mode: typeof MODE.MAP;
-  seen: Set<unknown>;
-  prop: boolean;
-  value: unknown;
+  mode: typeof MODE.SET;
+  seen: Set<object>;
+  value: readonly unknown[] | ReadonlySet<unknown>;
   index: number;
   length: number;
-  entries: readonly [unknown, unknown][];
-  isSafeKey: (key: any, value: any) => boolean;
+  target: readonly unknown[];
 } | {
-  mode: typeof MODE.ARRAY;
-  seen: Set<unknown>;
-  value: readonly unknown[];
+  mode: typeof MODE.MAP;
+  seen: Set<object>;
+  value: ReadonlyMap<unknown, unknown>;
   index: number;
   length: number;
+  isProperty: boolean;
+  properties: readonly unknown[];
+} | {
+  mode: typeof MODE.OBJ;
+  seen: Set<object>;
+  value: { readonly [p: string]: unknown };
+  index: number;
+  length: number;
+  isProperty: boolean;
+  properties: readonly string[];
 };
 
 const CONTINUE = Symbol.for("@tai-kun/surrealdb/cbor/continue"); // decorder.ts と同じ
@@ -225,10 +234,10 @@ export type Replacer = (value: symbol | object) => unknown | typeof CONTINUE;
 export interface WriteOptions {
   readonly replacer?: Replacer | readonly Replacer[] | undefined;
   readonly isSafeMapKey?:
-    | ((key: unknown, map: Map<unknown, unknown>) => boolean)
+    | ((key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean)
     | undefined;
   readonly isSafeObjectKey?:
-    | ((key: string, obj: Record<string, unknown>) => boolean)
+    | ((key: string, obj: { readonly [p: string]: unknown }) => boolean)
     | undefined;
 }
 
@@ -307,12 +316,11 @@ export function write(
             continue; // loop ではないので抜け出さないようにする。
           }
 
-          case Array.isArray(value):
-          case value instanceof Set: {
-            const array = [...value];
-            writeHeader(w, MT_ARRAY, array.length);
+          case isPlainObject(value): {
+            const properties = Object.keys(value);
+            writeHeader(w, MT_MAP, properties.length);
 
-            if (array.length > 0) {
+            if (properties.length > 0) {
               const seen = loop?.seen || new Set();
 
               if (seen.has(value)) {
@@ -321,25 +329,50 @@ export function write(
               }
 
               beginLoop({
-                mode: MODE.ARRAY,
+                mode: MODE.OBJ,
                 seen: seen.add(value),
-                value: array,
+                value,
                 index: 0,
-                length: array.length,
+                length: properties.length,
+                isProperty: true,
+                properties,
               });
             }
 
             break;
           }
 
-          case isPlainObject(value):
-          case value instanceof Map:
-            const entries = value instanceof Map
-              ? [...value.entries()]
-              : Object.entries(value);
-            writeHeader(w, MT_MAP, entries.length);
+          case Array.isArray(value):
+          case value instanceof Set: {
+            const target = Array.isArray(value) ? value : Array.from(value);
+            writeHeader(w, MT_ARRAY, target.length);
 
-            if (entries.length > 0) {
+            if (target.length > 0) {
+              const seen = loop?.seen || new Set();
+
+              if (seen.has(value)) {
+                // TODO(tai-kun): エラーメッセージを改善
+                throw new CircularReferenceError(String(value));
+              }
+
+              beginLoop({
+                mode: MODE.SET,
+                seen: seen.add(value),
+                value,
+                index: 0,
+                length: target.length,
+                target,
+              });
+            }
+
+            break;
+          }
+
+          case value instanceof Map: {
+            const properties = Array.from(value.keys());
+            writeHeader(w, MT_MAP, properties.length);
+
+            if (properties.length > 0) {
               const seen = loop?.seen || new Set();
 
               if (seen.has(value)) {
@@ -350,18 +383,16 @@ export function write(
               beginLoop({
                 mode: MODE.MAP,
                 seen: seen.add(value),
-                prop: true,
                 value,
                 index: 0,
-                length: entries.length,
-                entries,
-                isSafeKey: value instanceof Map
-                  ? isSafeMapKey
-                  : isSafeObjectKey,
+                length: properties.length,
+                isProperty: true,
+                properties,
               });
             }
 
             break;
+          }
 
           case value instanceof Uint8Array:
             writeByteString(w, value);
@@ -402,6 +433,7 @@ export function write(
       );
     }
 
+    // .length の比較は === で行うこと。
     while (loop && loop.index === loop.length) {
       // endLoop()
       loop.seen.delete(loop.value);
@@ -416,22 +448,36 @@ export function write(
     }
 
     switch (loop.mode) {
-      case MODE.MAP:
-        if (loop.prop) {
-          value = loop.entries[loop.index]![0];
+      case MODE.OBJ:
+        if (loop.isProperty) {
+          const key = value = loop.properties[loop.index]!;
 
-          if (!loop.isSafeKey(value, loop.value)) {
+          if (!isSafeObjectKey(key, loop.value)) {
             throw new CborUnsafeMapKeyError(value);
           }
         } else {
-          value = loop.entries[loop.index++]![1];
+          value = loop.value[loop.properties[loop.index++]!];
         }
 
-        loop.prop = !loop.prop;
+        loop.isProperty = !loop.isProperty;
         break;
 
-      case MODE.ARRAY:
-        value = loop.value[loop.index++];
+      case MODE.SET:
+        value = loop.target[loop.index++];
+        break;
+
+      case MODE.MAP:
+        if (loop.isProperty) {
+          value = loop.properties[loop.index];
+
+          if (!isSafeMapKey(value, loop.value)) {
+            throw new CborUnsafeMapKeyError(value);
+          }
+        } else {
+          value = loop.value.get(loop.properties[loop.index++]);
+        }
+
+        loop.isProperty = !loop.isProperty;
         break;
 
       default:

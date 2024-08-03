@@ -31,6 +31,22 @@ export class GeometryPolygonBase<L extends new(arg: any) => Line>
     );
   }
 
+  get exteriorRing(): InstanceType<L> {
+    return this.polygon[0];
+  }
+
+  set exteriorRing(v: InstanceType<L>) {
+    this.polygon = [v, ...this.interiorRings];
+  }
+
+  get interiorRings(): InstanceType<L>[] {
+    return this.polygon.slice(1);
+  }
+
+  set interiorRings(v: InstanceType<L>[]) {
+    this.polygon = [this.exteriorRing, ...v];
+  }
+
   clone(): this {
     // @ts-expect-error
     return new this.constructor(this._geo, {

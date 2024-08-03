@@ -205,11 +205,11 @@ type Loop = {
   mode: typeof MODE.MAP;
   seen: Set<unknown>;
   prop: boolean;
-  isMap: boolean;
   value: unknown;
   index: number;
   length: number;
   entries: readonly [unknown, unknown][];
+  isSafeKey: (key: any, value: any) => boolean;
 } | {
   mode: typeof MODE.ARRAY;
   seen: Set<unknown>;
@@ -251,20 +251,13 @@ export function write(
   let loop: Loop | undefined;
   const loopParents: Loop[] = [];
 
-  function begin(parent: Loop): void {
+  function beginLoop(parent: Loop): void {
     if (w.depth >= w.maxDepth) {
       throw new CborMaxDepthReachedError(w.maxDepth);
     }
 
     w.depth += 1;
     loopParents.push(loop = parent);
-  }
-
-  function end(): void {
-    loopParents.pop();
-    // loopParents が空の場合、loop には初期値と同じ undefined が設定される。
-    loop = loopParents[loopParents.length - 1]!;
-    w.depth -= 1;
   }
 
   while (true) {
@@ -320,9 +313,16 @@ export function write(
             writeHeader(w, MT_ARRAY, array.length);
 
             if (array.length > 0) {
-              begin({
+              const seen = loop?.seen || new Set();
+
+              if (seen.has(value)) {
+                // TODO(tai-kun): エラーメッセージを改善
+                throw new CircularReferenceError(String(value));
+              }
+
+              beginLoop({
                 mode: MODE.ARRAY,
-                seen: loop?.seen || new Set([value]),
+                seen: seen.add(value),
                 value: array,
                 index: 0,
                 length: array.length,
@@ -340,15 +340,24 @@ export function write(
             writeHeader(w, MT_MAP, entries.length);
 
             if (entries.length > 0) {
-              begin({
+              const seen = loop?.seen || new Set();
+
+              if (seen.has(value)) {
+                // TODO(tai-kun): エラーメッセージを改善
+                throw new CircularReferenceError(String(value));
+              }
+
+              beginLoop({
                 mode: MODE.MAP,
-                seen: loop?.seen || new Set([value]),
+                seen: seen.add(value),
                 prop: true,
-                isMap: value instanceof Map,
                 value,
                 index: 0,
                 length: entries.length,
                 entries,
+                isSafeKey: value instanceof Map
+                  ? isSafeMapKey
+                  : isSafeObjectKey,
               });
             }
 
@@ -393,6 +402,15 @@ export function write(
       );
     }
 
+    while (loop && loop.index === loop.length) {
+      // endLoop()
+      loop.seen.delete(loop.value);
+      loopParents.pop();
+      // loopParents が空の場合、loop には初期値と同じ undefined が設定される。
+      loop = loopParents[loopParents.length - 1];
+      w.depth -= 1;
+    }
+
     if (!loop) {
       break;
     }
@@ -400,49 +418,20 @@ export function write(
     switch (loop.mode) {
       case MODE.MAP:
         if (loop.prop) {
-          loop.prop = false;
           value = loop.entries[loop.index]![0];
 
-          if (loop.seen.has(value)) {
-            // TODO(tai-kun): エラーメッセージを改善
-            throw new CircularReferenceError(String(value));
-          }
-
-          if (
-            loop.isMap
-              ? !isSafeMapKey(value, loop.value as any)
-              : !isSafeObjectKey(value as string, loop.value as any)
-          ) {
+          if (!loop.isSafeKey(value, loop.value)) {
             throw new CborUnsafeMapKeyError(value);
           }
         } else {
-          loop.prop = true;
-          value = loop.entries[loop.index]![1];
-
-          if (loop.seen.has(value)) {
-            // TODO(tai-kun): エラーメッセージを改善
-            throw new CircularReferenceError(String(value));
-          }
-
-          if (++loop.index === loop.length) {
-            end();
-          }
+          value = loop.entries[loop.index++]![1];
         }
 
+        loop.prop = !loop.prop;
         break;
 
       case MODE.ARRAY:
-        value = loop.value[loop.index];
-
-        if (loop.seen.has(value)) {
-          // TODO(tai-kun): エラーメッセージを改善
-          throw new CircularReferenceError(String(value));
-        }
-
-        if (++loop.index === loop.length) {
-          end();
-        }
-
+        value = loop.value[loop.index++];
         break;
 
       default:

@@ -76,8 +76,19 @@ export default class Thing<T extends ThingSource[0] = ThingSource[0]>
     }
   }
 
-  toCBOR(): [tag: typeof CBOR_TAG_RECORDID, value: [tb: string, id: unknown]] {
-    return [CBOR_TAG_RECORDID, [this.tb, this.id]];
+  toCBOR(): [
+    tag: typeof CBOR_TAG_RECORDID,
+    value: [tb: string, id: unknown] | string,
+  ] {
+    switch (this.id) {
+      case "ulid()":
+      case "uuid()":
+      case "rand()":
+        return [CBOR_TAG_RECORDID, this.toString()];
+
+      default:
+        return [CBOR_TAG_RECORDID, [this.tb, this.id]];
+    }
   }
 
   toJSON(): string {

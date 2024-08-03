@@ -122,8 +122,7 @@ export function writeByteString(w: Writer, value: Uint8Array): void {
  */
 export function writeUtf8String(w: Writer, value: string): void {
   const bytes = utf8.encode(value);
-  writeHeader(w, MT_UTF8_STRING, bytes.length);
-  writePayload(w, bytes);
+  writeEncodedUtf8String(w, bytes);
 }
 
 /**

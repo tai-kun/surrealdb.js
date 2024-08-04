@@ -29,13 +29,11 @@ export type RecordAccessAuth = {
   readonly [p: string]: unknown;
 };
 
-// export type SystemUserAuth =
-//   | RootAccessAuth
-//   | NamespaceAccessAuth
-//   | DatabaseAccessAuth;
-
-export type AccessAuth =
+export type UserAuth =
   | RootUserAuth
   | NamespaceUserAuth
-  | DatabaseUserAuth
-  | RecordAccessAuth;
+  | DatabaseUserAuth;
+
+export type AccessAuth = RecordAccessAuth;
+
+export type Auth = UserAuth | AccessAuth;

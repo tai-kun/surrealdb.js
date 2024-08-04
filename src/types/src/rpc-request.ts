@@ -1,4 +1,4 @@
-import type { AccessAuth, RecordAccessAuth } from "./auth";
+import type { Auth, RecordAccessAuth } from "./auth";
 import type { ReadonlyPatch } from "./patch";
 
 export type RpcPingRequest = {
@@ -26,7 +26,7 @@ export type RpcSignupRequest = {
 
 export type RpcSigninRequest = {
   readonly method: "signin";
-  readonly params: readonly [auth: AccessAuth];
+  readonly params: readonly [auth: Auth];
 };
 
 export type RpcAuthenticateRequest = {

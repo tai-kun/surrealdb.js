@@ -1,7 +1,7 @@
 import Base, { type ClientRpcOptions } from "@tai-kun/surrealdb/clients/basic";
 import { QueryFailedError } from "@tai-kun/surrealdb/errors";
 import type {
-  AccessAuth,
+  Auth,
   LiveData,
   LiveDiff,
   LiveResult,
@@ -165,7 +165,7 @@ export default class Client extends Base {
   async signin<
     T extends RpcResultMapping["signin"] = RpcResultMapping["signin"],
   >(
-    auth: AccessAuth,
+    auth: Auth,
     options?: ClientRpcOptions | undefined,
   ): Promise<T> {
     return await this.rpc("signin", [auth], options);

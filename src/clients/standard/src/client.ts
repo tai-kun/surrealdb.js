@@ -295,7 +295,7 @@ export default class Client extends Base {
     surql: {
       readonly text: string;
       readonly vars: { readonly [p: string]: unknown };
-      readonly slots: readonly never[];
+      readonly slots: readonly (never | Slot<any, false, any>)[];
       readonly __type: T;
     },
     vars?: { readonly [p: string]: unknown } | undefined,

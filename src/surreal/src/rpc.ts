@@ -1,3 +1,4 @@
+import { processQueryRequest } from "@tai-kun/surrealdb/engine";
 import {
   MissingNamespaceError,
   ResponseError,
@@ -106,9 +107,7 @@ async function rpc(request: InlineRpcRequest): Promise<unknown> {
   }
 
   if (rpcRequest.method === "query") {
-    const [arg0, vars] = rpcRequest.params;
-    const surql = typeof arg0 === "string" ? { text: arg0 } : arg0;
-    rpcRequest.params = [surql.text, { ...surql.vars, ...vars }];
+    rpcRequest.params = processQueryRequest(rpcRequest).params;
   }
 
   const body: unknown = fmt.encodeSync({

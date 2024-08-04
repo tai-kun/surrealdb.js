@@ -12,10 +12,23 @@ import type {
   RpcResultMapping,
 } from "@tai-kun/surrealdb/types";
 import type { TaskListener } from "@tai-kun/surrealdb/utils";
+import type { Simplify, UnionToIntersection } from "type-fest";
 import Jwt from "./jwt";
+import Slot from "./slot";
 
 // re-exports
 export type * from "@tai-kun/surrealdb/clients/basic";
+
+type InferSlotVars<T extends Slot> = UnionToIntersection<
+  // dprint-ignore
+  {
+    [TName in T["name"]]: T extends Slot<TName, infer TRequired, infer TValue>
+      ? TRequired extends false
+      ? { readonly [_ in TName]?: TValue }
+      : { readonly [_ in TName]:  TValue } // boolean の場合も必須で。
+      : {};
+  }[T["name"]]
+>;
 
 export interface LiveOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
@@ -32,8 +45,6 @@ export type InferLiveResult<
 > = I extends { __diff: true }  ? LiveDiff<T, P>
   : I extends { __diff: false } ? LiveData<T>
   : LiveResult<T, P>
-
-type Simplify<T> = { [P in keyof T]: T[P] } & {};
 
 // dprint-ignore
 export type ActionResult<T extends { readonly [p: string]: unknown } = { [p: string]: unknown }>
@@ -259,7 +270,8 @@ export default class Client extends Base {
   async queryRaw<T extends readonly QueryResult[] = QueryResult[]>(
     surql: string | {
       readonly text: string;
-      readonly vars?: { readonly [p: string]: unknown } | undefined;
+      readonly vars: { readonly [p: string]: unknown };
+      readonly slots: readonly Slot[];
     },
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
@@ -273,29 +285,39 @@ export default class Client extends Base {
     return results as T;
   }
 
+  async query<T extends readonly unknown[] = unknown[]>(
+    surql: string,
+    vars?: { readonly [p: string]: unknown } | undefined,
+    options?: ClientRpcOptions | undefined,
+  ): Promise<T>;
+
   async query<T extends readonly unknown[]>(
-    surql: string | {
+    surql: {
       readonly text: string;
-      readonly vars?: { readonly [p: string]: unknown } | undefined;
+      readonly vars: { readonly [p: string]: unknown };
+      readonly slots: readonly never[];
       readonly __type: T;
     },
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T>;
 
-  async query<T extends readonly unknown[] = unknown[]>(
-    surql: string | {
+  async query<S extends Slot, T extends readonly unknown[]>(
+    surql: {
       readonly text: string;
-      readonly vars?: { readonly [p: string]: unknown } | undefined;
+      readonly vars: { readonly [p: string]: unknown };
+      readonly slots: readonly S[];
+      readonly __type: T;
     },
-    vars?: { readonly [p: string]: unknown } | undefined,
+    vars: Simplify<InferSlotVars<S> & { readonly [p: string]: unknown }>,
     options?: ClientRpcOptions | undefined,
   ): Promise<T>;
 
   async query(
     surql: string | {
       readonly text: string;
-      readonly vars?: { readonly [p: string]: unknown } | undefined;
+      readonly vars: { readonly [p: string]: unknown };
+      readonly slots: readonly Slot[];
     },
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,

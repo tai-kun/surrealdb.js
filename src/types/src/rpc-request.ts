@@ -65,10 +65,18 @@ export type RpcKillRequest = {
 export type RpcQueryRequest = {
   readonly method: "query";
   readonly params: readonly [
-    surql: string | {
-      readonly text: string;
-      readonly vars?: { readonly [p: string]: unknown } | undefined;
-    },
+    surql:
+      | string
+      // SurrealDB の RPC に準拠していないため、リクエストを送信する前に変形させる必要あり。
+      | {
+        readonly text: string;
+        readonly vars: { readonly [p: string]: unknown };
+        readonly slots: readonly {
+          readonly name: string;
+          readonly isRequired: boolean;
+          readonly defaultValue?: unknown;
+        }[];
+      },
     vars?: { readonly [p: string]: unknown } | undefined,
   ];
 };

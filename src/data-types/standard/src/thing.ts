@@ -7,7 +7,7 @@ export interface ThingLike<T extends ThingSource[0] = ThingSource[0]> {
   readonly id: unknown;
 }
 
-export default class Thing<T extends ThingSource[0] = ThingSource[0]>
+export default class Thing<const T extends ThingSource[0] = ThingSource[0]>
   extends Base<T>
 {
   // @ts-expect-error readonly を外すだけ。

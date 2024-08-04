@@ -7,6 +7,7 @@ import {
   EngineAbc,
   type EngineAbcConfig,
   OPEN,
+  processQueryRequest,
   type RpcArgs,
 } from "@tai-kun/surrealdb/engine";
 import {
@@ -430,14 +431,7 @@ export default class WebSocketEngine extends EngineAbc {
       }
 
       case "query": {
-        const [arg0, vars] = request.params;
-        const { text, vars: varsBase } = typeof arg0 === "string"
-          ? { text: arg0, vars: {} }
-          : arg0;
-        request = {
-          method: request.method,
-          params: [text, { ...varsBase, ...vars }],
-        };
+        request = processQueryRequest(request);
         break;
       }
     }

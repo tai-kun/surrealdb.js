@@ -15,7 +15,7 @@ export type ThingSource<
     | { readonly [key: string | number]: unknown }, // DataItem.Map
 ];
 
-export default class Thing<T extends ThingSource[0] = ThingSource[0]> {
+export default class Thing<const T extends ThingSource[0] = ThingSource[0]> {
   readonly tb: T;
 
   readonly id: unknown;

@@ -13,3 +13,6 @@ export {
   type RpcArgs,
   type TransitionArgs,
 } from "./src/abc";
+
+export type * from "./src/process-query-request";
+export { default as processQueryRequest } from "./src/process-query-request";

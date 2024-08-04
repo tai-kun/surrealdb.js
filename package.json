@@ -26,6 +26,7 @@
     "@types/ws": "^8.5.12",
     "big.js": "^6.2.1",
     "is-plain-obj": "^4.1.0",
+    "type-fest": "^4.23.0",
     "ws": "^8.18.0"
   },
   "devDependencies": {

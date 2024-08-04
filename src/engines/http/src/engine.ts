@@ -6,6 +6,7 @@ import {
   EngineAbc,
   type EngineAbcConfig,
   OPEN,
+  processQueryRequest,
   type RpcArgs,
 } from "@tai-kun/surrealdb/engine";
 import {
@@ -185,14 +186,9 @@ export default class HttpEngine extends EngineAbc {
       }
 
       case "query": {
-        const [arg0, inlineVars] = request.params;
-        const { text, vars: defaultVars } = typeof arg0 === "string"
-          ? { text: arg0, vars: {} }
-          : arg0;
-        request = {
-          method: request.method,
-          params: [text, { ...this.vars, ...defaultVars, ...inlineVars }],
-        };
+        const req = processQueryRequest(request);
+        req.params[1] = { ...this.vars, ...req.params[1] };
+        request = req;
         break;
       }
     }

@@ -3,3 +3,6 @@ export { default } from "./src/client";
 
 export type * from "./src/jwt";
 export { default as Jwt } from "./src/jwt";
+
+export type * from "./src/slot";
+export { default as Slot } from "./src/slot";

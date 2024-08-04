@@ -49,7 +49,7 @@ function escapeId(id: unknown): string {
   );
 }
 
-export default class Thing<T extends ThingSource[0] = ThingSource[0]>
+export default class Thing<const T extends ThingSource[0] = ThingSource[0]>
   extends Base<T>
   implements Encodable
 {

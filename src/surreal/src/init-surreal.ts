@@ -57,7 +57,7 @@ export default function initSurreal<C extends CC>(
   return {
     // @ts-expect-error
     Surreal,
-    ...createSurql({
+    surql: createSurql({
       formatter,
       varPrefix,
     }),

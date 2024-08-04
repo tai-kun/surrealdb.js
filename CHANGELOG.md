@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.1.0](https://github.com/tai-kun/surrealdb.js/compare/v1.0.1...v1.1.0) (2024-08-04)
+
+
+### Features
+
+* **clients/basic:** デフォルトのエラーハンドラーをオフにするオプションを追加 ([5906a2b](https://github.com/tai-kun/surrealdb.js/commit/5906a2bc75a297b4e38009496838d5d14416da6b))
+* **data-types:** .structure メソッドを追加 ([959966e](https://github.com/tai-kun/surrealdb.js/commit/959966ec022f365192e35848228c4e863055c0f8))
+* **data-types/encodable:** Thing を ID ジェネレーターに対応させる ([11cc58c](https://github.com/tai-kun/surrealdb.js/commit/11cc58c5f9f84f0e1be5ce8b755c09f9795dc42b))
+* **data-types/standard:** GeometryLine にリング系のプロパティーを追加 ([64877f6](https://github.com/tai-kun/surrealdb.js/commit/64877f6e74b0ca419d6cc8029a743158abde3c87))
+* **surreal:** 1 回限りの RPC を実行する関数を追加 ([fbf82c4](https://github.com/tai-kun/surrealdb.js/commit/fbf82c46b16556dba96255168b2096cb76e039ca))
+* **surreal:** SurrealQL を事前定義する関数を実験的に追加 ([6c35d2a](https://github.com/tai-kun/surrealdb.js/commit/6c35d2ad8c61d9fb3e13de78d5a72b493affddfa))
+
+
+### Bug Fixes
+
+* **cbor:** ネストされたオブジェクトのエンコード時に循環参照を検知できないことがる不具合を修正 ([8a8674a](https://github.com/tai-kun/surrealdb.js/commit/8a8674a1261d414b70f372543af85952de8e7887))
+* **engines/http:** 名前空間とデータベースのから文字列を許可する ([e69b5f6](https://github.com/tai-kun/surrealdb.js/commit/e69b5f6b27a532135c37e7d107d56d1e8d1b1eb5))
+* **engine:** 名前空間とデータベース選択に関するバグを修正 ([5fc1f78](https://github.com/tai-kun/surrealdb.js/commit/5fc1f78a41f668b421a6f4d5eeb60f4f2d66ae42))
+* **engine:** 接続情報の命名ミスを修正 ([cf47291](https://github.com/tai-kun/surrealdb.js/commit/cf472917201e09bcaba79f69e9831ad8d14e6596))
+
 ## [1.0.1](https://github.com/tai-kun/surrealdb.js/compare/v1.0.0...v1.0.1) (2024-08-02)
 
 

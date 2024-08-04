@@ -12,6 +12,7 @@ import type {
   RpcResultMapping,
 } from "@tai-kun/surrealdb/types";
 import type { TaskListener } from "@tai-kun/surrealdb/utils";
+import Jwt from "./jwt";
 
 // re-exports
 export type * from "@tai-kun/surrealdb/clients/basic";
@@ -153,28 +154,28 @@ export default class Client extends Base {
     return await this.rpc("info", [], options);
   }
 
-  async signup<
-    T extends RpcResultMapping["signup"] = RpcResultMapping["signup"],
-  >(
+  async signup(
     auth: RecordAccessAuth,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T> {
-    return await this.rpc("signup", [auth], options);
+  ): Promise<Jwt> {
+    return new Jwt(await this.rpc("signup", [auth], options));
   }
 
-  async signin<
-    T extends RpcResultMapping["signin"] = RpcResultMapping["signin"],
-  >(
+  async signin(
     auth: Auth,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T> {
-    return await this.rpc("signin", [auth], options);
+  ): Promise<Jwt> {
+    return new Jwt(await this.rpc("signin", [auth], options));
   }
 
   async authenticate(
-    token: string,
+    token: string | Jwt,
     options?: ClientRpcOptions | undefined,
   ): Promise<void> {
+    if (typeof token !== "string") {
+      token = token.raw;
+    }
+
     await this.rpc("authenticate", [token], options);
   }
 

@@ -47,3 +47,6 @@ export type * from "./src/to-surql";
 export { default as toSurql } from "./src/to-surql";
 
 export type * from "./src/types";
+
+export type * from "./src/utf8";
+export { default as utf8 } from "./src/utf8";

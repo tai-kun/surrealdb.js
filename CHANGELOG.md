@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://github.com/tai-kun/surrealdb.js/compare/v1.1.0...v1.2.0) (2024-08-04)
+
+
+### Features
+
+* **clients/standard:** JWT を安全に扱いやすくする。 ([930126b](https://github.com/tai-kun/surrealdb.js/commit/930126b128368b3b80f6b91751c99144df04683a))
+* 事前に定義されたクエリーに後から変数を割り当てる機能を追加 ([1ee76a8](https://github.com/tai-kun/surrealdb.js/commit/1ee76a8c27b021a49eb2dd3060874b3562f175dc))
+
+
+### Bug Fixes
+
+* **clients/standard:** クエリーの変数を必須にする条件を修正 ([9a85f64](https://github.com/tai-kun/surrealdb.js/commit/9a85f64131129c783aeb9abd8fde45580af80ae6))
+* **types:** 命名に一貫性をもたせる ([260eeae](https://github.com/tai-kun/surrealdb.js/commit/260eeaead84a9a374f8810bb4e8c2ea6019b89ad))
+
 ## [1.1.0](https://github.com/tai-kun/surrealdb.js/compare/v1.0.1...v1.1.0) (2024-08-04)
 
 

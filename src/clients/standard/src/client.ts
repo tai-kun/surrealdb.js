@@ -154,6 +154,9 @@ export default class Client extends Base {
     return await this.rpc("info", [], options);
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#signup)
+   */
   async signup(
     auth: RecordAccessAuth,
     options?: ClientRpcOptions | undefined,
@@ -161,6 +164,9 @@ export default class Client extends Base {
     return new Jwt(await this.rpc("signup", [auth], options));
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#signin)
+   */
   async signin(
     auth: Auth,
     options?: ClientRpcOptions | undefined,
@@ -168,6 +174,9 @@ export default class Client extends Base {
     return new Jwt(await this.rpc("signin", [auth], options));
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#authenticate)
+   */
   async authenticate(
     token: string | Jwt,
     options?: ClientRpcOptions | undefined,
@@ -179,6 +188,9 @@ export default class Client extends Base {
     await this.rpc("authenticate", [token], options);
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#invalidate)
+   */
   async invalidate(
     options?: ClientRpcOptions | undefined,
   ): Promise<void> {

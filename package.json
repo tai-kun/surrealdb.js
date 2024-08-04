@@ -62,7 +62,9 @@
     "test:medium:chromium": "node scripts/test.js chromium medium",
     "test:medium:firefox": "node scripts/test.js firefox medium",
     "test:medium:webkit": "node scripts/test.js webkit medium",
-    "docs": "cd docs && npm run dev"
+    "docs:dev": "cd docs && npm run dev",
+    "docs:build": "cd docs && npm run build",
+    "docs:preview": "cd docs && npm run preview"
   },
   "volta": {
     "node": "20.16.0"

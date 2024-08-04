@@ -306,7 +306,7 @@ await db.use({ database: "example" }); // throws MissingNamespaceError: The name
 await using db = new Surreal();
 await db.connect("http://localhost:8000");
 
-await db.query("OUTPUT 'Hello'"); // throws QueryFailure: Query failed with 1 error(s)
+await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 1 error(s)
 ```
 
 ## Disconnected

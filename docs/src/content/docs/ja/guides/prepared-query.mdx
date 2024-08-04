@@ -1,0 +1,109 @@
+---
+title: 事前に準備されたクエリー
+---
+
+事前に準備されたをクエリーを使う基本的な例は次のとおりです:
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const CreateUserQuery = surql`
+  CREATE ONLY user:foo CONTENT { age: 42 };
+`.returns<[{ id: Thing<"user">, age: number }]>()
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(CreateUserQuery);
+   // ^? const results: [{ id: Thing<"user">, age: number }]
+
+await db.disconnect();
+```
+
+クエリーを事前に準備すると型推論が有効になります。しかし推論される型は手動で設定する必要があります。まだ未実装ですが、`.returns` にバリデーターを渡せるようにする予定です。
+
+`surql` はテンプレート文字列でクエリーを記述できるため、値を視覚的に埋め込むことが可能です:
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const USER_NAME = "foo"
+const USER_AGE = 42
+
+const CreateUserQuery = surql`
+  CREATE ONLY type::thing('user', ${USERNAME}) CONTENT { age: ${USER_AGE} };
+`.returns<[{ id: Thing<"user">, age: number }]>()
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(CreateUserQuery);
+   // ^? const results: [{ id: Thing<"user">, age: number }]
+
+await db.disconnect();
+```
+
+上記の例で示したクエリーは、実際には次のようになります:
+
+```text
+CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
+```
+
+```ts
+{
+  _jst_0: "foo",
+  _jst_1: 42
+}
+```
+
+事前に定義されたクエリーに変数を設定し、クエリーを実行するときに値を渡すには `surql.slot` を使います:
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const UserIdSlot = surql.slot("id").type<Thing<"user">>();
+const UserAgeSlot = surql.slot("age", 42);
+
+const CreateUserQuery = surql`
+  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };
+`.returns<[{ id: Thing<"user">, age: number }]>()
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(CreateUserQuery, {
+  id: new Thing("user", "tai-kun"),
+});
+
+await db.disconnect();
+```
+
+スロットには必ず変数名が必要です。`.type` メソッドで変数に型レベルで制約を設けることができます。まだ未実装ですが、変数のバリデーターを渡せるようにする予定です。上記の例では、変数名 `id` のスロットはテーブル名が `"user"` のレコード ID でなければなりません。
+
+スロットの引数には変数名に続いてデフォルト値を設定することができます。実行時にスロットの変数名が省略された場合、このデフォルト値が使用されます。上記の例では、変数名 `age` のスロットにはデフォルト値 `42` が設定されています。
+
+事前に定義されたクエリーに、実行時に変数の指定が必須のスロットが含まれる場合、未指定であればクエリーは実行時に `SurrealTypeError` で拒否されます。TypeScript で厳格に型推論されていれば、実行しなくとも型レベルでエラーが表示されます。例えば、次のように必須の変数を省略して `tsc` で型チェックをするとエラーになります。
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const UserIdSlot = surql.slot("id").type<Thing<"user">>();
+const UserAgeSlot = surql.slot("age", 42);
+
+const CreateUserQuery = surql`
+  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };
+`.returns<[{ id: Thing<"user">, age: number }]>()
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(CreateUserQuery, {
+  // id: new Thing("user", "tai-kun"),
+});
+
+await db.disconnect();
+```
+
+`npx tsc --noEmit`:
+
+![tsc](./tsc.png)

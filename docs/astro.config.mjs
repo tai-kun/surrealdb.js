@@ -55,20 +55,27 @@ export default defineConfig({
                 ja: "接続",
               },
             },
-            // {
-            //   slug: "guides/authentication",
-            //   label: "Authentication",
-            //   translations: {
-            //     ja: "認証",
-            //   },
-            // },
-            // {
-            //   slug: "guides/querying",
-            //   label: "Querying",
-            //   translations: {
-            //     ja: "クエリー",
-            //   },
-            // },
+            {
+              slug: "guides/authentication",
+              label: "Authentication",
+              translations: {
+                ja: "認証",
+              },
+            },
+            {
+              slug: "guides/querying",
+              label: "Querying",
+              translations: {
+                ja: "クエリー",
+              },
+            },
+            {
+              slug: "guides/prepared-query",
+              label: "Prepared Query",
+              translations: {
+                ja: "事前に定義されたクエリー",
+              },
+            },
             // {
             //   slug: "guides/live-queries",
             //   label: "Live Queries",

@@ -250,15 +250,17 @@ export default class HttpEngine extends EngineAbc {
     // throwIfAborted(signal);
     let rpcResp: unknown;
 
-    if (this.fmt.decode) {
-      rpcResp = await this.fmt.decode({
-        reader: resp.body.getReader(),
-        signal,
-      });
-    } else {
-      rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
-      // throwIfAborted(signal);
-    }
+    // TODO(tai-kun): 非同期デコードを実装したい
+    // if (this.fmt.decode) {
+    //   rpcResp = await this.fmt.decode({
+    //     reader: resp.body.getReader(),
+    //     signal,
+    //   });
+    // } else {
+    //   rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
+    // }
+    rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
+    // throwIfAborted(signal);
 
     if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
       throw new ResponseError("Expected id-less rpc response.", {

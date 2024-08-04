@@ -3,10 +3,10 @@ export type Data = typeof globalThis extends
   ? string | ArrayBuffer | Uint8Array | Buff | Buff[]
   : string | ArrayBuffer | Uint8Array;
 
-export interface DecodeArgs {
-  reader: ReadableStreamDefaultReader<Uint8Array>;
-  signal: AbortSignal;
-}
+// export interface DecodeArgs {
+//   reader: ReadableStreamDefaultReader<Uint8Array>;
+//   signal: AbortSignal;
+// }
 
 export interface Formatter {
   readonly mimeType?: string | undefined;
@@ -19,5 +19,5 @@ export interface Formatter {
   //     signal: AbortSignal;
   //   },
   // ) => PromiseLike<unknown>;
-  readonly decode?: (args: DecodeArgs) => PromiseLike<unknown>;
+  // readonly decode?: (args: DecodeArgs) => PromiseLike<unknown>;
 }

@@ -48,11 +48,68 @@ export default defineConfig({
             ja: "ガイド",
           },
           items: [
+            {
+              slug: "guides/connecting",
+              label: "Connecting",
+              translations: {
+                ja: "接続",
+              },
+            },
             // {
-            //   slug: "guides/",
-            //   label: "",
+            //   slug: "guides/authentication",
+            //   label: "Authentication",
             //   translations: {
-            //     ja: "",
+            //     ja: "認証",
+            //   },
+            // },
+            // {
+            //   slug: "guides/querying",
+            //   label: "Querying",
+            //   translations: {
+            //     ja: "クエリー",
+            //   },
+            // },
+            // {
+            //   slug: "guides/live-queries",
+            //   label: "Live Queries",
+            //   translations: {
+            //     ja: "ライブクエリー",
+            //   },
+            // },
+            // {
+            //   slug: "guides/parameters",
+            //   label: "Parameters",
+            //   translations: {
+            //     ja: "パラメーター",
+            //   },
+            // },
+            // {
+            //   slug: "guides/http",
+            //   label: "HTTP Protocol",
+            //   translations: {
+            //     ja: "HTTP プロトコル",
+            //   },
+            // },
+            // {
+            //   slug: "guides/websocket",
+            //   label: "WebSocket Protocol",
+            //   translations: {
+            //     ja: "WebSocket プロトコル",
+            //   },
+            // },
+            // {
+            //   slug: "guides/cbor",
+            //   label: "CBOR",
+            // },
+            // {
+            //   slug: "guides/json",
+            //   label: "JSON",
+            // },
+            // {
+            //   slug: "guides/inline-rpc",
+            //   label: "Inline RPC",
+            //   translations: {
+            //     ja: "インライン RPC",
             //   },
             // },
           ],

@@ -78,7 +78,7 @@ export interface JwtPayload {
   NS?: string;
   DB?: string;
   AC?: string;
-  ID: "root" | (string & {});
+  ID: string;
   [p: string]: unknown;
 }
 

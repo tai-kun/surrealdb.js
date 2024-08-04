@@ -26,7 +26,7 @@ type InferSlotVars<T extends Slot> = UnionToIntersection<
       ? TRequired extends false
       ? { readonly [_ in TName]?: TValue }
       : { readonly [_ in TName]:  TValue } // boolean の場合も必須で。
-      : {};
+      : never;
   }[T["name"]]
 >;
 

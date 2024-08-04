@@ -62,21 +62,29 @@ export type RpcKillRequest = {
   readonly params: readonly [queryUuid: string | object];
 };
 
+export type SlotLike<
+  N extends string = string,
+  R extends boolean = boolean,
+  V = unknown,
+> = {
+  readonly name: N;
+  readonly isRequired: R;
+  readonly defaultValue?: V;
+};
+
+export type PreparedQueryLike = {
+  readonly text: string;
+  readonly vars: { readonly [p: string]: unknown };
+  readonly slots: readonly SlotLike[];
+};
+
 export type RpcQueryRequest = {
   readonly method: "query";
   readonly params: readonly [
     surql:
       | string
       // SurrealDB の RPC に準拠していないため、リクエストを送信する前に変形させる必要あり。
-      | {
-        readonly text: string;
-        readonly vars: { readonly [p: string]: unknown };
-        readonly slots: readonly {
-          readonly name: string;
-          readonly isRequired: boolean;
-          readonly defaultValue?: unknown;
-        }[];
-      },
+      | PreparedQueryLike,
     vars?: { readonly [p: string]: unknown } | undefined,
   ];
 };

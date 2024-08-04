@@ -1,7 +1,8 @@
 import type { ToCBOR, Writer } from "@tai-kun/surrealdb/cbor";
-import { Slot } from "@tai-kun/surrealdb/clients/standard";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { cloneSync, type Formatter } from "@tai-kun/surrealdb/formatter";
+import PreparedQuery from "./prepared-query";
+import Slot from "./slot";
 
 const MIME_CBOR_REGEX = /\bcbor\b/;
 const MIME_JSON_REGEX = /\bjson\b/;
@@ -10,21 +11,7 @@ export interface Surql {
   <V extends unknown[] = unknown[]>(
     texts: readonly string[] | TemplateStringsArray,
     ...values: V
-  ): {
-    text: string;
-    vars: { [p: string]: unknown };
-    slots: Extract<V[number], Slot>[];
-    // TODO(tai-kun): 検証機能をつける？
-    returns: {
-      <T extends readonly unknown[] = unknown[]>(): {
-        text: string;
-        vars: { [p: string]: unknown };
-        slots: Extract<V[number], Slot>[];
-        /** @deprecated */
-        __type: T;
-      };
-    };
-  };
+  ): PreparedQuery<Extract<V[number], Slot>>;
   slot: {
     <N extends string, T>(name: N): Slot<N, true, T | undefined>;
     <N extends string, T>(name: N, defaultValue: T): Slot<N, false, T>;
@@ -54,16 +41,7 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
       },
     });
 
-  function surql(texts: readonly string[], ...values: unknown[]): {
-    text: string;
-    vars: { [p: string]: unknown };
-    slots: Slot[];
-    returns(): {
-      text: string;
-      vars: { [p: string]: unknown };
-      slots: Slot[];
-    };
-  } {
+  function surql(texts: readonly string[], ...values: unknown[]) {
     if (texts.length - values.length !== 1) {
       throw new SurrealTypeError(
         "template string",
@@ -99,18 +77,7 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
       }
     }
 
-    return {
-      text,
-      vars,
-      slots,
-      returns() {
-        return {
-          text: this.text,
-          vars: this.vars,
-          slots: this.slots,
-        };
-      },
-    };
+    return new PreparedQuery(text, vars, slots);
   }
 
   function slot(...args: [name: string, defaultValue?: unknown]): Slot {

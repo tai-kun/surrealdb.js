@@ -38,13 +38,13 @@ export type RpcResultMapping = {
 export type RpcResult<M extends RpcMethod = RpcMethod> = RpcResultMapping[M];
 
 export type BidirectionalRpcResponseOk<T = unknown> = {
-  id: `${RpcMethod}_${string | number}`;
+  id: `${RpcMethod}_${number}`;
   result: T;
   error?: never;
 };
 
 export type BidirectionalRpcResponseErr = {
-  id: `${RpcMethod}_${string | number}`;
+  id: `${RpcMethod}_${number}`;
   result?: never;
   error: {
     code: number;

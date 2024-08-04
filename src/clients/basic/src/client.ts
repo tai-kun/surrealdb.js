@@ -118,14 +118,23 @@ export default class BasicClient {
     });
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#state)
+   */
   get state(): ConnectionState {
     return this.eng?.state ?? CLOSED;
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#endpoint)
+   */
   get endpoint(): URL | null | undefined {
     return this.eng?.endpoint;
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#namespace)
+   */
   get namespace(): string | null | undefined {
     return this.eng?.namespace;
   }
@@ -136,6 +145,9 @@ export default class BasicClient {
     }
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#database)
+   */
   get database(): string | null | undefined {
     return this.eng?.database;
   }
@@ -146,6 +158,9 @@ export default class BasicClient {
     }
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#token)
+   */
   get token(): string | null | undefined {
     return this.eng?.token;
   }
@@ -156,10 +171,16 @@ export default class BasicClient {
     }
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#getconnectioninfo)
+   */
   getConnectionInfo(): ConnectionInfo | undefined {
     return this.eng?.getConnectionInfo();
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#on)
+   */
   on<K extends keyof EngineEvents>(
     event: K,
     listener: TaskListener<EngineEvents[K]>,
@@ -167,6 +188,9 @@ export default class BasicClient {
     this.ee.on(event, listener);
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#off)
+   */
   off<K extends keyof EngineEvents>(
     event: K,
     listener: TaskListener<EngineEvents[K]>,
@@ -180,6 +204,9 @@ export default class BasicClient {
     this.ee.off(event, listener);
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#once)
+   */
   once<K extends keyof EngineEvents>(
     event: K,
     options?: TaskListenerOptions | undefined,
@@ -187,6 +214,9 @@ export default class BasicClient {
     return this.ee.once(event, options);
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#connect)
+   */
   @mutex
   async connect(
     endpoint: string | URL,
@@ -218,6 +248,9 @@ export default class BasicClient {
     this.eng = engine;
   }
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#disconnect)
+   */
   @mutex
   async disconnect(
     options: ClientDisconnectOptions | undefined = {},

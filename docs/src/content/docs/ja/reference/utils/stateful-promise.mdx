@@ -12,7 +12,7 @@ import Badge from "~/components/ja/Badge.astro";
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
 ```
 
-### constructor
+### `.constructor()`
 
 ```ts
 new StatefulPromise<T>(executor: StatefulPromiseExecutor<T>);
@@ -68,7 +68,7 @@ try {
 
 通常の `Promise` ではハンドリングされていない状態で拒否される (つまり `reject` が呼び出される) と `unhandledrejection` が発生しますが、`StatefulPromise` は明示的にハンドリングするまでエラーを投げないことがわかります。
 
-### .state <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
+### `.state` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
 現在の `StatefulPromise` の状態を表します。状態には次の 3 つがあります:
 
@@ -76,7 +76,7 @@ try {
 - `fulfilled`: 解決されたことを示します。
 - `rejected`: 拒否されたことを示します。
 
-### .then <Badge variant="instance" /><Badge variant="method" />
+### `.then()` <Badge variant="instance" /><Badge variant="method" />
 
 `.then` は `StatefulPromise` が成功した場合と失敗した場合のコールバック関数を取り、`StatefulPromise` オブジェクトを返します。
 
@@ -95,7 +95,7 @@ then<R1, R2>(
 
 `StatefulPromise` オブジェクトが返ります。
 
-### .resolve <Badge variant="static" /><Badge variant="method" />
+### `.resolve()` <Badge variant="static" /><Badge variant="method" />
 
 `.resolve` は与えられた値で解決された `StatefulPromise` を返します。
 
@@ -113,7 +113,7 @@ resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
 
 引数の `value` で解決された `StatefulPromise` オブジェクトを返します。値が `StatefulPromise` オブジェクトであれば、その値を返します。
 
-### .reject <Badge variant="static" /><Badge variant="method" />
+### `.reject()` <Badge variant="static" /><Badge variant="method" />
 
 `.reject` は与えられた理由で拒否された `StatefulPromise` オブジェクトを返します。
 
@@ -131,7 +131,7 @@ reject<T>(reason?: unknown): StatefulPromise<T>;
 
 引数の `reason` で拒否された `StatefulPromise` を返します。
 
-### .withResolvers <Badge variant="static" /><Badge variant="method" />
+### `.withResolvers()` <Badge variant="static" /><Badge variant="method" />
 
 `.withResolvers` は新しい `StatefulPromise` オブジェクトと、それを解決または拒否する関数を含むオブジェクトを返す関数です。
 
@@ -163,7 +163,7 @@ withResolvers<T>(): {
 
 `promise` を拒否する関数です。
 
-### .try <Badge variant="static" /><Badge variant="method" />
+### `.try()` <Badge variant="static" /><Badge variant="method" />
 
 `.try` は関数を `StatefulPromise` でラップする関数です。
 
@@ -202,7 +202,7 @@ await promise.then(null, e => {
 });
 ```
 
-### .allRejected <Badge variant="static" /><Badge variant="method" />
+### `.allRejected()` <Badge variant="static" /><Badge variant="method" />
 
 `.allRejected` は拒否された `StatefulPromise` の理由だけを収集する関数です。
 

@@ -33,8 +33,14 @@ export default function initSurreal<C extends CC>(
     varPrefix,
   } = init;
 
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/)
+   */
   // @ts-expect-error
   class Surreal extends Client {
+    /**
+     * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#constructor)
+     */
     constructor() {
       super({
         engines,

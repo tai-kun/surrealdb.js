@@ -13,7 +13,7 @@ import Badge from "~/components/ja/Badge.astro";
 import { TaskQueue } from "@tai-kun/surrealdb/utils";
 ```
 
-### constructor
+### `.constructor()`
 
 ```ts
 new TaskQueue();
@@ -27,11 +27,11 @@ new TaskQueue();
 
 `new` を通じて呼び出された場合、`TaskQueue` はそのインスタンスを返します。
 
-### .count <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
+### `.count` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
 現在キューに追加されているタスクランナーの数を表します。
 
-### .add <Badge variant="instance" /><Badge variant="method" />
+### `.add()` <Badge variant="instance" /><Badge variant="method" />
 
 `.add` はタスクランナーをキューの追加します。
 
@@ -75,7 +75,7 @@ const text = await promise;
 console.log(text);
 ```
 
-### .idle <Badge variant="instance" /><Badge variant="method" />
+### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
 `.idle` はキューが空になるまで待機するための関数です。キューからタスクランナーが削除されるのは、タスクランナーが解決/拒否問わず完了直後です。したがって、キューが空になるということは、すべてのタスクランナーの実行が完了したことを意味します。
 
@@ -129,7 +129,7 @@ console.log(results);
 
 上記の例では `throw null` がどこにも補足されずに、スクリプトは正常に終了します。タスクランナーのエラーに気づくには、個別にエラーハンドリングする必要があります。
 
-### .abort <Badge variant="instance" /><Badge variant="method" />
+### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 
 `.abort` は全タスクランナーの `signal` に中止イベントを発送する関数です。
 

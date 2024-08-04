@@ -12,7 +12,7 @@ import Badge from "~/components/ja/Badge.astro";
 import { Tagged } from "@tai-kun/surrealdb/cbor";
 ```
 
-### constructor
+### `.constructor()`
 
 ```ts
 new Tagged<T>(tag: number | BigInt, value: T);
@@ -32,15 +32,15 @@ new Tagged<T>(tag: number | BigInt, value: T);
 
 `new` を通じて呼び出された場合、`Tagged` はそのインスタンスを返します。
 
-### .tag <Badge variant="instance" /><Badge variant="property" />
+### `.tag` <Badge variant="instance" /><Badge variant="property" />
 
 `.tag` はタグ付きデータアイテムを識別するための 0 から 2^64-1 までの整数値を持つプロパティーです。
 
-### .value <Badge variant="instance" /><Badge variant="property" />
+### `.value` <Badge variant="instance" /><Badge variant="property" />
 
 `.value` タグ付きデータアイテムの値を格納するプロパティーです。
 
-### .toCBOR <Badge variant="instance" /><Badge variant="method" />
+### `.toCBOR()` <Badge variant="instance" /><Badge variant="method" />
 
 `.toCBOR` は CBOR にエンコードするための情報を返す関数です。
 

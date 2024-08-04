@@ -12,7 +12,7 @@ import Badge from "~/components/ja/Badge.astro";
 import { Serial } from "@tai-kun/surrealdb/utils";
 ```
 
-### constructor
+### `.constructor()`
 
 ```ts
 new Serial(max?: number);
@@ -62,7 +62,7 @@ console.log(id.next());
 2
 ```
 
-### .next <Badge variant="instance" /><Badge variant="method" />
+### `.next()` <Badge variant="instance" /><Badge variant="method" />
 
 `.next` は次の ID を取得する関数です。
 
@@ -78,7 +78,7 @@ next(): number;
 
 1 以上 `max` 以下の整数を返します。この値が最大値の場合、次に取得する値は 1 です。
 
-### .reset <Badge variant="instance" /><Badge variant="method" />
+### `.reset()` <Badge variant="instance" /><Badge variant="method" />
 
 ```ts
 reset(): void;

@@ -12,7 +12,7 @@ import Badge from "~/components/ja/Badge.astro";
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";
 ```
 
-### constructor
+### `.constructor()`
 
 ```ts
 new TaskEmitter<T>();
@@ -28,7 +28,7 @@ new TaskEmitter<T>();
 
 `new` を通じて呼び出された場合、`TaskEmitter` はそのインスタンスを返します。
 
-### .on <Badge variant="instance" /><Badge variant="method" />
+### `.on()` <Badge variant="instance" /><Badge variant="method" />
 
 `.on` はイベントエミッターにイベントリスナーを登録する関数です。同じイベントに同じ関数を複数回登録しようとすると、最初の 1 度以外は登録が無視されます。
 
@@ -80,7 +80,7 @@ Hello
 World !!!
 ```
 
-### .off <Badge variant="instance" /><Badge variant="method" />
+### `.off()` <Badge variant="instance" /><Badge variant="method" />
 
 `.off` はイベントエミッターからイベントリスナーを登録解除する関数です。イベントリスナーを省略した場合、対象のイベント名に登録されているすべてのイベントリスナーが登録解除されます。
 
@@ -102,7 +102,7 @@ off(event: string | number, listener?: TaskListener): void;
 
 なし。
 
-### .once <Badge variant="instance" /><Badge variant="method" />
+### `.once()` <Badge variant="instance" /><Badge variant="method" />
 
 `.once` は `.on` と似ていますが、エベントを 1 度だけ補足します。またコールバック関数ではなく、返値の `StatefulPromise` で値を受け取ります。
 
@@ -157,7 +157,7 @@ await emitter.idle();
 
 `.emit` の引数 (配列) で解決される `StatefulPromise` を返します。
 
-### .emit <Badge variant="instance" /><Badge variant="method" />
+### `.emit()` <Badge variant="instance" /><Badge variant="method" />
 
 `.emit` はイベントリスナーに値を発送する関数です。
 
@@ -182,7 +182,7 @@ emit(
 
 イベントリスナーが無ければ `undefined` を返します。イベントリスナーがあれば、それが解決/拒否されるまで待機する `StatefulPromise` の配列を返します。通常この `StatefulPromise` をハンドリングする必要はありません。イベントによって引き起こされる副作用を現在のコンテクストで待機する必要があるか、イベントリスナーの解決/拒否に関心があるときなどに使用できます。
 
-### .idle <Badge variant="instance" /><Badge variant="method" />
+### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
 `.idle` は現在実行中の全イベントリスナーの完了を待機する関数です。
 
@@ -198,7 +198,7 @@ idle(): StatefulPromise<void>;
 
 `void` で解決される `StatefulPromise` を返します。
 
-### .abort <Badge variant="instance" /><Badge variant="method" />
+### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 
 `.abort` は全イベントリスナーの `signal` に中止イベントを発送する関数です。
 

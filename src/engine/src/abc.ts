@@ -119,7 +119,9 @@ export type EngineEvents =
   }
   & {
     // 双方向通信における RPC レスポンスのイベント。
-    [_: `rpc_${BidirectionalRpcResponse["id"]}`]: [response: RpcResponse];
+    [_: `rpc_${BidirectionalRpcResponse["id"]}`]: [
+      response: BidirectionalRpcResponse,
+    ];
     // ライブクエリーの結果のイベント。
     [_: `live_${string}`]: [response: Simplify<Omit<LiveResult, "id">>];
     // エンジン内エラーを通知するイベント。

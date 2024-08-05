@@ -92,7 +92,20 @@ export class Lexer {
     this.depth -= 1;
   }
 
+  private closeLoop(): void {
+    while (
+      this.loop
+      && "index" in this.loop
+      // .length の比較は === で行うこと。
+      && this.loop.index === this.loop.length
+    ) {
+      this.endLoop();
+    }
+  }
+
   end(): void {
+    this.closeLoop();
+
     if (this.loop) {
       throw new CborTooLittleDataError({
         cause: this.loopParents,
@@ -405,14 +418,7 @@ export class Lexer {
 
       yield { mt, ai, value /* , length: payloadLength */ } as DataItem;
 
-      // .length の比較は === で行うこと。
-      while (
-        this.loop
-        && "index" in this.loop
-        && this.loop.index === this.loop.length
-      ) {
-        this.endLoop();
-      }
+      this.closeLoop();
 
       if (!this.loop) {
         continue;

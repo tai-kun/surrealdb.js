@@ -69,28 +69,27 @@ export interface LexerOptions {
 
 export class Lexer {
   private loop: Loop | undefined;
-  private loopDepth = 0;
+  private depth = 0;
   private loopParents: Loop[] = [];
   maxDepth: number;
 
   constructor(options: LexerOptions | undefined = {}) {
-    this.maxDepth = options.maxDepth || 64;
+    this.maxDepth = options.maxDepth ?? 64;
   }
 
-  private loopBegin(parent: Loop): void {
-    if (this.loopDepth >= this.maxDepth) {
+  private beginLoop(parent: Loop, count = true): void {
+    if (count && ++this.depth >= this.maxDepth) {
       throw new CborMaxDepthReachedError(this.maxDepth);
     }
 
-    this.loopDepth += 1;
     this.loopParents.push(this.loop = parent);
   }
 
-  private loopEnd(): void {
+  private endLoop(): void {
     this.loopParents.pop();
     // loopParents が空の場合、loop には初期値と同じ undefined が設定される。
     this.loop = this.loopParents[this.loopParents.length - 1]!;
-    this.loopDepth -= 1;
+    this.depth -= 1;
   }
 
   end(): void {
@@ -305,11 +304,11 @@ export class Lexer {
         case MT_UTF8_STRING: // 3
           if (ai === AI_INDEFINITE_NUM_BYTES) {
             // payloadLength = Infinity;
-            this.loopBegin({
+            this.beginLoop({
               mode: LOOP_MODE_STRING,
               type: mt,
               first: true,
-            });
+            }, false);
           } else {
             payloadLength = value as number;
             value = bytes.subarray(byteOffset, byteOffset += payloadLength);
@@ -335,11 +334,11 @@ export class Lexer {
 
           if (ai === AI_INDEFINITE_NUM_BYTES) {
             // payloadLength = Infinity;
-            this.loopBegin({
+            this.beginLoop({
               mode: LOOP_MODE_STREAM,
             });
           } else if (value !== 0) {
-            this.loopBegin({
+            this.beginLoop({
               mode: LOOP_MODE_ARRAY,
               index: 0,
               length: value as number,
@@ -351,11 +350,11 @@ export class Lexer {
         case MT_MAP: // 5
           if (ai === AI_INDEFINITE_NUM_BYTES) {
             // payloadLength = Infinity;
-            this.loopBegin({
+            this.beginLoop({
               mode: LOOP_MODE_STREAM,
             });
           } else if (value !== 0) {
-            this.loopBegin({
+            this.beginLoop({
               mode: LOOP_MODE_MAP,
               prop: true,
               index: 0,
@@ -406,6 +405,15 @@ export class Lexer {
 
       yield { mt, ai, value /* , length: payloadLength */ } as DataItem;
 
+      // .length の比較は === で行うこと。
+      while (
+        this.loop
+        && "index" in this.loop
+        && this.loop.index === this.loop.length
+      ) {
+        this.endLoop();
+      }
+
       if (!this.loop) {
         continue;
       }
@@ -416,25 +424,19 @@ export class Lexer {
             this.loop.prop = false;
           } else {
             this.loop.prop = true;
-
-            if (++this.loop.index === this.loop.length) {
-              this.loopEnd();
-            }
+            this.loop.index += 1;
           }
 
           break;
 
         case LOOP_MODE_ARRAY:
-          if (++this.loop.index === this.loop.length) {
-            this.loopEnd();
-          }
-
+          this.loop.index += 1;
           break;
 
         case LOOP_MODE_STRING:
           switch (true) {
             case value === BREAK:
-              this.loopEnd();
+              this.endLoop();
               break;
 
             case this.loop.first:
@@ -461,7 +463,7 @@ export class Lexer {
 
         case LOOP_MODE_STREAM:
           if (value === BREAK) {
-            this.loopEnd();
+            this.endLoop();
           }
 
           break;

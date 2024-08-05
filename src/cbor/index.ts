@@ -1,3 +1,6 @@
+export type * from "./src/decode-stream";
+export { default as decodeStream } from "./src/decode-stream";
+
 export type * from "./src/decode";
 export { default as decode } from "./src/decode";
 

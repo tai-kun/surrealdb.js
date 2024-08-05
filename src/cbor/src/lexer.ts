@@ -63,22 +63,34 @@ type Loop = {
   mode: typeof LOOP_MODE_STREAM;
 };
 
+const FRAGMENT_MODE_STRING = 2 as const;
+
+type Fragment = {
+  mode: typeof FRAGMENT_MODE_STRING;
+  type: typeof MT_BYTE_STRING | typeof MT_UTF8_STRING;
+  meta: AdditionalInfo.Value | AdditionalInfo.NumBytes;
+  data: Uint8Array;
+  offset: number;
+};
+
 export interface LexerOptions {
   readonly maxDepth?: number | undefined;
 }
 
 export class Lexer {
-  private loop: Loop | undefined;
+  private loop: Loop | undefined = undefined;
   private depth = 0;
+  private fragment: Fragment | undefined = undefined;
   private loopParents: Loop[] = [];
+
   maxDepth: number;
 
   constructor(options: LexerOptions | undefined = {}) {
     this.maxDepth = options.maxDepth ?? 64;
   }
 
-  private beginLoop(parent: Loop, count = true): void {
-    if (count && ++this.depth >= this.maxDepth) {
+  private beginLoop(parent: Loop): void {
+    if (parent.mode !== LOOP_MODE_STRING && ++this.depth >= this.maxDepth) {
       throw new CborMaxDepthReachedError(this.maxDepth);
     }
 
@@ -86,10 +98,13 @@ export class Lexer {
   }
 
   private endLoop(): void {
+    if (this.loop?.mode !== LOOP_MODE_STRING) {
+      this.depth -= 1;
+    }
+
     this.loopParents.pop();
     // loopParents が空の場合、loop には初期値と同じ undefined が設定される。
     this.loop = this.loopParents[this.loopParents.length - 1]!;
-    this.depth -= 1;
   }
 
   private closeLoop(): void {
@@ -106,16 +121,51 @@ export class Lexer {
   end(): void {
     this.closeLoop();
 
-    if (this.loop) {
+    if (this.loop || this.fragment) {
       throw new CborTooLittleDataError({
-        cause: this.loopParents,
+        cause: {
+          parents: this.loopParents,
+          fragment: this.fragment,
+        },
       });
     }
   }
 
   *stream(bytes: Uint8Array): Generator<DataItem, void, unknown> {
-    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     let byteOffset = 0;
+    const fragment = this.fragment;
+
+    if (fragment) {
+      switch (fragment.mode) {
+        case FRAGMENT_MODE_STRING: {
+          const remaining = fragment.data.length - fragment.offset;
+          const chunk = bytes.subarray(byteOffset, byteOffset += remaining);
+          fragment.data.set(chunk, fragment.offset);
+
+          if (chunk.length < remaining) {
+            fragment.offset += chunk.length;
+            return; // bytes の最後に到達しているので早期リターン
+          }
+
+          let value: string | Uint8Array = fragment.data;
+
+          if (fragment.type === MT_UTF8_STRING) {
+            value = utf8.decode(value);
+          }
+
+          yield { mt: fragment.type, ai: fragment.meta, value } as DataItem;
+
+          this.fragment = undefined;
+
+          break;
+        }
+
+        default:
+          unreachable();
+      }
+    }
+
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
 
     while (byteOffset < view.byteLength) {
       const ib = view.getUint8(byteOffset++);
@@ -321,16 +371,22 @@ export class Lexer {
               mode: LOOP_MODE_STRING,
               type: mt,
               first: true,
-            }, false);
+            });
           } else {
             payloadLength = value as number;
             value = bytes.subarray(byteOffset, byteOffset += payloadLength);
 
-            if (value.length !== payloadLength) {
-              throw new CborSyntaxError(
-                "Expected a payload length of " + payloadLength + " byte(s),"
-                  + " but it was actually " + value.length + " byte(s).",
-              );
+            if (value.length < payloadLength) {
+              const data = new Uint8Array(payloadLength);
+              data.set(value, 0 /* オフセット 0 */);
+              this.fragment = {
+                mode: FRAGMENT_MODE_STRING,
+                type: mt,
+                meta: ai,
+                data,
+                offset: value.length,
+              };
+              return; // bytes の最後に到達しているので早期リターン
             }
 
             if (mt === MT_UTF8_STRING) {

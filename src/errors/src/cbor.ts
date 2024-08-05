@@ -1,4 +1,8 @@
-import { SurrealError, type SurrealErrorOptions } from "./general";
+import {
+  SurrealAggregateError,
+  SurrealError,
+  type SurrealErrorOptions,
+} from "./general";
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cborerror)
@@ -90,5 +94,18 @@ export class CborUnsafeMapKeyError extends CborError {
         + " data type that is safe to use in a JavaScript map or object.",
       options,
     );
+  }
+}
+
+export class CborDecodeStreamAbortFailedError extends SurrealAggregateError {
+  static {
+    this.prototype.name = "CborStreamAbortFailedError";
+  }
+
+  constructor(
+    errors: readonly unknown[],
+    options?: Omit<SurrealErrorOptions, "cause"> | undefined,
+  ) {
+    super("Failed to abort decode-stream", errors, options);
   }
 }

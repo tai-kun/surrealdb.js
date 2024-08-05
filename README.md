@@ -60,12 +60,17 @@ SurrealDB v2.0.0 (currently in alpha)
 
 | Env | Version |
 | --- | --- |
-| Node.js | `^20.x`,`^22.5.1` |
+| Node.js | `20.x`,`^22.5.1` *1 |
 | Deno | `^1.44.3` (not tested) |
 | Bun | `^1.1.13` |
-| Chromium | `>=104` (Probably works with `>=67`) |
-| Firefox | `>=100` (Probably works with `>=68`) |
-| WebKit | `>=15.4` (Probably works with `>=14`) |
+| Chromium | `>=104` *2 |
+| Firefox | `>=100` *3 |
+| WebKit | `>=15.4` *4 |
+
+*1: Probably works with `18.x`  
+*2: Probably works with `>=78`  
+*3: Probably works with `>=68`  
+*4: Probably works with `>=14`
 
 and:
 

@@ -1,3 +1,5 @@
+import type { ToCBOR } from "@tai-kun/surrealdb/cbor";
+
 export type Data = typeof globalThis extends
   { Buffer: new(...args: any) => infer Buff }
   ? string | ArrayBuffer | Uint8Array | Buff | Buff[]
@@ -8,9 +10,15 @@ export type Data = typeof globalThis extends
 //   signal: AbortSignal;
 // }
 
+export type Encoded = ToCBOR | {
+  readonly toJSON: () => unknown; // toRawJSON に対応していない場合に備える
+  readonly toRawJSON?: (() => string) | undefined;
+};
+
 export interface Formatter {
   readonly mimeType?: string | undefined;
   readonly wsFormat?: string | undefined;
+  readonly toEncoded?: (data: unknown) => Encoded;
   readonly encodeSync: (data: unknown) => string | Uint8Array;
   readonly decodeSync: (data: Data) => unknown;
   // readonly encode?: (

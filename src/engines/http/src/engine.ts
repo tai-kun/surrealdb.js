@@ -163,16 +163,18 @@ export default class HttpEngine extends EngineAbc {
         this.database = database;
 
         return {
-          result: null,
+          result: undefined,
         };
       }
 
       case "let": {
         const [name, value] = request.params;
-        this.vars[name] = cloneSync(this.fmt, value);
+        this.vars[name] = this.fmt.toEncoded?.(value)
+          // WebSocket エンジンとの挙動を合わせるためにパラメーターを不変にする。
+          ?? cloneSync(this.fmt, value);
 
         return {
-          result: null,
+          result: undefined,
         };
       }
 
@@ -181,7 +183,7 @@ export default class HttpEngine extends EngineAbc {
         delete this.vars[name];
 
         return {
-          result: null,
+          result: undefined,
         };
       }
 

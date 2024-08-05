@@ -12,6 +12,22 @@ export default class JsonFormatter implements Formatter {
   decodeSync(data: Data): unknown {
     return JSON.parse(toString(data));
   }
+
+  toEncoded(data: unknown) {
+    const json = this.encodeSync(data);
+
+    // TODO(tai-kun): JSON フォーマッターの事前エンコーディングを実装する。
+    return {
+      data: this.decodeSync(json),
+      // json,
+      toJSON() {
+        return this.data;
+      },
+      // toRawJSON() {
+      //   return this.json;
+      // },
+    };
+  }
 }
 
 const decoder = /* @__PURE__ */ new TextDecoder();

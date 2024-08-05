@@ -1,11 +1,7 @@
-import type { ToCBOR, Writer } from "@tai-kun/surrealdb/cbor";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import { cloneSync, type Formatter } from "@tai-kun/surrealdb/formatter";
+import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import PreparedQuery from "./prepared-query";
 import Slot from "./slot";
-
-const MIME_CBOR_REGEX = /\bcbor\b/;
-const MIME_JSON_REGEX = /\bjson\b/;
 
 export interface Surql {
   <V extends unknown[] = unknown[]>(
@@ -28,18 +24,6 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
     formatter,
     varPrefix = "_jst_", // JavaScript, Tagged Template Literals
   } = config;
-  const transform: (value: unknown) => unknown = !formatter.mimeType
-    ? v => v
-    : MIME_JSON_REGEX.test(formatter.mimeType)
-    ? v => cloneSync(formatter, v)
-    : !MIME_CBOR_REGEX.test(formatter.mimeType)
-    ? v => v
-    : (data): ToCBOR & { bytes: Uint8Array } => ({
-      bytes: formatter.encodeSync(data) as Uint8Array, // TODO(tai-kun): assert
-      toCBOR(w: Writer) {
-        w.writeBytes(this.bytes);
-      },
-    });
 
   function surql(texts: readonly string[], ...values: unknown[]) {
     if (texts.length - values.length !== 1) {
@@ -73,7 +57,7 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
         slots.push(v);
       } else {
         text += "$" + varPrefix + j;
-        vars[varPrefix + j] = transform(v);
+        vars[varPrefix + j] = formatter.toEncoded?.(v) ?? v;
       }
     }
 

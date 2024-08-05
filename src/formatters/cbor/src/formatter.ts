@@ -5,6 +5,7 @@ import {
   encode,
   type EncodeOptions,
   Tagged,
+  type Writer,
 } from "@tai-kun/surrealdb/cbor";
 import type {
   DatetimeSource,
@@ -163,6 +164,15 @@ export default class CborFormatter implements Formatter {
 
   decodeSync(data: Data): unknown {
     return decode(toUint8Array(data), this.decodeOptions);
+  }
+
+  toEncoded(data: unknown) {
+    return {
+      bytes: encode(data, this.encodeOptions),
+      toCBOR(w: Writer) {
+        w.writeBytes(this.bytes);
+      },
+    };
   }
 }
 

@@ -276,3 +276,23 @@ describe("maxDepth", () => {
     expect(run).toThrowError(CborMaxDepthReachedError);
   });
 });
+
+describe("chunkSize", () => {
+  test("チャンクサイズを超える入力に耐性あり", () => {
+    const bytes = new TextEncoder().encode("Hello, World"); // 12 bytes
+    const encoded = encode(bytes, { chunkSize: 10 });
+
+    expect(encoded).toHaveLength(1 + 12); // header (1 byte) + payload (12 bytes)
+  });
+
+  test("途中でチャンクに空き容量が無くなったら確保する", () => {
+    const bytes1 = new TextEncoder().encode("Hello"); // 5 bytes
+    const bytes2 = new TextEncoder().encode("World"); // 5 bytes
+    const encoded = encode([bytes1, bytes2], { chunkSize: 10 });
+
+    // header (1 byte)
+    // + header (1 byte) + payload1 (5 bytes)
+    // + header (1 byte) + payload1 (5 bytes)
+    expect(encoded).toHaveLength(1 + (1 + 5) + (1 + 5));
+  });
+});

@@ -58,6 +58,7 @@ export class Writer {
         }
       }
     } else {
+      this.trim();
       this.alloc(size);
     }
   }

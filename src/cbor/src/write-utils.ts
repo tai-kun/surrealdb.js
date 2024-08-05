@@ -175,7 +175,7 @@ function writeFloat64(w: Writer, value: number): void {
 export function writeFloat(w: Writer, value: number): void {
   if (
     value !== value // NaN
-    || value === 0
+    || value === 0 // -0 も 0 にする。
     || value === Infinity
     || value === -Infinity
   ) {

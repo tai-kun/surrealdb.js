@@ -1,6 +1,6 @@
 {
   "name": "@tai-kun/surrealdb",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "license": "Apache-2.0",
   "description": "The SurrealDB SDK for JavaScript",
   "sideEffects": false,

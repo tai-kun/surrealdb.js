@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.1](https://github.com/tai-kun/surrealdb.js/compare/v1.2.0...v1.2.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* **cbor:** toCBOR で Writer に書き込むとエンコードが終わらないバグを修正 ([b5dd88e](https://github.com/tai-kun/surrealdb.js/commit/b5dd88eb0c4cd26fa9aebfb237a87d0272977e0a))
+
+
+### Performance Improvements
+
+* CBOR を事前にエンコードしておく ([05379e1](https://github.com/tai-kun/surrealdb.js/commit/05379e1311be5c6683e2baae36dcb3ec5d5e3552))
+
 ## [1.2.0](https://github.com/tai-kun/surrealdb.js/compare/v1.1.0...v1.2.0) (2024-08-04)
 
 

@@ -297,20 +297,22 @@ export function write(
             break;
 
           case typeof (value as ToCBOR).toCBOR === "function": {
-            const tagged = (value as ToCBOR).toCBOR(w);
+            const cbor = (value as ToCBOR).toCBOR(w);
 
-            if (Array.isArray(tagged)) {
-              if (tagged.length === 2) {
-                writeTag(w, tagged[0]);
-                value = tagged[1];
-              } else if (tagged.length === 1) {
-                value = tagged[0];
-              } else {
-                throw new SurrealTypeError(
-                  "an array of length 1 or 2",
-                  `an array of length ${(tagged as any[]).length}`,
-                );
-              }
+            if (!Array.isArray(cbor)) {
+              break; // Writer で書き込み済みと判断して次のステップに進む。
+            }
+
+            if (cbor.length === 2) {
+              writeTag(w, cbor[0]);
+              value = cbor[1];
+            } else if (cbor.length === 1) {
+              value = cbor[0];
+            } else {
+              throw new SurrealTypeError(
+                "an array of length 1 or 2",
+                `an array of length ${(cbor as any[]).length}`,
+              );
             }
 
             continue; // loop ではないので抜け出さないようにする。

@@ -1,4 +1,10 @@
-import { decode, encode, Tagged } from "@tai-kun/surrealdb/cbor";
+import {
+  decode,
+  encode,
+  Tagged,
+  writeInteger,
+  type Writer,
+} from "@tai-kun/surrealdb/cbor";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { expect, test } from "vitest";
 
@@ -55,6 +61,20 @@ test("toCBOR", () => {
 test("タグなし toCBOR", () => {
   const cborValue = {
     toCBOR: () => [20],
+  };
+
+  expect(encode(cborValue)).toStrictEqual(
+    new Uint8Array([
+      0b000_10100, // mt: 0, ai: 20
+    ]),
+  );
+});
+
+test("Writer で書き込む toCBOR", () => {
+  const cborValue = {
+    toCBOR: (w: Writer) => {
+      writeInteger(w, 20);
+    },
   };
 
   expect(encode(cborValue)).toStrictEqual(

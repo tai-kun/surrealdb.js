@@ -261,11 +261,10 @@ export function write(
   const loopParents: Loop[] = [];
 
   function beginLoop(parent: Loop): void {
-    if (w.depth >= w.maxDepth) {
+    if (++w.depth >= w.maxDepth) {
       throw new CborMaxDepthReachedError(w.maxDepth);
     }
 
-    w.depth += 1;
     loopParents.push(loop = parent);
   }
 

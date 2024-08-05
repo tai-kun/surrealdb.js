@@ -1,5 +1,6 @@
 import { CONTINUE, encode } from "@tai-kun/surrealdb/cbor";
 import {
+  CborMaxDepthReachedError,
   CborUnsafeMapKeyError,
   CircularReferenceError,
 } from "@tai-kun/surrealdb/errors";
@@ -230,5 +231,48 @@ describe("isSafeObjectKey", () => {
     };
 
     expect(run).not.toThrowError(CborUnsafeMapKeyError);
+  });
+});
+
+describe("maxDepth", () => {
+  test("最大深さと同じ深さなら大丈夫", () => {
+    const run = () => {
+      encode(
+        [[]],
+        { maxDepth: 2 },
+      );
+    };
+    expect(run).not.toThrowError(CborMaxDepthReachedError);
+  });
+
+  test("最大深さを超えるオブジェクトでエラー", () => {
+    const run = () => {
+      encode(
+        [[[]]],
+        { maxDepth: 2 },
+      );
+    };
+    expect(run).toThrowError(CborMaxDepthReachedError);
+  });
+
+  test("オブジェクトが深さのカウント対象", () => {
+    const run = () => {
+      encode(
+        {
+          // depth: 1
+          a: new Map([
+            // depth: 2
+            ["b", [
+              // depth: 3
+              new Set([
+                // depth: 4
+              ]),
+            ]],
+          ]),
+        },
+        { maxDepth: 3 },
+      );
+    };
+    expect(run).toThrowError(CborMaxDepthReachedError);
   });
 });

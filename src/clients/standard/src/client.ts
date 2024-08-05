@@ -324,7 +324,7 @@ export default class Client extends Base {
     surql: string | PreparedQueryLike,
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<unknown[]> {
+  ): Promise<readonly unknown[]> {
     const results = await this.queryRaw(surql, vars, options);
     const output: unknown[] = [];
     const errors: string[] = [];
@@ -341,7 +341,11 @@ export default class Client extends Base {
       throw new QueryFailedError(errors);
     }
 
-    return output;
+    if (typeof surql === "string") {
+      return output;
+    }
+
+    return surql.parse(output);
   }
 
   async let(

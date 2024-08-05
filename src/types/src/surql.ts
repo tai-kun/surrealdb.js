@@ -6,6 +6,7 @@ export type SlotLike<
   readonly name: N;
   readonly isRequired: R;
   readonly defaultValue?: V;
+  readonly parse: (value: unknown) => V;
 };
 
 export type PreparedQueryLike = {

@@ -66,7 +66,7 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
 
   function slot(...args: [name: string, defaultValue?: unknown]): Slot {
     return args.length >= 2
-      ? new Slot(args[0], false, args[1])
+      ? new Slot(args[0], false, { defaultValue: args[1] })
       : new Slot(args[0], true);
   }
 

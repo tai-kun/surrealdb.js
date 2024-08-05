@@ -17,11 +17,11 @@ export default function processQueryRequest(request: RpcQueryRequest): {
   const required: string[] = [];
 
   for (const slot of slots) {
-    if (slot.isRequired) {
-      if (!(slot.name in vars)) {
-        required.push(slot.name);
-      }
-    } else if (!(slot.name in vars) && "defaultValue" in slot) {
+    if (slot.name in vars) {
+      vars[slot.name] = slot.parse(vars[slot.name]);
+    } else if (slot.isRequired) {
+      required.push(slot.name);
+    } else if ("defaultValue" in slot) {
       vars[slot.name] = slot.defaultValue;
     }
   }

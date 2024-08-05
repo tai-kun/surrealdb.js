@@ -1,3 +1,6 @@
+export type * from "./src/create-surql";
+export { default as createSurql } from "./src/create-surql";
+
 export {
   type DataType,
   dataTypeOf,
@@ -37,7 +40,13 @@ export {
 export type * from "./src/init-surreal";
 export { default as initSurreal } from "./src/init-surreal";
 
+export type * from "./src/prepared-query";
+export { default as PreparedQuery } from "./src/prepared-query";
+
 export type * from "./src/rpc";
 export { default as rpc } from "./src/rpc";
+
+export type * from "./src/slot";
+export { default as Slot } from "./src/slot";
 
 export type * from "@tai-kun/surrealdb/types";

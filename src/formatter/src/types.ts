@@ -13,23 +13,36 @@ export type EncodedData = typeof globalThis extends
   ? string | Uint8Array | Buff
   : string | Uint8Array
 
+export type DecodingContext =
+  | { name: "fetch"; length: number }
+  | never; // 追加
+
+export type DecodingStrategy = "sync" | "stream";
+
 export interface Formatter {
+  //////////////
+  //  config  //
+  //////////////
+
   readonly mimeType?: string | undefined;
   readonly wsFormat?: string | undefined;
 
-  readonly toEncoded?: <T>(data: T) => EncodedCBOR<T> | EncodedJSON<T>;
+  //////////////
+  // encoding //
+  //////////////
 
+  readonly toEncoded?: <T>(data: T) => EncodedCBOR<T> | EncodedJSON<T>;
   readonly encodeSync: (data: unknown) => EncodedData;
-  // readonly encode?: (
-  //   args: {
-  //     writer: ???;
-  //     signal: AbortSignal;
-  //   },
-  // ) => PromiseLike<unknown>;
+  // readonly encodeStream?: () => PromiseLike<unknown>;
+
+  //////////////
+  // decoding //
+  //////////////
 
   readonly decodeSync: (data: Data) => unknown;
-  readonly decode?: (
+  readonly decodeStream?: (
     data: ReadableStream<Uint8Array>,
     signal: AbortSignal,
   ) => StatefulPromise<unknown>;
+  readonly decodingStrategy?: (ctx: DecodingContext) => DecodingStrategy;
 }

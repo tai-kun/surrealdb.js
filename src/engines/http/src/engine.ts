@@ -253,18 +253,21 @@ export default class HttpEngine extends EngineAbc {
     // throwIfAborted(signal);
     let rpcResp: unknown;
 
-    // TODO(tai-kun): CBOR の非同期デコードを実装したけど、ボディサイズによっては同期デコードの方
-    // が高速だと思うので、そのへんどうするか検討
-    // if (this.fmt.decode) {
-    //   rpcResp = await this.fmt.decode({
-    //     reader: resp.body.getReader(),
-    //     signal,
-    //   });
-    // } else {
-    //   rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
-    // }
-    rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
-    // throwIfAborted(signal);
+    if (this.fmt.decodeStream && this.fmt.decodingStrategy) {
+      const length = Number(resp.headers.get("content-length"));
+
+      if (
+        length === length
+        && length > 0
+        && this.fmt.decodingStrategy({ name: "fetch", length }) === "stream"
+      ) {
+        rpcResp = await this.fmt.decodeStream(resp.body, signal);
+      } else {
+        rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
+      }
+    } else {
+      rpcResp = this.fmt.decodeSync(await resp.arrayBuffer());
+    }
 
     if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
       throw new ResponseError("Expected id-less rpc response.", {

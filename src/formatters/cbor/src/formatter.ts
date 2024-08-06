@@ -1,10 +1,10 @@
 import {
   CONTINUE,
   decode,
-  type DecodeOptions,
+  type DecodeOptions as CborDecodeOptions,
   decodeStream,
   encode,
-  type EncodeOptions,
+  type EncodeOptions as CborEncodeOptions,
   Tagged,
 } from "@tai-kun/surrealdb/cbor";
 import type {
@@ -35,6 +35,8 @@ import {
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import {
   type Data,
+  type DecodingContext,
+  type DecodingStrategy,
   EncodedCBOR,
   type Formatter,
 } from "@tai-kun/surrealdb/formatter";
@@ -67,6 +69,12 @@ export interface CborDataTypes {
   readonly GeometryMultiPoint: new(_: any) => any;
   readonly GeometryCollection: new(_: any) => any;
   readonly GeometryMultiPolygon: new(_: any) => any;
+}
+
+export interface EncodeOptions extends CborEncodeOptions {}
+
+export interface DecodeOptions extends CborDecodeOptions {
+  readonly streamThreshold?: number | undefined;
 }
 
 export interface CborFormatterOptions extends CborDataTypes {
@@ -174,24 +182,6 @@ export default class CborFormatter implements Formatter {
     };
   }
 
-  encodeSync(data: unknown): EncodedData {
-    return encode(data, this.encodeOptions);
-  }
-
-  decodeSync(data: Data): unknown {
-    return decode(toEncodedData(data), this.decodeOptions);
-  }
-
-  decode(
-    data: ReadableStream<Uint8Array>,
-    signal: AbortSignal,
-  ): StatefulPromise<unknown> {
-    return decodeStream(data, {
-      ...this.decodeOptions,
-      signal,
-    });
-  }
-
   toEncoded<T = unknown>(data: T): EncodedCBOR<T> {
     if (data instanceof EncodedCBOR) {
       return data;
@@ -203,6 +193,34 @@ export default class CborFormatter implements Formatter {
         w.writeBytes(this);
       },
     );
+  }
+
+  encodeSync(data: unknown): EncodedData {
+    return encode(data, this.encodeOptions);
+  }
+
+  decodeSync(data: Data): unknown {
+    return decode(toEncodedData(data), this.decodeOptions);
+  }
+
+  decodeStream(
+    data: ReadableStream<Uint8Array>,
+    signal: AbortSignal,
+  ): StatefulPromise<unknown> {
+    return decodeStream(data, {
+      ...this.decodeOptions,
+      signal,
+    });
+  }
+
+  /** @experimental */
+  decodingStrategy(ctx: DecodingContext): DecodingStrategy {
+    // TODO(tai-kun): 8 KiB は適当。要調整。
+    if (ctx.length > (this.decodeOptions.streamThreshold || 8192)) {
+      return "stream";
+    }
+
+    return "sync";
   }
 }
 

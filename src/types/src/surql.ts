@@ -10,7 +10,7 @@ export type SlotLike<
 };
 
 export type PreparedQueryLike = {
-  readonly text: string;
+  readonly text: string | { readonly __type: string };
   readonly vars: { readonly [p: string]: unknown };
   readonly slots: readonly SlotLike[];
   readonly parse: (results: unknown[]) => readonly unknown[];

@@ -61,7 +61,11 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
       }
     }
 
-    return new PreparedQuery(text, vars, slots);
+    return new PreparedQuery(
+      formatter.toEncoded?.(text) ?? text,
+      vars,
+      slots,
+    );
   }
 
   function slot(...args: [name: string, defaultValue?: unknown]): Slot {

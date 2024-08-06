@@ -1,9 +1,15 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import type { RpcQueryRequest } from "@tai-kun/surrealdb/types";
+import type {
+  PreparedQueryLike,
+  RpcQueryRequest,
+} from "@tai-kun/surrealdb/types";
 
 export default function processQueryRequest(request: RpcQueryRequest): {
   method: "query";
-  params: [text: string, vars: { [p: string]: unknown }];
+  params: [
+    text: PreparedQueryLike["text"],
+    vars: { [p: string]: unknown },
+  ];
 } {
   const [arg0, args] = request.params;
   const {

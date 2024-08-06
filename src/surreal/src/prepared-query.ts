@@ -11,7 +11,7 @@ export default class PreparedQuery<
   readonly __type: T;
 
   constructor(
-    readonly text: string,
+    readonly text: string | { readonly __type: string },
     readonly vars: { readonly [p: string]: unknown },
     readonly slots: readonly S[],
     readonly parse: (results: unknown[]) => T = passthrough,

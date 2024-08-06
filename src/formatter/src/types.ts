@@ -16,15 +16,18 @@ export type EncodedData = typeof globalThis extends
 export interface Formatter {
   readonly mimeType?: string | undefined;
   readonly wsFormat?: string | undefined;
-  readonly toEncoded?: (data: unknown) => EncodedCBOR | EncodedJSON;
+
+  readonly toEncoded?: <T>(data: T) => EncodedCBOR<T> | EncodedJSON<T>;
+
   readonly encodeSync: (data: unknown) => EncodedData;
-  readonly decodeSync: (data: Data) => unknown;
   // readonly encode?: (
   //   args: {
   //     writer: ???;
   //     signal: AbortSignal;
   //   },
   // ) => PromiseLike<unknown>;
+
+  readonly decodeSync: (data: Data) => unknown;
   readonly decode?: (
     data: ReadableStream<Uint8Array>,
     signal: AbortSignal,

@@ -37,7 +37,7 @@ export default class JsonFormatter implements Formatter {
     }
   }
 
-  toEncoded(data: unknown): EncodedJSON {
+  toEncoded<T>(data: T): EncodedJSON<T> {
     return new EncodedJSON(
       {
         data: this.cloneSync(data),

@@ -1,5 +1,9 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import type { Data, Formatter } from "@tai-kun/surrealdb/formatter";
+import {
+  type Data,
+  EncodedJSON,
+  type Formatter,
+} from "@tai-kun/surrealdb/formatter";
 import { isArrayBuffer, utf8 } from "@tai-kun/surrealdb/utils";
 
 export default class JsonFormatter implements Formatter {
@@ -13,18 +17,17 @@ export default class JsonFormatter implements Formatter {
     return JSON.parse(toString(data));
   }
 
-  toEncoded(data: unknown) {
-    return {
-      data,
-      // json,
-      toJSON() {
+  toEncoded(data: unknown): EncodedJSON {
+    return new EncodedJSON(
+      { data },
+      function toJSON() {
         return this.data;
       },
       // TODO(tai-kun): JSON フォーマッターの事前エンコーディングを実装する。
-      // toRawJSON() {
-      //   return this.json;
+      // function toRawJSON() {
+      //   return (this.json ??= JSON.stringify(this.data));
       // },
-    };
+    );
   }
 }
 

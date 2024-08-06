@@ -6,7 +6,6 @@ import {
   encode,
   type EncodeOptions,
   Tagged,
-  type Writer,
 } from "@tai-kun/surrealdb/cbor";
 import type {
   DatetimeSource,
@@ -34,7 +33,11 @@ import {
   CBOR_TAG_TABLE,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import type { Data, Formatter } from "@tai-kun/surrealdb/formatter";
+import {
+  type Data,
+  EncodedCBOR,
+  type Formatter,
+} from "@tai-kun/surrealdb/formatter";
 import {
   isArrayBuffer,
   type StatefulPromise,
@@ -181,13 +184,13 @@ export default class CborFormatter implements Formatter {
     });
   }
 
-  toEncoded(data: unknown) {
-    return {
-      bytes: encode(data, this.encodeOptions),
-      toCBOR(w: Writer) {
-        w.writeBytes(this.bytes);
+  toEncoded<T = unknown>(data: T): EncodedCBOR<T> {
+    return new EncodedCBOR(
+      this.encodeSync(data),
+      function toCBOR(w) {
+        w.writeBytes(this);
       },
-    };
+    );
   }
 }
 

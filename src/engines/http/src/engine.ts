@@ -20,6 +20,7 @@ import { cloneSync } from "@tai-kun/surrealdb/formatter";
 import type {
   IdLessRpcResponse,
   RpcParams,
+  RpcQueryRequest,
   RpcResult,
 } from "@tai-kun/surrealdb/types";
 import { isBrowser, mutex } from "@tai-kun/surrealdb/utils";
@@ -190,7 +191,7 @@ export default class HttpEngine extends EngineAbc {
       case "query": {
         const req = processQueryRequest(request);
         req.params[1] = { ...this.vars, ...req.params[1] };
-        request = req;
+        request = req as RpcQueryRequest;
         break;
       }
     }

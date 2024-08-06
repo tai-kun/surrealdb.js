@@ -24,6 +24,7 @@ import {
 import type {
   BidirectionalRpcResponse,
   RpcParams,
+  RpcQueryRequest,
   RpcResult,
 } from "@tai-kun/surrealdb/types";
 import {
@@ -433,7 +434,7 @@ export default class WebSocketEngine extends EngineAbc {
       }
 
       case "query": {
-        request = processQueryRequest(request);
+        request = processQueryRequest(request) as RpcQueryRequest;
         break;
       }
     }

@@ -107,7 +107,10 @@ async function rpc(request: InlineRpcRequest): Promise<unknown> {
   }
 
   if (rpcRequest.method === "query") {
-    rpcRequest.params = processQueryRequest(rpcRequest).params;
+    rpcRequest.params = processQueryRequest(rpcRequest).params as [
+      text: string,
+      vars: { [p: string]: unknown },
+    ];
   }
 
   const body: unknown = fmt.encodeSync({

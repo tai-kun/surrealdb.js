@@ -1,14 +1,10 @@
 import type { ToCBOR } from "@tai-kun/surrealdb/cbor";
+import type { StatefulPromise } from "@tai-kun/surrealdb/utils";
 
 export type Data = typeof globalThis extends
   { Buffer: new(...args: any) => infer Buff }
   ? string | ArrayBuffer | Uint8Array | Buff | Buff[]
   : string | ArrayBuffer | Uint8Array;
-
-// export interface DecodeArgs {
-//   reader: ReadableStreamDefaultReader<Uint8Array>;
-//   signal: AbortSignal;
-// }
 
 export type EncodedCBOR = ToCBOR;
 
@@ -31,5 +27,8 @@ export interface Formatter {
   //     signal: AbortSignal;
   //   },
   // ) => PromiseLike<unknown>;
-  // readonly decode?: (args: DecodeArgs) => PromiseLike<unknown>;
+  readonly decode?: (
+    data: ReadableStream<Uint8Array>,
+    signal: AbortSignal,
+  ) => StatefulPromise<unknown>;
 }

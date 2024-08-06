@@ -197,7 +197,9 @@ export default class WebSocketEngine extends EngineAbc {
     });
     ws.addEventListener("message", async evt => {
       try {
-        // TODO(tai-kun): Blob の .stream を活用できるように。
+        // TODO(tai-kun): Blob の .stream を活用できるように。CBOR の非同期デコードを実装
+        // したけど、ボディサイズによっては同期デコードの方が高速だと思うので、そのへんどうするか検討
+
         // Node.js v22 と ws v8.18.0 以降は Blob も来る。
         const data = evt.data instanceof Blob
           ? await (evt.data as Blob).arrayBuffer()

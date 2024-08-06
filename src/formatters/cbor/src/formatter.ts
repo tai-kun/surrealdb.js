@@ -2,6 +2,7 @@ import {
   CONTINUE,
   decode,
   type DecodeOptions,
+  decodeStream,
   encode,
   type EncodeOptions,
   Tagged,
@@ -34,7 +35,11 @@ import {
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { Data, Formatter } from "@tai-kun/surrealdb/formatter";
-import { isArrayBuffer, utf8 } from "@tai-kun/surrealdb/utils";
+import {
+  isArrayBuffer,
+  type StatefulPromise,
+  utf8,
+} from "@tai-kun/surrealdb/utils";
 
 export interface CborDataTypes {
   readonly Uuid: new(_: UuidSource) => any;
@@ -164,6 +169,16 @@ export default class CborFormatter implements Formatter {
 
   decodeSync(data: Data): unknown {
     return decode(toUint8Array(data), this.decodeOptions);
+  }
+
+  decode(
+    data: ReadableStream<Uint8Array>,
+    signal: AbortSignal,
+  ): StatefulPromise<unknown> {
+    return decodeStream(data, {
+      ...this.decodeOptions,
+      signal,
+    });
   }
 
   toEncoded(data: unknown) {

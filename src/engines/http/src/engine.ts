@@ -252,7 +252,8 @@ export default class HttpEngine extends EngineAbc {
     // throwIfAborted(signal);
     let rpcResp: unknown;
 
-    // TODO(tai-kun): 非同期デコードを実装したい
+    // TODO(tai-kun): CBOR の非同期デコードを実装したけど、ボディサイズによっては同期デコードの方
+    // が高速だと思うので、そのへんどうするか検討
     // if (this.fmt.decode) {
     //   rpcResp = await this.fmt.decode({
     //     reader: resp.body.getReader(),

@@ -36,6 +36,7 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
     let text = "";
     const vars: { [p: string]: unknown } = {};
     const slots: Slot[] = [];
+    const slotNames: string[] = [];
 
     for (let i = 0, j: number, v, len = texts.length; i < len; i++) {
       text += texts[i];
@@ -54,10 +55,17 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
 
       if (v instanceof Slot) {
         text += "$" + v.name;
-        slots.push(v);
+
+        if (j === i && slotNames.indexOf(v.name) < 0) {
+          slots.push(v);
+          slotNames.push(v.name);
+        }
       } else {
         text += "$" + varPrefix + j;
-        vars[varPrefix + j] = formatter.toEncoded?.(v) ?? v;
+
+        if (j === i) {
+          vars[varPrefix + j] = formatter.toEncoded?.(v) ?? v;
+        }
       }
     }
 

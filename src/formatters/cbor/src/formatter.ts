@@ -44,6 +44,14 @@ import {
   utf8,
 } from "@tai-kun/surrealdb/utils";
 
+const hasBuffer = typeof Buffer !== "undefined";
+
+// dprint-ignore
+type EncodedData = typeof globalThis extends
+  { Buffer: new(...args: any) => infer Buff }
+  ? Uint8Array | Buff
+  : Uint8Array
+
 export interface CborDataTypes {
   readonly Uuid: new(_: UuidSource) => any;
   readonly Table: new(_: TableSource) => any;
@@ -166,12 +174,12 @@ export default class CborFormatter implements Formatter {
     };
   }
 
-  encodeSync(data: unknown): Uint8Array {
+  encodeSync(data: unknown): EncodedData {
     return encode(data, this.encodeOptions);
   }
 
   decodeSync(data: Data): unknown {
-    return decode(toUint8Array(data), this.decodeOptions);
+    return decode(toEncodedData(data), this.decodeOptions);
   }
 
   decode(
@@ -194,22 +202,19 @@ export default class CborFormatter implements Formatter {
   }
 }
 
-function toUint8Array(data: Data): Uint8Array {
+function toEncodedData(data: Data): EncodedData {
   switch (true) {
     case data instanceof Uint8Array:
-      return typeof Buffer === "undefined"
+      return hasBuffer && data instanceof Buffer
         ? new Uint8Array(data)
-        : data instanceof Buffer
-        ? new Uint8Array(data)
-        : data;
+        : data as Uint8Array;
 
     case isArrayBuffer(data):
       return new Uint8Array(data);
 
-    case typeof Buffer !== "undefined"
+    case hasBuffer
       && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
-      // return Buffer.concat(data);
-      return new Uint8Array(Buffer.concat(data));
+      return Buffer.concat(data);
 
     case typeof data === "string":
       return utf8.encode(data);

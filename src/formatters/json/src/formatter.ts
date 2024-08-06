@@ -1,5 +1,6 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import {
+  cloneSync,
   type Data,
   EncodedJSON,
   type Formatter,
@@ -19,7 +20,9 @@ export default class JsonFormatter implements Formatter {
 
   toEncoded(data: unknown): EncodedJSON {
     return new EncodedJSON(
-      { data },
+      {
+        data: cloneSync(this, data),
+      },
       function toJSON() {
         return this.data;
       },

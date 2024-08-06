@@ -38,6 +38,10 @@ export default class JsonFormatter implements Formatter {
   }
 
   toEncoded<T>(data: T): EncodedJSON<T> {
+    if (data instanceof EncodedJSON) {
+      return data;
+    }
+
     return new EncodedJSON(
       {
         data: this.cloneSync(data),

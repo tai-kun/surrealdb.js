@@ -142,7 +142,7 @@ describe("スロットを埋め込める", () => {
   });
 
   test(".slots", () => {
-    expect(CreateUserQuery.slots).toStrictEqual([
+    expect(CreateUserQuery.slots).toMatchObject([
       new Slot("value", true),
     ]);
   });

@@ -193,6 +193,10 @@ export default class CborFormatter implements Formatter {
   }
 
   toEncoded<T = unknown>(data: T): EncodedCBOR<T> {
+    if (data instanceof EncodedCBOR) {
+      return data;
+    }
+
     return new EncodedCBOR(
       this.encodeSync(data),
       function toCBOR(w) {

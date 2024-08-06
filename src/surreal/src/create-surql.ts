@@ -78,22 +78,25 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
         text += "$" + varPrefix + j;
 
         if (j === i) {
-          vars[varPrefix + j] = formatter.toEncoded?.(v) ?? v;
+          vars[varPrefix + j] = formatter.toEncoded?.(v) || v;
         }
       }
     }
 
     return new PreparedQuery(
-      formatter.toEncoded?.(text) ?? text,
+      formatter.toEncoded?.(text) || text,
       vars,
       slots,
     );
   }
 
   function slot(...args: [name: string, defaultValue?: unknown]): Slot {
-    return args.length >= 2
-      ? new Slot(args[0], false, { defaultValue: args[1] })
-      : new Slot(args[0], true);
+    return args.length === 1
+      ? new Slot(args[0], true, { formatter })
+      : new Slot(args[0], false, {
+        formatter,
+        defaultValue: formatter.toEncoded?.(args[1]) || args[1],
+      });
   }
 
   // @ts-expect-error

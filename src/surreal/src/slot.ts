@@ -1,3 +1,4 @@
+import type { Encoded, Formatter } from "@tai-kun/surrealdb/formatter";
 import type { SlotLike } from "@tai-kun/surrealdb/types";
 import type { Writable } from "type-fest";
 
@@ -5,7 +6,8 @@ const passthrough = (v: unknown): any => v;
 
 export interface SlotOptions<V = any> {
   readonly parse?: ((value: unknown) => V) | undefined;
-  readonly defaultValue?: V;
+  readonly formatter?: Formatter | undefined;
+  readonly defaultValue?: V | Encoded<V>;
 }
 
 export default class Slot<
@@ -13,8 +15,10 @@ export default class Slot<
   R extends boolean = any,
   V = any,
 > implements SlotLike {
+  protected readonly fmt?: Formatter;
+
   readonly parse: (value: unknown) => V;
-  readonly defaultValue?: V;
+  readonly defaultValue?: V | Encoded<V>;
 
   constructor(
     readonly name: N,
@@ -23,9 +27,26 @@ export default class Slot<
   ) {
     this.parse = options.parse || passthrough;
 
+    if (options.formatter) {
+      this.fmt = options.formatter;
+    }
+
     if ("defaultValue" in options) {
       this.defaultValue = options.defaultValue;
     }
+  }
+
+  protected toOptions(): SlotOptions<V> {
+    const options: Writable<SlotOptions> = {
+      parse: this.parse,
+      formatter: this.fmt,
+    };
+
+    if ("defaultValue" in this) {
+      options.defaultValue = this.defaultValue;
+    }
+
+    return options;
   }
 
   type<TBind extends V>(): Slot<N, true, TBind>;
@@ -50,7 +71,7 @@ export default class Slot<
   ): Slot<N, R, V> {
     const This = this.constructor as typeof Slot;
 
-    return new This(name, this.isRequired, this);
+    return new This(name, this.isRequired, this.toOptions());
   }
 
   default(defaultValue: V): Slot<N, false, V> {
@@ -58,7 +79,8 @@ export default class Slot<
 
     return new This(this.name, false, {
       parse: this.parse,
-      defaultValue: defaultValue,
+      formatter: this.fmt,
+      defaultValue: this.fmt?.toEncoded?.(defaultValue) || defaultValue,
       // TODO(tai-kun): ここでパースする必要あるか検討 (高コストだけどコンストラクター内でやる？)
       // defaultValue: this.parse(defaultValue),
     });
@@ -67,7 +89,10 @@ export default class Slot<
   optional(): Slot<N, false, V> {
     const This = this.constructor as typeof Slot;
 
-    return new This(this.name, false, this);
+    return new This(this.name, false, {
+      parse: this.parse,
+      formatter: this.fmt,
+    });
   }
 
   required(): Slot<N, true, V> {
@@ -75,6 +100,7 @@ export default class Slot<
 
     return new This(this.name, true, {
       parse: this.parse,
+      formatter: this.fmt,
     });
   }
 }

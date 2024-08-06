@@ -1,6 +1,8 @@
 import { surql } from "@tai-kun/surrealdb";
+import type { Writer } from "@tai-kun/surrealdb/cbor";
 import type { InferSlotVars } from "@tai-kun/surrealdb/clients/standard";
-import { expect, expectTypeOf, test } from "vitest";
+import { Encoded, EncodedCBOR } from "@tai-kun/surrealdb/formatter";
+import { expect, expectTypeOf, test, vi } from "vitest";
 
 test("unknown 型の必須スロット", () => {
   const slot = surql.slot("foo");
@@ -34,21 +36,36 @@ test("unknown 型のオプショナルスロット", () => {
   expect(slot).not.toHaveProperty("defaultValue");
 });
 
-test("デフォルト値を設定とオプショナルになる", () => {
+test("デフォルト値を設定するとオプショナルになる", () => {
   const slot = surql.slot("foo", 42);
   type TSlot = typeof slot;
 
   expectTypeOf<TSlot["name"]>().toEqualTypeOf<"foo">();
   expectTypeOf<TSlot["isRequired"]>().toEqualTypeOf<false>();
-  expectTypeOf<TSlot["defaultValue"]>().toEqualTypeOf<number | undefined>();
+  expectTypeOf<TSlot["defaultValue"]>()
+    .toEqualTypeOf<number | Encoded<number> | undefined>();
   expectTypeOf<InferSlotVars<TSlot>>().toEqualTypeOf<{
-    readonly foo?: number;
+    readonly foo?: number | Encoded<number>;
   }>();
 
   expect(slot.name).toBe("foo");
   expect(slot.isRequired).toBe(false);
   expect(slot).toHaveProperty("defaultValue");
-  expect(slot.defaultValue).toBe(42);
+
+  const writeBytes = vi.fn();
+  const writer = { writeBytes } as unknown as Writer;
+
+  expect(slot.defaultValue).toBeInstanceOf(EncodedCBOR);
+  (slot.defaultValue as EncodedCBOR).toCBOR(writer);
+  expect(writeBytes.mock.calls).toStrictEqual([
+    [
+      // `42`
+      new Uint8Array([
+        0x18,
+        0x2a,
+      ]),
+    ],
+  ]);
 });
 
 test("型を変更する", () => {
@@ -57,9 +74,10 @@ test("型を変更する", () => {
 
   expectTypeOf<TSlot["name"]>().toEqualTypeOf<"foo">();
   expectTypeOf<TSlot["isRequired"]>().toEqualTypeOf<true>();
-  expectTypeOf<TSlot["defaultValue"]>().toEqualTypeOf<number | undefined>();
+  expectTypeOf<TSlot["defaultValue"]>()
+    .toEqualTypeOf<number | Encoded<number> | undefined>();
   expectTypeOf<InferSlotVars<TSlot>>().toEqualTypeOf<{
-    readonly foo: number;
+    readonly foo: number | Encoded<number>;
   }>();
 
   expect(slot.name).toBe("foo");
@@ -80,9 +98,10 @@ test("バリデーターで型を変更する", () => {
 
   expectTypeOf<TSlot["name"]>().toEqualTypeOf<"foo">();
   expectTypeOf<TSlot["isRequired"]>().toEqualTypeOf<true>();
-  expectTypeOf<TSlot["defaultValue"]>().toEqualTypeOf<number | undefined>();
+  expectTypeOf<TSlot["defaultValue"]>()
+    .toEqualTypeOf<number | Encoded<number> | undefined>();
   expectTypeOf<InferSlotVars<TSlot>>().toEqualTypeOf<{
-    readonly foo: number;
+    readonly foo: number | Encoded<number>;
   }>();
 
   expect(slot.name).toBe("foo");
@@ -110,7 +129,7 @@ test("変数名変更後は必須フラグとデフォルト値が引き継が�
   expectTypeOf<(typeof slot1)["name"]>().toEqualTypeOf<"foo">();
   expectTypeOf<(typeof slot1)["isRequired"]>().toEqualTypeOf<false>();
   expectTypeOf<(typeof slot1)["defaultValue"]>()
-    .toEqualTypeOf<number | undefined>();
+    .toEqualTypeOf<number | Encoded<number> | undefined>();
   expect(slot1.name).toBe("foo");
   expect(slot1.isRequired).toBe(false);
   expect(slot1).toHaveProperty("defaultValue");
@@ -121,7 +140,7 @@ test("変数名変更後は必須フラグとデフォルト値が引き継が�
   expectTypeOf<(typeof slot2)["name"]>().toEqualTypeOf<"bar">();
   expectTypeOf<(typeof slot2)["isRequired"]>().toEqualTypeOf<false>();
   expectTypeOf<(typeof slot2)["defaultValue"]>()
-    .toEqualTypeOf<number | undefined>();
+    .toEqualTypeOf<number | Encoded<number> | undefined>();
   expect(slot2.name).toBe("bar");
   expect(slot2.isRequired).toBe(false);
   expect(slot2).toHaveProperty("defaultValue");

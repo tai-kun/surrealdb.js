@@ -1,7 +1,7 @@
 import {
-  CborSyntaxError,
   CborTooLittleDataError,
   CborUnsafeMapKeyError,
+  SurrealTypeError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import { ianaReviver } from "./iana";
@@ -219,11 +219,7 @@ export class Decoder {
               return false; // continue
             }
 
-            throw new CborSyntaxError(
-              "For a byte string of indefinite length, only a Uint8Array is "
-                + `expected before the "break" stop code, but a ${typeof value}`
-                + " was received.",
-            );
+            throw new SurrealTypeError("Uint8Array", typeof value);
           },
           out(): unknown {
             const out = new Uint8Array(this.len);
@@ -260,11 +256,7 @@ export class Decoder {
               return false; // continue
             }
 
-            throw new CborSyntaxError(
-              "For a utf-8 string of indefinite length, only a string is "
-                + `expected before the "break" stop code, but a ${typeof value}`
-                + " was received.",
-            );
+            throw new SurrealTypeError("string", typeof value);
           },
           out(): unknown {
             return this.acc;

@@ -54,11 +54,6 @@ type Loop = {
 } | {
   mode: typeof LOOP_MODE_STRING;
   type: typeof MT_BYTE_STRING | typeof MT_UTF8_STRING;
-  /**
-   * - `true`: 最初のループ処理である。
-   * - `false`: 2 回目以降のループ処理である。
-   */
-  first: boolean;
 } | {
   mode: typeof LOOP_MODE_STREAM;
 };
@@ -366,11 +361,18 @@ export class Lexer {
         case MT_BYTE_STRING: // 2
         case MT_UTF8_STRING: // 3
           if (ai === AI_INDEFINITE_NUM_BYTES) {
+            if (this.loop?.mode === LOOP_MODE_STRING) {
+              // https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-4.3
+              throw new CborSyntaxError(
+                "The payload of major type " + this.loop.type + " contains "
+                  + "additional information indicating a indefinite-length.",
+              );
+            }
+
             // payloadLength = Infinity;
             this.beginLoop({
               mode: LOOP_MODE_STRING,
               type: mt,
-              first: true,
             });
           } else {
             payloadLength = value as number;
@@ -472,67 +474,53 @@ export class Lexer {
           unreachable(mt);
       }
 
-      yield { mt, ai, value /* , length: payloadLength */ } as DataItem;
-
       this.closeLoop();
 
-      if (!this.loop) {
-        continue;
-      }
+      if (this.loop) {
+        switch (this.loop.mode) {
+          case LOOP_MODE_MAP:
+            if (this.loop.prop) {
+              this.loop.prop = false;
+            } else {
+              this.loop.prop = true;
+              this.loop.index += 1;
+            }
 
-      switch (this.loop.mode) {
-        case LOOP_MODE_MAP:
-          if (this.loop.prop) {
-            this.loop.prop = false;
-          } else {
-            this.loop.prop = true;
+            break;
+
+          case LOOP_MODE_ARRAY:
             this.loop.index += 1;
-          }
+            break;
 
-          break;
+          case LOOP_MODE_STRING:
+            switch (true) {
+              case value === BREAK:
+                this.endLoop();
+                break;
 
-        case LOOP_MODE_ARRAY:
-          this.loop.index += 1;
-          break;
+              case mt !== this.loop.type:
+                // https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-4.3
+                throw new CborSyntaxError(
+                  "The payload of major type " + this.loop.type
+                    + " contains a major type " + mt + ".",
+                );
+            }
 
-        case LOOP_MODE_STRING:
-          switch (true) {
-            case value === BREAK:
+            break;
+
+          case LOOP_MODE_STREAM:
+            if (value === BREAK) {
               this.endLoop();
-              break;
+            }
 
-            case this.loop.first:
-              this.loop.first = false;
-              break;
+            break;
 
-            case mt !== this.loop.type:
-              // https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-4.3
-              throw new CborSyntaxError(
-                "The payload of major type " + this.loop.type
-                  + " contains a major type " + mt + ".",
-              );
-
-            case ai === AI_INDEFINITE_NUM_BYTES:
-              // https://www.rfc-editor.org/rfc/rfc8949.html#section-appendix.f-4.3
-              throw new CborSyntaxError(
-                "The payload of major type " + this.loop.type
-                  + " contains additional information"
-                  + " indicating a indefinite-length.",
-              );
-          }
-
-          break;
-
-        case LOOP_MODE_STREAM:
-          if (value === BREAK) {
-            this.endLoop();
-          }
-
-          break;
-
-        default:
-          unreachable(this.loop);
+          default:
+            unreachable(this.loop);
+        }
       }
+
+      yield { mt, ai, value /* , length: payloadLength */ } as DataItem;
     }
   }
 }

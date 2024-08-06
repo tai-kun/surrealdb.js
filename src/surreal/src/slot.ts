@@ -73,6 +73,8 @@ export default class Slot<
   required(): Slot<N, true, V> {
     const This = this.constructor as typeof Slot;
 
-    return new This(this.name, true, this);
+    return new This(this.name, true, {
+      parse: this.parse,
+    });
   }
 }

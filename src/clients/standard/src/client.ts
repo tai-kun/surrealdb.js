@@ -22,7 +22,7 @@ export type * from "@tai-kun/surrealdb/clients/basic";
 
 type Override<T, U> = Simplify<Omit<T, keyof U> & U>;
 
-type InferSlotVars<T extends SlotLike> = UnionToIntersection<
+export type InferSlotVars<T extends SlotLike> = UnionToIntersection<
   // dprint-ignore
   {
     [N in T["name"]]: T extends SlotLike<N, infer R, infer V>

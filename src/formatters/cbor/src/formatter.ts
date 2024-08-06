@@ -34,7 +34,7 @@ import {
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { Data, Formatter } from "@tai-kun/surrealdb/formatter";
-import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
+import { isArrayBuffer, utf8 } from "@tai-kun/surrealdb/utils";
 
 export interface CborDataTypes {
   readonly Uuid: new(_: UuidSource) => any;
@@ -176,8 +176,6 @@ export default class CborFormatter implements Formatter {
   }
 }
 
-const encoder = /* @__PURE__ */ new TextEncoder();
-
 function toUint8Array(data: Data): Uint8Array {
   switch (true) {
     case data instanceof Uint8Array:
@@ -196,7 +194,7 @@ function toUint8Array(data: Data): Uint8Array {
       return new Uint8Array(Buffer.concat(data));
 
     case typeof data === "string":
-      return encoder.encode(data);
+      return utf8.encode(data);
 
     default:
       throw new SurrealTypeError(

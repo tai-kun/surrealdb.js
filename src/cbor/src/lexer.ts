@@ -4,6 +4,7 @@ import {
   CborTooLittleDataError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
+import { utf8 } from "@tai-kun/surrealdb/utils";
 import { getFloat16 } from "./float";
 import {
   type AdditionalInfo,
@@ -31,7 +32,6 @@ import {
   MT_UTF8_STRING,
   Simple,
 } from "./spec";
-import utf8 from "./utf8";
 
 const LOOP_MODE_MAP = 0 as const;
 const LOOP_MODE_ARRAY = 1 as const;

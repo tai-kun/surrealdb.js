@@ -1,6 +1,6 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { Data, Formatter } from "@tai-kun/surrealdb/formatter";
-import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
+import { isArrayBuffer, utf8 } from "@tai-kun/surrealdb/utils";
 
 export default class JsonFormatter implements Formatter {
   mimeType = "application/json";
@@ -30,19 +30,17 @@ export default class JsonFormatter implements Formatter {
   }
 }
 
-const decoder = /* @__PURE__ */ new TextDecoder();
-
 function toString(data: Data): string {
   switch (true) {
     case typeof data === "string":
       return data;
 
     case data instanceof Uint8Array || isArrayBuffer(data):
-      return decoder.decode(data);
+      return utf8.decode(data);
 
     case typeof Buffer !== "undefined"
       && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
-      return decoder.decode(Buffer.concat(data));
+      return utf8.decode(Buffer.concat(data));
 
     default:
       throw new SurrealTypeError(

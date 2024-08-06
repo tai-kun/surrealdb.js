@@ -6,6 +6,7 @@ import {
   SurrealTypeError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
+import { utf8 } from "@tai-kun/surrealdb/utils";
 import isPlainObject from "is-plain-obj";
 import { ianaReplacer } from "./iana";
 import {
@@ -32,7 +33,6 @@ import {
   MT_UTF8_STRING,
   Simple,
 } from "./spec";
-import utf8 from "./utf8";
 import type { ToCBOR, Writer } from "./writer";
 
 /**

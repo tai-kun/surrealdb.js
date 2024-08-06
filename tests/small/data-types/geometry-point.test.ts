@@ -1,3 +1,4 @@
+import { isGeometryPoint } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import { CBOR_TAG_GEOMETRY_POINT } from "@tai-kun/surrealdb/data-types/encodable";
 import { GeometryPoint } from "@tai-kun/surrealdb/data-types/standard";
@@ -57,4 +58,10 @@ test(".toCBOR", () => {
   });
 
   expect(g).toStrictEqual(output);
+});
+
+test("GeometryPoint であると判定できる", () => {
+  expect(isGeometryPoint(new GeometryPoint([0, 1]))).toBe(true);
+  expect(isGeometryPoint({ type: "GeometryPoint", coordinates: [0, 1] }))
+    .toBe(false);
 });

@@ -1,3 +1,4 @@
+import { isDuration } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import { CBOR_TAG_CUSTOM_DURATION } from "@tai-kun/surrealdb/data-types/encodable";
 import { Duration } from "@tai-kun/surrealdb/data-types/standard";
@@ -354,4 +355,9 @@ test(".clone() で複製できる", () => {
   expect(d2).toBeInstanceOf(MyDuration);
   expect(d1).not.toBe(d2);
   expect(d1.getCompact()).toStrictEqual(d2.getCompact());
+});
+
+test("Duration であると判定できる", () => {
+  expect(isDuration(new Duration(0))).toBe(true);
+  expect(isDuration(0)).toBe(false);
 });

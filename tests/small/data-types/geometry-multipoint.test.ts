@@ -1,3 +1,4 @@
+import { isGeometryMultiPoint } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_GEOMETRY_MULTIPOINT,
@@ -80,4 +81,10 @@ test(".toCBOR", () => {
   });
 
   expect(g).toStrictEqual(output);
+});
+
+test("GeometryMultiPoint であると判定できる", () => {
+  expect(isGeometryMultiPoint(new GeometryMultiPoint([]))).toBe(true);
+  expect(isGeometryMultiPoint({ type: "GeometryMultiPoint", coordinates: [] }))
+    .toBe(false);
 });

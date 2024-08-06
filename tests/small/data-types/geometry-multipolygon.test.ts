@@ -1,3 +1,4 @@
+import { isGeometryMultiPolygon } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_GEOMETRY_LINE,
@@ -242,4 +243,15 @@ test(".toCBOR", () => {
   });
 
   expect(g).toStrictEqual(output);
+});
+
+test("GeometryMultiPolygon であると判定できる", () => {
+  expect(isGeometryMultiPolygon(new GeometryMultiPolygon([]))).toBe(true);
+  expect(
+    isGeometryMultiPolygon({
+      type: "GeometryMultiPolygon",
+      coordinates: [],
+    }),
+  )
+    .toBe(false);
 });

@@ -1,3 +1,4 @@
+import { isGeometryLine } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_GEOMETRY_LINE,
@@ -75,4 +76,22 @@ test(".toCBOR", () => {
   });
 
   expect(g).toStrictEqual(output);
+});
+
+test("GeometryLine であると判定できる", () => {
+  expect(
+    isGeometryLine(
+      new GeometryLine([
+        new GeometryPoint([0, 0]),
+        new GeometryPoint([0, 0]),
+      ]),
+    ),
+  ).toBe(true);
+  expect(isGeometryLine({
+    type: "GeometryLine",
+    coordinates: [
+      [0, 0],
+      [0, 0],
+    ],
+  })).toBe(false);
 });

@@ -1,3 +1,4 @@
+import { isGeometryCollection } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_GEOMETRY_COLLECTION,
@@ -251,4 +252,10 @@ test(".toCBOR", () => {
   });
 
   expect(g).toStrictEqual(c);
+});
+
+test("GeometryCollection であると判定できる", () => {
+  expect(isGeometryCollection(new GeometryCollection([]))).toBe(true);
+  expect(isGeometryCollection({ type: "GeometryCollection", geometries: [] }))
+    .toBe(false);
 });

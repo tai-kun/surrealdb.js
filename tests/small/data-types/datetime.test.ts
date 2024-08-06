@@ -1,3 +1,4 @@
+import { isDatetime } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_CUSTOM_DATETIME,
@@ -536,4 +537,11 @@ describe("standard", () => {
     expect(time).toBe(1717245296_780);
     expect(dt.toISOString()).toBe("2024-06-01T12:34:56.780122000Z");
   });
+});
+
+test("Datetime であると判定できる", () => {
+  expect(isDatetime(new EncodableDatetime([0, 0]))).toBe(true);
+  expect(isDatetime(new Datetime())).toBe(true);
+  expect(isDatetime([0, 0])).toBe(false);
+  expect(isDatetime(new Date())).toBe(false);
 });

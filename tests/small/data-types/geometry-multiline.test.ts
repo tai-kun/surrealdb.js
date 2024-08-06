@@ -1,3 +1,4 @@
+import { isGeometryMultiLine } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_GEOMETRY_LINE,
@@ -122,4 +123,10 @@ test(".toCBOR", () => {
   });
 
   expect(dt).toStrictEqual(output);
+});
+
+test("GeometryMultiLine であると判定できる", () => {
+  expect(isGeometryMultiLine(new GeometryMultiLine([]))).toBe(true);
+  expect(isGeometryMultiLine({ type: "GeometryMultiLine", coordinates: [] }))
+    .toBe(false);
 });

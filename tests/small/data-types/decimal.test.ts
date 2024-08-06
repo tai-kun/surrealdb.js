@@ -1,3 +1,4 @@
+import { isDecimal } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_STRING_DECIMAL,
@@ -156,4 +157,11 @@ test("big.js のインスタンスメソッドにアクセスできる", () => {
 
   expect(d).toBeInstanceOf(Decimal);
   expect(String(d)).toBe("0.3");
+});
+
+test("Decimal であると判定できる", () => {
+  expect(isDecimal(new EncodableDecimal("0"))).toBe(true);
+  expect(isDecimal(new Decimal(0))).toBe(true);
+  expect(isDecimal("0")).toBe(false);
+  expect(isDecimal(0)).toBe(false);
 });

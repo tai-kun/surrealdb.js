@@ -1,3 +1,4 @@
+import { isGeometryPolygon } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_GEOMETRY_LINE,
@@ -143,4 +144,25 @@ test(".toCBOR", () => {
   });
 
   expect(g).toStrictEqual(output);
+});
+
+test("GeometryPolygon であると判定できる", () => {
+  expect(isGeometryPolygon(
+    new GeometryPolygon([
+      new GeometryLine([
+        new GeometryPoint([0, 0]),
+        new GeometryPoint([1, 0]),
+      ]),
+    ]),
+  )).toBe(true);
+  expect(isGeometryPolygon({
+    type: "GeometryPolygon",
+    coordinates: [
+      [
+        [0, 0],
+        [0, 1],
+      ],
+    ],
+  }))
+    .toBe(false);
 });

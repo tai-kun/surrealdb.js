@@ -10,10 +10,14 @@ export type Data = typeof globalThis extends
 //   signal: AbortSignal;
 // }
 
-export type Encoded = ToCBOR | {
+export type EncodedCBOR = ToCBOR;
+
+export type EncodedJSON = {
   readonly toJSON: () => unknown; // toRawJSON に対応していない場合に備える
   readonly toRawJSON?: (() => string) | undefined;
 };
+
+export type Encoded = EncodedCBOR | EncodedJSON;
 
 export interface Formatter {
   readonly mimeType?: string | undefined;

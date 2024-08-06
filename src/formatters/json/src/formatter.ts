@@ -14,15 +14,13 @@ export default class JsonFormatter implements Formatter {
   }
 
   toEncoded(data: unknown) {
-    const json = this.encodeSync(data);
-
-    // TODO(tai-kun): JSON フォーマッターの事前エンコーディングを実装する。
     return {
-      data: this.decodeSync(json),
+      data,
       // json,
       toJSON() {
         return this.data;
       },
+      // TODO(tai-kun): JSON フォーマッターの事前エンコーディングを実装する。
       // toRawJSON() {
       //   return this.json;
       // },

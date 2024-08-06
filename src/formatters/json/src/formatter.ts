@@ -18,10 +18,29 @@ export default class JsonFormatter implements Formatter {
     return JSON.parse(toString(data));
   }
 
+  cloneSync<T>(data: T): T {
+    switch (typeof data) {
+      case "string":
+      case "number":
+      case "boolean":
+        return data;
+
+      default:
+        switch (data) {
+          case null:
+          case undefined:
+            return data;
+
+          default:
+            return cloneSync(this, data);
+        }
+    }
+  }
+
   toEncoded(data: unknown): EncodedJSON {
     return new EncodedJSON(
       {
-        data: cloneSync(this, data),
+        data: this.cloneSync(data),
       },
       function toJSON() {
         return this.data;

@@ -1,5 +1,6 @@
 import { Slot, surql } from "@tai-kun/surrealdb";
 import type { Writer } from "@tai-kun/surrealdb/cbor";
+import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { EncodedCBOR } from "@tai-kun/surrealdb/formatter";
 import { afterEach, describe, expect, test, vi } from "vitest";
 
@@ -214,5 +215,13 @@ describe("同じオブジェクトを 2 度以上処理しない", () => {
         ]),
       ],
     ]);
+  });
+});
+
+describe("エラー", () => {
+  test("特定の変数名から始まるスロットでエラー", () => {
+    const ValueSlot = surql.slot("_jst_foo");
+
+    expect(() => surql`RETURN ${ValueSlot};`).toThrow(SurrealTypeError);
   });
 });

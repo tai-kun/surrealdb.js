@@ -36,9 +36,16 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
     let text = "";
     const vars: { [p: string]: unknown } = {};
     const slots: Slot[] = [];
-    const slotNames: string[] = [];
 
-    for (let i = 0, j: number, v, len = texts.length; i < len; i++) {
+    for (
+      let i = 0,
+        j: number,
+        v,
+        len = texts.length,
+        named: string[] = [];
+      i < len;
+      i++
+    ) {
       text += texts[i];
 
       if (i + 1 === len) {
@@ -56,9 +63,16 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
       if (v instanceof Slot) {
         text += "$" + v.name;
 
-        if (j === i && slotNames.indexOf(v.name) < 0) {
+        if (j === i && named.indexOf(v.name) < 0) {
+          if ((v.name as string).startsWith(varPrefix)) {
+            throw new SurrealTypeError(
+              `a variable name that do not start with "${varPrefix}"`,
+              v.name,
+            );
+          }
+
           slots.push(v);
-          slotNames.push(v.name);
+          named.push(v.name);
         }
       } else {
         text += "$" + varPrefix + j;

@@ -31,6 +31,8 @@ jobs:
           npm --no-git-tag-version version minor
           npm --no-git-tag-version version "$(npm pkg get version | jq -r)-next.$(date --utc +'%Y%m%dT%H%M%S')"
 
-      - run: npm publish --access=public --tag=next
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public
+          tag: next

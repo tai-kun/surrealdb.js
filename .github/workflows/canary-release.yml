@@ -1,0 +1,43 @@
+name: Canary Release on NPM
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/canary-release.yml"
+      - "scripts/**"
+      - "src/**"
+      - "package-lock.json"
+      - "package.json"
+      - "tsconfig.json"
+
+jobs:
+  next:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22.x"
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Pin version
+        run: |
+          pkg_name="$(npm pkg get name | jq -r)"
+          pkg_version="$(curl -s https://registry.npmjs.org/${pkg_name}/latest | jq -r .version)"
+
+          npm --no-git-tag-version version "$pkg_version"
+          npm --no-git-tag-version version minor
+
+          pkg_version="$(npm pkg get version | jq -r)"
+
+          npm --no-git-tag-version version "${pkg_version}-next.$(date --utc +'%Y%m%dT%H%M%S')"
+
+      - run: npm publish --access=public --tag=next
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,3 +1,9 @@
+export type * from "./src/create-query";
+export { default as createQuery } from "./src/create-query";
+
+export type * from "./src/create-rpc";
+export { default as createRpc } from "./src/create-rpc";
+
 export type * from "./src/create-surql";
 export { default as createSurql } from "./src/create-surql";
 
@@ -42,6 +48,9 @@ export { default as initSurreal } from "./src/init-surreal";
 
 export type * from "./src/prepared-query";
 export { default as PreparedQuery } from "./src/prepared-query";
+
+export type * from "./src/query";
+export { default as query } from "./src/query";
 
 export type * from "./src/rpc";
 export { default as rpc } from "./src/rpc";

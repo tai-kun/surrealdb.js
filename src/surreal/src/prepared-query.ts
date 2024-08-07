@@ -4,7 +4,7 @@ const passthrough = (v: unknown): any => v;
 
 export default class PreparedQuery<
   S extends SlotLike,
-  T extends readonly unknown[] = unknown[],
+  T extends unknown[] = unknown[],
 > implements PreparedQueryLike {
   /** @deprecated */
   // @ts-expect-error 型だけ
@@ -17,9 +17,9 @@ export default class PreparedQuery<
     readonly parse: (results: unknown[]) => T = passthrough,
   ) {}
 
-  returns<T extends readonly unknown[] = unknown[]>(): PreparedQuery<S, T>;
+  returns<T extends unknown[] = unknown[]>(): PreparedQuery<S, T>;
 
-  returns<T extends readonly unknown[] = unknown[]>(
+  returns<T extends unknown[] = unknown[]>(
     parse: (results: unknown[]) => T,
   ): PreparedQuery<S, T>;
 

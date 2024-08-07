@@ -1,3 +1,4 @@
+import type { Jwt } from "@tai-kun/surrealdb/clients/standard";
 import { processQueryRequest } from "@tai-kun/surrealdb/engine";
 import {
   MissingNamespaceError,
@@ -39,7 +40,7 @@ export type InlineRpcFetcherRequestInit = {
     "Surreal-DB"?: string;
     "Surreal-NS"?: string;
     Accept: string;
-    Authorization?: `Bearer ${string}`;
+    Authorization?: string;
   };
   body: string | Uint8Array;
   signal: AbortSignal;
@@ -50,13 +51,13 @@ export type InlineRpcFetcher = (
   init: InlineRpcFetcherRequestInit,
 ) => Response | PromiseLike<Response>;
 
-type InlineRpcRequestOptions = {
+export type InlineRpcRequestOptions = {
   readonly url: string | URL; // Request["url"]
 
   readonly formatter?: Formatter | undefined;
   readonly namespace?: string | undefined;
   readonly database?: string | undefined;
-  readonly token?: string | undefined;
+  readonly token?: string | Jwt | undefined;
 
   readonly fetch?: InlineRpcFetcher | undefined;
   readonly signal?: AbortSignal | undefined;
@@ -141,7 +142,10 @@ async function rpc(request: InlineRpcRequest): Promise<unknown> {
       "Content-Type": fmt.mimeType,
       ...(ns != null ? { "Surreal-NS": ns } : {}),
       ...(db != null ? { "Surreal-DB": db } : {}),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(!token ? {} : {
+        Authorization: "Bearer "
+          + (typeof token === "string" ? token : token.raw),
+      }),
     },
   });
   const cause = {

@@ -6,6 +6,8 @@ export { default as decode } from "./src/decode";
 
 export {
   CONTINUE,
+  type IsSafeMapKey,
+  type IsSafeObjectKey,
   type Reviver,
   type ReviverObject,
   type SimpleItemReviver,

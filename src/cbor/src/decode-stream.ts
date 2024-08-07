@@ -1,9 +1,8 @@
 import { CborDecodeStreamAbortFailedError } from "@tai-kun/surrealdb/errors";
 import { StatefulPromise, throwIfAborted } from "@tai-kun/surrealdb/utils";
-import { Decoder, type DecoderOptions } from "./decoder";
-import { Lexer, type LexerOptions } from "./lexer";
+import Decoder, { type DecoderOptions } from "./decoder";
 
-export interface DecodeStreamOptions extends LexerOptions, DecoderOptions {
+export interface DecodeStreamOptions extends DecoderOptions {
   readonly signal?: AbortSignal | undefined;
 }
 
@@ -15,7 +14,6 @@ export default function decodeStream(
     const { signal } = options;
     throwIfAborted(signal);
 
-    const lexer = new Lexer(options);
     const decoder = new Decoder(options);
     let cancelPromise: Promise<unknown> | undefined;
 
@@ -37,9 +35,7 @@ export default function decodeStream(
         const { done, value } = await reader.read();
 
         if (value) {
-          for (const dataItem of lexer.stream(value)) {
-            decoder.process(dataItem);
-          }
+          decoder.process(value);
         }
 
         if (done) {
@@ -51,10 +47,7 @@ export default function decodeStream(
         throw await cancelPromise;
       }
 
-      const out = decoder.end();
-      lexer.end();
-
-      return out;
+      return decoder.output();
     } finally {
       signal?.removeEventListener("abort", handleAbort);
     }

@@ -18,7 +18,7 @@ describe("map", () => {
       0x00, // mt: 0, ai: 0
     ]);
 
-    expect(decode(bytes, { map: true })).toStrictEqual(
+    expect(decode(bytes, { mapType: "Map" })).toStrictEqual(
       new Map([
         [[0], 0],
       ]),
@@ -46,7 +46,7 @@ describe("isSafeMapKey", () => {
     ]);
 
     const run = () => {
-      decode(bytes, { map: true });
+      decode(bytes, { mapType: "Map" });
     };
     expect(run).toThrow(CborUnsafeMapKeyError);
   });
@@ -72,7 +72,7 @@ describe("isSafeMapKey", () => {
     ]);
 
     const run = () => {
-      decode(bytes, { map: true });
+      decode(bytes, { mapType: "Map" });
     };
     expect(run).toThrow(CborUnsafeMapKeyError);
   });
@@ -89,7 +89,7 @@ describe("isSafeMapKey", () => {
 
     const run = () => {
       decode(bytes, {
-        map: true,
+        mapType: "Map",
         isSafeMapKey: k => k === 1,
       });
     };
@@ -108,7 +108,7 @@ describe("isSafeMapKey", () => {
 
     const run = () => {
       decode(bytes, {
-        // map: true,
+        // mapType: "Map",
         isSafeMapKey: k => k === 1,
       });
     };
@@ -197,7 +197,7 @@ describe("isSafeObjectKey", () => {
 
     const run = () => {
       decode(bytes, {
-        map: true,
+        mapType: "Map",
         isSafeObjectKey: k => k === 1,
       });
     };
@@ -287,7 +287,9 @@ describe("Well-Formedness Errors", () => {
       ]);
 
       expect(() => decode(bytes)).toThrow(
-        new CborSyntaxError("Major Type 0 has indefinite-length bytes."),
+        new CborSyntaxError(
+          "The data item `unsigned integer` has indefinite-length bytes.",
+        ),
       );
     });
 
@@ -297,7 +299,9 @@ describe("Well-Formedness Errors", () => {
       ]);
 
       expect(() => decode(bytes)).toThrow(
-        new CborSyntaxError("Major Type 1 has indefinite-length bytes."),
+        new CborSyntaxError(
+          "The data item `negative integer` has indefinite-length bytes.",
+        ),
       );
     });
 
@@ -307,7 +311,9 @@ describe("Well-Formedness Errors", () => {
       ]);
 
       expect(() => decode(bytes)).toThrow(
-        new CborSyntaxError("Major Type 6 has indefinite-length bytes."),
+        new CborSyntaxError(
+          "The data item `tagged item` has indefinite-length bytes.",
+        ),
       );
     });
 
@@ -337,7 +343,8 @@ describe("Well-Formedness Errors", () => {
 
       expect(() => decode(bytes)).toThrow(
         new CborSyntaxError(
-          "The payload of major type 2 contains a major type 0.",
+          "The payload of the data item `byte string` contains a mismatched "
+            + "data item `unsigned integer`.",
         ),
       );
     });
@@ -355,7 +362,8 @@ describe("Well-Formedness Errors", () => {
 
       expect(() => decode(bytes)).toThrow(
         new CborSyntaxError(
-          "The payload of major type 3 contains a major type 0.",
+          "The payload of the data item `utf8 string` contains a mismatched "
+            + "data item `unsigned integer`.",
         ),
       );
     });
@@ -380,8 +388,8 @@ describe("Well-Formedness Errors", () => {
 
       expect(() => decode(bytes)).toThrow(
         new CborSyntaxError(
-          "The payload of major type 2 contains additional information "
-            + "indicating a indefinite-length.",
+          "The payload of the indefinite-length data item `byte string` "
+            + "contains the same type.",
         ),
       );
     });
@@ -406,8 +414,8 @@ describe("Well-Formedness Errors", () => {
 
       expect(() => decode(bytes)).toThrow(
         new CborSyntaxError(
-          "The payload of major type 3 contains additional information "
-            + "indicating a indefinite-length.",
+          "The payload of the indefinite-length data item `utf8 string` "
+            + "contains the same type.",
         ),
       );
     });

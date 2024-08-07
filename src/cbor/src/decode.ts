@@ -1,10 +1,9 @@
-import { Decoder, type DecoderOptions } from "./decoder";
-import { Lexer, type LexerOptions } from "./lexer";
+import Decoder, { type DecoderOptions } from "./decoder";
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/decode/#options)
  */
-export interface DecodeOptions extends LexerOptions, DecoderOptions {}
+export interface DecodeOptions extends DecoderOptions {}
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/decode/)
@@ -13,15 +12,8 @@ export default function decode(
   input: Uint8Array,
   options?: DecodeOptions | undefined,
 ): unknown {
-  const lexer = new Lexer(options);
   const decoder = new Decoder(options);
+  decoder.process(input);
 
-  for (const dataItem of lexer.stream(input)) {
-    decoder.process(dataItem);
-  }
-
-  const out = decoder.end();
-  lexer.end();
-
-  return out;
+  return decoder.output();
 }

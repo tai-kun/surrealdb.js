@@ -175,17 +175,21 @@ async function rpc(request: InlineRpcRequest): Promise<unknown> {
   // throwIfAborted(signal);
   let rpcResp: unknown;
 
-  // TODO(tai-kun): 非同期デコードを実装したい
-  // if (fmt.decode) {
-  //   rpcResp = await fmt.decode({
-  //     reader: resp.body.getReader(),
-  //     signal,
-  //   });
-  // } else {
-  //   rpcResp = fmt.decodeSync(await resp.arrayBuffer());
-  // }
-  rpcResp = fmt.decodeSync(await resp.arrayBuffer());
-  // throwIfAborted(signal);
+  if (fmt.decodeStream && fmt.decodingStrategy) {
+    const length = Number(resp.headers.get("content-length"));
+
+    if (
+      length === length
+      && length > 0
+      && fmt.decodingStrategy({ name: "fetch", length }) === "stream"
+    ) {
+      rpcResp = await fmt.decodeStream(resp.body, signal);
+    } else {
+      rpcResp = fmt.decodeSync(await resp.arrayBuffer());
+    }
+  } else {
+    rpcResp = fmt.decodeSync(await resp.arrayBuffer());
+  }
 
   if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
     throw new ResponseError("Expected id-less rpc response.", {

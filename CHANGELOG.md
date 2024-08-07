@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.3.0](https://github.com/tai-kun/surrealdb.js/compare/v1.2.1...v1.3.0) (2024-08-07)
+
+
+### Features
+
+* **surreal:** スロットに値を検証する機能を追加 ([81fefe8](https://github.com/tai-kun/surrealdb.js/commit/81fefe84dfdc5256c6984b702ee4cf3f233bd7d4))
+* **surreal:** 事前準備されたクエリーに返値を検証する機能を追加 ([0f034cf](https://github.com/tai-kun/surrealdb.js/commit/0f034cf095a411f9068beb6d65850ecd3ec4f29d))
+
+
+### Bug Fixes
+
+* **cbor:** Lexcer を終了する前にループを抜け出す ([310e4f3](https://github.com/tai-kun/surrealdb.js/commit/310e4f3ad8733fdbde8bc2cce9aa27808a36debe))
+* **cbor:** lexer の制限に関するバグを修正 ([ecad937](https://github.com/tai-kun/surrealdb.js/commit/ecad937d26aaf7e5623acf6fa3fee3d0005de009))
+* **cbor:** maxDepth + 1 までネストできていた不具合を修正 ([a12aecb](https://github.com/tai-kun/surrealdb.js/commit/a12aecb35e763a4a7d1bc349c2a2ea710f9553ca))
+* **cbor:** タンクサイズを超える入力が合った時にエンコードに失敗する不具合を修正 ([e6d1439](https://github.com/tai-kun/surrealdb.js/commit/e6d1439b12cc7ba836f03be1ef7417ab824aa827))
+* **cbor:** 不定長文字列内に不定長文字列を入れてエラーにならない不具合を修正 ([92cc063](https://github.com/tai-kun/surrealdb.js/commit/92cc063ff0fec2be2f9822c44d5fb69c7af021f2))
+* **formatters/json:** 不変にする ([ef7cd13](https://github.com/tai-kun/surrealdb.js/commit/ef7cd13ee8e931ff8f8b8853149403812d131272))
+* **surreal:** スロットの .required でデフォルト値が引き継がれる不具合を修正 ([3bd2ad5](https://github.com/tai-kun/surrealdb.js/commit/3bd2ad5816598f6c9d15e1fd6f4bb430c07d3861))
+* **surreal:** 特定の変数名から始まるスロットでエラー ([eb6c600](https://github.com/tai-kun/surrealdb.js/commit/eb6c600347a6e4ca8b323fc9977536a036349535))
+* 型を修正 ([939be31](https://github.com/tai-kun/surrealdb.js/commit/939be31f52599165d6a709dcdce6aeac8f0da75c))
+
+
+### Performance Improvements
+
+* **cbor:** lexer と decoder を統合する ([a9c0dfa](https://github.com/tai-kun/surrealdb.js/commit/a9c0dfa2a56cbe39f842dba43f4397327c9733ea))
+* **cbor:** エンコードサイズが小さいときの速度を改善 ([0d2eaad](https://github.com/tai-kun/surrealdb.js/commit/0d2eaadc83d310a6becd656962e824a4bbdaa3d6))
+* **formatters/json:** プリミティブ値のクローンパフォーマンスを向上 ([8b99ceb](https://github.com/tai-kun/surrealdb.js/commit/8b99ceb503a146fb6039ad8cc905902f8c0123d1))
+* **surreal:** スロットのデフォルト値を事前にエンコードする ([70ca7e0](https://github.com/tai-kun/surrealdb.js/commit/70ca7e02e24374f57ac462008de1c73f1761884e))
+* **surreal:** 事前準備されたクエリーのテキストを事前にエンコードしておく ([bf131bc](https://github.com/tai-kun/surrealdb.js/commit/bf131bc95a82cfae82be16238c9b851aae4fa212))
+* **surreal:** 同じ処理をしない。 ([276b53d](https://github.com/tai-kun/surrealdb.js/commit/276b53d38a5d49476e6b92985f64fb0d6cd1572d))
+* Uint8Array を継承する Buffer を許容する ([8170f6e](https://github.com/tai-kun/surrealdb.js/commit/8170f6e951af6a8de6b96066ca96fe58e17af688))
+
 ## [1.2.1](https://github.com/tai-kun/surrealdb.js/compare/v1.2.0...v1.2.1) (2024-08-05)
 
 

@@ -80,32 +80,42 @@ export function writePayload(w: Writer, value: Uint8Array): void {
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeinteger)
  */
 export function writeInteger(w: Writer, value: number | bigint): void {
-  if (
-    value !== value // NaN
-    || value === Infinity
-    || value === -Infinity
-  ) {
-    writeFloat16(w, value as number);
-  } else if (typeof value === "number") {
-    if (!Number.isSafeInteger(value)) {
-      throw new NumberRangeError([-(2 ** 53 - 1), 2 ** 53 - 1], value);
-    }
+  switch (value) {
+    case Infinity:
+      writePositiveInfinity(w);
+      break;
 
-    // 整数とヘッダーの書き込み処理は同じなので、それぞれの意味は異なるけど再利用する。
-    if (value >= 0) {
-      writeHeader(w, MT_UNSIGNED_INTEGER, value === 0 ? 0 : value);
-    } else {
-      writeHeader(w, MT_NEGATIVE_INTEGER, -value - 1);
-    }
-  } else {
-    // TODO(tai-kun): Bignums を実装する必要ありか？
-    // https://www.rfc-editor.org/rfc/rfc8949.html#name-bignums
+    case -Infinity:
+      writeNegativeInfinity(w);
+      break;
 
-    if (value >= 0n) {
-      writeHeader(w, MT_UNSIGNED_INTEGER, value);
-    } else {
-      writeHeader(w, MT_NEGATIVE_INTEGER, -value - 1n);
-    }
+    case value:
+      if (typeof value === "number") {
+        if (!Number.isSafeInteger(value)) {
+          throw new NumberRangeError([-(2 ** 53 - 1), 2 ** 53 - 1], value);
+        }
+
+        // 整数とヘッダーの書き込み処理は同じなので、それぞれの意味は異なるけど再利用する。
+        if (value >= 0) {
+          writeHeader(w, MT_UNSIGNED_INTEGER, value === 0 ? 0 : value);
+        } else {
+          writeHeader(w, MT_NEGATIVE_INTEGER, -value - 1);
+        }
+      } else {
+        // TODO(tai-kun): Bignums を実装する必要ありか？
+        // https://www.rfc-editor.org/rfc/rfc8949.html#name-bignums
+
+        if (value >= 0n) {
+          writeHeader(w, MT_UNSIGNED_INTEGER, value);
+        } else {
+          writeHeader(w, MT_NEGATIVE_INTEGER, -value - 1n);
+        }
+      }
+
+      break;
+
+    default:
+      writeNaN(w);
   }
 }
 
@@ -144,20 +154,43 @@ export function writeTag(w: Writer, value: DataItem.Tag["value"]): void {
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writenullable)
  */
 export function writeNullable(w: Writer, value: null | undefined): void {
-  w.writeUint8(value === null ? HEADER_NULL : HEADER_UNDEFINED);
+  if (value === null) {
+    w.writeUint8(HEADER_NULL);
+  } else {
+    w.writeUint8(HEADER_UNDEFINED);
+  }
 }
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeboolean)
  */
 export function writeBoolean(w: Writer, value: boolean): void {
-  w.writeUint8(value ? HEADER_TRUE : HEADER_FALSE);
+  if (value) {
+    w.writeUint8(HEADER_TRUE);
+  } else {
+    w.writeUint8(HEADER_FALSE);
+  }
 }
 
-function writeFloat16(w: Writer, value: number): void {
+function writeNaN(w: Writer): void {
   w.writeUint8(HEADER_FLOAT_HALF);
-  w.writeFloat16(value); // payload
+  w.writeUint16(0x7e00);
 }
+
+function writePositiveInfinity(w: Writer): void {
+  w.writeUint8(HEADER_FLOAT_HALF);
+  w.writeUint16(0x7c00);
+}
+
+function writeNegativeInfinity(w: Writer): void {
+  w.writeUint8(HEADER_FLOAT_HALF);
+  w.writeUint16(0xfc00);
+}
+
+// function writeFloat16(w: Writer, value: number): void {
+//   w.writeUint8(HEADER_FLOAT_HALF);
+//   w.writeFloat16(value); // payload
+// }
 
 // function writeFloat32(w: Writer, value: number): void {
 //   w.writeUint8(HEADER_FLOAT_SINGLE);
@@ -173,15 +206,21 @@ function writeFloat64(w: Writer, value: number): void {
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writefloat)
  */
 export function writeFloat(w: Writer, value: number): void {
-  if (
-    value !== value // NaN
-    || value === 0 // -0 も 0 にする。
-    || value === Infinity
-    || value === -Infinity
-  ) {
-    writeFloat16(w, value);
-  } else {
-    writeFloat64(w, value);
+  switch (value) {
+    case Infinity:
+      writePositiveInfinity(w);
+      break;
+
+    case -Infinity:
+      writeNegativeInfinity(w);
+      break;
+
+    case value:
+      writeFloat64(w, value);
+      break;
+
+    default:
+      writeNaN(w);
   }
 }
 
@@ -196,21 +235,19 @@ export function writeNumber(w: Writer, value: number | bigint): void {
   }
 }
 
-const MODE = {
-  SET: 0 as const,
-  MAP: 1 as const,
-  OBJ: 2 as const,
-};
+const PARENT_SET = 0;
+const PARENT_MAP = 1;
+const PARENT_OBJ = 2;
 
-type Loop = {
-  mode: typeof MODE.SET;
+type Parent = {
+  $: typeof PARENT_SET;
   seen: Set<object>;
   value: readonly unknown[] | ReadonlySet<unknown>;
   index: number;
   length: number;
   target: readonly unknown[];
 } | {
-  mode: typeof MODE.MAP;
+  $: typeof PARENT_MAP;
   seen: Set<object>;
   value: ReadonlyMap<unknown, unknown>;
   index: number;
@@ -218,7 +255,7 @@ type Loop = {
   isProperty: boolean;
   properties: readonly unknown[];
 } | {
-  mode: typeof MODE.OBJ;
+  $: typeof PARENT_OBJ;
   seen: Set<object>;
   value: { readonly [p: string]: unknown };
   index: number;
@@ -231,14 +268,20 @@ const CONTINUE = Symbol.for("@tai-kun/surrealdb/cbor/continue"); // decorder.ts 
 
 export type Replacer = (value: symbol | object) => unknown | typeof CONTINUE;
 
+export type IsSafeMapKey = (
+  key: unknown,
+  map: ReadonlyMap<unknown, unknown>,
+) => boolean;
+
+export type IsSafeObjectKey = (
+  key: string | number,
+  obj: { readonly [p: string]: unknown },
+) => boolean;
+
 export interface WriteOptions {
+  readonly isSafeMapKey?: IsSafeMapKey | undefined;
+  readonly isSafeObjectKey?: IsSafeObjectKey | undefined;
   readonly replacer?: Replacer | readonly Replacer[] | undefined;
-  readonly isSafeMapKey?:
-    | ((key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean)
-    | undefined;
-  readonly isSafeObjectKey?:
-    | ((key: string, obj: { readonly [p: string]: unknown }) => boolean)
-    | undefined;
 }
 
 /**
@@ -257,232 +300,242 @@ export function write(
   const replacers: Replacer[] = typeof replacer === "function"
     ? [replacer, ianaReplacer]
     : [...replacer, ianaReplacer];
-  let loop: Loop | undefined;
-  const loopParents: Loop[] = [];
+  let parent: Parent | undefined;
+  const parents: Parent[] = [];
 
-  function beginLoop(parent: Loop): void {
+  function begin(p: Parent): void {
     if (++w.depth >= w.maxDepth) {
       throw new CborMaxDepthReachedError(w.maxDepth);
     }
 
-    loopParents.push(loop = parent);
+    parents.push(parent = p);
   }
 
   while (true) {
-    let replace = false;
-
-    switch (typeof value) {
-      case "number":
-        writeNumber(w, value);
+    switch (value) {
+      case null:
+        w.writeUint8(HEADER_NULL);
         break;
 
-      case "bigint":
-        writeInteger(w, value);
+      case undefined:
+        w.writeUint8(HEADER_UNDEFINED);
         break;
 
-      case "string":
-        writeUtf8String(w, value);
+      case true:
+        w.writeUint8(HEADER_TRUE);
         break;
 
-      case "boolean":
-        writeBoolean(w, value);
+      case false:
+        w.writeUint8(HEADER_FALSE);
         break;
 
-      case "object":
-      case "undefined":
-        switch (true) {
-          case value == null:
-            writeNullable(w, value);
+      default:
+        let replace = false;
+
+        switch (typeof value) {
+          case "string":
+            writeUtf8String(w, value);
             break;
 
-          case typeof (value as ToCBOR).toCBOR === "function": {
-            const cbor = (value as ToCBOR).toCBOR(w);
+          case "number":
+            writeNumber(w, value);
+            break;
 
-            if (!Array.isArray(cbor)) {
-              break; // Writer で書き込み済みと判断して次のステップに進む。
-            }
+          case "bigint":
+            writeInteger(w, value);
+            break;
 
-            if (cbor.length === 2) {
-              writeTag(w, cbor[0]);
-              value = cbor[1];
-            } else if (cbor.length === 1) {
-              value = cbor[0];
-            } else {
-              throw new SurrealTypeError(
-                "an array of length 1 or 2",
-                `an array of length ${(cbor as any[]).length}`,
-              );
-            }
+          case "object":
+            switch (true) {
+              case typeof (value as ToCBOR).toCBOR === "function": {
+                const cbor = (value as ToCBOR).toCBOR(w);
 
-            continue; // loop ではないので抜け出さないようにする。
-          }
+                if (!Array.isArray(cbor)) {
+                  break; // Writer で書き込み済みと判断して次のステップに進む。
+                }
 
-          case isPlainObject(value): {
-            const properties = Object.keys(value);
-            writeHeader(w, MT_MAP, properties.length);
+                if (cbor.length === 2) {
+                  writeTag(w, cbor[0]);
+                  value = cbor[1];
+                } else if (cbor.length === 1) {
+                  value = cbor[0];
+                } else {
+                  throw new SurrealTypeError(
+                    "an array of length 1 or 2",
+                    `an array of length ${(cbor as any[]).length}`,
+                  );
+                }
 
-            if (properties.length > 0) {
-              const seen = loop?.seen || new Set();
-
-              if (seen.has(value)) {
-                // TODO(tai-kun): エラーメッセージを改善
-                throw new CircularReferenceError(String(value));
+                continue; // parent ではないので抜け出さないようにする。
               }
 
-              beginLoop({
-                mode: MODE.OBJ,
-                seen: seen.add(value),
-                value,
-                index: 0,
-                length: properties.length,
-                isProperty: true,
-                properties,
-              });
-            }
+              case isPlainObject(value): {
+                const properties = Object.keys(value);
+                writeHeader(w, MT_MAP, properties.length);
 
-            break;
-          }
+                if (properties.length > 0) {
+                  const seen = parent?.seen || new Set();
 
-          case Array.isArray(value):
-          case value instanceof Set: {
-            const target = Array.isArray(value) ? value : Array.from(value);
-            writeHeader(w, MT_ARRAY, target.length);
+                  if (seen.has(value)) {
+                    // TODO(tai-kun): エラーメッセージを改善
+                    throw new CircularReferenceError(String(value));
+                  }
 
-            if (target.length > 0) {
-              const seen = loop?.seen || new Set();
+                  begin({
+                    $: PARENT_OBJ,
+                    seen: seen.add(value),
+                    value,
+                    index: 0,
+                    length: properties.length,
+                    isProperty: true,
+                    properties,
+                  });
+                }
 
-              if (seen.has(value)) {
-                // TODO(tai-kun): エラーメッセージを改善
-                throw new CircularReferenceError(String(value));
+                break;
               }
 
-              beginLoop({
-                mode: MODE.SET,
-                seen: seen.add(value),
-                value,
-                index: 0,
-                length: target.length,
-                target,
-              });
-            }
+              case Array.isArray(value):
+              case value instanceof Set: {
+                const target = Array.isArray(value) ? value : Array.from(value);
+                writeHeader(w, MT_ARRAY, target.length);
 
-            break;
-          }
+                if (target.length > 0) {
+                  const seen = parent?.seen || new Set();
 
-          case value instanceof Map: {
-            const properties = Array.from(value.keys());
-            writeHeader(w, MT_MAP, properties.length);
+                  if (seen.has(value)) {
+                    // TODO(tai-kun): エラーメッセージを改善
+                    throw new CircularReferenceError(String(value));
+                  }
 
-            if (properties.length > 0) {
-              const seen = loop?.seen || new Set();
+                  begin({
+                    $: PARENT_SET,
+                    seen: seen.add(value),
+                    value,
+                    index: 0,
+                    length: target.length,
+                    target,
+                  });
+                }
 
-              if (seen.has(value)) {
-                // TODO(tai-kun): エラーメッセージを改善
-                throw new CircularReferenceError(String(value));
+                break;
               }
 
-              beginLoop({
-                mode: MODE.MAP,
-                seen: seen.add(value),
-                value,
-                index: 0,
-                length: properties.length,
-                isProperty: true,
-                properties,
-              });
+              case value instanceof Map: {
+                const properties = Array.from(value.keys());
+                writeHeader(w, MT_MAP, properties.length);
+
+                if (properties.length > 0) {
+                  const seen = parent?.seen || new Set();
+
+                  if (seen.has(value)) {
+                    // TODO(tai-kun): エラーメッセージを改善
+                    throw new CircularReferenceError(String(value));
+                  }
+
+                  begin({
+                    $: PARENT_MAP,
+                    seen: seen.add(value),
+                    value,
+                    index: 0,
+                    length: properties.length,
+                    isProperty: true,
+                    properties,
+                  });
+                }
+
+                break;
+              }
+
+              case value instanceof Uint8Array:
+                writeByteString(w, value);
+                break;
+
+              case value instanceof Simple:
+                writeHeader(w, MT_SIMPLE_FLOAT, value.value);
+                break;
+
+              default:
+                replace = true;
             }
 
-            break;
-          }
-
-          case value instanceof Uint8Array:
-            writeByteString(w, value);
-            break;
-
-          case value instanceof Simple:
-            writeHeader(w, MT_SIMPLE_FLOAT, value.value);
             break;
 
           default:
             replace = true;
         }
 
-        break;
+        if (replace) {
+          replace = false;
 
-      default:
-        replace = true;
-    }
+          for (let i = 0, ret; i < replacers.length; i++) {
+            if ((ret = replacers[i]!(value as symbol | object)) !== CONTINUE) {
+              value = ret;
+              replace = true;
+              break;
+            }
+          }
 
-    if (replace) {
-      replace = false;
+          if (replace) {
+            continue;
+          }
 
-      for (let i = 0, ret; i < replacers.length; i++) {
-        if ((ret = replacers[i]!(value as symbol | object)) !== CONTINUE) {
-          value = ret;
-          replace = true;
-          break;
+          throw new SurrealTypeError(
+            "number | bigint | string | boolean | object | undefined | null",
+            typeof value,
+          );
         }
-      }
-
-      if (replace) {
-        continue;
-      }
-
-      throw new SurrealTypeError(
-        "number | bigint | string | boolean | object | undefined | null",
-        typeof value,
-      );
     }
 
     // .length の比較は === で行うこと。
-    while (loop && loop.index === loop.length) {
+    while (parent && parent.index === parent.length) {
       // endLoop()
-      loop.seen.delete(loop.value);
-      loopParents.pop();
-      // loopParents が空の場合、loop には初期値と同じ undefined が設定される。
-      loop = loopParents[loopParents.length - 1];
+      parent.seen.delete(parent.value);
+      parents.pop();
+      // parents が空の場合、loop には初期値と同じ undefined が設定される。
+      parent = parents[parents.length - 1];
       w.depth -= 1;
     }
 
-    if (!loop) {
+    if (!parent) {
       break;
     }
 
-    switch (loop.mode) {
-      case MODE.OBJ:
-        if (loop.isProperty) {
-          const key = value = loop.properties[loop.index]!;
+    switch (parent.$) {
+      case PARENT_OBJ:
+        if (parent.isProperty) {
+          const key = value = parent.properties[parent.index]!;
 
-          if (!isSafeObjectKey(key, loop.value)) {
+          if (!isSafeObjectKey(key, parent.value)) {
             throw new CborUnsafeMapKeyError(value);
           }
         } else {
-          value = loop.value[loop.properties[loop.index++]!];
+          value = parent.value[parent.properties[parent.index++]!];
         }
 
-        loop.isProperty = !loop.isProperty;
+        parent.isProperty = !parent.isProperty;
         break;
 
-      case MODE.SET:
-        value = loop.target[loop.index++];
+      case PARENT_SET:
+        value = parent.target[parent.index++];
         break;
 
-      case MODE.MAP:
-        if (loop.isProperty) {
-          value = loop.properties[loop.index];
+      case PARENT_MAP:
+        if (parent.isProperty) {
+          value = parent.properties[parent.index];
 
-          if (!isSafeMapKey(value, loop.value)) {
+          if (!isSafeMapKey(value, parent.value)) {
             throw new CborUnsafeMapKeyError(value);
           }
         } else {
-          value = loop.value.get(loop.properties[loop.index++]);
+          value = parent.value.get(parent.properties[parent.index++]);
         }
 
-        loop.isProperty = !loop.isProperty;
+        parent.isProperty = !parent.isProperty;
         break;
 
       default:
-        unreachable(loop);
+        unreachable(parent);
     }
   }
 }

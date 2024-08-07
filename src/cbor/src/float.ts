@@ -1,12 +1,4 @@
-import { getFloat16 as get, setFloat16 as set } from "@petamoriken/float16";
-
-export function setFloat16(
-  view: DataView,
-  offset: number,
-  value: number,
-): void {
-  set(view, offset, value);
-}
+import { getFloat16 as get } from "@petamoriken/float16";
 
 export function getFloat16(view: DataView, offset: number): number {
   return get(view, offset);
@@ -18,7 +10,7 @@ export function getFloat16(view: DataView, offset: number): number {
   //   return mantissa * Math.pow(2, exponent);
   // }
 
-  // const half = (bytes[offset]! << 8) + bytes[offset + 1]!;
+  // const half = (view[offset]! << 8) + bytes[offset + 1]!;
   // const exp = (half >> 10) & 0x1f;
   // const mant = half & 0x3ff;
   // const value = exp === 0

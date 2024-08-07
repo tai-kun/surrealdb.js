@@ -16,5 +16,5 @@ export default function encode(
   const w = new Writer(options);
   write(w, value, options);
 
-  return w.consume();
+  return w.output();
 }

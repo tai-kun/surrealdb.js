@@ -1,4 +1,3 @@
-import { setFloat16 } from "./float";
 import type { DataItem } from "./spec";
 
 export interface ToCBOR {
@@ -10,29 +9,38 @@ export interface ToCBOR {
 
 export interface WriterOptions {
   readonly chunkSize?: number | undefined;
+  readonly maxChunkSize?: number | undefined;
   readonly maxDepth?: number | undefined;
 }
 
 export class Writer {
-  private chunkSize: number;
-  private chunks: Uint8Array[] = [];
-  private length: number = 0;
-  private offset: number = 0;
-  private view: DataView = undefined as any;
-
-  depth: number = 0;
-  maxDepth: number;
+  readonly maxDepth: number;
+  protected chunkSize: number;
+  protected maxChunkSize: number;
 
   constructor(options: WriterOptions | undefined = {}) {
     const {
       maxDepth = 64,
-      chunkSize = 2048,
+      chunkSize = 128,
+      maxChunkSize = 2048,
     } = options;
-
     this.maxDepth = maxDepth;
     this.chunkSize = chunkSize;
-    this.clear(); // init
+    this.maxChunkSize = maxChunkSize;
+
+    this.view = undefined as any;
+    this.depth = 0;
+    this.chunks = [];
+    this.length = 0;
+    this.offset = 0;
+    this.alloc();
   }
+
+  depth: number;
+  protected view: DataView;
+  protected chunks: Uint8Array[];
+  protected length: number;
+  protected offset: number;
 
   private alloc(size = this.chunkSize): void {
     const chunk = new Uint8Array(size);
@@ -43,19 +51,23 @@ export class Writer {
 
   private claim(size: number): void {
     if (size <= this.chunkSize) {
-      if (this.chunks.length <= 0) {
-        this.alloc();
-      } else {
-        const last = this.chunks.length - 1;
-        const free = this.chunks[last]!.length - this.offset;
+      const last = this.chunks.length - 1;
+      const free = this.chunks[last]!.length - this.offset;
 
-        if (free < size) {
-          if (free > 0) {
-            this.trim();
-          }
-
-          this.alloc();
+      if (free < size) {
+        if (free > 0) {
+          this.trim();
         }
+
+        if (this.chunkSize < this.maxChunkSize) {
+          this.chunkSize *= 2;
+
+          if (this.chunkSize > this.maxChunkSize) {
+            this.chunkSize = this.maxChunkSize;
+          }
+        }
+
+        this.alloc();
       }
     } else {
       this.trim();
@@ -73,14 +85,7 @@ export class Writer {
     this.offset += size;
   }
 
-  clear(): void {
-    this.chunks = [];
-    this.length = 0;
-    this.offset = 0;
-    this.depth = 0;
-  }
-
-  consume(): Uint8Array {
+  output(): Uint8Array {
     this.trim();
     const acc = new Uint8Array(this.length);
 
@@ -91,8 +96,6 @@ export class Writer {
       acc.set(chunk, offset);
       offset += chunk.length;
     }
-
-    this.clear(); // consume
 
     return acc;
   }
@@ -128,11 +131,11 @@ export class Writer {
     this.next(8);
   }
 
-  writeFloat16(value: number): void {
-    this.claim(2);
-    setFloat16(this.view, this.offset, value);
-    this.next(2);
-  }
+  // writeFloat16(value: number): void {
+  //   this.claim(2);
+  //   setFloat16(this.view, this.offset, value);
+  //   this.next(2);
+  // }
 
   // writeFloat32(value: number): void {
   //   this.claim(4);

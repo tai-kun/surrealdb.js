@@ -7,6 +7,7 @@ import {
   SurrealTypeError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
+import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
 import { utf8 } from "@tai-kun/surrealdb/utils";
 import { getFloat16 } from "./float";
 import { ianaReviver } from "./iana";
@@ -22,7 +23,7 @@ import {
   AI_SIMPLE_UNDEFINED,
   AI_TWO_BYTES,
   BREAK,
-  JS_MAX_SAFE_UNSIGNED_INTEGER,
+  JS_MAX_SAFE_UNSIGNED_BIG_INTEGER,
   type MajorType,
   MT_ARRAY,
   MT_BYTE_STRING,
@@ -35,10 +36,6 @@ import {
   Simple,
 } from "./spec";
 import Tagged from "./tagged";
-
-type Uint8ArrayLike = typeof globalThis extends
-  { Buffer: new(...args: any) => infer Buff } ? Uint8Array | Buff
-  : Uint8Array;
 
 type InputValue = unknown;
 
@@ -395,10 +392,10 @@ export default class Decoder {
             if (mt === MT_NEGATIVE_INTEGER) {
               // 負の値は -1 から value を引いた数なので、最大値より 1 以上小さくないと
               // Number にはなれない。
-              if (value <= JS_MAX_SAFE_UNSIGNED_INTEGER - 1n) {
+              if (value <= JS_MAX_SAFE_UNSIGNED_BIG_INTEGER - 1n) {
                 value = Number(value);
               }
-            } else if (value <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
+            } else if (value <= JS_MAX_SAFE_UNSIGNED_BIG_INTEGER) {
               value = Number(value);
             }
           }

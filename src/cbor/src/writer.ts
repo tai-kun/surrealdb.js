@@ -1,3 +1,4 @@
+import type { AllocatedMemoryBlock } from "./memory";
 import type { DataItem } from "./spec";
 
 export interface ToCBOR {
@@ -8,86 +9,110 @@ export interface ToCBOR {
 }
 
 export interface WriterOptions {
-  readonly chunkSize?: number | undefined;
-  readonly maxChunkSize?: number | undefined;
   readonly maxDepth?: number | undefined;
 }
 
 export class Writer {
   readonly maxDepth: number;
-  protected chunkSize: number;
-  protected maxChunkSize: number;
 
-  constructor(options: WriterOptions | undefined = {}) {
+  constructor(
+    memory: AllocatedMemoryBlock,
+    options: WriterOptions | undefined = {},
+  ) {
     const {
       maxDepth = 64,
-      chunkSize = 128,
-      maxChunkSize = 2048,
     } = options;
     this.maxDepth = maxDepth;
-    this.chunkSize = chunkSize;
-    this.maxChunkSize = maxChunkSize;
 
-    this.view = undefined as any;
+    this.data = memory.data;
+    this.view = memory.view;
     this.depth = 0;
-    this.chunks = [];
-    this.length = 0;
+    this.total = 0;
     this.offset = 0;
-    this.alloc();
+    this.chunks = [memory.data];
+    this.memory = memory;
   }
 
+  data: Uint8Array;
+  view: DataView;
   depth: number;
-  protected view: DataView;
-  protected chunks: Uint8Array[];
-  protected length: number;
-  protected offset: number;
+  total: number;
+  offset: number;
+  protected chunks: [Uint8Array, ...Uint8Array[]];
+  protected readonly memory: AllocatedMemoryBlock;
 
-  private alloc(size = this.chunkSize): void {
-    const chunk = new Uint8Array(size);
-    this.chunks.push(chunk);
-    this.offset = 0;
-    this.view = new DataView(chunk.buffer, chunk.byteOffset, chunk.byteLength);
+  protected datacopy(): Uint8Array {
+    return this.offset >= this.data.length
+      ? this.data.slice()
+      : this.data.slice(0, this.offset);
   }
 
-  private claim(size: number): void {
-    if (size <= this.chunkSize) {
-      const last = this.chunks.length - 1;
-      const free = this.chunks[last]!.length - this.offset;
+  protected dataref(): Uint8Array {
+    if (this.offset <= this.data.length) {
+      return this.data.subarray(0, this.offset); // trim
+    }
 
-      if (free < size) {
-        if (free > 0) {
-          this.trim();
-        }
+    return this.data;
+  }
 
-        if (this.chunkSize < this.maxChunkSize) {
-          this.chunkSize *= 2;
+  claim(size: number): void {
+    if (size > this.memory.size) {
+      // 事前に用意されたメモリーサイズを超える要求があれば:
+      // (1) 現チャンクに内容があれば必要なだけ複製を記録する。
+      // (2) 要求サイズちょうどのデータを作成する。
+      // (3) 総容量を更新する。
+      // (4) オフセットを 0 に戻す。
 
-          if (this.chunkSize > this.maxChunkSize) {
-            this.chunkSize = this.maxChunkSize;
-          }
-        }
+      let last = this.chunks.length - 1;
 
-        this.alloc();
+      // (1)
+      if (this.offset > 0) {
+        this.chunks[last++] = this.datacopy();
       }
-    } else {
-      this.trim();
-      this.alloc(size);
+
+      this.data = this.chunks[last] = new Uint8Array(size); // (2)
+      this.view = new DataView(this.data.buffer, 0, size); // (2)
+      this.total += this.offset; // (3)
+      this.offset = 0; // (4)
+    } else if (size > (this.data.length - this.offset)) {
+      // 要求サイズがチャンクに収まらない場合:
+      // (1) 現チャンクが事前に用意されたメモリーなら必要なだけ複製を記録する。
+      // (2) 現チャンクがカスタムサイズのメモリーなら必要なだけ参照を記録する。
+      // (3) 現チャンクを事前に用意されたメモリーにする。
+      // (4) 総容量を更新する。
+      // (5) オフセットを 0 に戻す。
+
+      const last = this.chunks.length - 1;
+
+      // (1)
+      if (this.data === this.memory.data) {
+        this.chunks[last] = this.datacopy();
+      } //
+      // (2)
+      else if (this.data.length < this.offset) {
+        this.chunks[last] = this.dataref();
+      }
+
+      this.data = this.chunks[last + 1] = this.memory.data; // (3)
+      this.view = this.memory.view; // (3)
+      this.total += this.offset; // (4)
+      this.offset = 0; // (5)
     }
   }
 
-  private trim(): void {
-    const last = this.chunks.length - 1;
-    this.chunks[last] = this.chunks[last]!.subarray(0, this.offset);
-  }
-
-  private next(size: number): void {
-    this.length += size;
-    this.offset += size;
-  }
-
   output(): Uint8Array {
-    this.trim();
-    const acc = new Uint8Array(this.length);
+    if (this.chunks.length < 2) {
+      if (this.data === this.memory.data) {
+        return this.datacopy();
+      }
+
+      return this.data;
+    }
+
+    const last = this.chunks.length - 1;
+    this.chunks[last] = this.dataref(); // コピーされるので参照で構わない。
+
+    const acc = new Uint8Array(this.total + this.offset);
 
     for (
       let offset = 0, chunk: Uint8Array | undefined;
@@ -102,50 +127,49 @@ export class Writer {
 
   writeBytes(value: Uint8Array): void {
     this.claim(value.length);
-    const last = this.chunks.length - 1;
-    this.chunks[last]!.set(value, this.offset);
-    this.next(value.length);
+    this.data.set(value, this.offset);
+    this.offset += value.length;
   }
 
   writeUint8(value: number): void {
     this.claim(1);
     this.view.setUint8(this.offset, value);
-    this.next(1);
+    this.offset += 1;
   }
 
   writeUint16(value: number): void {
     this.claim(2);
     this.view.setUint16(this.offset, value);
-    this.next(2);
+    this.offset += 2;
   }
 
   writeUint32(value: number): void {
     this.claim(4);
     this.view.setUint32(this.offset, value);
-    this.next(4);
+    this.offset += 4;
   }
 
   writeBigUint64(value: bigint): void {
     this.claim(8);
     this.view.setBigUint64(this.offset, value);
-    this.next(8);
+    this.offset += 8;
   }
 
   // writeFloat16(value: number): void {
   //   this.claim(2);
   //   setFloat16(this.view, this.offset, value);
-  //   this.next(2);
+  //   this.offset += 2;
   // }
 
-  // writeFloat32(value: number): void {
-  //   this.claim(4);
-  //   this.view.setFloat32(this.offset, value);
-  //   this.next(4);
-  // }
+  writeFloat32(value: number): void {
+    this.claim(4);
+    this.view.setFloat32(this.offset, value);
+    this.offset += 4;
+  }
 
   writeFloat64(value: number): void {
     this.claim(8);
     this.view.setFloat64(this.offset, value);
-    this.next(8);
+    this.offset += 8;
   }
 }

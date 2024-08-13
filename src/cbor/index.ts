@@ -33,7 +33,6 @@ export {
   HEADER_FALSE,
   HEADER_FLOAT_DOUBLE,
   HEADER_FLOAT_HALF,
-  // HEADER_FLOAT_SINGLE,
   HEADER_NULL,
   HEADER_TRUE,
   HEADER_UNDEFINED,
@@ -55,16 +54,14 @@ export { default as Tagged } from "./src/tagged";
 export {
   type Replacer,
   write,
+  writeBigInt,
   writeBoolean,
   writeByteString,
   writeEncodedUtf8String,
-  writeFloat,
   writeHeader,
-  writeInteger,
   writeNullable,
   writeNumber,
   writePayload,
-  writeTag,
   writeUtf8String,
 } from "./src/write-utils";
 

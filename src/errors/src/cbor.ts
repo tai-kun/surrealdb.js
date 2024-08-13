@@ -1,8 +1,4 @@
-import {
-  SurrealAggregateError,
-  SurrealError,
-  type SurrealErrorOptions,
-} from "./general";
+import { SurrealError, type SurrealErrorOptions } from "./general";
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#cborerror)
@@ -97,15 +93,65 @@ export class CborUnsafeMapKeyError extends CborError {
   }
 }
 
-export class CborDecodeStreamAbortFailedError extends SurrealAggregateError {
+export class CborDecodeStreamAbortFailedError extends CborError {
   static {
     this.prototype.name = "CborStreamAbortFailedError";
   }
+
+  override cause: unknown[];
 
   constructor(
     errors: readonly unknown[],
     options?: Omit<SurrealErrorOptions, "cause"> | undefined,
   ) {
-    super("Failed to abort decode-stream", errors, options);
+    super("Failed to abort decode-stream", options);
+    this.cause = errors.slice();
+  }
+}
+
+export class CborMemoryError extends CborError {
+  static {
+    this.prototype.name = "CborMemoryError";
+  }
+}
+
+export class CborMemoryBlockError extends CborError {
+  static {
+    this.prototype.name = "CborMemoryBlockError";
+  }
+}
+
+type MemoryAddress = string | number;
+
+export class CborMemoryBlockConflictError extends CborMemoryBlockError {
+  static {
+    this.prototype.name = "CborMemoryBlockConflictError";
+  }
+
+  constructor(
+    address: MemoryAddress,
+    expectedSize: number,
+    actualSize: number,
+  ) {
+    super(
+      `Memory conflict at address ${address}: `
+        + `Expected size ${expectedSize}, but found ${actualSize}.`,
+    );
+  }
+}
+
+export class CborMemoryBlockInUseError extends CborMemoryBlockError {
+  static {
+    this.prototype.name = "CborMemoryBlockInUseError";
+  }
+}
+
+export class CborUndefinedMemoryBlockError extends CborMemoryBlockError {
+  static {
+    this.prototype.name = "CborUndefinedMemoryBlockError";
+  }
+
+  constructor(address: MemoryAddress) {
+    super(`Memory block at address ${address} is not defined.`);
   }
 }

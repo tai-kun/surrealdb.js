@@ -1,4 +1,4 @@
-import { encode, writeInteger, type Writer } from "@tai-kun/surrealdb/cbor";
+import { encode, writeNumber, type Writer } from "@tai-kun/surrealdb/cbor";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { expect, test } from "vitest";
 
@@ -34,7 +34,7 @@ test("タグなし", () => {
 test("Writer で書き込む", () => {
   const cborValue = {
     toCBOR: (w: Writer) => {
-      writeInteger(w, 20);
+      writeNumber(w, 20);
     },
   };
 

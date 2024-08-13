@@ -44,7 +44,8 @@
     "unzipper": "^0.12.3",
     "uuid": "^10.0.0",
     "vite-tsconfig-paths": "^4.3.2",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "zod": "^3.23.8"
   },
   "scripts": {
     "build": "node scripts/build/source.js && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
@@ -62,6 +63,7 @@
     "test:medium:chromium": "node scripts/test.js chromium medium",
     "test:medium:firefox": "node scripts/test.js firefox medium",
     "test:medium:webkit": "node scripts/test.js webkit medium",
+    "test:examples": "node scripts/test.js nodejs examples",
     "docs:dev": "cd docs && npm run dev",
     "docs:build": "cd docs && npm run build",
     "docs:preview": "cd docs && npm run preview"

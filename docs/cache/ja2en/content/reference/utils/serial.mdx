@@ -1,0 +1,93 @@
+---
+title: Serial
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+`Serial` is a class that generates incrementing IDs. It is used for generating IDs for RPC requests in bidirectional communication. The ID is generated circularly, preventing the ID from exceeding a safe integer value. If the ID exceeds that value, it is reset to 1.
+
+### Import
+
+```ts
+import { Serial } from "@tai-kun/surrealdb/utils";
+```
+
+### `.constructor()`
+
+```ts
+new Serial(max?: number);
+```
+
+#### Parameters
+
+##### `max`
+
+Sets the maximum value of the incrementing ID. Integers from 1 to 2^53-1 are valid. The default value is 2^53-1.
+
+#### Return Value
+
+When called with `new`, `Serial` returns its instance.
+
+#### Example
+
+The following example demonstrates basic usage:
+
+```ts
+import { Serial } from "@tai-kun/surrealdb/utils";
+
+const id = new Serial(3);
+
+console.log(id.next());
+console.log(id.next());
+console.log(id.next());
+
+console.log(id.next());
+console.log(id.next());
+
+id.reset();
+
+console.log(id.next());
+console.log(id.next());
+```
+
+Output:
+
+```js
+1
+2
+3
+1
+2
+1
+2
+```
+
+### `.next()` <Badge variant="instance" /><Badge variant="method" />
+
+`.next` is a function that gets the next ID.
+
+```ts
+next(): number;
+```
+
+#### Parameters
+
+None.
+
+#### Return Value
+
+Returns an integer between 1 and `max`. If the value is the maximum value, the next value to be retrieved is 1.
+
+### `.reset()` <Badge variant="instance" /><Badge variant="method" />
+
+```ts
+reset(): void;
+```
+
+#### Parameters
+
+None.
+
+#### Return Value
+
+None.

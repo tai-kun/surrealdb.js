@@ -7,15 +7,18 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "ja2en": "node scripts/ja2en.js"
   },
   "dependencies": {
-    "@astrojs/check": "^0.8.2",
-    "@astrojs/starlight": "^0.25.1",
-    "astro": "^4.12.2",
+    "@astrojs/check": "^0.9.2",
+    "@astrojs/starlight": "^0.25.4",
+    "@google/generative-ai": "^0.16.0",
+    "astro": "^4.13.3",
+    "glob": "^11.0.0",
     "remark-definition-list": "^2.0.0",
     "sharp": "^0.33.4",
-    "typescript": "^5.5.3"
+    "typescript": "^5.5.4"
   },
   "volta": {
     "extends": "../package.json"

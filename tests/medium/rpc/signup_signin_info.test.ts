@@ -329,6 +329,7 @@ for (const { suite, url, Surreal } of surreal) {
 
           // 資格情報
           // TODO(tai-kun): なんか失敗する
+          // https://github.com/surrealdb/surrealdb/issues/4489
           // {
           //   await expect(db.info()).resolves.toMatchObject({
           //     email: "tai-kun@example.com",

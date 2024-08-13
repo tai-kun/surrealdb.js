@@ -61,3 +61,39 @@ jobs:
       - name: Logs
         run: cat /tmp/logs
         if: always()
+
+  examples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        nodejs-version:
+          # TODO(tai-kun): v18 だけなんか失敗する。要調査。
+          # - "18.x"
+          - "20.x"
+          - "^22.5.1"
+        surrealdb-version:
+          - "alpha"
+          # - "v2.0.0"
+          # - "latest"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.nodejs-version }}
+
+      - name: Setup
+        run: npm ci
+
+      - name: Test
+        run: |
+          bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
+          VITEST_MODE='Node.js' npx vitest tests/examples/
+
+      - name: Logs
+        run: cat /tmp/logs
+        if: always()

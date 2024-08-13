@@ -21,5 +21,6 @@ await Promise.all(["esm", "cjs"].map(async format => {
       resolve({ esm: format === "esm" }),
     ],
     packages: "external",
+    keepNames: true,
   });
 }));

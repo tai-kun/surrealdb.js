@@ -22,28 +22,40 @@ write(writer: Writer, value: unknown, options?: WriteOptions): void;
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
-CBOR 形式のバイト配列にエンコードするための JavaScript の値です。`value` に渡せる JavaScript の値は次のとおりです:
+CBOR 形式の `Uint8Array` にエンコードするための JavaScript の値です。`value` に渡せる JavaScript の値は次のとおりです:
 
-- プリミティブな値 (`number`, `bigint`, `string`, `boolean`, `null`, `undefined`)
+- プリミティブな値
+  - `number`
+  - `bigint`
+  - `string`
+  - `boolean`
+  - `null`
+  - `undefined`
+- `.toCBOR()` メソッドを持つオブジェクト
 - 配列または `Set`
-- プレーンなオブジェクトまたは `Map`
-- バイト配列 (`Uint8Array`)
+- プレーンオブジェクトまたは `Map`
+- `Uint8Array`
+- `Simple` オブジェクト
+- オプションの `replacer` で置換できる値
 
-プリミティブな値でなく、`toCBOR` プロパティが関数であれば、それを呼び出します。
+プリミティブな値でなく、`toCBOR` プロパティが関数であれば、それを優先的に呼び出します。
 
 ##### `options`
 
 書き込みオプションです。
 
-`isSafeMapKey?: (key: unknown, map: Map<unknown, unknown>) => boolean`
-:   このオプションは、`Map` オブジェクトのキーが安全であるか検証する関数です。関数は `key` と `map` の 2 つの引数を受け取ります。`key` はキーの値で、`map` 検証している `Map` オブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。
+`replacer?: Replacer | Replacer[]`
+:   エンコーダーはデフォルトでほとんどの値を CBOR にエンコードしますが、それらに当てはまらない特殊な値を、エンコード可能な値に置換するすることができます。このオプションは、関数または関数の配列を指定することで置換処理を実装できます。関数が `Symbol.for("@tai-kun/surrealdb/cbor/continue")` で得られる `CONTINUE` シンボルを返すと後続の関数が呼び出されます。何にも置換できなかった場合は `SurrealTypeError` が投げられます。
 
-`isSafeObjectKey?: (key: unknown, obj: Record<string, unknown>) => boolean`
-:   このオプションは、プレーンオブジェクトのキーが安全であるか検証する関数です。関数は `key` と `obj` の 2 つの引数を受け取ります。`key` はキーの値で、`obj` 検証しているプレーンオブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。
+`isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
+:   このオプションは、`Map` オブジェクトのキーが安全であるか検証する関数です。関数は `key` と `map` の 2 つの引数を受け取ります。`key` はキーの値で、`map` 検証している `Map` オブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。このオプションを指定すると、デフォルトの検証が完全に上書きされることに注意してください。デフォルトの検証に独自の検証を加える場合は、`"__proto__"` または `"constructor"` も安全ではないキーと判定するべきです。
+
+`isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
+:   このオプションは、プレーンオブジェクトのキーが安全であるか検証する関数です。関数は `key` と `obj` の 2 つの引数を受け取ります。`key` はキーの値で、`obj` 検証しているプレーンオブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。このオプションを指定すると、デフォルトの検証が完全に上書きされることに注意してください。デフォルトの検証に独自の検証を加える場合は、`"__proto__"` または `"constructor"` も安全ではないキーと判定するべきです。
 
 #### 返値
 
@@ -62,24 +74,24 @@ import { writeNumber } from "@tai-kun/surrealdb/cbor";
 `writeNumber` は数値を `Writer` で書き込むヘルパー関数です。
 
 ```ts
-writeNumber(writer: Writer, value: number | bigint): void;
+writeNumber(writer: Writer, value: number): void;
 ```
 
 #### 引数
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
-数値です。整数値または `bigint` の場合は [`writeInteger`](#writeinteger) で書き込まれ、それ以外は [`writeFloat`](#writefloat) で書き込まれます。JavaScript では `.0` を浮動小数点数と判定する方法がないので、その場合は整数値になります。例えば `-1.0` は `-1` であり、整数です。
+数値です。整数の場合、-2^53-1 から 2^53-1 までの値が有効です。JavaScript では `.0` を浮動小数点数と判定する方法がないので、その場合は整数値として CBOR へエンコードされます。例えば `-1.0` は `-1` であり、整数です。
 
 #### 返値
 
 なし。
 
-## writeInteger
+## writeBigInt
 
 ### インポート
 
@@ -89,51 +101,21 @@ import { writeInteger } from "@tai-kun/surrealdb/cbor";
 
 ### 構文
 
-`writeInteger` は整数値を `Writer` で書き込むヘルパー関数です。
+`writeBigInt` は `bigint` を `Writer` で書き込むヘルパー関数です。
 
 ```ts
-writeInteger(writer: Writer, value: number | bigint): void;
+writeBigInt(writer: Writer, value: bigint): void;
 ```
 
 #### 引数
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
-整数値です。`NaN` や　`Infinity`、`-Infinity` の場合は半精度浮動小数点で書き込まれます。整数値の範囲は -2^64-1 から 2^64-1 です。JavaScript の安全な整数値を超えている `number` 型で書き込むとエラーが投げられます。
-
-#### 返値
-
-なし。
-
-## writeFloat
-
-### インポート
-
-```ts
-import { writeFloat } from "@tai-kun/surrealdb/cbor";
-```
-
-### 構文
-
-`writeFloat` は浮動小数点数を `Writer` で書き込むヘルパー関数です。
-
-```ts
-writeFloat(writer: Writer, value: number): void;
-```
-
-#### 引数
-
-##### `writer`
-
-値をバイト配列へ書き込むための `Writer` です。
-
-##### `value`
-
-浮動小数点数です。`NaN` や `0`、`-0`、`Infinity`、`-Infinity` の場合は半精度で書き込まれます。それ以外は倍精度で書き込まれます。単精度で書き込まれることはありません。
+`bigint` です。-2^64 から 2^64-1 までの値が有効です。
 
 #### 返値
 
@@ -149,21 +131,21 @@ import { writeByteString } from "@tai-kun/surrealdb/cbor";
 
 ### 構文
 
-`writeByteString` はバイト配列形式の文字列を `Writer` で書き込むヘルパー関数です。
+`writeByteString` は `Uint8Array` を `Writer` で書き込むヘルパー関数です。
 
 ```ts
-writeByteString(writer: Writer, value: ): void;
+writeByteString(writer: Writer, value: Uint8Array): void;
 ```
 
 #### 引数
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
-バイト配列形式の文字列です。
+ `Uint8Array` です。
 
 #### 返値
 
@@ -189,7 +171,7 @@ writeUtf8String(writer: Writer, value: string): void;
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
@@ -209,7 +191,7 @@ import { writeEncodedUtf8String } from "@tai-kun/surrealdb/cbor";
 
 ### 構文
 
-`writeEncodedUtf8String` は UTF-8 でエンコードされた文字列 (バイト配列) を `Writer` で書き込むヘルパー関数です。
+`writeEncodedUtf8String` は UTF-8 でエンコードされた文字列 ( `Uint8Array` ) を `Writer` で書き込むヘルパー関数です。
 
 ```ts
 writeEncodedUtf8String(writer: Writer, value: Uint8Array): void;
@@ -219,41 +201,11 @@ writeEncodedUtf8String(writer: Writer, value: Uint8Array): void;
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
-UTF-8 でエンコードされた文字列 (バイト配列) です。
-
-#### 返値
-
-なし。
-
-## writeTag
-
-### インポート
-
-```ts
-import { writeTag } from "@tai-kun/surrealdb/cbor";
-```
-
-### 構文
-
-`writeTag` はタグ付きデータアイテムのタグを `Writer` で書き込むヘルパー関数です。
-
-```ts
-writeTag(writer: Writer, value: number | bigint): void;
-```
-
-#### 引数
-
-##### `writer`
-
-値をバイト配列へ書き込むための `Writer` です。
-
-##### `value`
-
-タグ付きデータアイテムのタグです。0 から 2^64-1 までの整数値が有効です。
+UTF-8 でエンコードされた文字列 ( `Uint8Array` ) です。
 
 #### 返値
 
@@ -279,7 +231,7 @@ writeBoolean(writer: Writer, value: boolean): void;
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
@@ -309,7 +261,7 @@ writeNullable(writer: Writer, value: null | undefined): void;
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 
@@ -339,7 +291,7 @@ writeHeader(writer: Writer, mt: MajorType, length: number | bigint): void;
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `mt`
 
@@ -373,7 +325,7 @@ writePayload(writer: Writer, value: Uint8Array): void;
 
 ##### `writer`
 
-値をバイト配列へ書き込むための `Writer` です。
+値を `Uint8Array` へ書き込むための `Writer` です。
 
 ##### `value`
 

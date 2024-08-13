@@ -57,7 +57,10 @@ import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
 const { Surreal } = initSurreal({
   Client: Client,
   engines: {
-    http: config => new HttpEngine(config),
+    http: config => new HttpEngine({
+      ...config,
+      // fetch: <your custom fetch function>
+    }),
     https: "http",
   },
   formatter: new JsonFormatter(),

@@ -1,5 +1,7 @@
 // @ts-nocheck
 
+export {}; // TypeScript このファイルをモジュールとして認識させる。
+
 let port = 65535;
 
 Bun.serve({

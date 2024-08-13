@@ -2,48 +2,88 @@
 title: 事前に準備されたクエリー
 ---
 
+## 基本的な使い方
+
 事前に準備されたをクエリーを使う基本的な例は次のとおりです:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
-const CreateUserQuery = surql`
-  CREATE ONLY user:foo CONTENT { age: 42 };
-`.returns<[{ id: Thing<"user">, age: number }]>()
+const CreateUserQuery = surql`CREATE ONLY user:foo CONTENT { age: 42 };`
+  .returns<[{ id: Thing<"user">, age: number }]>();
 
 const db = new Surreal();
-await db.connect("ws://localhost:8000");
+await db.connect(`ws://localhost:8000`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
 
 const results = await db.query(CreateUserQuery);
-   // ^? const results: [{ id: Thing<"user">, age: number }]
+//    ^? const results: [{ id: Thing<"user">, age: number }]
 
 await db.disconnect();
 ```
 
-クエリーを事前に準備すると型推論が有効になります。しかし推論される型は手動で設定する必要があります。まだ未実装ですが、`.returns` にバリデーターを渡せるようにする予定です。
+クエリーを事前に準備すると型推論が有効になります。しかし推論される型は手動で設定する必要があります。
+
+## クエリーの結果を検証する
+
+`.returns` の引数にクエリー結果のバリデーターを渡すと、クエリーはより安全になります。次の例では zod を使用してクエリーの結果が意図した値かどうかを検証します:
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+import { z } from "zod";
+
+const isUserTable = (id: Thing): id is Thing<"user"> => id.tb === "user";
+
+const CreatedUserSchema = z.tuple([
+  z.object({
+    id: z.instanceof(Thing).refine(isUserTable),
+    age: z.number(),
+  }),
+]);
+
+const CreateUserQuery = surql`CREATE ONLY user:bar CONTENT { age: 42 };`
+  .returns(CreatedUserSchema.parse.bind(CreatedUserSchema));
+
+const db = new Surreal();
+await db.connect(`ws://localhost:8000`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
+
+const results = await db.query(CreateUserQuery);
+//    ^? const results: [{ id: Thing<"user">, age: number }]
+
+await db.disconnect();
+```
+
+zod に依存いてるわけではないので、valibot や汎用的な関数でレスポンスを検証することができます。
+
+## クエリーに変数を埋め込む
 
 `surql` はテンプレート文字列でクエリーを記述できるため、値を視覚的に埋め込むことが可能です:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
-const USER_NAME = "foo"
-const USER_AGE = 42
+const USERNAME = "baz";
+const USER_AGE = 42;
 
 const CreateUserQuery = surql`
-  CREATE ONLY type::thing('user', ${USERNAME}) CONTENT { age: ${USER_AGE} };
-`.returns<[{ id: Thing<"user">, age: number }]>()
+  CREATE ONLY type::thing('user', ${USERNAME}) CONTENT { age: ${USER_AGE} };`
+  .returns<[{ id: Thing<"user">; age: number }]>();
 
 const db = new Surreal();
-await db.connect("ws://localhost:8000");
+await db.connect(`ws://${hostname()}`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
 
 const results = await db.query(CreateUserQuery);
-   // ^? const results: [{ id: Thing<"user">, age: number }]
+//    ^? const results: [{ id: Thing<"user">, age: number }]
 
 await db.disconnect();
 ```
 
-上記の例で示したクエリーは、実際には次のようになります:
+上記の例で送信される RPC リクエストのパラメーターは次のとおりです:
 
 ```text
 CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
@@ -51,25 +91,36 @@ CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
 
 ```ts
 {
-  _jst_0: "foo",
+  _jst_0: "baz",
   _jst_1: 42
 }
 ```
 
-事前に定義されたクエリーに変数を設定し、クエリーを実行するときに値を渡すには `surql.slot` を使います:
+## クエリーに引数を定義する
+
+事前に定義されたクエリーに引数を定義するには `surql.slot` を使います:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+import { z } from "zod";
 
-const UserIdSlot = surql.slot("id").type<Thing<"user">>();
+const isUserTable = (id: Thing): id is Thing<"user"> => id.tb === "user";
+
+const UserIdSchema = z.instanceof(Thing).refine(isUserTable);
+
+const UserIdSlot = surql.slot("id")
+  .type(UserIdSchema.parse.bind(UserIdSchema));
+
 const UserAgeSlot = surql.slot("age", 42);
 
 const CreateUserQuery = surql`
-  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };
-`.returns<[{ id: Thing<"user">, age: number }]>()
+  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };`
+  .returns<[{ id: Thing<"user">; age: number }]>();
 
 const db = new Surreal();
-await db.connect("ws://localhost:8000");
+await db.connect(`ws://${hostname()}`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
 
 const results = await db.query(CreateUserQuery, {
   id: new Thing("user", "tai-kun"),
@@ -78,21 +129,25 @@ const results = await db.query(CreateUserQuery, {
 await db.disconnect();
 ```
 
-スロットには必ず変数名が必要です。`.type` メソッドで変数に型レベルで制約を設けることができます。まだ未実装ですが、変数のバリデーターを渡せるようにする予定です。上記の例では、変数名 `id` のスロットはテーブル名が `"user"` のレコード ID でなければなりません。
+スロットには必ず変数名が必要です。`.type()` メソッドで変数に型レベルで制約を設けることができます。`.returns()` と同様に、`.type()` の引数に値を検証する関数を渡すことができます。上記の例では、変数名 `id` のスロットはテーブル名が `"user"` のレコード ID でなければなりません。
 
 スロットの引数には変数名に続いてデフォルト値を設定することができます。実行時にスロットの変数名が省略された場合、このデフォルト値が使用されます。上記の例では、変数名 `age` のスロットにはデフォルト値 `42` が設定されています。
 
-事前に定義されたクエリーに、実行時に変数の指定が必須のスロットが含まれる場合、未指定であればクエリーは実行時に `SurrealTypeError` で拒否されます。TypeScript で厳格に型推論されていれば、実行しなくとも型レベルでエラーが表示されます。例えば、次のように必須の変数を省略して `tsc` で型チェックをするとエラーになります。
+スロットは `.type()` 以外にも `.rename()` や `.default()`、`.optional()`、`.required()` が利用可能です。
+
+事前に定義されたクエリーに、実行時に変数の指定が必須のスロットが含まれる場合、それが未指定であればクエリーは実行時に `SurrealTypeError` で拒否されます。TypeScript で正しくに型推論されていれば、実行しなくとも型レベルでエラーが表示されます。例えば、次のように必須の変数を省略して `tsc` で型チェックをするとエラーになります。
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
-const UserIdSlot = surql.slot("id").type<Thing<"user">>();
+const UserIdSlot = surql.slot("id")
+  .type<Thing<"user">>();
+
 const UserAgeSlot = surql.slot("age", 42);
 
 const CreateUserQuery = surql`
-  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };
-`.returns<[{ id: Thing<"user">, age: number }]>()
+  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };`
+  .returns<[{ id: Thing<"user">, age: number }]>()
 
 const db = new Surreal();
 await db.connect("ws://localhost:8000");

@@ -25,11 +25,7 @@ import {
   HEADER_UNDEFINED,
   JS_MAX_SAFE_UNSIGNED_INTEGER,
   type MajorType,
-  MT_ARRAY,
   MT_BYTE_STRING,
-  MT_MAP,
-  MT_SIMPLE_FLOAT,
-  MT_TAG,
   Simple,
 } from "./spec";
 import type { ToCBOR, Writer } from "./writer";
@@ -93,8 +89,45 @@ export function writeByteString(
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeutf8string)
  */
 export function writeUtf8String(w: Writer, value: string): void {
-  const bytes = utf8.encode(value);
-  writeEncodedUtf8String(w, bytes);
+  let l = value.length;
+
+  // パフォーマンスのために `.encodeInto` を使ってバッファーに直接書き込む。
+  // 文字列を UTF-8 でエンコードするとき、必要なバッファーのサイズは `.length` バイト以上
+  // `.length * 3` バイト以下である [^1]。さらに CBOR のヘッダーを書き込むために最大 5 バイトの
+  // 空き容量が追加で必要となる。つまりメモリーの空き容量が `.length * 3 + 5` バイト以上であれば
+  // `.encodeInto` を使うことができる。
+  // [^1]: https://developer.mozilla.org/ja/docs/Web/API/TextEncoder/encodeInto#%E3%83%90%E3%83%83%E3%83%95%E3%82%A1%E3%83%BC%E3%81%AE%E5%A4%A7%E3%81%8D%E3%81%95
+  if ((w.data.length - w.offset) >= (5 + l + l + l)) {
+    const r = utf8.encodeInto(value, w.data.subarray(w.offset + 5));
+
+    if (r.written < AI_ONE_BYTE) {
+      w.data[w.offset++] = 96 + r.written; // (120 - 1 - 23) + value
+      l = 4;
+    } else if (r.written <= 0xff) {
+      w.data[w.offset++] = 120; // (MT_UTF8_STRING << 5) | AI_ONE_BYTE
+      w.data[w.offset++] = r.written;
+      l = 3;
+    } else if (r.written <= 0xffff) {
+      w.data[w.offset++] = 121; // (MT_UTF8_STRING << 5) | AI_TWO_BYTES
+      w.view.setUint16(w.offset, r.written);
+      w.offset += 2;
+      l = 2;
+    } else { // else if (r.written <= 2147483647 < 0xffffffff)
+      w.data[w.offset++] = 122; // (MT_UTF8_STRING << 5) | AI_FOUR_BYTES
+      w.view.setUint32(w.offset, r.written);
+      w.offset += 4;
+      l = 0;
+    }
+
+    if (l > 0) {
+      w.data.copyWithin(w.offset, l += w.offset, l + r.written);
+    }
+
+    w.offset += r.written;
+  } else {
+    const bytes = utf8.encode(value);
+    writeEncodedUtf8String(w, bytes);
+  }
 }
 
 /**
@@ -102,41 +135,44 @@ export function writeUtf8String(w: Writer, value: string): void {
  */
 export function writeEncodedUtf8String(
   w: Writer,
-  bytes: Uint8ArrayLike,
+  value: Uint8ArrayLike,
 ): void {
-  const value = bytes.length;
+  const length = value.length;
 
-  w.claim(9 + value); // 1 (header) + 8 (64-bit payload) + bytes.length
+  w.claim(9 + length); // 1 (header) + 8 (64-bit payload) + value.length
 
-  if (value < AI_ONE_BYTE) {
-    w.data[w.offset++] = 96 + value; // (120 - 1 - 23) + value
-  } else if (value <= 0xff) {
+  if (length < AI_ONE_BYTE) {
+    w.data[w.offset++] = 96 + length; // (120 - 1 - 23) + length
+  } else if (length <= 0xff) {
     w.data[w.offset++] = 120; // (MT_UTF8_STRING << 5) | AI_ONE_BYTE
-    w.data[w.offset++] = value;
-  } else if (value <= 0xffff) {
+    w.data[w.offset++] = length;
+  } else if (length <= 0xffff) {
     w.data[w.offset++] = 121; // (MT_UTF8_STRING << 5) | AI_TWO_BYTES
-    w.view.setUint16(w.offset, value);
+    w.view.setUint16(w.offset, length);
     w.offset += 2;
-  } else if (value <= 0xffffffff) {
+  } else if (length <= 0xffffffff) {
     w.data[w.offset++] = 122; // (MT_UTF8_STRING << 5) | AI_FOUR_BYTES
-    w.view.setUint32(w.offset, value);
+    w.view.setUint32(w.offset, length);
     w.offset += 4;
-  } else if (value <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
+  } else if (length <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
     w.data[w.offset++] = 123; // (MT_UTF8_STRING << 5) | AI_EIGHT_BYTES
-    w.view.setBigUint64(w.offset, BigInt(value));
+    w.view.setBigUint64(w.offset, BigInt(length));
     w.offset += 8;
   } else {
-    throw new NumberRangeError(
-      [
-        -JS_MAX_SAFE_UNSIGNED_INTEGER,
-        JS_MAX_SAFE_UNSIGNED_INTEGER,
-      ],
-      value,
-    );
+    throw new NumberRangeError([0, JS_MAX_SAFE_UNSIGNED_INTEGER], length);
   }
+  // エンコードした文字列が JavaScript 以外でデコードされる可能性を考えると、JavaScript の制約に
+  // したがった文字列長の検証をする必要はないかもしれない。
+  // } else if (length <= 6442450941) { // (2^31-1)*3
+  //   w.data[w.offset++] = 123; // (MT_UTF8_STRING << 5) | AI_EIGHT_BYTES
+  //   w.view.setBigUint64(w.offset, BigInt(length));
+  //   w.offset += 8;
+  // } else {
+  //   throw new NumberRangeError([0, 6442450941], length);
+  // }
 
-  w.data.set(bytes, w.offset);
-  w.offset += value;
+  w.data.set(value, w.offset);
+  w.offset += length;
 }
 
 /**
@@ -318,6 +354,106 @@ export function writeBigInt(w: Writer, value: bigint): void {
   }
 }
 
+/**
+ * @internal
+ */
+function writeArrayHeader(w: Writer, length: number): void {
+  w.claim(9); // 1 (header) + 8 (64-bit payload)
+
+  if (length < AI_ONE_BYTE) {
+    w.data[w.offset++] = 128 + length; // 128 + 23 = 151
+  } else if (length <= 0xff) {
+    w.data[w.offset++] = 152; // (MT_ARRAY << 5) | AI_ONE_BYTE
+    w.data[w.offset++] = length;
+  } else if (length <= 0xffff) {
+    w.data[w.offset++] = 153; // (MT_ARRAY << 5) | AI_TWO_BYTES
+    w.view.setUint16(w.offset, length);
+    w.offset += 2;
+  } else if (length <= 0xffffffff) {
+    w.data[w.offset++] = 154; // (MT_ARRAY << 5) | AI_FOUR_BYTES
+    w.view.setUint32(w.offset, length);
+    w.offset += 4;
+  } else if (length <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
+    w.data[w.offset++] = 155; // (MT_ARRAY << 5) | AI_EIGHT_BYTES
+    w.view.setBigUint64(w.offset, BigInt(length));
+    w.offset += 8;
+  } else {
+    throw new NumberRangeError([0, JS_MAX_SAFE_UNSIGNED_INTEGER], length);
+  }
+}
+
+/**
+ * @internal
+ */
+function writeMapHeader(w: Writer, length: number): void {
+  w.claim(9); // 1 (header) + 8 (64-bit payload)
+
+  if (length < AI_ONE_BYTE) {
+    w.data[w.offset++] = 160 + length; // 160 + 23 = 183
+  } else if (length <= 0xff) {
+    w.data[w.offset++] = 184; // (MT_MAP << 5) | AI_ONE_BYTE
+    w.data[w.offset++] = length;
+  } else if (length <= 0xffff) {
+    w.data[w.offset++] = 185; // (MT_MAP << 5) | AI_TWO_BYTES
+    w.view.setUint16(w.offset, length);
+    w.offset += 2;
+  } else if (length <= 0xffffffff) {
+    w.data[w.offset++] = 186; // (MT_MAP << 5) | AI_FOUR_BYTES
+    w.view.setUint32(w.offset, length);
+    w.offset += 4;
+  } else if (length <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
+    w.data[w.offset++] = 187; // (MT_MAP << 5) | AI_EIGHT_BYTES
+    w.view.setBigUint64(w.offset, BigInt(length));
+    w.offset += 8;
+  } else {
+    throw new NumberRangeError([0, JS_MAX_SAFE_UNSIGNED_INTEGER], length);
+  }
+}
+
+/**
+ * @internal
+ */
+function writeTagHeader(w: Writer, tag: number | bigint): void {
+  w.claim(9); // 1 (header) + 8 (64-bit payload)
+
+  if (tag < AI_ONE_BYTE) {
+    w.data[w.offset++] = 192 + Number(tag); // 192 + 23 = 215
+  } else if (tag <= 0xff) {
+    w.data[w.offset++] = 216; // (MT_TAG << 5) | AI_ONE_BYTE
+    w.data[w.offset++] = Number(tag);
+  } else if (tag <= 0xffff) {
+    w.data[w.offset++] = 217; // (MT_TAG << 5) | AI_TWO_BYTES
+    w.view.setUint16(w.offset, Number(tag));
+    w.offset += 2;
+  } else if (tag <= 0xffffffff) {
+    w.data[w.offset++] = 218; // (MT_TAG << 5) | AI_FOUR_BYTES
+    w.view.setUint32(w.offset, Number(tag));
+    w.offset += 4;
+  } else if (tag <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
+    w.data[w.offset++] = 219; // (MT_TAG << 5) | AI_EIGHT_BYTES
+    w.view.setBigUint64(w.offset, BigInt(tag));
+    w.offset += 8;
+  } else {
+    throw new NumberRangeError([0, CBOR_MAX_UNSIGNED_INTEGER], tag);
+  }
+}
+
+/**
+ * @internal
+ */
+function writeSimpleHeader(w: Writer, value: number): void {
+  w.claim(3); // 1 (header) + 2
+
+  if (value < AI_ONE_BYTE) {
+    w.data[w.offset++] = 224 + value; // 128 + 23 = 247
+  } else if (value <= 0xff) {
+    w.data[w.offset++] = 248; // (MT_SIMPLE_FLOAT << 5) | AI_ONE_BYTE
+    w.data[w.offset++] = value;
+  } else {
+    throw new NumberRangeError([0, 0xff], value);
+  }
+}
+
 const PARENT_SET = 0;
 const PARENT_MAP = 1;
 const PARENT_OBJ = 2;
@@ -433,7 +569,7 @@ export function write(
         });
 
         if (cbor.length === 2) {
-          writeHeader(w, MT_TAG, cbor[0]);
+          writeTagHeader(w, cbor[0]);
           value = cbor[1];
         } else if (cbor.length === 1) {
           value = cbor[0];
@@ -448,41 +584,44 @@ export function write(
       }
     } else if (isPlainObject(value)) {
       const keys = Object.keys(value);
-      writeHeader(w, MT_MAP, keys.length);
+      const length = keys.length;
+      writeMapHeader(w, length);
 
-      if (keys.length > 0) {
+      if (length > 0) {
         begin({
           $: PARENT_OBJ,
           value,
           index: 0,
-          length: keys.length,
+          length,
           isProperty: true,
           properties: keys,
         });
       }
     } else if (Array.isArray(value) || value instanceof Set) {
       const target = Array.isArray(value) ? value : Array.from(value);
-      writeHeader(w, MT_ARRAY, target.length);
+      const length = target.length;
+      writeArrayHeader(w, length);
 
-      if (target.length > 0) {
+      if (length > 0) {
         begin({
           $: PARENT_SET,
           value,
           index: 0,
-          length: target.length,
+          length,
           target,
         });
       }
     } else if (value instanceof Map) {
       const keys = Array.from(value.keys());
-      writeHeader(w, MT_MAP, keys.length);
+      const length = keys.length;
+      writeMapHeader(w, length);
 
-      if (keys.length > 0) {
+      if (length > 0) {
         begin({
           $: PARENT_MAP,
           value,
           index: 0,
-          length: keys.length,
+          length,
           isProperty: true,
           properties: keys,
         });
@@ -490,7 +629,7 @@ export function write(
     } else if (value instanceof Uint8Array) {
       writeByteString(w, value);
     } else if (value instanceof Simple) {
-      writeHeader(w, MT_SIMPLE_FLOAT, value.value);
+      writeSimpleHeader(w, value.value);
     } else {
       let replaced = false;
 

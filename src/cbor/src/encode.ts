@@ -17,7 +17,7 @@ export default function encode(
   options: EncodeOptions | undefined = {},
 ): Uint8Array {
   mem ||= new Memory();
-  mem.define(0, 4096);
+  mem.define(0, 8192);
 
   try {
     const w = new Writer(mem.alloc(0), options);

@@ -73,7 +73,7 @@ const CreateUserQuery = surql`
   .returns<[{ id: Thing<"user">; age: number }]>();
 
 const db = new Surreal();
-await db.connect(`ws://${hostname()}`);
+await db.connect(`ws://localhost:8000`);
 await db.signin({ user: "root", pass: "root" });
 await db.use("example", "example");
 
@@ -118,7 +118,7 @@ const CreateUserQuery = surql`
   .returns<[{ id: Thing<"user">; age: number }]>();
 
 const db = new Surreal();
-await db.connect(`ws://${hostname()}`);
+await db.connect(`ws://localhost:8000`);
 await db.signin({ user: "root", pass: "root" });
 await db.use("example", "example");
 

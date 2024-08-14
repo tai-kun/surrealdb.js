@@ -139,7 +139,7 @@ export function writeEncodedUtf8String(
 ): void {
   const length = value.length;
 
-  w.claim(9 + length); // 1 (header) + 8 (64-bit payload) + value.length
+  w.claim(9); // 1 (header) + 8 (64-bit payload)
 
   if (length < AI_ONE_BYTE) {
     w.data[w.offset++] = 96 + length; // (120 - 1 - 23) + length
@@ -171,8 +171,7 @@ export function writeEncodedUtf8String(
   //   throw new NumberRangeError([0, 6442450941], length);
   // }
 
-  w.data.set(value, w.offset);
-  w.offset += length;
+  w.writeBytes(value);
 }
 
 /**

@@ -18,6 +18,9 @@ function query<T extends readonly unknown[] = unknown[]>(
   options?: QueryOptions | undefined,
 ): Promise<T>;
 
+/**
+ * @experimental
+ */
 function query<T extends readonly unknown[]>(
   endpoint: string | URL,
   surql: Override<PreparedQueryLike, {
@@ -28,6 +31,9 @@ function query<T extends readonly unknown[]>(
   options?: QueryOptions | undefined,
 ): Promise<T>;
 
+/**
+ * @experimental
+ */
 function query<S extends SlotLike, T extends readonly unknown[]>(
   endpoint: string | URL,
   surql: Override<PreparedQueryLike, {

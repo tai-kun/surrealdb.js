@@ -87,6 +87,9 @@ export type InlineRpcRequest =
   )
   & InlineRpcRequestOptions;
 
+/**
+ * @experimental
+ */
 async function rpc(request: InlineRpcRequest): Promise<unknown> {
   const {
     url,

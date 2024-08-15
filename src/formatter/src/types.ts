@@ -42,5 +42,8 @@ export interface Formatter {
     data: ReadableStream<Uint8Array>,
     signal: AbortSignal,
   ) => StatefulPromise<unknown>;
+  /**
+   * @experimental
+   */
   readonly decodingStrategy?: (ctx: DecodingContext) => DecodingStrategy;
 }

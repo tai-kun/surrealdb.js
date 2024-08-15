@@ -1,3 +1,4 @@
+import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
 import type { AllocatedMemoryBlock } from "./memory";
 import type { DataItem } from "./spec";
 
@@ -125,7 +126,7 @@ export class Writer {
     return acc;
   }
 
-  writeBytes(value: Uint8Array): void {
+  writeBytes(value: Uint8ArrayLike): void {
     this.claim(value.length);
     this.data.set(value, this.offset);
     this.offset += value.length;

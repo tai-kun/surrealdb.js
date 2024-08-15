@@ -40,6 +40,7 @@ import {
   EncodedCBOR,
   type Formatter,
 } from "@tai-kun/surrealdb/formatter";
+import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
 import {
   isArrayBuffer,
   type StatefulPromise,
@@ -47,12 +48,6 @@ import {
 } from "@tai-kun/surrealdb/utils";
 
 const hasBuffer = typeof Buffer !== "undefined";
-
-// dprint-ignore
-type EncodedData = typeof globalThis extends
-  { Buffer: new(...args: any) => infer Buff }
-  ? Uint8Array | Buff
-  : Uint8Array
 
 export interface CborDataTypes {
   readonly Uuid: new(_: UuidSource) => any;
@@ -195,7 +190,7 @@ export default class CborFormatter implements Formatter {
     );
   }
 
-  encodeSync(data: unknown): EncodedData {
+  encodeSync(data: unknown): Uint8Array {
     return encode(data, this.encodeOptions);
   }
 
@@ -224,7 +219,7 @@ export default class CborFormatter implements Formatter {
   }
 }
 
-function toEncodedData(data: Data): EncodedData {
+function toEncodedData(data: Data): Uint8ArrayLike {
   switch (true) {
     case data instanceof Uint8Array:
       return hasBuffer && data instanceof Buffer

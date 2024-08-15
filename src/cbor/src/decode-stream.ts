@@ -1,4 +1,5 @@
 import { CborDecodeStreamAbortFailedError } from "@tai-kun/surrealdb/errors";
+import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
 import { StatefulPromise, throwIfAborted } from "@tai-kun/surrealdb/utils";
 import Decoder, { type DecoderOptions } from "./decoder";
 
@@ -7,7 +8,7 @@ export interface DecodeStreamOptions extends DecoderOptions {
 }
 
 export default function decodeStream(
-  input: ReadableStream<Uint8Array>,
+  input: ReadableStream<Uint8ArrayLike>,
   options: DecodeStreamOptions | undefined = {},
 ): StatefulPromise<unknown> {
   return StatefulPromise.try(async () => {

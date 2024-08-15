@@ -1,3 +1,5 @@
+import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
+
 export default {
   // 戦闘を空白にすると入力補完の候補から排除される。
   [" e"]: /* @__PURE__ */ new TextEncoder(),
@@ -9,7 +11,7 @@ export default {
   encode(input: string): Uint8Array {
     return this[" e"].encode(input);
   },
-  encodeInto(input: string, dest: Uint8Array): TextEncoderEncodeIntoResult {
+  encodeInto(input: string, dest: Uint8ArrayLike): TextEncoderEncodeIntoResult {
     return this[" e"].encodeInto(input, dest);
   },
   decode(input: AllowSharedBufferSource): string {

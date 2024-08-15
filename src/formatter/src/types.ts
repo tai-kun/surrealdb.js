@@ -1,3 +1,4 @@
+import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
 import type { StatefulPromise } from "@tai-kun/surrealdb/utils";
 import type EncodedCBOR from "./encoded-cbor";
 import type EncodedJSON from "./encoded-json";
@@ -8,10 +9,7 @@ export type Data = typeof globalThis extends
   : string | ArrayBuffer | Uint8Array;
 
 // dprint-ignore
-export type EncodedData = typeof globalThis extends
-  { Buffer: new(...args: any) => infer Buff }
-  ? string | Uint8Array | Buff
-  : string | Uint8Array
+export type EncodedData = string | Uint8ArrayLike
 
 export type DecodingContext =
   | { name: "fetch"; length: number }

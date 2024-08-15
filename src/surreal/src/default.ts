@@ -18,7 +18,7 @@ import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import Formatter from "@tai-kun/surrealdb/formatters/cbor";
 import Validator from "@tai-kun/surrealdb/validators/noop";
-import { WebSocket } from "ws";
+import { WebSocket } from "isows";
 import initSurreal from "./init-surreal";
 
 const {
@@ -36,10 +36,6 @@ const {
       return new WebSocketEngine({
         ...config,
         createWebSocket(address, protocol) {
-          if ("WebSocket" in globalThis) {
-            return new globalThis.WebSocket(address, protocol);
-          }
-
           return new WebSocket(address, protocol);
         },
       });

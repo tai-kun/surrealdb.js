@@ -35,16 +35,24 @@ import {
   throwIfAborted,
 } from "@tai-kun/surrealdb/utils";
 import { isLiveResult, isRpcResponse } from "@tai-kun/surrealdb/validator";
+import type { Promisable } from "type-fest";
 import type { WebSocket as WsWebSocket } from "ws";
 
-type GlobalWebSocket = typeof globalThis extends
-  { WebSocket: new(...args: any) => infer R } ? R
-  : never;
+type InferWebSocket<T> = T extends
+  { readonly WebSocket: new(...args: any) => infer W } ? W : never;
 
-export type CreateWebSocket = (address: URL, protocol: string | undefined) =>
-  | GlobalWebSocket
-  | WsWebSocket
-  | PromiseLike<GlobalWebSocket | WsWebSocket>;
+type NativeWebSocket = InferWebSocket<
+  | typeof global
+  | typeof window
+  | typeof self
+>;
+
+type WebSocket = WsWebSocket | NativeWebSocket; // isows の型定義はこれより狭い。
+
+export type CreateWebSocket = (
+  address: URL,
+  protocol: string | undefined,
+) => Promisable<WebSocket>;
 
 export interface EngineConfig extends EngineAbcConfig {
   readonly createWebSocket: CreateWebSocket;
@@ -54,7 +62,7 @@ export interface EngineConfig extends EngineAbcConfig {
 export default class WebSocketEngine extends EngineAbc {
   readonly name = "websocket";
 
-  protected ws: WsWebSocket | null = null;
+  protected ws: WebSocket | null = null;
   protected readonly id = new Serial();
   protected readonly newWs: CreateWebSocket;
   protected readonly pingInterval: number;
@@ -92,10 +100,7 @@ export default class WebSocketEngine extends EngineAbc {
       this.ee.once(OPEN, { signal }),
       this.ee.once("error", { signal }),
     ];
-    const ws = await this.newWs(
-      new URL(endpoint),
-      this.fmt.wsFormat,
-    ) as WsWebSocket;
+    const ws = await this.newWs(new URL(endpoint), this.fmt.wsFormat);
     ws.addEventListener("error", evt => {
       this.ee.emit(
         "error",
@@ -108,11 +113,11 @@ export default class WebSocketEngine extends EngineAbc {
           //     - undici: https://github.com/nodejs/undici/blob/v6.18.1/types/websocket.d.ts#L127-L133
           //     - ws: https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/ws/index.d.ts#L289-L294
           // - Deno: https://github.com/denoland/deno/blob/v1.43.6/ext/web/02_event.js#L1064-L1133
-          evt.message != null
-            ? "The \"error\" event was caught."
-            : String(evt.message),
+          "message" in evt
+            ? String(evt.message)
+            : "The \"error\" event was caught.",
           {
-            ...(evt.error == null ? {} : { cause: evt.error }),
+            ...("error" in evt ? { cause: evt.error } : {}),
             fatal: true,
           },
         ),

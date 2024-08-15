@@ -95,7 +95,7 @@ function define(
           ws(config) {
             return new WebSocketEngine({
               ...config,
-              async createWebSocket(addr, proto) {
+              createWebSocket(addr, proto) {
                 if ("WebSocket" in globalThis) {
                   return new globalThis.WebSocket(addr, proto);
                 }

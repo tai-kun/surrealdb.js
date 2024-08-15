@@ -2,6 +2,7 @@
   "excludes": [
     "**/.history",
     "**/.temp",
+    "**/cache",
     "**/dist",
     "**/node_modules",
     "**/*-lock.json"

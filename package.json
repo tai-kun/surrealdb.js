@@ -23,11 +23,10 @@
   "dependencies": {
     "@petamoriken/float16": "^3.8.7",
     "@types/big.js": "^6.2.2",
-    "@types/ws": "^8.5.12",
     "big.js": "^6.2.1",
     "is-plain-obj": "^4.1.0",
-    "type-fest": "^4.23.0",
-    "ws": "^8.18.0"
+    "isows": "^1.0.4",
+    "type-fest": "^4.23.0"
   },
   "devDependencies": {
     "@tsconfig/strictest": "^2.0.5",

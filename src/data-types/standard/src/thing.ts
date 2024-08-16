@@ -1,31 +1,39 @@
-import type { ThingSource } from "@tai-kun/surrealdb/data-types/decode-only";
+import type {
+  ThingIdSource,
+  ThingSource,
+  ThingTbSource,
+} from "@tai-kun/surrealdb/data-types/decode-only";
 import { Thing as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import type { TableLike } from "./table";
 
-export interface ThingLike<T extends ThingSource[0] = ThingSource[0]> {
+export interface ThingLike<
+  T extends ThingTbSource = ThingTbSource,
+  I extends ThingIdSource = ThingIdSource,
+> {
   readonly tb: T;
-  readonly id: unknown;
+  readonly id: I;
 }
 
-export default class Thing<const T extends ThingSource[0] = ThingSource[0]>
-  extends Base<T>
-{
+export default class Thing<
+  T extends ThingTbSource = ThingTbSource,
+  I extends ThingIdSource = ThingIdSource,
+> extends Base<T> {
   // @ts-expect-error readonly を外すだけ。
   tb: T;
 
   // @ts-expect-error readonly を外すだけ。
-  id: unknown;
+  id: I;
 
-  constructor(value: ThingSource<T> | ThingLike<T>);
+  constructor(value: ThingSource<T, I> | ThingLike<T, I>);
 
-  constructor(tb: T | TableLike<T>, id: ThingSource<T>[1]);
+  constructor(tb: T | TableLike<T>, id: I);
 
   constructor(
     ...args:
-      | [ThingSource<T> | ThingLike<T>]
-      | [tb: T | TableLike<T>, id: ThingSource<T>[1]]
+      | [ThingSource<T, I> | ThingLike<T, I>]
+      | [tb: T | TableLike<T>, id: I]
   ) {
-    const value: readonly [T, any] = args.length === 2
+    const value: readonly [T, I] = args.length === 2
       ? [typeof args[0] === "string" ? args[0] : args[0].name, args[1]]
       : Array.isArray(args[0])
       ? args[0]

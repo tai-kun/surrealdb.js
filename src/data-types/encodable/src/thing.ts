@@ -1,6 +1,7 @@
 import {
   Thing as Base,
-  type ThingSource,
+  type ThingIdSource,
+  type ThingTbSource,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { escapeRid, quoteStr, toSurql } from "@tai-kun/surrealdb/utils";
@@ -49,10 +50,10 @@ function escapeId(id: unknown): string {
   );
 }
 
-export default class Thing<const T extends ThingSource[0] = ThingSource[0]>
-  extends Base<T>
-  implements Encodable
-{
+export default class Thing<
+  T extends ThingTbSource = ThingTbSource,
+  I extends ThingIdSource = ThingIdSource,
+> extends Base<T, I> implements Encodable {
   override valueOf(): string {
     return this.toString();
   }

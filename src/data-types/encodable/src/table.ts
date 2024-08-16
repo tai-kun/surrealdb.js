@@ -5,6 +5,8 @@ import {
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_TABLE, type Encodable } from "./spec";
 
+export type * from "~/data-types/decode-only/src/table";
+
 export default class Table<T extends TableSource = TableSource> extends Base<T>
   implements Encodable
 {

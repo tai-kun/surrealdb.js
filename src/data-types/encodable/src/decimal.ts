@@ -1,6 +1,8 @@
 import { Decimal as Base } from "@tai-kun/surrealdb/data-types/decode-only";
 import { CBOR_TAG_STRING_DECIMAL, type Encodable } from "./spec";
 
+export type * from "~/data-types/decode-only/src/decimal";
+
 export default class Decimal extends Base implements Encodable {
   [Symbol.toPrimitive](hint: "default" | "string"): string;
   [Symbol.toPrimitive](hint: "number"): number;

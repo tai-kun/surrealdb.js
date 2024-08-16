@@ -1,12 +1,14 @@
-import type { DatetimeSource } from "@tai-kun/surrealdb/data-types/decode-only";
 import {
   CBOR_TAG_CUSTOM_DATETIME,
+  type DatetimeSource,
   type Encodable,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { isSafeNumber, quoteStr } from "@tai-kun/surrealdb/utils";
 import { toISOString } from "~/data-types/datetime";
 import { defineAsDatetime } from "~/data-types/define";
+
+export type * from "~/data-types/encodable/src/datetime";
 
 const MILLISECONDS_PER_SECOND = 1e3;
 const NANOSECONDS_PER_SECOND = 1e9;

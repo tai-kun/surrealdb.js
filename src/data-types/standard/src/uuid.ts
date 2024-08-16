@@ -1,7 +1,11 @@
-import type { UuidSource } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Uuid as Base } from "@tai-kun/surrealdb/data-types/encodable";
+import {
+  Uuid as Base,
+  type UuidSource,
+} from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError, unreachable } from "@tai-kun/surrealdb/errors";
 import { isValidBytes } from "~/data-types/uuid";
+
+export type * from "~/data-types/encodable/src/uuid";
 
 // const UUID_36_REGEX =
 //   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/

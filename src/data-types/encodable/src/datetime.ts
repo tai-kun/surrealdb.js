@@ -3,6 +3,8 @@ import { quoteStr } from "@tai-kun/surrealdb/utils";
 import { toISOString } from "~/data-types/datetime";
 import { CBOR_TAG_CUSTOM_DATETIME, type Encodable } from "./spec";
 
+export type * from "~/data-types/decode-only/src/datetime";
+
 const MILLISECONDS_PER_SECOND = 1e3;
 const NANOSECONDS_PER_MILLISECOND = 1e6;
 

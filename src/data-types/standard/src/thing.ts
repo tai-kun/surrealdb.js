@@ -1,10 +1,12 @@
-import type {
-  ThingIdSource,
-  ThingSource,
-  ThingTbSource,
-} from "@tai-kun/surrealdb/data-types/decode-only";
-import { Thing as Base } from "@tai-kun/surrealdb/data-types/encodable";
+import {
+  Thing as Base,
+  type ThingIdSource,
+  type ThingSource,
+  type ThingTbSource,
+} from "@tai-kun/surrealdb/data-types/encodable";
 import type { TableLike } from "./table";
+
+export type * from "~/data-types/encodable/src/thing";
 
 export interface ThingLike<
   T extends ThingTbSource = ThingTbSource,

@@ -2,10 +2,12 @@ import {
   CBOR_TAG_STRING_DECIMAL,
   type Encodable,
 } from "@tai-kun/surrealdb/data-types/encodable";
-import { Big as Decimal } from "big.js";
+import { Big as Decimal, type BigSource } from "big.js";
 import { defineAsDecimal } from "~/data-types/define";
 
-interface EncodableBig extends Omit<Encodable, "toJSON"> {
+export type DecimalSource = BigSource;
+
+interface StandardExtension extends Omit<Encodable, "toJSON"> {
   [Symbol.toPrimitive]: {
     (hint: "default" | "string"): string;
     (hint: "number"): number;
@@ -15,14 +17,21 @@ interface EncodableBig extends Omit<Encodable, "toJSON"> {
     tag: typeof CBOR_TAG_STRING_DECIMAL,
     value: string,
   ];
+  structure(): {
+    singleDigits: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)[];
+    /** Integer, -1e+6 ~ 1e+6 */
+    exponent: number;
+    sign: -1 | 1;
+  };
+  clone(): Decimal;
 }
 
 declare module "big.js" {
-  interface Big extends EncodableBig {}
+  interface Big extends StandardExtension {}
 }
 
 defineAsDecimal(Decimal.prototype);
-Object.assign<any, EncodableBig>(Decimal.prototype, {
+Object.assign<any, StandardExtension>(Decimal.prototype, {
   [Symbol.toPrimitive](this: Decimal, hint: string): any {
     switch (hint) {
       case "number":
@@ -49,11 +58,22 @@ Object.assign<any, EncodableBig>(Decimal.prototype, {
     return this.toString() + "dec";
   },
   structure(this: Decimal): {
-    value: string;
+    singleDigits: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)[];
+    exponent: number;
+    sign: -1 | 1;
   } {
     return {
-      value: this.valueOf(),
+      // @ts-expect-error
+      singleDigits: this.c.slice(), // copy
+      exponent: this.e,
+      // @ts-expect-error
+      sign: this.s,
     };
+  },
+  clone(this: Decimal) {
+    const This = this.constructor as typeof Decimal;
+
+    return new This(this.toString());
   },
 });
 

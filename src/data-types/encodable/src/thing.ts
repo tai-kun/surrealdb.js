@@ -7,6 +7,8 @@ import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { escapeRid, quoteStr, toSurql } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_RECORDID, type Encodable } from "./spec";
 
+export type * from "~/data-types/decode-only/src/thing";
+
 function escapeId(id: unknown): string {
   switch (typeof id) {
     case "string":

@@ -35,8 +35,8 @@ import {
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import {
   type Data,
-  type DecodingContext,
-  type DecodingStrategy,
+  // type DecodingContext,
+  // type DecodingStrategy,
   EncodedCBOR,
   type Formatter,
 } from "@tai-kun/surrealdb/formatter";
@@ -208,15 +208,15 @@ export default class CborFormatter implements Formatter {
     });
   }
 
-  /** @experimental */
-  decodingStrategy(ctx: DecodingContext): DecodingStrategy {
-    // TODO(tai-kun): 8 KiB は適当。要調整。
-    if (ctx.length > (this.decodeOptions.streamThreshold || 8192)) {
-      return "stream";
-    }
+  // /** @experimental */
+  // decodingStrategy(ctx: DecodingContext): DecodingStrategy {
+  //   // TODO(tai-kun): 8 KiB は適当。要調整。
+  //   if (ctx.length > (this.decodeOptions.streamThreshold || 8192)) {
+  //     return "stream";
+  //   }
 
-    return "sync";
-  }
+  //   return "sync";
+  // }
 }
 
 function toEncodedData(data: Data): Uint8ArrayLike {

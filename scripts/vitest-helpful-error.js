@@ -2,10 +2,10 @@
 
 import { formatWithOptions } from "node-inspect-extracted";
 
-const OriginalError = globalThis.Error;
+const super_ = globalThis.Error.prototype.constructor;
 
 globalThis.Error.prototype.constructor = function(...args) {
-  const this_ = OriginalError.prototype.constructor(...args); // super(...args);
+  const this_ = super_(...args);
 
   let formatted = null;
   let formatting = false;
@@ -25,10 +25,10 @@ globalThis.Error.prototype.constructor = function(...args) {
       }
 
       formatting = true;
-      const text = formatWithOptions({ depth: null }, this_);
+      formatted = formatWithOptions({ depth: null }, this_);
       formatting = false;
 
-      return formatted = text;
+      return formatted;
     },
   });
 

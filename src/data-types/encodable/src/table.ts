@@ -8,9 +8,6 @@ import { CBOR_TAG_TABLE, type Encodable } from "./spec";
 export default class Table<T extends TableSource = TableSource> extends Base<T>
   implements Encodable
 {
-  structure(): Record<string, unknown> {
-    throw new Error("Method not implemented.");
-  }
   override valueOf(): T {
     return this.name;
   }
@@ -46,7 +43,7 @@ export default class Table<T extends TableSource = TableSource> extends Base<T>
     return escapeIdent(this.name);
   }
 
-  structrue(): {
+  structure(): {
     name: string;
   } {
     return {

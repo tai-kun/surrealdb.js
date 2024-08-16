@@ -1,6 +1,6 @@
 // @ts-nocheck
 
-import { format } from "node:util";
+import { formatWithOptions } from "node-inspect-extracted";
 
 global.Error = class Error extends global.Error {
   constructor(...args) {
@@ -23,7 +23,7 @@ global.Error = class Error extends global.Error {
         }
 
         formatting = true;
-        const text = format(this);
+        const text = formatWithOptions({ depth: null }, this);
         formatting = false;
 
         return formatted = text;

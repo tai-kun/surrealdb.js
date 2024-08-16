@@ -76,7 +76,7 @@ export default class Datetime {
     }
 
     this.seconds = s === 0 ? 0 : s;
-    this.nanoseconds = ns === 0 ? ns : ns;
+    this.nanoseconds = ns === 0 ? 0 : ns;
 
     defineAsDatetime(this);
   }

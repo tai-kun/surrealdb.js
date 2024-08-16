@@ -146,6 +146,15 @@ describe("decode-only/encodable", () => {
       });
     });
   }
+
+  test("-0 を 0 にする", () => {
+    const dt = new EncodableDatetime([-0, -0]);
+
+    expect(dt.structure()).toStrictEqual({
+      seconds: 0,
+      nanoseconds: 0,
+    });
+  });
 });
 
 // -----------------------------------------------------------------------------
@@ -536,6 +545,15 @@ describe("standard", () => {
 
     expect(time).toBe(1717245296_780);
     expect(dt.toISOString()).toBe("2024-06-01T12:34:56.780122000Z");
+  });
+
+  test("-0 を 0 にする", () => {
+    const dt = new Datetime([-0, -0]);
+
+    expect(dt.structure()).toStrictEqual({
+      seconds: 0,
+      nanoseconds: 0,
+    });
   });
 });
 

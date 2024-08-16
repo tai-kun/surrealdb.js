@@ -47,6 +47,9 @@ export default defineConfig({
         ? ["json", "text-summary", "text"]
         : ["html", "text-summary"],
     },
+    setupFiles: [
+      "scripts/vitest-helpful-error.js",
+    ],
   },
   define: {
     "process.env.RUNTIME": JSON.stringify(runtime),

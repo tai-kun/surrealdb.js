@@ -1,6 +1,6 @@
 import { beforeAll, vi } from "vitest";
 
-export function hostname(): `localhost:${number}` {
+export function host(): `localhost:${number}` {
   if (typeof port !== "number") {
     throw new Error(
       "Cannot initialize Surreal outside of the test function.",

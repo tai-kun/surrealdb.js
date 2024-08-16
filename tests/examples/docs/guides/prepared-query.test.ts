@@ -1,7 +1,7 @@
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 import { expect, expectTypeOf, test } from "vitest";
 import { z } from "zod";
-import { hostname } from "../../surreal";
+import { host } from "../../surreal";
 
 test("基本的な使い方", async () => {
   // prepare
@@ -12,7 +12,7 @@ test("基本的な使い方", async () => {
     .returns<[{ id: Thing<"user">; age: number }]>();
 
   await using db = new Surreal();
-  await db.connect(`ws://${hostname()}`);
+  await db.connect(`ws://${host()}`);
   await db.signin({ user: "root", pass: "root" });
   await db.use("example", "example");
 
@@ -50,7 +50,7 @@ test("クエリーの結果を検証する", async () => {
     .returns(CreatedUserSchema.parse.bind(CreatedUserSchema));
 
   await using db = new Surreal();
-  await db.connect(`ws://${hostname()}`);
+  await db.connect(`ws://${host()}`);
   await db.signin({ user: "root", pass: "root" });
   await db.use("example", "example");
 
@@ -83,7 +83,7 @@ test("クエリーに変数を埋め込む", async () => {
     .returns<[{ id: Thing<"user">; age: number }]>();
 
   await using db = new Surreal();
-  await db.connect(`ws://${hostname()}`);
+  await db.connect(`ws://${host()}`);
   await db.signin({ user: "root", pass: "root" });
   await db.use("example", "example");
 
@@ -122,7 +122,7 @@ test("クエリーに引数を定義する", async () => {
     .returns<[{ id: Thing<"user">; age: number }]>();
 
   await using db = new Surreal();
-  await db.connect(`ws://${hostname()}`);
+  await db.connect(`ws://${host()}`);
   await db.signin({ user: "root", pass: "root" });
   await db.use("example", "example");
 

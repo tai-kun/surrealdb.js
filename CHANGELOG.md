@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.4.1](https://github.com/tai-kun/surrealdb.js/compare/v1.4.0...v1.4.1) (2024-08-16)
+
+
+### Bug Fixes
+
+* **cbor:** バッファーの必要サイズの要求時に安全な整数値を超える可能性がある ([8109455](https://github.com/tai-kun/surrealdb.js/commit/8109455c936338547f7cfc34ced98011b9774c44))
+* **data-types/decode-only:** Datetime が -0 を 0 にしない不具合を修正 ([622a263](https://github.com/tai-kun/surrealdb.js/commit/622a26326d53977c495f05512ab3b5e2a232759e))
+* **data-types/encodable:** typo ([c6b0310](https://github.com/tai-kun/surrealdb.js/commit/c6b03107a43455eee219ace8aa77e26d3bdb3b26))
+* **data-types:** Thing の id の型を改善 ([ee8f24a](https://github.com/tai-kun/surrealdb.js/commit/ee8f24aefef68a258024ada9930044d4ab67d39a))
+* **data-types:** 継承元の型を export ([fd67887](https://github.com/tai-kun/surrealdb.js/commit/fd6788771843da1e931af0ff01ee757855c2083e))
+* experimental 属性のつけ忘れ ([131f49f](https://github.com/tai-kun/surrealdb.js/commit/131f49fcd95f4ff942f5b9ebc282a115b3ff105a))
+* **formatters/cbor:** デフォルトで実験的機能を実装しない ([06c1146](https://github.com/tai-kun/surrealdb.js/commit/06c1146d021170a0612603d0be354fbb2c3a793c))
+* typo ([3d066bd](https://github.com/tai-kun/surrealdb.js/commit/3d066bd39fd5e369db0f742f42caf55b5c0e5eae))
+* Uint8Array に関連する型を修正 ([040b1f4](https://github.com/tai-kun/surrealdb.js/commit/040b1f4ae623b03b7fdae577be5d3aec49914cbe))
+* WebSocket の自動選択を賢くする ([3288895](https://github.com/tai-kun/surrealdb.js/commit/328889572f1a27e22197b31bab7fd78aff184883))
+
+
+### Performance Improvements
+
+* **cbor:** 新しくバッファーを確保する回数を削減 ([c92b3fe](https://github.com/tai-kun/surrealdb.js/commit/c92b3fef700644fc97fa4242214c2e56fc80a00f))
+
 ## [1.4.0](https://github.com/tai-kun/surrealdb.js/compare/v1.3.0...v1.4.0) (2024-08-13)
 
 

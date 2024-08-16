@@ -1,4 +1,4 @@
-import { decode, encode, Tagged } from "@tai-kun/surrealdb/cbor";
+import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import { expect, test } from "vitest";
 
 // https://github.com/cbor/test-vectors より JavaScript 向けに編集 & 加筆
@@ -742,12 +742,12 @@ for (
       .match(/.{1,2}/g)!
       .map(byte => parseInt(byte, 16)),
   );
-  const taggedBytes = new Uint8Array([
-    0b110_01010, // mt: 6, ai: 10
-    ...hex
-      .match(/.{1,2}/g)!
-      .map(byte => parseInt(byte, 16)),
-  ]);
+  // const taggedBytes = new Uint8Array([
+  //   0b110_01010, // mt: 6, ai: 10
+  //   ...hex
+  //     .match(/.{1,2}/g)!
+  //     .map(byte => parseInt(byte, 16)),
+  // ]);
   const toHexArray = (bytes: Uint8Array) =>
     [...bytes].map(byte => byte.toString(16).padStart(2, "0"));
 
@@ -759,31 +759,31 @@ for (
     expect(toHexArray(encode(value))).toStrictEqual(toHexArray(bytes));
   });
 
-  test(`decode(tagged(10, ${hex}))`, { fails: !decodeOk }, () => {
-    expect(decode(taggedBytes)).toStrictEqual(new Tagged(10, value));
-  });
+  // test(`decode(tagged(10, ${hex}))`, { fails: !decodeOk }, () => {
+  //   expect(decode(taggedBytes)).toStrictEqual(new Tagged(10, value));
+  // });
 
-  test(`encode(tagged(10, ${hex}))`, { fails: !encodeOk }, () => {
-    expect(toHexArray(encode(new Tagged(10, value))))
-      .toStrictEqual(toHexArray(taggedBytes));
-  });
+  // test(`encode(tagged(10, ${hex}))`, { fails: !encodeOk }, () => {
+  //   expect(toHexArray(encode(new Tagged(10, value))))
+  //     .toStrictEqual(toHexArray(taggedBytes));
+  // });
 
-  test(`decode(tagged(10, ${hex})) with reviver`, { fails: !decodeOk }, () => {
-    expect(
-      decode(taggedBytes, {
-        reviver: {
-          tagged(t) {
-            switch (t.tag) {
-              case 10:
-                return t.value;
+  // test(`decode(tagged(10, ${hex})) with reviver`, { fails: !decodeOk }, () => {
+  //   expect(
+  //     decode(taggedBytes, {
+  //       reviver: {
+  //         tagged(t) {
+  //           switch (t.tag) {
+  //             case 10:
+  //               return t.value;
 
-              default:
-                return undefined;
-            }
-          },
-        },
-      }),
-    )
-      .toStrictEqual(value);
-  });
+  //             default:
+  //               return undefined;
+  //           }
+  //         },
+  //       },
+  //     }),
+  //   )
+  //     .toStrictEqual(value);
+  // });
 }

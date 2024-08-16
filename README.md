@@ -11,6 +11,8 @@
 [![License](https://img.shields.io/npm/l/%40tai-kun%2Fsurrealdb?style=flat&logo=apache&color=rgb(40%2C%2038%2C%2097))](https://opensource.org/licenses/Apache-2.0)
 [![Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb?style=flat&logo=npm)](https://www.npmjs.com/package/@tai-kun/surrealdb)
 
+This library becomes stable starting from version 2. While version 1 is relatively stable, it has not been thoroughly tested.
+
 ## Install
 
 ```sh

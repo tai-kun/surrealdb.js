@@ -2,44 +2,36 @@
 
 import { formatWithOptions } from "node-inspect-extracted";
 
-global.Error = class Error extends global.Error {
-  constructor(...args) {
-    super(...args);
-    let formatted = null;
-    let formatting = false;
-    let originalName = this.name;
-    let originalMessage = this.message;
-    Object.defineProperty(this, "name", {
-      set: name => {
-        originalName = name;
-      },
-      get: () => {
-        if (formatting) {
-          return originalName;
-        }
+const OriginalError = global.Error;
 
-        if (typeof formatted === "string") {
-          return formatted;
-        }
+global.Error.prototype.constructor = function(...args) {
+  const this_ = OriginalError.prototype.constructor(...args); // super(...args);
 
-        formatting = true;
-        const text = formatWithOptions({ depth: null }, this);
-        formatting = false;
+  let formatted = null;
+  let formatting = false;
+  let originalName = this_.name;
+  let originalMessage = this_.message;
 
-        return formatted = text;
-      },
-    });
-    Object.defineProperty(this, "message", {
-      set: message => {
-        originalMessage = message;
-      },
-      get: () => {
-        if ("nameStr" in this) {
-          return " ";
-        }
+  Object.defineProperty(this_, "name", {
+    set(name) {
+      originalName = name;
+    },
+    get() {
+      if (formatting) {
+        return originalName;
+      }
 
-        return originalMessage;
-      },
-    });
-  }
+      if (typeof formatted === "string") {
+        return formatted;
+      }
+
+      formatting = true;
+      const text = formatWithOptions({ depth: null }, this_);
+      formatting = false;
+
+      return formatted = text;
+    },
+  });
+
+  return this_;
 };

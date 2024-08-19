@@ -139,7 +139,7 @@ let port: number;
 beforeAll(async () => {
   port = await vi.waitFor(
     async () => {
-      const resp = await fetch("http://localhost:3150/surrealdb/start", {
+      const resp = await fetch("http://localhost:11298/surrealdb/start", {
         method: "POST",
       });
 
@@ -175,7 +175,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   try {
-    const resp = await fetch("http://localhost:3150/stop", {
+    const resp = await fetch("http://localhost:11298/stop", {
       method: "POST",
       body: String(port),
     });

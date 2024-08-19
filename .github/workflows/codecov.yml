@@ -32,12 +32,18 @@ jobs:
           node-version: 20.x
 
       - name: 依存関係をインストール
-        run: npm ci
+        run: |
+          npm ci
+          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
       - name: カバレッジ
         run: |
-          bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
-          VITEST_MODE='node.js' npx vitest tests/ --run --coverage
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
+
+          npx vitest tests/ --run --coverage
+        env:
+          VITEST_MODE: node.js
 
       - uses: codecov/codecov-action@v4
         with:

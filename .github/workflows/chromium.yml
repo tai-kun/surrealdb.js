@@ -45,16 +45,16 @@ jobs:
           npm ci
           npm i -D playwright@${{ matrix.playwright-version }}
           npx playwright install --with-deps chromium
-
-      - name: サービスを起動
-        run: |
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
+      - name: テスト
+        run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-      - name: テスト
-        run: VITEST_MODE='chromium' npx vitest tests/medium/
+          npx vitest tests/medium/
+        env:
+          VITEST_MODE: chromium
 
       - name: SurrealDB のログ
         run: cat /tmp/logs

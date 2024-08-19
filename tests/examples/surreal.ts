@@ -1,10 +1,8 @@
-import { beforeAll, vi } from "vitest";
+import { afterAll, beforeAll, vi } from "vitest";
 
 export function host(): `localhost:${number}` {
   if (typeof port !== "number") {
-    throw new Error(
-      "Cannot initialize Surreal outside of the test function.",
-    );
+    throw new Error("ポート番号が確定する前にホストを取得できません。");
   }
 
   return `localhost:${port}`;
@@ -15,16 +13,18 @@ let port: number;
 beforeAll(async () => {
   port = await vi.waitFor(
     async () => {
-      const resp = await fetch("http://localhost:3150");
+      const resp = await fetch("http://localhost:3150/surrealdb/start", {
+        method: "POST",
+      });
 
-      if (resp.status !== 200) {
+      if (!resp.ok) {
+        await resp.body?.cancel();
         throw new Error(resp.statusText);
       }
 
       const text = await resp.text();
-      const port = Number(text);
 
-      return port;
+      return Number(text);
     },
     {
       interval: 1_000,
@@ -33,10 +33,10 @@ beforeAll(async () => {
   );
   await vi.waitFor(
     async () => {
-      const resp = await fetch(`http://localhost:${port}/health`);
+      const resp = await fetch(`http://${host()}/health`);
       await resp.body?.cancel();
 
-      if (resp.status !== 200) {
+      if (!resp.ok) {
         throw new Error(resp.statusText);
       }
     },
@@ -45,4 +45,16 @@ beforeAll(async () => {
       timeout: 10_000,
     },
   );
+}, 30e3);
+
+afterAll(async () => {
+  try {
+    const resp = await fetch("http://localhost:3150/stop", {
+      method: "POST",
+      body: String(port),
+    });
+    await resp.body?.cancel();
+  } catch (e) {
+    console.warn(e);
+  }
 });

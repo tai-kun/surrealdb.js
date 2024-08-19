@@ -46,17 +46,18 @@ jobs:
           bun-version: ${{ matrix.bun-version }}
 
       - name: 依存関係をインストール
-        run: bun install
-
-      - name: サービスを起動
         run: |
+          bun install
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
+      - name: テスト
+        run:  |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-      - name: テスト
-        run: VITEST_MODE='bun' bunx vitest tests/medium/
+          bunx vitest tests/medium/
+        env:
+          VITEST_MODE: bun
 
       - name: SurrealDB のログ
         run: cat /tmp/logs

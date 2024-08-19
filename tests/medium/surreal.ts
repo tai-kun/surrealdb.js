@@ -6,7 +6,7 @@ import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
 import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
-import { beforeAll, vi } from "vitest";
+import { afterAll, beforeAll, vi } from "vitest";
 import { WebSocket } from "ws";
 
 const engines = {
@@ -139,16 +139,18 @@ let port: number;
 beforeAll(async () => {
   port = await vi.waitFor(
     async () => {
-      const resp = await fetch("http://localhost:3150");
+      const resp = await fetch("http://localhost:3150/surrealdb/start", {
+        method: "POST",
+      });
 
-      if (resp.status !== 200) {
+      if (!resp.ok) {
+        await resp.body?.cancel();
         throw new Error(resp.statusText);
       }
 
       const text = await resp.text();
-      const port = Number(text);
 
-      return port;
+      return Number(text);
     },
     {
       interval: 1_000,
@@ -160,7 +162,7 @@ beforeAll(async () => {
       const resp = await fetch(`http://localhost:${port}/health`);
       await resp.body?.cancel();
 
-      if (resp.status !== 200) {
+      if (!resp.ok) {
         throw new Error(resp.statusText);
       }
     },
@@ -169,4 +171,16 @@ beforeAll(async () => {
       timeout: 10_000,
     },
   );
+}, 30e3);
+
+afterAll(async () => {
+  try {
+    const resp = await fetch("http://localhost:3150/stop", {
+      method: "POST",
+      body: String(port),
+    });
+    await resp.body?.cancel();
+  } catch (e) {
+    console.warn(e);
+  }
 });

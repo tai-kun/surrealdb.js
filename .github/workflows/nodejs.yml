@@ -53,17 +53,18 @@ jobs:
           node-version: ${{ matrix.nodejs-version }}
 
       - name: 依存関係をインストール
-        run: npm ci
-
-      - name: サービスを起動
         run: |
+          npm ci
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
+      - name: テスト
+        run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-      - name: テスト
-        run: VITEST_MODE='node.js' npx vitest tests/medium/
+          npx vitest --run tests/medium/
+        env:
+          VITEST_MODE: node.js
 
       - name: SurrealDB のログ
         run: cat /tmp/logs
@@ -95,17 +96,18 @@ jobs:
           node-version: ${{ matrix.nodejs-version }}
 
       - name: 依存関係をインストール
-        run: npm ci
-
-      - name: サービスを起動
         run: |
+          npm ci
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
+      - name: テスト
+        run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-      - name: テスト
-        run: VITEST_MODE='node.js' npx vitest tests/examples/
+          npx vitest --run tests/medium/
+        env:
+          VITEST_MODE: node.js
 
       - name: SurrealDB のログ
         run: cat /tmp/logs

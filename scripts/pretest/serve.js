@@ -20,8 +20,8 @@ Bun.serve({
               "surreal",
               "start",
               ...["--bind", `127.0.0.1:${--port}`],
-              ...["--user", "test"],
-              ...["--pass", "test"],
+              ...["--user", "root"],
+              ...["--pass", "root"],
               // ...["--strict"],
             ]);
             procMap.set(port, proc);

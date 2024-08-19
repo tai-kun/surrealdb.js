@@ -28,4 +28,6 @@ jobs:
           npx playwright install --with-deps ${{ inputs.browser-name }}
 
       - name: テスト
-        run: VITEST_MODE='${{ inputs.browser-name }}' npx vitest tests/small/
+        run: npx vitest tests/small/
+        env:
+          VITEST_MODE: ${{ inputs.browser-name }}

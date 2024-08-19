@@ -1,4 +1,4 @@
-name: Browser (small test)
+name: Browser (medium test)
 
 on:
   workflow_call:
@@ -9,6 +9,9 @@ on:
       playwright-version:
         type: string
         required: true
+      surrealdb-version:
+        type: string
+        required: true
 
 jobs:
   test:
@@ -16,6 +19,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
 
       - uses: actions/setup-node@v4
         with:
@@ -26,8 +31,17 @@ jobs:
           npm ci
           npm i -D playwright@${{ inputs.playwright-version }}
           npx playwright install --with-deps ${{ inputs.browser-name }}
+          bash scripts/pretest/setup_surrealdb.sh ${{ inputs.surrealdb-version }}
 
       - name: テスト
-        run: npx vitest tests/small/
+        run: |
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
+
+          npx vitest tests/medium/
         env:
           VITEST_MODE: ${{ inputs.browser-name }}
+
+      - name: SurrealDB のログ
+        run: cat /tmp/logs
+        if: always()

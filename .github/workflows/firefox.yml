@@ -15,3 +15,22 @@ jobs:
           - "1.23" # Firefox 100
           - "latest"
       fail-fast: false
+
+  # TODO(tai-kun): 「NetworkError」がでる。CORS を無効化する方法を探す。
+  # medium:
+  #   uses: ./.github/workflows/browser.medium.yml
+  #   with:
+  #     browser-name: firefox
+  #     playwright-version: ${{ matrix.playwright-version }}
+  #     surrealdb-version: ${{ matrix.surrealdb-version }}
+  #   strategy:
+  #     matrix:
+  #       playwright-version:
+  #         # よくわからないが 1.22 以前では依存関係のインストールに失敗する。
+  #         - "1.23" # Firefox 100
+  #         - "latest"
+  #       surrealdb-version:
+  #         - "alpha"
+  #         # - "v2.0.0"
+  #         # - "latest"
+  #     fail-fast: false

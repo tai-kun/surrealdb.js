@@ -16,12 +16,13 @@ jobs:
           - "latest"
       fail-fast: false
 
-  # TODO(tai-kun): ネットにつながらない？
   medium:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    uses: ./.github/workflows/browser.medium.yml
+    with:
+      browser-name: chromium
+      playwright-version: ${{ matrix.playwright-version }}
+      surrealdb-version: ${{ matrix.surrealdb-version }}
     strategy:
-      fail-fast: false
       matrix:
         playwright-version:
           # よくわからないが 1.22 以前では依存関係のインストールに失敗する。
@@ -31,31 +32,4 @@ jobs:
           - "alpha"
           # - "v2.0.0"
           # - "latest"
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: oven-sh/setup-bun@v2
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
-
-      - name: 依存関係をインストール
-        run: |
-          npm ci
-          npm i -D playwright@${{ matrix.playwright-version }}
-          npx playwright install --with-deps chromium
-          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
-
-      - name: テスト
-        run: |
-          touch /tmp/logs
-          bun run scripts/pretest/serve.js &>>/tmp/logs &
-
-          npx vitest tests/medium/
-        env:
-          VITEST_MODE: chromium
-
-      - name: SurrealDB のログ
-        run: cat /tmp/logs
-        if: always()
+      fail-fast: false

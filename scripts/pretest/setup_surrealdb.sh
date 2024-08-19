@@ -21,6 +21,3 @@ beta)
 esac
 
 curl -LsSf https://install.surrealdb.com | sh -s -- $surrealdb_install_options
-
-touch /tmp/logs
-bun run scripts/pretest/surrealdb.js &>>/tmp/logs &

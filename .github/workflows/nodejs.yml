@@ -55,10 +55,15 @@ jobs:
       - name: 依存関係をインストール
         run: npm ci
 
-      - name: テスト
+      - name: サービスを起動
         run: |
-          bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
-          VITEST_MODE='node.js' npx vitest tests/medium/
+          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
+
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
+
+      - name: テスト
+        run: VITEST_MODE='node.js' npx vitest tests/medium/
 
       - name: SurrealDB のログ
         run: cat /tmp/logs

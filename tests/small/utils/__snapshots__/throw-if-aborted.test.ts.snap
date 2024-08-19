@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`中止されたシグナルを渡すと例外を投げる 1`] = `
+{
+  "message": "test",
+  "name": "Error",
+}
+`;

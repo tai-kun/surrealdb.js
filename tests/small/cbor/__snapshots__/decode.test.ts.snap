@@ -1,0 +1,309 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Well-Formedness Errors > Syntax error > 0b00011100 (mt=0,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b00011101 (mt=0,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b00011110 (mt=0,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b00111100 (mt=1,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b00111101 (mt=1,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b00111110 (mt=1,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b01011100 (mt=2,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b01011101 (mt=2,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b01011110 (mt=2,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b01111100 (mt=3,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b01111101 (mt=3,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b01111110 (mt=3,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b10011100 (mt=4,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b10011101 (mt=4,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b10011110 (mt=4,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b10111100 (mt=5,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b10111101 (mt=5,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b10111110 (mt=5,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b11011100 (mt=6,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b11011101 (mt=6,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b11011110 (mt=6,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b11111100 (mt=7,ai=28) は予約済み 1`] = `
+{
+  "message": "The additional info 28 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b11111101 (mt=7,ai=29) は予約済み 1`] = `
+{
+  "message": "The additional info 29 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 0b11111110 (mt=7,ai=30) は予約済み 1`] = `
+{
+  "message": "The additional info 30 is reserved for future additions to the CBOR format.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > タグは不定長バイトをとれない 1`] = `
+{
+  "message": "The data item \`tagged item\` has indefinite-length bytes.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 不定長 UTF-8 文字列に不定長 UTF-8 文字列だめ 1`] = `
+{
+  "message": "The payload of the indefinite-length data item \`utf8 string\` contains the same type.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 不定長の UTF-8 文字列は全データアイテムのメジャータイプが 3 1`] = `
+{
+  "message": "The payload of the data item \`utf8 string\` contains a mismatched data item \`unsigned integer\`.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 不定長のバイト文字列に不定長のバイト文字列だめ 1`] = `
+{
+  "message": "The payload of the indefinite-length data item \`byte string\` contains the same type.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 不定長のバイト文字列は全データアイテムのメジャータイプが 4 1`] = `
+{
+  "message": "The payload of the data item \`byte string\` contains a mismatched data item \`unsigned integer\`.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 不定長バイトの開始なく BREAK できない 1`] = `
+{
+  "message": "The "break" stop code was encountered outside of a indefinite-length data item.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 正の整数は不定長バイトをとれない 1`] = `
+{
+  "message": "The data item \`unsigned integer\` has indefinite-length bytes.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Syntax error > 負の整数は不定長バイトをとれない 1`] = `
+{
+  "message": "The data item \`negative integer\` has indefinite-length bytes.",
+  "name": "CborSyntaxError",
+}
+`;
+
+exports[`Well-Formedness Errors > Too little data > 文字数が足りない 1`] = `
+{
+  "cause": {
+    "fragment": {
+      "$": 0,
+      "data": Uint8Array [
+        72,
+        101,
+        0,
+      ],
+      "mt": 3,
+      "offset": 2,
+      "size": 3,
+    },
+    "parents": [
+      {
+        "$": 0,
+        "out": [Function],
+        "put": [Function],
+        "val": undefined,
+      },
+    ],
+  },
+  "message": "Input data appears truncated or incomplete for CBOR decoding.",
+  "name": "CborTooLittleDataError",
+}
+`;
+
+exports[`isSafeMapKey > __proto__ 1`] = `
+{
+  "key": "__proto__",
+  "message": "Invalid key for CBOR map: __proto__. The key must be a valid CBOR data type that is safe to use in a JavaScript map or object.",
+  "name": "CborUnsafeMapKeyError",
+}
+`;
+
+exports[`isSafeMapKey > constructor 1`] = `
+{
+  "key": "constructor",
+  "message": "Invalid key for CBOR map: constructor. The key must be a valid CBOR data type that is safe to use in a JavaScript map or object.",
+  "name": "CborUnsafeMapKeyError",
+}
+`;
+
+exports[`isSafeMapKey > カスタマイズ 1`] = `
+{
+  "key": 1,
+  "message": "Invalid key for CBOR map: 1. The key must be a valid CBOR data type that is safe to use in a JavaScript map or object.",
+  "name": "CborUnsafeMapKeyError",
+}
+`;
+
+exports[`isSafeObjectKey > __proto__ 1`] = `
+{
+  "key": "__proto__",
+  "message": "Invalid key for CBOR map: __proto__. The key must be a valid CBOR data type that is safe to use in a JavaScript map or object.",
+  "name": "CborUnsafeMapKeyError",
+}
+`;
+
+exports[`isSafeObjectKey > constructor 1`] = `
+{
+  "key": "constructor",
+  "message": "Invalid key for CBOR map: constructor. The key must be a valid CBOR data type that is safe to use in a JavaScript map or object.",
+  "name": "CborUnsafeMapKeyError",
+}
+`;
+
+exports[`isSafeObjectKey > カスタマイズ 1`] = `
+{
+  "key": 1,
+  "message": "Invalid key for CBOR map: 1. The key must be a valid CBOR data type that is safe to use in a JavaScript map or object.",
+  "name": "CborUnsafeMapKeyError",
+}
+`;
+
+exports[`maxDepth > 最大深さを超えるオブジェクトでエラー 1`] = `
+{
+  "maxDepth": 2,
+  "message": "Maximum depth of 2 has been reached.",
+  "name": "CborMaxDepthReachedError",
+}
+`;

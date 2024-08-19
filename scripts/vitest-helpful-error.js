@@ -12,28 +12,29 @@ expect.addSnapshotSerializer({
   },
   serialize(error, ...args) {
     const [, , , , print] = args;
-    currentError = new Proxy(error, {
-      get(e, p, r) {
-        if (p === "message") {
-          return e[ORIGINAL_MESSAGE];
-        }
+    const kv = {
+      name: error.name,
+      message: error[ORIGINAL_MESSAGE],
+    };
 
-        return Reflect.get(e, p, r);
-      },
-      ownKeys(e) {
-        return Reflect.ownKeys(e).map(p => p !== "stack");
-      },
-    });
-    const text = print(currentError, ...args.slice(0, -1));
-    currentError = null;
+    for (const p of Object.getOwnPropertyNames(error)) {
+      if (!(p in kv) && p !== "stack") {
+        kv[p] = error[p];
+      }
+    }
 
-    return text;
+    return print(kv, ...args.slice(0, -1));
   },
 });
 
 class Error extends globalThis.Error {
   constructor(...args) {
     super(...args);
+
+    if (typeof this.constructor.captureStackTrace === "function") {
+      this.constructor.captureStackTrace(this, this.constructor);
+    }
+
     let formatted = null;
     let formatting = false;
     let originalMessage = this.message;

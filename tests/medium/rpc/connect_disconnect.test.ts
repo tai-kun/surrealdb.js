@@ -30,10 +30,12 @@ for (const { suite, Surreal, url } of surreal) {
 
       await expect(async () => await db.connect(`${url()}/other`))
         .rejects
-        .toThrowErrorMatchingInlineSnapshot(
-          "[ConnectionConflictError: Connection conflict between "
-            + `${url()}/rpc and ${url()}/other/rpc.]`,
-        );
+        .toThrowErrorMatchingInlineSnapshot(`{
+  "endpoint1": "${url()}/rpc",
+  "endpoint2": "${url()}/other/rpc",
+  "message": "Connection conflict between ${url()}/rpc and ${url()}/other/rpc.",
+  "name": "ConnectionConflictError",
+}`);
       expect(db.state).toBe(OPEN);
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
     });

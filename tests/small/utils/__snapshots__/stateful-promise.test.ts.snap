@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`.try 有りで同期的に例外を投げると reject 判定になる 1`] = `
+{
+  "message": "test",
+  "name": "Error",
+}
+`;
+
+exports[`\`reject\` で拒否できる 1`] = `
+{
+  "message": "test",
+  "name": "Error",
+}
+`;

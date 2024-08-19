@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`キュー内の全タスクを中断する 1`] = `
+{
+  "message": "test",
+  "name": "Error",
+}
+`;
+
+exports[`キュー内の全タスクを中断する 2`] = `
+{
+  "message": "test",
+  "name": "Error",
+}
+`;
+
+exports[`特定のタスクを中断する 1`] = `
+{
+  "message": "test",
+  "name": "Error",
+}
+`;

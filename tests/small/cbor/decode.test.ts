@@ -46,11 +46,7 @@ describe("isSafeMapKey", () => {
     const run = () => {
       decode(bytes, { mapType: "Map" });
     };
-    expect(run).toThrowErrorMatchingInlineSnapshot(
-      "[CborUnsafeMapKeyError: Invalid key for CBOR map: __proto__. The key "
-        + "must be a valid CBOR data type that is safe to use in a JavaScript "
-        + "map or object.]",
-    );
+    expect(run).toThrowErrorMatchingSnapshot();
   });
 
   test("constructor", () => {
@@ -76,11 +72,7 @@ describe("isSafeMapKey", () => {
     const run = () => {
       decode(bytes, { mapType: "Map" });
     };
-    expect(run).toThrowErrorMatchingInlineSnapshot(
-      "[CborUnsafeMapKeyError: Invalid key for CBOR map: constructor. The key "
-        + "must be a valid CBOR data type that is safe to use in a JavaScript "
-        + "map or object.]",
-    );
+    expect(run).toThrowErrorMatchingSnapshot();
   });
 
   test("カスタマイズ", () => {
@@ -98,11 +90,7 @@ describe("isSafeMapKey", () => {
         isSafeMapKey: k => k !== 1,
       });
     };
-    expect(run).toThrowErrorMatchingInlineSnapshot(
-      "[CborUnsafeMapKeyError: Invalid key for CBOR map: 1. The key "
-        + "must be a valid CBOR data type that is safe to use in a JavaScript "
-        + "map or object.]",
-    );
+    expect(run).toThrowErrorMatchingSnapshot();
   });
 
   test("カスタマイズはオブジェクトに影響しない", () => {
@@ -147,11 +135,7 @@ describe("isSafeObjectKey", () => {
     const run = () => {
       decode(bytes);
     };
-    expect(run).toThrowErrorMatchingInlineSnapshot(
-      "[CborUnsafeMapKeyError: Invalid key for CBOR map: __proto__. The key "
-        + "must be a valid CBOR data type that is safe to use in a JavaScript "
-        + "map or object.]",
-    );
+    expect(run).toThrowErrorMatchingSnapshot();
   });
 
   test("constructor", () => {
@@ -177,11 +161,7 @@ describe("isSafeObjectKey", () => {
     const run = () => {
       decode(bytes);
     };
-    expect(run).toThrowErrorMatchingInlineSnapshot(
-      "[CborUnsafeMapKeyError: Invalid key for CBOR map: constructor. The key "
-        + "must be a valid CBOR data type that is safe to use in a JavaScript "
-        + "map or object.]",
-    );
+    expect(run).toThrowErrorMatchingSnapshot();
   });
 
   test("カスタマイズ", () => {
@@ -198,11 +178,7 @@ describe("isSafeObjectKey", () => {
         isSafeObjectKey: k => k !== 1,
       });
     };
-    expect(run).toThrowErrorMatchingInlineSnapshot(
-      "[CborUnsafeMapKeyError: Invalid key for CBOR map: 1. The key "
-        + "must be a valid CBOR data type that is safe to use in a JavaScript "
-        + "map or object.]",
-    );
+    expect(run).toThrowErrorMatchingSnapshot();
   });
 
   test("カスタマイズは Map に影響しない", () => {
@@ -257,9 +233,7 @@ describe("maxDepth", () => {
       );
       console.dir(a, { depth: null });
     };
-    expect(run).toThrowErrorMatchingInlineSnapshot(
-      "[CborMaxDepthReachedError: Maximum depth of 2 has been reached.]",
-    );
+    expect(run).toThrowErrorMatchingSnapshot();
   });
 });
 
@@ -276,10 +250,7 @@ describe("Well-Formedness Errors", () => {
         // 0b011_11001, // y <- 3/3 (LOST)
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborTooLittleDataError: Input data appears truncated or incomplete "
-          + "for CBOR decoding.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
   });
 
@@ -296,10 +267,7 @@ describe("Well-Formedness Errors", () => {
             Number.parseInt(bin, 2),
           ]);
 
-          expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-            `[CborSyntaxError: The additional info ${ai} is reserved for future`
-              + " additions to the CBOR format.]",
-          );
+          expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
         });
       }
     }
@@ -309,10 +277,7 @@ describe("Well-Formedness Errors", () => {
         0b000_11111,
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborSyntaxError: The data item `unsigned integer` has "
-          + "indefinite-length bytes.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
 
     test("負の整数は不定長バイトをとれない", () => {
@@ -320,10 +285,7 @@ describe("Well-Formedness Errors", () => {
         0b001_11111,
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborSyntaxError: The data item `negative integer` has "
-          + "indefinite-length bytes.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
 
     test("タグは不定長バイトをとれない", () => {
@@ -331,10 +293,7 @@ describe("Well-Formedness Errors", () => {
         0b110_11111,
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborSyntaxError: The data item `tagged item` has indefinite-length "
-          + "bytes.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
 
     test("不定長バイトの開始なく BREAK できない", () => {
@@ -342,10 +301,7 @@ describe("Well-Formedness Errors", () => {
         0xff,
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        `[CborSyntaxError: The "break" stop code was encountered outside of a `
-          + "indefinite-length data item.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
 
     test("不定長のバイト文字列は全データアイテムのメジャータイプが 4", () => {
@@ -359,10 +315,7 @@ describe("Well-Formedness Errors", () => {
         0b111_11111, // BREAK
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborSyntaxError: The payload of the data item `byte string` contains "
-          + "a mismatched data item `unsigned integer`.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
 
     test("不定長の UTF-8 文字列は全データアイテムのメジャータイプが 3", () => {
@@ -376,10 +329,7 @@ describe("Well-Formedness Errors", () => {
         0b111_11111, // BREAK
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborSyntaxError: The payload of the data item `utf8 string` contains "
-          + "a mismatched data item `unsigned integer`.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
 
     test("不定長のバイト文字列に不定長のバイト文字列だめ", () => {
@@ -400,10 +350,7 @@ describe("Well-Formedness Errors", () => {
         0b111_11111, // BREAK
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborSyntaxError: The payload of the indefinite-length data item "
-          + "`byte string` contains the same type.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
 
     test("不定長 UTF-8 文字列に不定長 UTF-8 文字列だめ", () => {
@@ -424,10 +371,7 @@ describe("Well-Formedness Errors", () => {
         0b111_11111, // BREAK
       ]);
 
-      expect(() => decode(bytes)).toThrowErrorMatchingInlineSnapshot(
-        "[CborSyntaxError: The payload of the indefinite-length data item "
-          + "`utf8 string` contains the same type.]",
-      );
+      expect(() => decode(bytes)).toThrowErrorMatchingSnapshot();
     });
   });
 });

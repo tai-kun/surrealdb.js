@@ -17,5 +17,5 @@ test("中止されたシグナルを渡すと例外を投げる", () => {
   };
   controller.abort(new Error("test"));
 
-  expect(fn).toThrowErrorMatchingInlineSnapshot("[Error: test]");
+  expect(fn).toThrowErrorMatchingSnapshot();
 });

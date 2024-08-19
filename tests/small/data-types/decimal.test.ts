@@ -39,9 +39,7 @@ describe("decode-only/encodable", () => {
     describe(t, () => {
       test("インスタンスの作成に失敗する", { skip: "string" in c }, () => {
         expect(() => new EncodableDecimal(...c.args))
-          .toThrowErrorMatchingInlineSnapshot(
-            "[Error: [big.js] Invalid number]",
-          );
+          .toThrowErrorMatchingSnapshot();
       });
 
       test("文字列", { skip: !("string" in c) }, () => {
@@ -105,10 +103,7 @@ describe("standard", () => {
   for (const [t, c] of Object.entries(suites)) {
     describe(t, () => {
       test("インスタンスの作成に失敗する", { skip: "string" in c }, () => {
-        expect(() => new Decimal(...c.args))
-          .toThrowErrorMatchingInlineSnapshot(
-            "[Error: [big.js] Invalid number]",
-          );
+        expect(() => new Decimal(...c.args)).toThrowErrorMatchingSnapshot();
       });
 
       test("文字列", { skip: !("string" in c) }, () => {

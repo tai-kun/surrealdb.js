@@ -87,8 +87,7 @@ describe("isSafeMapKey", () => {
     const bytes = new Uint8Array([
       0xa1, // mt: 5, ai: 1
       // key
-      0b011_00001, // mt: 3, ai: 1
-      0x00, // mt: 0, ai: 1
+      0b000_00001, // mt: 0, ai: 1
       // value
       0x02, // mt: 0, ai: 2
     ]);
@@ -96,7 +95,7 @@ describe("isSafeMapKey", () => {
     const run = () => {
       decode(bytes, {
         mapType: "Map",
-        isSafeMapKey: k => k === 1,
+        isSafeMapKey: k => k !== 1,
       });
     };
     expect(run).toThrowErrorMatchingInlineSnapshot(
@@ -189,15 +188,14 @@ describe("isSafeObjectKey", () => {
     const bytes = new Uint8Array([
       0xa1, // mt: 5, ai: 1
       // key
-      0b011_00001, // mt: 3, ai: 1
-      0x00, // mt: 0, ai: 1
+      0b000_00001, // mt: 0, ai: 1
       // value
       0x02, // mt: 0, ai: 2
     ]);
 
     const run = () => {
       decode(bytes, {
-        isSafeObjectKey: k => k === 1,
+        isSafeObjectKey: k => k !== 1,
       });
     };
     expect(run).toThrowErrorMatchingInlineSnapshot(

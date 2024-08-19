@@ -2,35 +2,17 @@
 
 import { formatWithOptions } from "node-inspect-extracted";
 
-const super_ = globalThis.Error.prototype.constructor;
+Error = new Proxy(Error, {
+  construct: function construct(Err, args) {
+    const err = new Err(...args);
 
-globalThis.Error.prototype.constructor = function(...args) {
-  const this_ = super_(...args);
+    if (typeof Error.captureStackTrace === "function") {
+      Error.captureStackTrace(err, construct);
+    }
 
-  let formatted = null;
-  let formatting = false;
-  let originalName = this_.name;
+    err.message = formatWithOptions({ depth: null }, err)
+      .replace(new RegExp(`^${err.name}: *`), "");
 
-  Object.defineProperty(this_, "name", {
-    set(name) {
-      originalName = name;
-    },
-    get() {
-      if (formatting) {
-        return originalName;
-      }
-
-      if (typeof formatted === "string") {
-        return formatted;
-      }
-
-      formatting = true;
-      formatted = formatWithOptions({ depth: null }, this_);
-      formatting = false;
-
-      return formatted;
-    },
-  });
-
-  return this_;
-};
+    return err;
+  },
+});

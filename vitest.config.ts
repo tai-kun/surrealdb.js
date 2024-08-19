@@ -37,6 +37,14 @@ export default defineConfig({
       name: runtime,
       headless: true,
       screenshotFailures: false,
+      providerOptions: {
+        launch: {
+          args: ["--disable-web-security"],
+        },
+        // context: {
+        //   bypassCSP: true,
+        // },
+      },
     },
     include: [
       "tests/**/*.test.ts",

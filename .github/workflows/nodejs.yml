@@ -16,15 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Node.js ${{ matrix.nodejs-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: Setup
+      - name: 依存関係をインストール
         run: npm ci
 
-      - name: Test
-        run: VITEST_MODE='Node.js' npx vitest tests/small/
+      - name: テスト
+        run: VITEST_MODE='node.js' npx vitest tests/small/
 
   medium:
     runs-on: ubuntu-latest
@@ -46,19 +47,20 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
-      - uses: actions/setup-node@v4
+      - name: Node.js ${{ matrix.nodejs-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: Setup
+      - name: 依存関係をインストール
         run: npm ci
 
-      - name: Test
+      - name: テスト
         run: |
           bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
-          VITEST_MODE='Node.js' npx vitest tests/medium/
+          VITEST_MODE='node.js' npx vitest tests/medium/
 
-      - name: Logs
+      - name: SurrealDB のログ
         run: cat /tmp/logs
         if: always()
 
@@ -82,18 +84,19 @@ jobs:
 
       - uses: oven-sh/setup-bun@v2
 
-      - uses: actions/setup-node@v4
+      - name: Node.js ${{ matrix.nodejs-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: Setup
+      - name: 依存関係をインストール
         run: npm ci
 
-      - name: Test
+      - name: テスト
         run: |
           bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
-          VITEST_MODE='Node.js' npx vitest tests/examples/
+          VITEST_MODE='node.js' npx vitest tests/examples/
 
-      - name: Logs
+      - name: SurrealDB のログ
         run: cat /tmp/logs
         if: always()

@@ -19,11 +19,11 @@ jobs:
         with:
           bun-version: ${{ matrix.bun-version }}
 
-      - name: Setup
+      - name: 依存関係をインストール
         run: bun install
 
-      - name: Test
-        run: VITEST_MODE='Bun' bunx vitest tests/small/
+      - name: テスト
+        run: VITEST_MODE='bun' bunx vitest tests/small/
 
   # TODO(tai-kun): なんか失敗する。要調査。
   # medium:
@@ -46,14 +46,14 @@ jobs:
   #       with:
   #         bun-version: ${{ matrix.bun-version }}
 
-  #     - name: Setup
+  #     - name: 依存関係をインストール
   #       run: bun install
 
-  #     - name: Test
+  #     - name: テスト
   #       run: |
   #         bash scripts/pretest/medium.sh ${{ matrix.surrealdb-version }}
-  #         VITEST_MODE='Bun' bunx vitest tests/medium/
+  #         VITEST_MODE='bun' bunx vitest tests/medium/
 
-  #     - name: Logs
+  #     - name: SurrealDB のログ
   #       run: cat /tmp/logs
   #       if: always()

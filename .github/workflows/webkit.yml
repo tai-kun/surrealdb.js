@@ -4,26 +4,39 @@ on: push
 
 jobs:
   small:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
+    uses: ./.github/workflows/browser.small.yml
+    with:
+      browser-name: webkit
+      playwright-version: ${{ matrix.playwright-version }}
     strategy:
-      fail-fast: false
       matrix:
         playwright-version:
+          # よくわからないが 1.22 以前では依存関係のインストールに失敗する。
           - "1.23" # WebKit 15.4
           - "latest"
-    steps:
-      - uses: actions/checkout@v4
+      fail-fast: false
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
+  # small:
+  #   runs-on: ubuntu-latest
+  #   timeout-minutes: 30
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       playwright-version:
+  #         - "1.23" # WebKit 15.4
+  #         - "latest"
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Setup
-        run: |
-          npm ci
-          npm i -D playwright@${{ matrix.playwright-version }}
-          npx playwright install --with-deps webkit
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: "20.x"
 
-      - name: Test
-        run: VITEST_MODE='WebKit' npx vitest tests/small/
+  #     - name: Setup
+  #       run: |
+  #         npm ci
+  #         npm i -D playwright@${{ matrix.playwright-version }}
+  #         npx playwright install --with-deps webkit
+
+  #     - name: Test
+  #       run: VITEST_MODE='WebKit' npx vitest tests/small/

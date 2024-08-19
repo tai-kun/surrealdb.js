@@ -1,7 +1,7 @@
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
-let runtime = (process.env["VITEST_MODE"] || "Node.js").toLocaleLowerCase();
+let runtime = (process.env["VITEST_MODE"] || "Node.js").toLowerCase();
 let browser: boolean;
 
 switch (runtime) {

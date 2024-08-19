@@ -18,7 +18,7 @@ test("シグナルがすでに中断を示していたらその理由を投げ�
     makeAbortApi(c.signal);
   };
 
-  expect(fn).toThrow(e);
+  expect(fn).toThrowError(e);
 });
 
 test("中止する", async () => {

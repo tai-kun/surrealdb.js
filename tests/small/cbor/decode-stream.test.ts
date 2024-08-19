@@ -88,5 +88,5 @@ test("デコードを中断できる", async () => {
     ac.abort("Aborted by signal");
   });
 
-  await expect(promise).rejects.toThrow("Aborted by signal");
+  await expect(promise).rejects.toThrowError("Aborted by signal");
 });

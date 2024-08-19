@@ -222,6 +222,6 @@ describe("エラー", () => {
   test("特定の変数名から始まるスロットでエラー", () => {
     const ValueSlot = surql.slot("_jst_foo");
 
-    expect(() => surql`RETURN ${ValueSlot};`).toThrow(SurrealTypeError);
+    expect(() => surql`RETURN ${ValueSlot};`).toThrowError(SurrealTypeError);
   });
 });

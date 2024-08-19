@@ -120,7 +120,7 @@ describe("decode-only/encodable", () => {
         () => {
           const dt = new EncodableDatetime(...c.args as [any]);
 
-          expect(() => dt.toISOString()).toThrow();
+          expect(() => dt.toISOString()).toThrowError();
         },
       );
 
@@ -335,7 +335,7 @@ describe("standard", () => {
         () => {
           const dt = new Datetime(...c.args);
 
-          expect(() => dt.toISOString()).toThrow();
+          expect(() => dt.toISOString()).toThrowError();
         },
       );
 
@@ -377,7 +377,7 @@ describe("standard", () => {
 
     expect(dt.seconds).toBe(NaN);
     expect(dt.nanoseconds).toBe(NaN);
-    expect(() => dt.toISOString()).toThrow();
+    expect(() => dt.toISOString()).toThrowError();
   });
 
   test("秒時刻を負の秒時刻で上書きする", () => {
@@ -404,7 +404,7 @@ describe("standard", () => {
 
     expect(dt.seconds).toBe(NaN);
     expect(dt.nanoseconds).toBe(NaN);
-    expect(() => dt.toISOString()).toThrow();
+    expect(() => dt.toISOString()).toThrowError();
   });
 
   test("ナノ秒時刻を負のナノ秒時刻で上書きする", () => {

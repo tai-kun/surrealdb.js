@@ -1,5 +1,4 @@
 import { CLOSED, CLOSING, CONNECTING, OPEN } from "@tai-kun/surrealdb/engine";
-import { ConnectionConflictError } from "@tai-kun/surrealdb/errors";
 import { describe, expect, test, vi } from "vitest";
 import surreal from "../surreal";
 
@@ -31,7 +30,10 @@ for (const { suite, Surreal, url } of surreal) {
 
       await expect(async () => await db.connect(`${url()}/other`))
         .rejects
-        .toThrowError(ConnectionConflictError);
+        .toThrowErrorMatchingInlineSnapshot(
+          "[ConnectionConflictError: Connection conflict between "
+            + `${url()}/rpc and ${url()}/other/rpc.]`,
+        );
       expect(db.state).toBe(OPEN);
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
     });

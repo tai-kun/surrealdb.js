@@ -32,7 +32,7 @@ test("特定のタスクを中断する", async () => {
 
   await expect(async () => await p)
     .rejects
-    .toThrowError("test");
+    .toThrowErrorMatchingInlineSnapshot("[Error: test]");
   expect(q.count).toBe(0);
 });
 
@@ -59,10 +59,10 @@ test("キュー内の全タスクを中断する", async () => {
 
   await expect(async () => await p1)
     .rejects
-    .toThrowError("test");
+    .toThrowErrorMatchingInlineSnapshot("[Error: test]");
   await expect(async () => await p2)
     .rejects
-    .toThrowError("test");
+    .toThrowErrorMatchingInlineSnapshot("[Error: test]");
   expect(q.count).toBe(0);
 });
 

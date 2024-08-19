@@ -7,7 +7,7 @@ test("中止されていないシグナルを渡すと例外を投げない", ()
     throwIfAborted(controller.signal);
   };
 
-  expect(fn).not.toThrow();
+  expect(fn).not.toThrowError();
 });
 
 test("中止されたシグナルを渡すと例外を投げる", () => {
@@ -17,5 +17,5 @@ test("中止されたシグナルを渡すと例外を投げる", () => {
   };
   controller.abort(new Error("test"));
 
-  expect(fn).toThrowError("test");
+  expect(fn).toThrowErrorMatchingInlineSnapshot("[Error: test]");
 });

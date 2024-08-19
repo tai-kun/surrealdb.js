@@ -1,4 +1,5 @@
 import { isUuid, type LiveResult, Thing } from "@tai-kun/surrealdb";
+import { RpcResponseError } from "@tai-kun/surrealdb/errors";
 import { describe, expect, test, vi } from "vitest";
 import surreal from "../surreal.js";
 
@@ -9,7 +10,7 @@ for (const { suite, eng, fmt, url, Surreal } of surreal) {
       await db.connect(url());
       await db.use("my_namespace", "my_database");
 
-      await expect(db.live("person")).rejects.toThrowError();
+      await expect(db.live("person")).rejects.toThrowError(RpcResponseError);
     });
   });
 

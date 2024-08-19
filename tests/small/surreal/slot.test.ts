@@ -108,7 +108,8 @@ test("バリデーターで型を変更する", () => {
   expect(slot.isRequired).toBe(true);
   expect(slot).not.toHaveProperty("defaultValue");
   expect(slot.parse(0)).toBe(0);
-  expect(() => slot.parse("0")).toThrow(new TypeError("number")); // 検証する。
+  expect(() => slot.parse("0"))
+    .toThrowErrorMatchingInlineSnapshot("[TypeError: number]"); // 検証する。
 });
 
 test("変数名を変える", () => {

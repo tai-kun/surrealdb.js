@@ -29,7 +29,7 @@ export class CborTooMuchDataError extends CborWellFormednessError {
   }
 
   constructor(options?: SurrealErrorOptions | undefined) {
-    super("There are input bytes left that were not consumed.", options);
+    super("Unconsumed input bytes remain after decoding.", options);
   }
 }
 
@@ -43,7 +43,10 @@ export class CborTooLittleDataError extends CborWellFormednessError {
   }
 
   constructor(options?: SurrealErrorOptions | undefined) {
-    super("There are input bytes left that were not consumed.", options);
+    super(
+      "Input data appears truncated or incomplete for CBOR decoding.",
+      options,
+    );
   }
 }
 
@@ -78,7 +81,7 @@ export class CborMaxDepthReachedError extends CborError {
  */
 export class CborUnsafeMapKeyError extends CborError {
   static {
-    this.prototype.name = "CborUnsafeMapKey";
+    this.prototype.name = "CborUnsafeMapKeyError";
   }
 
   constructor(

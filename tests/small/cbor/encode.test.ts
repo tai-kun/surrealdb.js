@@ -11,42 +11,42 @@ describe("循環参照", () => {
     const a = {};
     Object.assign(a, { b: { a } });
 
-    expect(() => encode(a)).toThrow(CircularReferenceError);
+    expect(() => encode(a)).toThrowError(CircularReferenceError);
   });
 
   test("配列", () => {
     const a: any[] = [];
     a.push([[a]]);
 
-    expect(() => encode(a)).toThrow(CircularReferenceError);
+    expect(() => encode(a)).toThrowError(CircularReferenceError);
   });
 
   test("Map のキー", () => {
     const a = new Map();
     a.set(new Set([a]), 0);
 
-    expect(() => encode(a)).toThrow(CircularReferenceError);
+    expect(() => encode(a)).toThrowError(CircularReferenceError);
   });
 
   test("Map の値", () => {
     const a = new Map();
     a.set(0, new Set([a]));
 
-    expect(() => encode(a)).toThrow(CircularReferenceError);
+    expect(() => encode(a)).toThrowError(CircularReferenceError);
   });
 
   test("Set", () => {
     const a = new Set();
     a.add(new Set([a]));
 
-    expect(() => encode(a)).toThrow(CircularReferenceError);
+    expect(() => encode(a)).toThrowError(CircularReferenceError);
   });
 
   test("ネストされていなければ大丈夫", () => {
     const a = {};
     const b = [[a, a], { a, b: a }];
 
-    expect(() => encode(b)).not.toThrow(CircularReferenceError);
+    expect(() => encode(b)).not.toThrowError(CircularReferenceError);
   });
 });
 

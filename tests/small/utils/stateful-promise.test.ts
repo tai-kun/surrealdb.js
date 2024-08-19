@@ -19,7 +19,9 @@ test("`reject` で拒否できる", async () => {
 
   reject(new Error("test"));
 
-  await expect(async () => await promise).rejects.toThrowError("test");
+  await expect(async () => await promise)
+    .rejects
+    .toThrowErrorMatchingInlineSnapshot("[Error: test]");
   expect(promise.state).toBe("rejected");
 });
 
@@ -67,7 +69,9 @@ test.fails("(仕様確認) .try 無しで同期的に例外を投げると rejec
   };
   const tryFn = fn;
   const fnTest = async () => {
-    await expect(tryFn).rejects.toThrowError("test");
+    await expect(tryFn)
+      .rejects
+      .toThrowErrorMatchingInlineSnapshot("[Error: test]");
   };
 
   await fnTest();
@@ -79,7 +83,9 @@ test(".try 有りで同期的に例外を投げると reject 判定になる", a
   };
   const tryFn = () => StatefulPromise.try(fn);
   const fnTest = async () => {
-    await expect(tryFn).rejects.toThrowError("test");
+    await expect(tryFn)
+      .rejects
+      .toThrowErrorMatchingInlineSnapshot("[Error: test]");
   };
 
   await fnTest();

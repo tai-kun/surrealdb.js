@@ -25,7 +25,7 @@ describe("map", () => {
 });
 
 describe("isSafeMapKey", () => {
-  test.only("__proto__", () => {
+  test("__proto__", () => {
     const bytes = new Uint8Array([
       0xa1, // mt: 5, ai: 1
       // key

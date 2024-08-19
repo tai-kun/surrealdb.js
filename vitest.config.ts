@@ -26,6 +26,27 @@ switch (runtime) {
     throw new Error(`Invalid vitest mode: ${process.env["VITEST_MODE"]}`);
 }
 
+let providerOptions = {};
+
+switch (runtime) {
+  case "chromium":
+    providerOptions = {
+      launch: {
+        args: ["--disable-web-security"],
+      },
+      // context: {
+      //   bypassCSP: true,
+      // },
+    };
+    break;
+
+  case "firefox":
+    break;
+
+  case "wenkit":
+    break;
+}
+
 export default defineConfig({
   esbuild: {
     target: "safari15", // static を使うために必要なオプション
@@ -36,15 +57,8 @@ export default defineConfig({
       provider: "playwright",
       name: runtime,
       headless: true,
+      providerOptions,
       screenshotFailures: false,
-      providerOptions: {
-        launch: {
-          args: ["--disable-web-security"],
-        },
-        // context: {
-        //   bypassCSP: true,
-        // },
-      },
     },
     include: [
       "tests/**/*.test.ts",

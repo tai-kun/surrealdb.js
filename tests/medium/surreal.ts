@@ -46,7 +46,7 @@ function define(
   v8n: Validators;
 } & {
   suite: `${Engines}_${Formatters}_${Validators}`;
-  url(): `${"http" | "ws"}://localhost:${number}`;
+  url(): `${"http" | "ws"}://127.0.0.1:${number}`;
 } {
   let surreal: InitializedSurreal<typeof Client>;
   let formatter;
@@ -120,7 +120,7 @@ function define(
     fmt,
     v8n,
     suite: `${eng}_${fmt}_${v8n}`,
-    url(): `${"http" | "ws"}://localhost:${number}` {
+    url(): `${"http" | "ws"}://127.0.0.1:${number}` {
       if (typeof port !== "number") {
         throw new Error(
           "Cannot initialize Surreal outside of the test function.",
@@ -128,8 +128,8 @@ function define(
       }
 
       return eng === "http"
-        ? `http://localhost:${port}`
-        : `ws://localhost:${port}`;
+        ? `http://127.0.0.1:${port}`
+        : `ws://127.0.0.1:${port}`;
     },
   };
 }
@@ -139,7 +139,7 @@ let port: number;
 beforeAll(async () => {
   port = await vi.waitFor(
     async () => {
-      const resp = await fetch("http://localhost:11298/surrealdb/start", {
+      const resp = await fetch("http://127.0.0.1:3150/surrealdb/start", {
         method: "POST",
       });
 
@@ -159,7 +159,7 @@ beforeAll(async () => {
   );
   await vi.waitFor(
     async () => {
-      const resp = await fetch(`http://localhost:${port}/health`);
+      const resp = await fetch(`http://127.0.0.1:${port}/health`);
       await resp.body?.cancel();
 
       if (!resp.ok) {
@@ -175,7 +175,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   try {
-    const resp = await fetch("http://localhost:11298/stop", {
+    const resp = await fetch("http://127.0.0.1:3150/stop", {
       method: "POST",
       body: String(port),
     });

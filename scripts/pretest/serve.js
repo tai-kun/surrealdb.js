@@ -6,7 +6,8 @@ let port = 65535;
 const procMap = new Map();
 
 Bun.serve({
-  port: 11298,
+  hostname: "0.0.0.0",
+  port: 3150,
   /**
    * @param {Request} req
    * @returns {Promise<Response>}
@@ -19,7 +20,7 @@ Bun.serve({
             const proc = Bun.spawn([
               "surreal",
               "start",
-              ...["--bind", `127.0.0.1:${--port}`],
+              ...["--bind", `0.0.0.0:${--port}`],
               ...["--user", "root"],
               ...["--pass", "root"],
               // ...["--strict"],

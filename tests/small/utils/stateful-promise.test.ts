@@ -95,14 +95,14 @@ test("拒否された StatefulPromise の理由を収集する", async () => {
   const errors = await StatefulPromise.allRejected([
     StatefulPromise.resolve(1),
     StatefulPromise.reject("reason"),
-    StatefulPromise.reject(11298),
+    StatefulPromise.reject(3150),
     undefined,
     1129,
   ]);
 
   expect(errors).toStrictEqual([
     "reason",
-    11298,
+    3150,
   ]);
 });
 

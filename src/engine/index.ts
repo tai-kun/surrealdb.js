@@ -14,5 +14,8 @@ export {
   type TransitionArgs,
 } from "./src/abc";
 
+export type * from "./src/process-endpoint";
+export { default as processEndpoint } from "./src/process-endpoint";
+
 export type * from "./src/process-query-request";
 export { default as processQueryRequest } from "./src/process-query-request";

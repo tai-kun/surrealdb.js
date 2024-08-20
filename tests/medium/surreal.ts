@@ -121,17 +121,19 @@ function define(
     v8n,
     suite: `${eng}_${fmt}_${v8n}`,
     url(): `${"http" | "ws"}://127.0.0.1:${number}` {
-      if (typeof port !== "number") {
-        throw new Error(
-          "Cannot initialize Surreal outside of the test function.",
-        );
-      }
-
       return eng === "http"
-        ? `http://127.0.0.1:${port}`
-        : `ws://127.0.0.1:${port}`;
+        ? `http://${host()}`
+        : `ws://${host()}`;
     },
   };
+}
+
+export function host(): `127.0.0.1:${number}` {
+  if (typeof port !== "number") {
+    throw new Error("ポート番号が確定する前にホストを取得できません。");
+  }
+
+  return `127.0.0.1:${port}`;
 }
 
 let port: number;

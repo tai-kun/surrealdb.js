@@ -16,11 +16,27 @@ expect.addSnapshotSerializer({
       name: error.name,
       message: error[ORIGINAL_MESSAGE],
     };
+    const omit = [
+      // スナップショットが変わりすぎるので取り除く。
+      "stack",
+
+      // Firefox が追加するエラーの情報。このような情報を持たない Chromium に合わせて取り除く。
+      "fileName",
+      "lineNumber",
+      "columnNumber",
+
+      // WebKit が追加するエラーの情報。このような情報を持たない Chromium に合わせて取り除く。
+      "sourceURL",
+      "line",
+      "column",
+    ];
 
     for (const p of Object.getOwnPropertyNames(error)) {
-      if (!(p in kv) && p !== "stack") {
-        kv[p] = error[p];
+      if (p in kv || omit.includes(p)) {
+        continue;
       }
+
+      kv[p] = error[p];
     }
 
     return print(kv, ...args.slice(0, -1));

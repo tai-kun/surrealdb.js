@@ -3,12 +3,11 @@
 import { formatWithOptions } from "node-inspect-extracted";
 import { expect } from "vitest";
 
-let currentError = null;
 const ORIGINAL_MESSAGE = Symbol();
 
 expect.addSnapshotSerializer({
   test(value) {
-    return value instanceof globalThis.Error && value !== currentError;
+    return value instanceof globalThis.Error;
   },
   serialize(error, ...args) {
     const [, , , , print] = args;

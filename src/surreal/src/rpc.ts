@@ -12,7 +12,7 @@ import {
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
 import type { RpcParams, RpcResultMapping } from "@tai-kun/surrealdb/types";
-import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
+import { getTimeoutSignal, throwIfAborted } from "@tai-kun/surrealdb/utils";
 import { isRpcResponse } from "@tai-kun/surrealdb/validator";
 import type { UnionToIntersection, ValueOf } from "type-fest";
 
@@ -83,6 +83,8 @@ async function rpc(
   let {
     params = [],
   } = options;
+
+  throwIfAborted(signal);
 
   if (ns == null && db != null) {
     throw new MissingNamespaceError(db);

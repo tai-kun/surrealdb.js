@@ -1,98 +1,90 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import type {
-  RpcAuthenticateRequest,
-  RpcCreateRequest,
-  RpcDeleteRequest,
-  RpcInfoRequest,
-  RpcInsertRequest,
-  RpcInvalidateRequest,
-  RpcMergeRequest,
-  RpcPatchRequest,
-  RpcPingRequest,
-  RpcQueryRequest,
-  RpcRelateRequest,
-  RpcResultMapping,
-  RpcRunRequest,
-  RpcSelectRequest,
-  RpcSigninRequest,
-  RpcSignupRequest,
-  RpcUnsetRequest,
-  RpcUpdateRequest,
-  RpcUpsertRequest,
-  RpcVersionRequest,
-} from "@tai-kun/surrealdb/types";
+import type { RpcParams, RpcResultMapping } from "@tai-kun/surrealdb/types";
 import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
-import req, {
-  type InlineRpcRequest,
-  type InlineRpcRequestOptions,
-} from "./rpc";
+import type { UnionToIntersection, ValueOf } from "type-fest";
+import rpc_, { type InlineRpcMethod, type InlineRpctOptions } from "./rpc";
 
-type RpcRequestOptions = Omit<InlineRpcRequestOptions, "url">;
+const callRpc = rpc_ as (
+  endpoint: string | URL,
+  method: InlineRpcMethod,
+  options: InlineRpctOptions & {
+    readonly params: RpcParams<InlineRpcMethod> | undefined;
+  },
+) => Promise<unknown>;
 
-export type CreateRpcOptions =
-  & Omit<RpcRequestOptions, "signal">
-  & { readonly timeout?: number | undefined };
+export type CreateInlineRpctOptions = Omit<InlineRpctOptions, "signal"> & {
+  readonly timeout?: number | undefined;
+};
+
+interface RpcWithRequiredParams<M extends InlineRpcMethod> {
+  <T extends RpcResultMapping[M]>(
+    method: M,
+    options: InlineRpctOptions & { readonly params: RpcParams<M> },
+  ): Promise<T>;
+}
+
+interface RpcWithOptionalParams<M extends InlineRpcMethod> {
+  <T extends RpcResultMapping[M]>(
+    method: M,
+    options?:
+      | (InlineRpctOptions & { readonly params?: RpcParams<M> })
+      | undefined,
+  ): Promise<T>;
+}
 
 /**
  * @experimental
  */
-// @dprint-ignore
 export default function createRpc(
   endpoint: string | URL,
-  options?: CreateRpcOptions | undefined,
-): {
-  <T extends RpcResultMapping["authenticate"]>(request: RpcAuthenticateRequest & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["create"]      >(request: RpcCreateRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["delete"]      >(request: RpcDeleteRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["info"]        >(request: RpcInfoRequest         & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["insert"]      >(request: RpcInsertRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["invalidate"]  >(request: RpcInvalidateRequest   & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["merge"]       >(request: RpcMergeRequest        & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["patch"]       >(request: RpcPatchRequest        & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["ping"]        >(request: RpcPingRequest         & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["query"]       >(request: RpcQueryRequest        & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["relate"]      >(request: RpcRelateRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["run"]         >(request: RpcRunRequest          & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["select"]      >(request: RpcSelectRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["signin"]      >(request: RpcSigninRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["signup"]      >(request: RpcSignupRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["unset"]       >(request: RpcUnsetRequest        & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["update"]      >(request: RpcUpdateRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["upsert"]      >(request: RpcUpsertRequest       & RpcRequestOptions): Promise<T>
-  <T extends RpcResultMapping["version"]     >(request: RpcVersionRequest      & RpcRequestOptions): Promise<T>
-} {
+  options: CreateInlineRpctOptions | undefined = {},
+): UnionToIntersection<
+  ValueOf<
+    {
+      [M in InlineRpcMethod]: undefined extends RpcParams<M>
+        ? RpcWithOptionalParams<M>
+        : RpcWithRequiredParams<M>;
+    }
+  >
+> {
+  endpoint = new URL(endpoint); // copy
   const {
     timeout = 5000,
     ...defaults
-  } = options || {}
+  } = options || {};
 
-  return async function rpc(request: Omit<InlineRpcRequest, "url">) {
+  async function rpc(
+    method: InlineRpcMethod,
+    options:
+      | (InlineRpctOptions & { readonly params?: any })
+      | undefined = {},
+  ): Promise<any> {
     const {
       fetch = defaults.fetch,
       token: tokenProp,
+      params,
       signal,
       database = defaults.database,
       formatter = defaults.formatter,
       namespace = defaults.namespace,
-      ...rest
-    } = request;
+    } = options;
 
     if (defaults.token !== undefined && tokenProp !== undefined) {
       throw new SurrealTypeError("token === undefined", typeof tokenProp);
     }
 
-    return await req(
-      // @ts-expect-error
-      {
-        url: endpoint,
-        fetch,
-        token: defaults.token ?? tokenProp,
-        signal: signal || getTimeoutSignal(timeout),
-        database,
-        formatter,
-        namespace,
-        ...rest
-      }
-    )
+    const result = await callRpc(endpoint, method, {
+      fetch,
+      token: defaults.token ?? tokenProp,
+      params,
+      signal: signal || getTimeoutSignal(timeout),
+      database,
+      formatter,
+      namespace,
+    });
+
+    return result;
   }
+
+  return rpc;
 }

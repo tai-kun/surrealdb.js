@@ -159,3 +159,45 @@ test("UUID v6 の文字列を解析できる", () => {
 //   expect(uuid.version).toBe(7);
 //   expect(uuid.timestamp).toBe(1_717_200_000_000);
 // });
+
+test("v3 と v6 のタイムスタンプを比較できる", () => {
+  {
+    const uuidv1String = uuids.v1({
+      msecs: new Date("2024-06-01").getTime(),
+    });
+    const uuidv1 = new Uuid(uuidv1String);
+
+    const uuidv6String = uuids.v6({
+      msecs: new Date("2024-06-02").getTime(),
+    });
+    const uuidv6 = new Uuid(uuidv6String);
+
+    expect.soft(uuidv1.compareTo(uuidv6)).toBe(-1);
+  }
+  {
+    const uuidv1String = uuids.v1({
+      msecs: new Date("2024-06-02").getTime(),
+    });
+    const uuidv1 = new Uuid(uuidv1String);
+
+    const uuidv6String = uuids.v6({
+      msecs: new Date("2024-06-01").getTime(),
+    });
+    const uuidv6 = new Uuid(uuidv6String);
+
+    expect.soft(uuidv1.compareTo(uuidv6)).toBe(1);
+  }
+  {
+    const uuidv1String = uuids.v1({
+      msecs: new Date("2024-06-01").getTime(),
+    });
+    const uuidv1 = new Uuid(uuidv1String);
+
+    const uuidv6String = uuids.v6({
+      msecs: new Date("2024-06-01").getTime(),
+    });
+    const uuidv6 = new Uuid(uuidv6String);
+
+    expect.soft(uuidv1.compareTo(uuidv6)).toBe(0);
+  }
+});

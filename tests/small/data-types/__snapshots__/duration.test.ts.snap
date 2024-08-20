@@ -1,0 +1,79 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`-Infinity でナノ秒数を更新するとエラー 1`] = `
+{
+  "actual": -Infinity,
+  "integer": true,
+  "message": "Value -Infinity is out of range. Expected value to be between 0 and 9007199254740991 as an integer.",
+  "name": "NumberRangeError",
+  "range": [
+    0,
+    9007199254740991,
+  ],
+}
+`;
+
+exports[`Infinity でナノ秒数を更新するとエラー 1`] = `
+{
+  "actual": Infinity,
+  "integer": true,
+  "message": "Value Infinity is out of range. Expected value to be between 0 and 9007199254740991 as an integer.",
+  "name": "NumberRangeError",
+  "range": [
+    0,
+    9007199254740991,
+  ],
+}
+`;
+
+exports[`NaN でナノ秒数を更新するとエラー 1`] = `
+{
+  "actual": NaN,
+  "integer": true,
+  "message": "Value NaN is out of range. Expected value to be between 0 and 9007199254740991 as an integer.",
+  "name": "NumberRangeError",
+  "range": [
+    0,
+    9007199254740991,
+  ],
+}
+`;
+
+exports[`Number.MAX_SAFE_INTEGER + 1 でナノ秒数を更新するとエラー 1`] = `
+{
+  "actual": 9007199254740992,
+  "integer": true,
+  "message": "Value 9007199254740992 is out of range. Expected value to be between 0 and 9007199254740991 as an integer.",
+  "name": "NumberRangeError",
+  "range": [
+    0,
+    9007199254740991,
+  ],
+}
+`;
+
+exports[`無効な正の秒数で更新するとエラー 1`] = `
+{
+  "actual": 18446744073709551616n,
+  "integer": true,
+  "message": "Value 18446744073709551616 is out of range. Expected value to be between 0 and 18446744073709551615 as an integer.",
+  "name": "NumberRangeError",
+  "range": [
+    0n,
+    18446744073709551615n,
+  ],
+}
+`;
+
+exports[`負の秒数で更新するとエラー 1`] = `
+{
+  "actual": -1n,
+  "integer": true,
+  "message": "Value -1 is out of range. Expected value to be between 0 and 18446744073709551615 as an integer.",
+  "name": "NumberRangeError",
+  "range": [
+    0n,
+    18446744073709551615n,
+  ],
+}
+`;

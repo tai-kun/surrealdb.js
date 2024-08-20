@@ -20,6 +20,14 @@ test(".toSurql", () => {
   expect(tb.toSurql()).toBe("`foo-bar`");
 });
 
+test(".structure", () => {
+  const tb = new Table("foo-bar");
+
+  expect(tb.structure()).toStrictEqual({
+    name: "foo-bar",
+  });
+});
+
 test(".clone", () => {
   class MyTable extends Table {}
 

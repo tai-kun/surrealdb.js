@@ -24,6 +24,15 @@ test(".toSurql", () => {
   expect(t.toSurql()).toBe("r'foo:bar'");
 });
 
+test(".structure", () => {
+  const t = new Thing("foo", "bar");
+
+  expect(t.structure()).toStrictEqual({
+    tb: "foo",
+    id: "bar",
+  });
+});
+
 test(".clone", () => {
   class MyThing extends Thing {}
 

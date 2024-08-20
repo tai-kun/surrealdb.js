@@ -7,60 +7,93 @@ import {
 import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
 import { describe, expect, test } from "vitest";
 
-type Suite = {
-  args: any[];
-  seconds: number;
-  nanoseconds: number;
-  nanoTime: bigint;
-  iso: string;
-  skip?: boolean;
-} | {
-  args: any[];
-  seconds: number;
-  nanoseconds: number;
-  nanoTime?: never;
-  iso?: never;
-  skip?: boolean;
-};
+type Suite =
+  // 有効
+  | {
+    args: any[];
+    seconds: number;
+    nanoseconds: number;
+    time: number;
+    iso: string;
+    json: string;
+    surql: string;
+    string: string;
+    skip?: boolean;
+  }
+  // 無効
+  | {
+    args: any[];
+    seconds: number;
+    nanoseconds: number;
+    time?: never;
+    iso?: never;
+    json?: never;
+    surql?: never;
+    string?: never;
+    skip?: boolean;
+  };
 
-const suites: Record<string, Suite> = {
+type Suites = Record<string, Suite>;
+
+// -----------------------------------------------------------------------------
+//
+// Decode-only / Encodable Datetime
+//
+// -----------------------------------------------------------------------------
+
+const decEncSuites: Suites = {
   "(仕様確認) WebKit ではミリ秒未満の精度が丸められる": {
     args: ["1969-12-31T23:59:59.9991Z"],
     seconds: 0,
     nanoseconds: 0,
-    nanoTime: 0n,
-    iso: "1970-01-01T00:00:00.000000000Z",
+    time: 0,
+    iso: "1970-01-01T00:00:00.000Z",
+    json: "1970-01-01T00:00:00.000Z",
+    surql: "d'1970-01-01T00:00:00.000Z'",
+    string: new Date("1970-01-01T00:00:00.000Z").toString(),
     skip: process.env.RUNTIME !== "webkit",
   },
   "(仕様確認) WebKit 以外ではミリ秒未満の精度が丸められずに切り捨てられる": {
     args: ["1969-12-31T23:59:59.9991Z"],
     seconds: -1,
     nanoseconds: 999000000,
-    nanoTime: -1000000n,
+    time: -1,
     iso: "1969-12-31T23:59:59.999000000Z",
+    json: "1969-12-31T23:59:59.999000000Z",
+    surql: "d'1969-12-31T23:59:59.999000000Z'",
+    string: new Date("1969-12-31T23:59:59.999Z").toString(),
     skip: process.env.RUNTIME === "webkit",
   },
   "有効な文字列": {
     args: ["2024-06-01T12:34:56.780123456789Z"],
     seconds: 1717245296,
     nanoseconds: 780_000_000, // ミリ秒未満の精度は消える
-    nanoTime: 1717245296_780000000n,
+    time: 1717245296_780,
     iso: "2024-06-01T12:34:56.780000000Z",
+    json: "2024-06-01T12:34:56.780000000Z",
+    surql: "d'2024-06-01T12:34:56.780000000Z'",
+    string: new Date("2024-06-01T12:34:56.780Z").toString(),
   },
   "UNIX エポック以前の文字列 (WebKit のみ)": {
     args: ["1960-06-01T12:34:56.780123456789Z"],
     seconds: -302441103 - 1,
     nanoseconds: 781_000_000, // ミリ秒未満の精度は消える
-    nanoTime: -302441103_219000000n,
+    time: -302441103_219,
     iso: "1960-06-01T12:34:56.781000000Z",
+    json: "1960-06-01T12:34:56.781000000Z",
+    surql: "d'1960-06-01T12:34:56.781000000Z'",
+    string: new Date("1960-06-01T12:34:56.781Z").toString(),
     skip: process.env.RUNTIME !== "webkit",
   },
   "UNIX エポック以前の文字列 (WebKit 以外)": {
     args: ["1960-06-01T12:34:56.780123456789Z"],
     seconds: -302441103 - 1,
     nanoseconds: 780_000_000, // ミリ秒未満の精度は消える
-    nanoTime: -302441103_220000000n,
+    time: -302441103_220,
     iso: "1960-06-01T12:34:56.780000000Z",
+    json: "1960-06-01T12:34:56.780000000Z",
+    surql: "d'1960-06-01T12:34:56.780000000Z'",
+    string: new Date("1960-06-01T12:34:56.780000000Z").toString(),
     skip: process.env.RUNTIME === "webkit",
   },
   "無効な文字列": {
@@ -72,26 +105,26 @@ const suites: Record<string, Suite> = {
     args: [[1717245296, 780123456]],
     seconds: 1717245296,
     nanoseconds: 780123456,
-    nanoTime: 1717245296_780123456n,
+    time: 1717245296_780,
     iso: "2024-06-01T12:34:56.780123456Z",
+    json: "2024-06-01T12:34:56.780123456Z",
+    surql: "d'2024-06-01T12:34:56.780123456Z'",
+    string: new Date("2024-06-01T12:34:56.780123456Z").toString(),
   },
   "ナノ秒が 999_999_999 を超える配列": {
     args: [[0, 61_780123456]],
     seconds: 61,
     nanoseconds: 780123456,
-    nanoTime: 61_780123456n,
+    time: 61_780,
     iso: "1970-01-01T00:01:01.780123456Z",
+    json: "1970-01-01T00:01:01.780123456Z",
+    surql: "d'1970-01-01T00:01:01.780123456Z'",
+    string: new Date("1970-01-01T00:01:01.780123456Z").toString(),
   },
 };
 
-// -----------------------------------------------------------------------------
-//
-// Decode-only / Encodable Datetime
-//
-// -----------------------------------------------------------------------------
-
 describe("decode-only/encodable", () => {
-  for (const [t, c] of Object.entries(suites)) {
+  for (const [t, c] of Object.entries(decEncSuites)) {
     describe.skipIf(!!c.skip)(t, () => {
       test("秒とナノ秒を取得する", () => {
         const dt = new EncodableDatetime(...c.args as [any]);
@@ -100,12 +133,11 @@ describe("decode-only/encodable", () => {
         expect(dt.nanoseconds).toBe(c.nanoseconds);
       });
 
-      test("ミリ秒時刻を取得する", { skip: !("nanoTime" in c) }, () => {
-        const msTime = Number(c.nanoTime! / 1_000_000n);
+      test("ミリ秒時刻を取得する", { skip: !("time" in c) }, () => {
         const dt = new EncodableDatetime(...c.args as [any]);
 
-        expect(dt.valueOf()).toBe(msTime);
-        expect(+dt).toBe(msTime);
+        expect(dt.valueOf()).toBe(c.time);
+        expect(+dt).toBe(c.time);
       });
 
       test("ISO 形式の文字列にする", { skip: !("iso" in c) }, () => {
@@ -123,6 +155,23 @@ describe("decode-only/encodable", () => {
           expect(() => dt.toISOString()).toThrowError();
         },
       );
+
+      test(".toString()", { skip: !("string" in c) }, () => {
+        expect((new EncodableDatetime(...c.args as [any])).toString())
+          .toBe(c.string);
+      });
+
+      test("テンプレートリテラル", { skip: !("string" in c) }, () => {
+        expect(`${new EncodableDatetime(...c.args as [any])}`).toBe(c.string);
+      });
+
+      test("文字列へ暗黙の型変換", { skip: !("string" in c) }, () => {
+        expect("" + new EncodableDatetime(...c.args as [any])).toBe(c.string);
+      });
+
+      test("数値へ暗黙の型変換", { skip: !("time" in c) }, () => {
+        expect(+new EncodableDatetime(...c.args as [any])).toBe(c.time);
+      });
 
       test("CBOR でエンコード/デコードできる", () => {
         const input = new EncodableDatetime(...c.args as [any]);
@@ -144,6 +193,27 @@ describe("decode-only/encodable", () => {
 
         expect(dt).toStrictEqual(output);
       });
+
+      test(".toJSON()", { skip: !("json" in c) }, () => {
+        const json = new EncodableDatetime(...c.args as [any]).toJSON();
+
+        expect(json).toBe(c.json);
+      });
+
+      test(".toSurql()", { skip: !("surql" in c) }, () => {
+        const surql = new EncodableDatetime(...c.args as [any]).toSurql();
+
+        expect(surql).toBe(c.surql);
+      });
+
+      test(".structure()", () => {
+        const structure = new EncodableDatetime(...c.args as [any]).structure();
+
+        expect(structure).toStrictEqual({
+          seconds: c.seconds,
+          nanoseconds: c.nanoseconds,
+        });
+      });
     });
   }
 
@@ -159,136 +229,178 @@ describe("decode-only/encodable", () => {
 
 // -----------------------------------------------------------------------------
 //
-// Datetime
+// Standard Datetime
 //
 // -----------------------------------------------------------------------------
 
-describe("standard", () => {
-  // Add test suites
-  Object.assign<any, Record<string, Suite>>(suites, {
-    "負のナノ秒を持つ配列": {
-      args: [[61, -61_000000000]],
-      seconds: 0,
-      nanoseconds: 0,
-      nanoTime: 0n,
-      iso: "1970-01-01T00:00:00.000000000Z",
-    },
-    "有効な正のミリ秒時刻": {
-      args: [1717245296_780],
-      seconds: 1717245296,
-      nanoseconds: 780_000_000,
-      nanoTime: 1717245296_780000000n,
-      iso: "2024-06-01T12:34:56.780000000Z",
-    },
-    "有効な負のミリ秒時刻": {
-      args: [-302441103_220],
-      seconds: -302441103 - 1,
-      nanoseconds: 780_000_000,
-      nanoTime: -302441103_220000000n,
-      iso: "1960-06-01T12:34:56.780000000Z",
-    },
-    "無効なミリ秒時刻": {
-      args: [NaN],
-      seconds: NaN,
-      nanoseconds: NaN,
-    },
-    "有効な正のナノ秒時刻": {
-      args: [1717245296_780123456n],
+const standardSuites: Suites = {
+  ...decEncSuites,
+  "負のナノ秒を持つ配列": {
+    args: [[61, -61_000000000]],
+    seconds: 0,
+    nanoseconds: 0,
+    time: 0,
+    iso: "1970-01-01T00:00:00.000000000Z",
+    json: "1970-01-01T00:00:00.000000000Z",
+    surql: "d'1970-01-01T00:00:00.000000000Z'",
+    string: new Date("1970-01-01T00:00:00.000000000Z").toString(),
+  },
+  "有効な正のミリ秒時刻": {
+    args: [1717245296_780],
+    seconds: 1717245296,
+    nanoseconds: 780_000_000,
+    time: 1717245296_780,
+    iso: "2024-06-01T12:34:56.780000000Z",
+    json: "2024-06-01T12:34:56.780000000Z",
+    surql: "d'2024-06-01T12:34:56.780000000Z'",
+    string: new Date("2024-06-01T12:34:56.780000000Z").toString(),
+  },
+  "有効な負のミリ秒時刻": {
+    args: [-302441103_220],
+    seconds: -302441103 - 1,
+    nanoseconds: 780_000_000,
+    time: -302441103_220,
+    iso: "1960-06-01T12:34:56.780000000Z",
+    json: "1960-06-01T12:34:56.780000000Z",
+    surql: "d'1960-06-01T12:34:56.780000000Z'",
+    string: new Date("1960-06-01T12:34:56.780000000Z").toString(),
+  },
+  "無効なミリ秒時刻": {
+    args: [NaN],
+    seconds: NaN,
+    nanoseconds: NaN,
+  },
+  "有効な正のナノ秒時刻": {
+    args: [1717245296_780123456n],
+    seconds: 1717245296,
+    nanoseconds: 780123456,
+    time: 1717245296_780,
+    iso: "2024-06-01T12:34:56.780123456Z",
+    json: "2024-06-01T12:34:56.780123456Z",
+    surql: "d'2024-06-01T12:34:56.780123456Z'",
+    string: new Date("2024-06-01T12:34:56.780123456Z").toString(),
+  },
+  "有効な負のナノ秒時刻": {
+    args: [-302441103_220000100n],
+    seconds: -302441103 - 1,
+    nanoseconds: 779_999_900,
+    time: -302441103_220,
+    iso: "1960-06-01T12:34:56.779999900Z",
+    json: "1960-06-01T12:34:56.779999900Z",
+    surql: "d'1960-06-01T12:34:56.779999900Z'",
+    string: new Date("1960-06-01T12:34:56.779999900Z").toString(),
+  },
+  "Date 上限値の正のナノ秒数": {
+    args: [8640000000000_000000000n],
+    seconds: 8640000000000,
+    nanoseconds: 0,
+    time: 8640000000000_000,
+    iso: "+275760-09-13T00:00:00.000000000Z",
+    json: "+275760-09-13T00:00:00.000000000Z",
+    surql: "d'+275760-09-13T00:00:00.000000000Z'",
+    string: new Date("+275760-09-13T00:00:00.000000000Z").toString(),
+  },
+  "Date 下限値の正のナノ秒数": {
+    args: [-8640000000000_000000000n],
+    seconds: -8640000000000,
+    nanoseconds: 0,
+    time: -8640000000000_000,
+    iso: "-271821-04-20T00:00:00.000000000Z",
+    json: "-271821-04-20T00:00:00.000000000Z",
+    surql: "d'-271821-04-20T00:00:00.000000000Z'",
+    string: new Date("-271821-04-20T00:00:00.000000000Z").toString(),
+  },
+  "Date 範囲外の正のナノ秒数": {
+    args: [8640000000000_000000001n],
+    seconds: NaN,
+    nanoseconds: NaN,
+  },
+  "Date 範囲外の負のナノ秒数": {
+    args: [-8640000000000_000000001n],
+    seconds: NaN,
+    nanoseconds: NaN,
+  },
+  "有効な Date オブジェクト": {
+    args: [new Date(0)],
+    seconds: 0,
+    nanoseconds: 0,
+    time: 0,
+    iso: "1970-01-01T00:00:00.000000000Z",
+    json: "1970-01-01T00:00:00.000000000Z",
+    surql: "d'1970-01-01T00:00:00.000000000Z'",
+    string: new Date("1970-01-01T00:00:00.000000000Z").toString(),
+  },
+  "無効な Date オブジェクト": {
+    args: [new Date(NaN)],
+    seconds: NaN,
+    nanoseconds: NaN,
+  },
+  "Datetime のようなオブジェクト": {
+    args: [{
       seconds: 1717245296,
       nanoseconds: 780123456,
-      nanoTime: 1717245296_780123456n,
-      iso: "2024-06-01T12:34:56.780123456Z",
-    },
-    "有効な負のナノ秒時刻": {
-      args: [-302441103_220000100n],
-      seconds: -302441103 - 1,
-      nanoseconds: 779_999_900,
-      nanoTime: -302441103_220000100n,
-      iso: "1960-06-01T12:34:56.779999900Z",
-    },
-    "Date 上限値の正のナノ秒数": {
-      args: [8640000000000_000000000n],
-      seconds: 8640000000000,
-      nanoseconds: 0,
-      nanoTime: 8640000000000_000000000n,
-      iso: "+275760-09-13T00:00:00.000000000Z",
-    },
-    "Date 下限値の正のナノ秒数": {
-      args: [-8640000000000_000000000n],
-      seconds: -8640000000000,
-      nanoseconds: 0,
-      nanoTime: -8640000000000_000000000n,
-      iso: "-271821-04-20T00:00:00.000000000Z",
-    },
-    "Date 範囲外の正のナノ秒数": {
-      args: [8640000000000_000000001n],
-      seconds: NaN,
-      nanoseconds: NaN,
-    },
-    "Date 範囲外の負のナノ秒数": {
-      args: [-8640000000000_000000001n],
-      seconds: NaN,
-      nanoseconds: NaN,
-    },
-    "有効な Date オブジェクト": {
-      args: [new Date(0)],
-      seconds: 0,
-      nanoseconds: 0,
-      nanoTime: 0n,
-      iso: "1970-01-01T00:00:00.000000000Z",
-    },
-    "無効な Date オブジェクト": {
-      args: [new Date(NaN)],
-      seconds: NaN,
-      nanoseconds: NaN,
-    },
-    "Datetime のようなオブジェクト": {
-      args: [{
-        seconds: 1717245296,
-        nanoseconds: 780123456,
-      }],
-      seconds: 1717245296,
-      nanoseconds: 780123456,
-      nanoTime: 1717245296_780123456n,
-      iso: "2024-06-01T12:34:56.780123456Z",
-    },
-    "有効な年月日等": {
-      args: [2024, 6 - 1, 1, 12, 34, 56, 780, 123, 456],
-      seconds: 1717245296,
-      nanoseconds: 780123456,
-      nanoTime: 1717245296_780123456n,
-      iso: "2024-06-01T12:34:56.780123456Z",
-    },
-    "マイクロ秒が 999 を超える年月日等": {
-      args: [2024, 6 - 1, 1, 12, 34, 56, 780, 321_123, 456],
-      seconds: 1717245297,
-      nanoseconds: 101123456,
-      nanoTime: 1717245297_101123456n,
-      iso: "2024-06-01T12:34:57.101123456Z",
-    },
-    "西暦 1 万年以降には `+` プレフィクスが付く": {
-      args: [10_000, 6 - 1, 1, 12, 34, 56, 780, 123, 456],
-      seconds: 253415478896,
-      nanoseconds: 780123456,
-      nanoTime: 253415478896_780123456n,
-      iso: "+010000-06-01T12:34:56.780123456Z",
-    },
-    "西暦 0 年": {
-      args: [-62167219200000],
-      seconds: -62167219200,
-      nanoseconds: 0,
-      nanoTime: -62167219200_000000000n,
-      iso: "0000-01-01T00:00:00.000000000Z",
-    },
-    "紀元前には `-` プレフィクスが付く": {
-      args: [-62167219200001],
-      seconds: -62167219200 - 1,
-      nanoseconds: 999000000,
-      nanoTime: -62167219200_001000000n,
-      iso: "-000001-12-31T23:59:59.999000000Z",
-    },
-  });
+    }],
+    seconds: 1717245296,
+    nanoseconds: 780123456,
+    time: 1717245296_780,
+    iso: "2024-06-01T12:34:56.780123456Z",
+    json: "2024-06-01T12:34:56.780123456Z",
+    surql: "d'2024-06-01T12:34:56.780123456Z'",
+    string: new Date("2024-06-01T12:34:56.780123456Z").toString(),
+  },
+  "有効な年月日等": {
+    args: [2024, 6 - 1, 1, 12, 34, 56, 780, 123, 456],
+    seconds: 1717245296,
+    nanoseconds: 780123456,
+    time: 1717245296_780,
+    iso: "2024-06-01T12:34:56.780123456Z",
+    json: "2024-06-01T12:34:56.780123456Z",
+    surql: "d'2024-06-01T12:34:56.780123456Z'",
+    string: new Date("2024-06-01T12:34:56.780123456Z").toString(),
+  },
+  "マイクロ秒が 999 を超える年月日等": {
+    args: [2024, 6 - 1, 1, 12, 34, 56, 780, 321_123, 456],
+    seconds: 1717245297,
+    nanoseconds: 101123456,
+    time: 1717245297_101,
+    iso: "2024-06-01T12:34:57.101123456Z",
+    json: "2024-06-01T12:34:57.101123456Z",
+    surql: "d'2024-06-01T12:34:57.101123456Z'",
+    string: new Date("2024-06-01T12:34:57.101123456Z").toString(),
+  },
+  "西暦 1 万年以降には `+` プレフィクスが付く": {
+    args: [10_000, 6 - 1, 1, 12, 34, 56, 780, 123, 456],
+    seconds: 253415478896,
+    nanoseconds: 780123456,
+    time: 253415478896_780,
+    iso: "+010000-06-01T12:34:56.780123456Z",
+    json: "+010000-06-01T12:34:56.780123456Z",
+    surql: "d'+010000-06-01T12:34:56.780123456Z'",
+    string: new Date("+010000-06-01T12:34:56.780123456Z").toString(),
+  },
+  "西暦 0 年": {
+    args: [-62167219200000],
+    seconds: -62167219200,
+    nanoseconds: 0,
+    time: -62167219200_000,
+    iso: "0000-01-01T00:00:00.000000000Z",
+    json: "0000-01-01T00:00:00.000000000Z",
+    surql: "d'0000-01-01T00:00:00.000000000Z'",
+    string: new Date("0000-01-01T00:00:00.000000000Z").toString(),
+  },
+  "紀元前には `-` プレフィクスが付く": {
+    args: [-62167219200001],
+    seconds: -62167219200 - 1,
+    nanoseconds: 999000000,
+    time: -62167219200_001,
+    iso: "-000001-12-31T23:59:59.999000000Z",
+    json: "-000001-12-31T23:59:59.999000000Z",
+    surql: "d'-000001-12-31T23:59:59.999000000Z'",
+    string: new Date("-000001-12-31T23:59:59.999000000Z").toString(),
+  },
+};
 
+describe("standard", () => {
   test("現在時刻で Datetime インスタンスを作成する", () => {
     const dt = new Datetime();
 
@@ -298,7 +410,7 @@ describe("standard", () => {
     expect(+dt).toBeTypeOf("number");
   });
 
-  for (const [t, c] of Object.entries(suites)) {
+  for (const [t, c] of Object.entries(standardSuites)) {
     describe.skipIf(!!c.skip)(t, () => {
       test("秒とナノ秒を取得する", () => {
         const dt = new Datetime(...c.args);
@@ -307,20 +419,12 @@ describe("standard", () => {
         expect(dt.nanoseconds).toBe(c.nanoseconds);
       });
 
-      test("ミリ秒時刻を取得する", { skip: !("nanoTime" in c) }, () => {
-        const msTime = Number(c.nanoTime! / 1_000_000n);
+      test("ミリ秒時刻を取得する", { skip: !("time" in c) }, () => {
         const dt = new Datetime(...c.args);
 
-        expect(dt.getTime()).toBe(msTime);
-        expect(dt.valueOf()).toBe(msTime);
-        expect(+dt).toBe(msTime);
-      });
-
-      test("ナノ秒時刻が一致する", { skip: !("nanoTime" in c) }, () => {
-        const dt = new Datetime(...c.args);
-
-        expect(BigInt(dt.seconds) * 1_000_000_000n + BigInt(dt.nanoseconds))
-          .toBe(c.nanoTime);
+        expect(dt.getTime()).toBe(c.time);
+        expect(dt.valueOf()).toBe(c.time);
+        expect(+dt).toBe(c.time);
       });
 
       test("ISO 形式の文字列にする", { skip: !("iso" in c) }, () => {
@@ -338,6 +442,23 @@ describe("standard", () => {
           expect(() => dt.toISOString()).toThrowError();
         },
       );
+
+      test(".toString()", { skip: !("string" in c) }, () => {
+        expect((new Datetime(...c.args as [any])).toString())
+          .toBe(c.string);
+      });
+
+      test("テンプレートリテラル", { skip: !("string" in c) }, () => {
+        expect(`${new Datetime(...c.args as [any])}`).toBe(c.string);
+      });
+
+      test("文字列へ暗黙の型変換", { skip: !("string" in c) }, () => {
+        expect("" + new Datetime(...c.args as [any])).toBe(c.string);
+      });
+
+      // test("数値へ暗黙の型変換", { skip: !("time" in c) }, () => {
+      //   expect(+new Datetime(...c.args as [any])).toBe(c.time);
+      // });
 
       test("CBOR でエンコード/デコードできる", () => {
         const input = new Datetime(...c.args);
@@ -358,6 +479,27 @@ describe("standard", () => {
         });
 
         expect(dt).toStrictEqual(output);
+      });
+
+      test(".toJSON()", { skip: !("json" in c) }, () => {
+        const json = new Datetime(...c.args as [any]).toJSON();
+
+        expect(json).toBe(c.json);
+      });
+
+      test(".toSurql()", { skip: !("surql" in c) }, () => {
+        const surql = new Datetime(...c.args as [any]).toSurql();
+
+        expect(surql).toBe(c.surql);
+      });
+
+      test(".structure()", () => {
+        const structure = new Datetime(...c.args as [any]).structure();
+
+        expect(structure).toStrictEqual({
+          seconds: c.seconds,
+          nanoseconds: c.nanoseconds,
+        });
       });
     });
   }

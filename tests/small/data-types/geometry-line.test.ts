@@ -78,6 +78,32 @@ test(".toCBOR", () => {
   expect(g).toStrictEqual(output);
 });
 
+test(".close, .toClosed, isClosed", () => {
+  const p1 = new GeometryPoint([0, 0]);
+  const p2 = new GeometryPoint([0, 1]);
+  const p3 = new GeometryPoint([1, 1]);
+  const p4 = new GeometryPoint([1, 0]);
+
+  const l1 = new GeometryLine([p1, p2, p3, p4]);
+
+  expect(l1.isClosed()).toBe(false);
+
+  const l2 = l1.toClosed();
+  l1.close();
+
+  expect(l1.coordinates).toStrictEqual([
+    [0, 0], // 始点
+    [0, 1],
+    [1, 1],
+    [1, 0],
+    [0, 0], // 終点
+  ]);
+  expect(l1.isClosed()).toBe(true);
+  expect(l2.isClosed()).toBe(true);
+  expect(l2).not.toBe(l1);
+  expect(l2.equals(l1)).toBe(true);
+});
+
 test("GeometryLine であると判定できる", () => {
   expect(
     isGeometryLine(

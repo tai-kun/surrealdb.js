@@ -15,6 +15,8 @@ const valid = Object.entries({
       ns: 0n,
       ms: 0,
     },
+    json: "0ns",
+    surql: "0ns",
     string: "0ns",
     iso8601: "P0S",
   },
@@ -28,6 +30,8 @@ const valid = Object.entries({
       ns: 12_345n,
       ms: 0.012_345,
     },
+    json: "12µs345ns",
+    surql: "12µs345ns",
     string: "12µs345ns",
     iso8601: "P0S",
   },
@@ -41,6 +45,8 @@ const valid = Object.entries({
       ns: 12_345_000n,
       ms: 12.345_000,
     },
+    json: "12ms345µs",
+    surql: "12ms345µs",
     string: "12ms345µs",
     iso8601: "P0S",
   },
@@ -54,6 +60,8 @@ const valid = Object.entries({
       ns: 12_345_000n,
       ms: 12.345_000,
     },
+    json: "12ms345µs",
+    surql: "12ms345µs",
     string: "12ms345µs",
     iso8601: "P0S",
   },
@@ -67,6 +75,8 @@ const valid = Object.entries({
       ns: 12_345_000n,
       ms: 12.345_000,
     },
+    json: "12ms345µs",
+    surql: "12ms345µs",
     string: "12ms345µs",
     iso8601: "P0S",
   },
@@ -80,6 +90,8 @@ const valid = Object.entries({
       ns: 123_456_000_000n,
       ms: 123_456,
     },
+    json: "2m3s456ms",
+    surql: "2m3s456ms",
     string: "2m3s456ms",
     iso8601: "P2M3S",
   },
@@ -93,6 +105,8 @@ const valid = Object.entries({
       ns: 3_601_000_000_000n,
       ms: 3_601_000,
     },
+    json: "1h1s",
+    surql: "1h1s",
     string: "1h1s",
     iso8601: "P1H1S",
   },
@@ -109,6 +123,8 @@ const valid = Object.entries({
     //  (6 * 24 * 60) + (22 * 60) + (40)
     // = 8_640        +  1_320    +  40
     // = 10_000
+    json: "6d22h40m",
+    surql: "6d22h40m",
     string: "6d22h40m",
     iso8601: "P6D22H40M",
   },
@@ -122,6 +138,8 @@ const valid = Object.entries({
       ns: 7_776_000_000_000_000n,
       ms: 7_776_000_000,
     },
+    json: "12w6d",
+    surql: "12w6d",
     string: "12w6d",
     iso8601: "P12W6D",
   },
@@ -140,6 +158,8 @@ const valid = Object.entries({
     // = ( 365      +  335        ) / 7
     // =  700                       / 7
     // =  100
+    json: "1y47w6d",
+    surql: "1y47w6d",
     string: "1y47w6d",
     iso8601: "P1Y47W6D",
   },
@@ -153,6 +173,8 @@ const valid = Object.entries({
       ns: 63_072_000_000_000_000n,
       ms: 63_072_000_000,
     },
+    json: "2y",
+    surql: "2y",
     string: "2y",
     iso8601: "P2Y",
   },
@@ -166,6 +188,8 @@ const valid = Object.entries({
       ns: 61_001_001_001n,
       ms: 61_001.001_001,
     },
+    json: "1m1s1ms1µs1ns",
+    surql: "1m1s1ms1µs1ns",
     string: "1m1s1ms1µs1ns",
     iso8601: "P1M1S",
   },
@@ -179,6 +203,8 @@ const valid = Object.entries({
       ns: 60_001_000_000n,
       ms: 60_001,
     },
+    json: "1m1ms",
+    surql: "1m1ms",
     string: "1m1ms",
     iso8601: "P1M",
   },
@@ -192,6 +218,8 @@ const valid = Object.entries({
       ns: 183_000_000_000n,
       ms: 183_000,
     },
+    json: "3m3s",
+    surql: "3m3s",
     string: "3m3s",
     iso8601: "P3M3S",
   },
@@ -205,6 +233,8 @@ const valid = Object.entries({
       ns: 1_234_567_890n,
       ms: 1_234.567_890,
     },
+    json: "1s234ms567µs890ns",
+    surql: "1s234ms567µs890ns",
     string: "1s234ms567µs890ns",
     iso8601: "P1S",
   },
@@ -274,8 +304,194 @@ for (const [i, t] of valid) {
 
       expect(dt).toStrictEqual(output);
     });
+
+    test(".toJSON()", () => {
+      const json = new Duration(t.input).toJSON();
+
+      expect(json).toBe(t.json);
+    });
+
+    test(".toSurql()", () => {
+      const surql = new Duration(t.input).toSurql();
+
+      expect(surql).toBe(t.surql);
+    });
+
+    test(".structure()", () => {
+      const structure = new Duration(t.input).structure();
+
+      expect(structure).toStrictEqual(t.structure);
+    });
   });
 }
+
+test("有効な正の秒数で更新", () => {
+  const d = new Duration(0);
+  d.seconds = 100n;
+
+  expect(d.toString()).toBe("1m40s");
+});
+
+test("無効な正の秒数で更新するとエラー", () => {
+  const d = new Duration(0);
+
+  expect(() => d.seconds = 2n ** 64n).toThrowErrorMatchingSnapshot();
+});
+
+test("負の秒数で更新するとエラー", () => {
+  const d = new Duration(0);
+
+  expect(() => d.seconds = -1n).toThrowErrorMatchingSnapshot();
+});
+
+test("有効な正のナノ秒数で更新", () => {
+  const d = new Duration(0);
+  d.nanoseconds = 100;
+
+  expect(d.toString()).toBe("100ns");
+});
+
+test("NaN でナノ秒数を更新するとエラー", () => {
+  const d = new Duration(0);
+
+  expect(() => d.nanoseconds = NaN).toThrowErrorMatchingSnapshot();
+});
+
+test("Infinity でナノ秒数を更新するとエラー", () => {
+  const d = new Duration(0);
+
+  expect(() => d.nanoseconds = Infinity).toThrowErrorMatchingSnapshot();
+});
+
+test("-Infinity でナノ秒数を更新するとエラー", () => {
+  const d = new Duration(0);
+
+  expect(() => d.nanoseconds = -Infinity).toThrowErrorMatchingSnapshot();
+});
+
+test("Number.MAX_SAFE_INTEGER + 1 でナノ秒数を更新するとエラー", () => {
+  const d = new Duration(0);
+
+  expect(() => d.nanoseconds = Number.MAX_SAFE_INTEGER + 1)
+    .toThrowErrorMatchingSnapshot();
+});
+
+test(".addYears()", () => {
+  const d = new Duration(0);
+  d.addYears(1);
+
+  expect(d.toString()).toBe("1y");
+});
+
+test(".addWeeks()", () => {
+  const d = new Duration(0);
+  d.addWeeks(1);
+
+  expect(d.toString()).toBe("1w");
+});
+
+test(".addDays()", () => {
+  const d = new Duration(0);
+  d.addDays(1);
+
+  expect(d.toString()).toBe("1d");
+});
+
+test(".addHours()", () => {
+  const d = new Duration(0);
+  d.addHours(1);
+
+  expect(d.toString()).toBe("1h");
+});
+
+test(".addMinutes()", () => {
+  const d = new Duration(0);
+  d.addMinutes(1);
+
+  expect(d.toString()).toBe("1m");
+});
+
+test(".addSeconds()", () => {
+  const d = new Duration(0);
+  d.addSeconds(1);
+
+  expect(d.toString()).toBe("1s");
+});
+
+test(".addMilliseconds()", () => {
+  const d = new Duration(0);
+  d.addMilliseconds(1);
+
+  expect(d.toString()).toBe("1ms");
+});
+
+test(".addMicroseconds()", () => {
+  const d = new Duration(0);
+  d.addMicroseconds(1);
+
+  expect(d.toString()).toBe("1µs");
+});
+
+test(".addNanoseconds()", () => {
+  const d = new Duration(0);
+  d.addNanoseconds(1);
+
+  expect(d.toString()).toBe("1ns");
+});
+
+test(".asYears()", () => {
+  const d = new Duration("1y73d");
+
+  expect(d.asYears()).toBe(1.2);
+});
+
+test(".asWeeks()", () => {
+  const d = new Duration("14d");
+
+  expect(d.asWeeks()).toBe(2);
+});
+
+test(".asDays()", () => {
+  const d = new Duration("1w");
+
+  expect(d.asDays()).toBe(7);
+});
+
+test(".asHours()", () => {
+  const d = new Duration("1w3d");
+
+  expect(d.asHours()).toBe(240);
+});
+
+test(".asMinutes()", () => {
+  const d = new Duration("2m59s1000ms");
+
+  expect(d.asMinutes()).toBe(3);
+});
+
+test(".asSeconds()", () => {
+  const d = new Duration("500ns");
+
+  expect(d.asSeconds()).toBe(0.000_000_5);
+});
+
+test(".asMilliseconds()", () => {
+  const d = new Duration("0s");
+
+  expect(d.asMilliseconds()).toBe(0);
+});
+
+test(".asMicroseconds()", () => {
+  const d = new Duration("1ms100ns");
+
+  expect(d.asMicroseconds()).toBe(1_000.1);
+});
+
+test(".asNanoseconds()", () => {
+  const d = new Duration("999999999ns");
+
+  expect(d.asNanoseconds()).toBe(999_999_999);
+});
 
 describe("Duration.MAX", () => {
   test("毎度異なるインスタンス", () => {
@@ -339,6 +555,42 @@ describe("Duration.ZERO", () => {
     expect(Duration.ZERO.getMicroseconds()).toBe(0);
     expect(Duration.ZERO.getNanoseconds()).toBe(0);
   });
+});
+
+test(".years()", () => {
+  expect(Duration.years(1).toString()).toBe("1y");
+});
+
+test(".weeks()", () => {
+  expect(Duration.weeks(1).toString()).toBe("1w");
+});
+
+test(".days()", () => {
+  expect(Duration.days(1).toString()).toBe("1d");
+});
+
+test(".hours()", () => {
+  expect(Duration.hours(1).toString()).toBe("1h");
+});
+
+test(".minutes()", () => {
+  expect(Duration.minutes(1).toString()).toBe("1m");
+});
+
+test(".seconds()", () => {
+  expect(Duration.seconds(1).toString()).toBe("1s");
+});
+
+test(".milliseconds()", () => {
+  expect(Duration.milliseconds(1).toString()).toBe("1ms");
+});
+
+test(".microseconds()", () => {
+  expect(Duration.microseconds(1).toString()).toBe("1µs");
+});
+
+test(".nanoseconds()", () => {
+  expect(Duration.nanoseconds(1).toString()).toBe("1ns");
 });
 
 // test("年月日等で表現されたミリ秒を取得できる", () => {

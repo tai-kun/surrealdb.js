@@ -18,6 +18,7 @@ interface StandardExtension extends Omit<Encodable, "toJSON"> {
     value: string,
   ];
   structure(): {
+    value: string;
     singleDigits: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)[];
     /** Integer, -1e+6 ~ 1e+6 */
     exponent: number;
@@ -58,11 +59,13 @@ Object.assign<any, StandardExtension>(Decimal.prototype, {
     return this.toString() + "dec";
   },
   structure(this: Decimal): {
+    value: string;
     singleDigits: (0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9)[];
     exponent: number;
     sign: -1 | 1;
   } {
     return {
+      value: this.toString(),
       // @ts-expect-error
       singleDigits: this.c.slice(), // copy
       exponent: this.e,

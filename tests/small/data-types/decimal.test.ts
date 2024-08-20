@@ -7,142 +7,232 @@ import {
 import { Decimal } from "@tai-kun/surrealdb/data-types/standard";
 import { describe, expect, test } from "vitest";
 
-type Suite = {
-  args: [any];
-  string?: never;
-  number?: never;
-} | {
-  args: [any];
-  string: string;
-  number: number;
-};
-
 // -----------------------------------------------------------------------------
 //
-// Decode-only / Encodable Datetime
+// Decode-only / Encodable Decimal
 //
 // -----------------------------------------------------------------------------
 
 describe("decode-only/encodable", () => {
-  const suites: Record<string, Suite> = {
-    "有効な文字列": {
-      args: ["1.23e1"],
-      string: "1.23e1",
-      number: 12.3,
-    },
-    "無効な文字列": {
-      args: ["+3.14"],
-    },
-  };
-
-  for (const [t, c] of Object.entries(suites)) {
-    describe(t, () => {
-      test("インスタンスの作成に失敗する", { skip: "string" in c }, () => {
-        expect(() => new EncodableDecimal(...c.args))
-          .toThrowErrorMatchingSnapshot();
-      });
-
-      test("文字列", { skip: !("string" in c) }, () => {
-        expect(String(new EncodableDecimal(...c.args))).toBe(c.string);
-      });
-
-      test(
-        "CBOR でエンコード/デコードできる",
-        { skip: !("string" in c) },
-        () => {
-          const input = new EncodableDecimal(...c.args);
-          const output = new EncodableDecimal(...c.args);
-          const bytes = encode(input);
-          const dt = decode(bytes, {
-            reviver: {
-              tagged(t) {
-                switch (t.tag) {
-                  case CBOR_TAG_STRING_DECIMAL:
-                    return new EncodableDecimal(t.value as any);
-
-                  default:
-                    return undefined;
-                }
-              },
-            },
-          });
-
-          expect(dt).toStrictEqual(output);
-        },
-      );
+  describe("有効な文字列", () => {
+    test(".toString()", () => {
+      expect((new EncodableDecimal("1.23e1")).toString()).toBe("1.23e1");
     });
-  }
+
+    test("テンプレートリテラル", () => {
+      expect(`${new EncodableDecimal("1.23e1")}`).toBe("1.23e1");
+    });
+
+    test("文字列へ暗黙の型変換", () => {
+      expect("" + new EncodableDecimal("1.23e1")).toBe("1.23e1");
+    });
+
+    test("数値へ暗黙の型変換", () => {
+      expect(+new EncodableDecimal("1.23e1")).toBe(12.3);
+    });
+
+    test("CBOR でエンコード/デコードできる", () => {
+      const input = new EncodableDecimal("1.23e1");
+      const output = new EncodableDecimal("1.23e1");
+      const bytes = encode(input);
+      const dt = decode(bytes, {
+        reviver: {
+          tagged(t) {
+            switch (t.tag) {
+              case CBOR_TAG_STRING_DECIMAL:
+                return new EncodableDecimal(t.value as any);
+
+              default:
+                return undefined;
+            }
+          },
+        },
+      });
+
+      expect(dt).toStrictEqual(output);
+    });
+
+    test(".toJSON()", () => {
+      const json = new EncodableDecimal("1.23e1").toJSON();
+
+      expect(json).toBe("1.23e1");
+    });
+
+    test(".toSurql()", () => {
+      const surql = new EncodableDecimal("1.23e1").toSurql();
+
+      expect(surql).toBe("1.23e1dec");
+    });
+
+    test(".structure()", () => {
+      const structure = new EncodableDecimal("1.23e1").structure();
+
+      expect(structure).toStrictEqual({
+        value: "1.23e1",
+      });
+    });
+  });
+
+  describe("無効な文字列", () => {
+    test("インスタンスの作成に失敗する", () => {
+      expect(() => new EncodableDecimal("+3.14"))
+        .toThrowErrorMatchingSnapshot();
+    });
+  });
 });
 
 // -----------------------------------------------------------------------------
 //
-// Standard Datetime
+// Standard Decimal
 //
 // -----------------------------------------------------------------------------
 
 describe("standard", () => {
-  const suites: Record<string, Suite> = {
-    "有効な文字列": {
-      args: ["1.23e1"],
-      string: "12.3",
-      number: 12.3,
-    },
-    "無効な文字列": {
-      args: ["+3.14"],
-    },
-    "有効な数値": {
-      args: [3.14],
-      string: "3.14",
-      number: 3.14,
-    },
-    "無効な数値": {
-      args: [NaN],
-    },
-  };
-
-  for (const [t, c] of Object.entries(suites)) {
-    describe(t, () => {
-      test("インスタンスの作成に失敗する", { skip: "string" in c }, () => {
-        expect(() => new Decimal(...c.args)).toThrowErrorMatchingSnapshot();
-      });
-
-      test("文字列", { skip: !("string" in c) }, () => {
-        expect(String(new Decimal(...c.args))).toBe(c.string);
-      });
-
-      test("数値", { skip: !("number" in c) }, () => {
-        const d = new Decimal(...c.args);
-
-        expect(d.toNumber()).toBe(c.number);
-        expect(+d).toBe(c.number);
-      });
-
-      test(
-        "CBOR でエンコード/デコードできる",
-        { skip: !("string" in c) },
-        () => {
-          const input = new Decimal(...c.args);
-          const output = new Decimal(...c.args);
-          const bytes = encode(input);
-          const dt = decode(bytes, {
-            reviver: {
-              tagged(t) {
-                switch (t.tag) {
-                  case CBOR_TAG_STRING_DECIMAL:
-                    return new Decimal(t.value as any);
-
-                  default:
-                    return undefined;
-                }
-              },
-            },
-          });
-
-          expect(dt).toStrictEqual(output);
-        },
-      );
+  describe("有効な文字列", () => {
+    test(".toString()", () => {
+      expect((new Decimal("1.23e1")).toString()).toBe("12.3");
     });
-  }
+
+    test("テンプレートリテラル", () => {
+      expect(`${new Decimal("1.23e1")}`).toBe("12.3");
+    });
+
+    test("文字列へ暗黙の型変換", () => {
+      expect("" + new Decimal("1.23e1")).toBe("12.3");
+    });
+
+    test("数値へ暗黙の型変換", () => {
+      expect(+new Decimal("1.23e1")).toBe(12.3);
+    });
+
+    test("CBOR でエンコード/デコードできる", () => {
+      const input = new Decimal("1.23e1");
+      const output = new Decimal("1.23e1");
+      const bytes = encode(input);
+      const dt = decode(bytes, {
+        reviver: {
+          tagged(t) {
+            switch (t.tag) {
+              case CBOR_TAG_STRING_DECIMAL:
+                return new Decimal(t.value as any);
+
+              default:
+                return undefined;
+            }
+          },
+        },
+      });
+
+      expect(dt).toStrictEqual(output);
+    });
+
+    test(".toJSON()", () => {
+      const json = new Decimal("1.23e1").toJSON();
+
+      expect(json).toBe("12.3");
+    });
+
+    test(".toSurql()", () => {
+      const surql = new Decimal("1.23e1").toSurql();
+
+      expect(surql).toBe("12.3dec");
+    });
+
+    test(".structure()", () => {
+      const structure = new Decimal("1.23e1").structure();
+
+      expect(structure).toStrictEqual({
+        value: "12.3",
+        exponent: 1,
+        sign: 1,
+        singleDigits: [
+          1,
+          2,
+          3,
+        ],
+      });
+    });
+  });
+
+  describe("無効な文字列", () => {
+    test("インスタンスの作成に失敗する", () => {
+      expect(() => new Decimal("+3.14"))
+        .toThrowErrorMatchingSnapshot();
+    });
+  });
+
+  describe("有効な数値", () => {
+    test(".toString()", () => {
+      expect((new Decimal(3.14)).toString()).toBe("3.14");
+    });
+
+    test("テンプレートリテラル", () => {
+      expect(`${new Decimal(3.14)}`).toBe("3.14");
+    });
+
+    test("文字列へ暗黙の型変換", () => {
+      expect("" + new Decimal(3.14)).toBe("3.14");
+    });
+
+    test("数値へ暗黙の型変換", () => {
+      expect(+new Decimal(3.14)).toBe(3.14);
+    });
+
+    test("CBOR でエンコード/デコードできる", () => {
+      const input = new Decimal(3.14);
+      const output = new Decimal(3.14);
+      const bytes = encode(input);
+      const dt = decode(bytes, {
+        reviver: {
+          tagged(t) {
+            switch (t.tag) {
+              case CBOR_TAG_STRING_DECIMAL:
+                return new Decimal(t.value as any);
+
+              default:
+                return undefined;
+            }
+          },
+        },
+      });
+
+      expect(dt).toStrictEqual(output);
+    });
+
+    test(".toJSON()", () => {
+      const json = new Decimal(3.14).toJSON();
+
+      expect(json).toBe("3.14");
+    });
+
+    test(".toSurql()", () => {
+      const surql = new Decimal(3.14).toSurql();
+
+      expect(surql).toBe("3.14dec");
+    });
+
+    test(".structure()", () => {
+      const structure = new Decimal(3.14).structure();
+
+      expect(structure).toStrictEqual({
+        value: "3.14",
+        exponent: 0,
+        sign: 1,
+        singleDigits: [
+          3,
+          1,
+          4,
+        ],
+      });
+    });
+  });
+
+  describe("無効な数値", () => {
+    test("インスタンスの作成に失敗する", () => {
+      expect(() => new Decimal(NaN))
+        .toThrowErrorMatchingSnapshot();
+    });
+  });
 });
 
 test("big.js の静的プロパティーにアクセスできる", () => {

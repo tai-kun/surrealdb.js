@@ -6,6 +6,7 @@ import {
   type EngineAbcConfig,
   type EngineEvents,
   OPEN,
+  processEndpoint,
 } from "@tai-kun/surrealdb/engine";
 import {
   CircularEngineReferenceError,
@@ -223,15 +224,7 @@ export default class BasicClient {
     options: ClientConnectOptions | undefined = {},
   ): Promise<void> {
     const conn = this.getConnectionInfo();
-    endpoint = new URL(endpoint); // コピー
-
-    if (!endpoint.pathname.endsWith("/rpc")) {
-      if (!endpoint.pathname.endsWith("/")) {
-        endpoint.pathname += "/";
-      }
-
-      endpoint.pathname += "rpc";
-    }
+    endpoint = processEndpoint(endpoint);
 
     if (conn?.state === OPEN) {
       if (conn.endpoint.href === endpoint.href) {

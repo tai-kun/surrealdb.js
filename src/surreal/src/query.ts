@@ -2,11 +2,11 @@ import type { InferSlotVars } from "@tai-kun/surrealdb/clients/standard";
 import { QueryFailedError } from "@tai-kun/surrealdb/errors";
 import type { PreparedQueryLike, SlotLike } from "@tai-kun/surrealdb/types";
 import type { Simplify } from "type-fest";
-import rpc, { type InlineRpcRequestOptions } from "./rpc";
+import rpc, { type InlineRpcOptions } from "./rpc";
 
 type Override<T, U> = Simplify<Omit<T, keyof U> & U>;
 
-export type QueryOptions = Omit<InlineRpcRequestOptions, "url">;
+export type InlineQueryOptions = InlineRpcOptions;
 
 /**
  * @experimental
@@ -15,7 +15,7 @@ function query<T extends readonly unknown[] = unknown[]>(
   endpoint: string | URL,
   surql: string,
   vars?: { readonly [p: string]: unknown } | undefined,
-  options?: QueryOptions | undefined,
+  options?: InlineQueryOptions | undefined,
 ): Promise<T>;
 
 /**
@@ -28,7 +28,7 @@ function query<T extends readonly unknown[]>(
     readonly __type: T;
   }>,
   vars?: { readonly [p: string]: unknown } | undefined,
-  options?: QueryOptions | undefined,
+  options?: InlineQueryOptions | undefined,
 ): Promise<T>;
 
 /**
@@ -41,19 +41,17 @@ function query<S extends SlotLike, T extends readonly unknown[]>(
     readonly __type: T;
   }>,
   vars: Simplify<InferSlotVars<S> & { readonly [p: string]: unknown }>,
-  options?: QueryOptions | undefined,
+  options?: InlineQueryOptions | undefined,
 ): Promise<T>;
 
 async function query(
-  url: string | URL,
+  endpoint: string | URL,
   surql: string | PreparedQueryLike,
   vars?: { readonly [p: string]: unknown } | undefined,
-  options?: QueryOptions | undefined,
+  options?: InlineQueryOptions | undefined,
 ): Promise<unknown[]> {
-  const results = await rpc({
+  const results = await rpc(endpoint, "query", {
     ...options,
-    url,
-    method: "query",
     params: [surql, vars],
   });
   const output: unknown[] = [];

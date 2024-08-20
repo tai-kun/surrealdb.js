@@ -3,53 +3,54 @@ import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { PreparedQueryLike, SlotLike } from "@tai-kun/surrealdb/types";
 import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 import type { Simplify } from "type-fest";
-import req, { type QueryOptions } from "./query";
+import req, { type InlineQueryOptions } from "./query";
 
 type Override<T, U> = Simplify<Omit<T, keyof U> & U>;
 
-export type CreateQueryOptions =
-  & Omit<QueryOptions, "signal">
-  & { readonly timeout?: number | undefined };
+export type CreateInlineQueryOptions = Omit<InlineQueryOptions, "signal"> & {
+  readonly timeout?: number | undefined;
+  readonly bindings?: { readonly [p: string]: unknown };
+};
 
 /**
  * @experimental
  */
 export default function createQuery(
   endpoint: string | URL,
-  options?: CreateQueryOptions | undefined,
+  options?: CreateInlineQueryOptions | undefined,
 ): {
-  query<T extends readonly unknown[] = unknown[]>(
+  <T extends readonly unknown[] = unknown[]>(
     surql: string,
     vars?: { readonly [p: string]: unknown } | undefined,
-    options?: QueryOptions | undefined,
+    options?: InlineQueryOptions | undefined,
   ): Promise<T>;
-  query<T extends readonly unknown[]>(
+  <T extends readonly unknown[]>(
     surql: Override<PreparedQueryLike, {
       readonly slots: readonly (never | SlotLike<string, false>)[];
       readonly __type: T;
     }>,
     vars?: { readonly [p: string]: unknown } | undefined,
-    options?: QueryOptions | undefined,
+    options?: InlineQueryOptions | undefined,
   ): Promise<T>;
-  query<S extends SlotLike, T extends readonly unknown[]>(
+  <S extends SlotLike, T extends readonly unknown[]>(
     surql: Override<PreparedQueryLike, {
       readonly slots: readonly S[];
       readonly __type: T;
     }>,
     vars: Simplify<InferSlotVars<S> & { readonly [p: string]: unknown }>,
-    options?: QueryOptions | undefined,
+    options?: InlineQueryOptions | undefined,
   ): Promise<T>;
 } {
   const {
     timeout = 5000,
+    bindings,
     ...defaults
   } = options || {};
 
-  // @ts-expect-error
   return async function query(
     surql: string | PreparedQueryLike,
     vars?: { readonly [p: string]: unknown } | undefined,
-    options: QueryOptions | undefined = {},
+    options: InlineQueryOptions | undefined = {},
   ) {
     const {
       fetch = defaults.fetch,
@@ -62,6 +63,17 @@ export default function createQuery(
 
     if (defaults.token !== undefined && tokenProp !== undefined) {
       throw new SurrealTypeError("token === undefined", typeof tokenProp);
+    }
+
+    if (bindings) {
+      if (vars) {
+        vars = {
+          ...bindings,
+          ...vars,
+        };
+      } else {
+        vars = bindings;
+      }
     }
 
     return await req(endpoint, surql as string, vars, {

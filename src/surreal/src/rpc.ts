@@ -34,7 +34,7 @@ export type InlineRpcFetcher = (
   init: InlineRpcFetcherRequestInit,
 ) => Response | PromiseLike<Response>;
 
-export type InlineRpctOptions = {
+export type InlineRpcOptions = {
   readonly formatter?: Formatter | undefined;
   readonly namespace?: string | undefined;
   readonly database?: string | undefined;
@@ -69,7 +69,7 @@ async function rpc(
   endpoint: string | URL,
   method: InlineRpcMethod,
   options:
-    | (InlineRpctOptions & { readonly params?: any })
+    | (InlineRpcOptions & { readonly params?: any })
     | undefined = {},
 ): Promise<unknown> {
   const {
@@ -194,7 +194,7 @@ interface RpcWithRequiredParams<M extends InlineRpcMethod> {
   //   endpoint: string | URL,
   //   method: M,
   //   params: RpcParams<M>,
-  //   options?: InlineRpctOptions | undefined,
+  //   options?: InlineRpcOptions | undefined,
   // ): Promise<T>;
   /**
    * @experimental
@@ -202,7 +202,7 @@ interface RpcWithRequiredParams<M extends InlineRpcMethod> {
   <T extends RpcResultMapping[M]>(
     endpoint: string | URL,
     method: M,
-    options: InlineRpctOptions & { readonly params: RpcParams<M> },
+    options: InlineRpcOptions & { readonly params: RpcParams<M> },
   ): Promise<T>;
 }
 
@@ -212,7 +212,7 @@ interface RpcWithOptionalParams<M extends InlineRpcMethod> {
   //   endpoint: string | URL,
   //   method: M,
   //   params?: RpcParams<M>,
-  //   options?: InlineRpctOptions | undefined,
+  //   options?: InlineRpcOptions | undefined,
   // ): Promise<T>;
   /**
    * @experimental
@@ -221,7 +221,7 @@ interface RpcWithOptionalParams<M extends InlineRpcMethod> {
     endpoint: string | URL,
     method: M,
     options?:
-      | (InlineRpctOptions & { readonly params?: RpcParams<M> })
+      | (InlineRpcOptions & { readonly params?: RpcParams<M> })
       | undefined,
   ): Promise<T>;
 }

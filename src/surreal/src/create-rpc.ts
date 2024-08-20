@@ -2,24 +2,24 @@ import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { RpcParams, RpcResultMapping } from "@tai-kun/surrealdb/types";
 import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 import type { UnionToIntersection, ValueOf } from "type-fest";
-import rpc_, { type InlineRpcMethod, type InlineRpctOptions } from "./rpc";
+import rpc_, { type InlineRpcMethod, type InlineRpcOptions } from "./rpc";
 
 const callRpc = rpc_ as (
   endpoint: string | URL,
   method: InlineRpcMethod,
-  options: InlineRpctOptions & {
+  options: InlineRpcOptions & {
     readonly params: RpcParams<InlineRpcMethod> | undefined;
   },
 ) => Promise<unknown>;
 
-export type CreateInlineRpctOptions = Omit<InlineRpctOptions, "signal"> & {
+export type CreateInlineRpcOptions = Omit<InlineRpcOptions, "signal"> & {
   readonly timeout?: number | undefined;
 };
 
 interface RpcWithRequiredParams<M extends InlineRpcMethod> {
   <T extends RpcResultMapping[M]>(
     method: M,
-    options: InlineRpctOptions & { readonly params: RpcParams<M> },
+    options: InlineRpcOptions & { readonly params: RpcParams<M> },
   ): Promise<T>;
 }
 
@@ -27,7 +27,7 @@ interface RpcWithOptionalParams<M extends InlineRpcMethod> {
   <T extends RpcResultMapping[M]>(
     method: M,
     options?:
-      | (InlineRpctOptions & { readonly params?: RpcParams<M> })
+      | (InlineRpcOptions & { readonly params?: RpcParams<M> })
       | undefined,
   ): Promise<T>;
 }
@@ -37,7 +37,7 @@ interface RpcWithOptionalParams<M extends InlineRpcMethod> {
  */
 export default function createRpc(
   endpoint: string | URL,
-  options: CreateInlineRpctOptions | undefined = {},
+  options: CreateInlineRpcOptions | undefined = {},
 ): UnionToIntersection<
   ValueOf<
     {
@@ -56,7 +56,7 @@ export default function createRpc(
   async function rpc(
     method: InlineRpcMethod,
     options:
-      | (InlineRpctOptions & { readonly params?: any })
+      | (InlineRpcOptions & { readonly params?: any })
       | undefined = {},
   ): Promise<any> {
     const {

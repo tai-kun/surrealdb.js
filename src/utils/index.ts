@@ -1,3 +1,6 @@
+export type * from "./src/diagnostics-channel";
+export { default as channel } from "./src/diagnostics-channel";
+
 export {
   BACKTICK,
   BRACKET_L,

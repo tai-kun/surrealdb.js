@@ -74,6 +74,7 @@ export default defineConfig({
     ],
   },
   define: {
+    __DEV__: "true",
     "process.env.RUNTIME": JSON.stringify(runtime),
     "process.env.BROWSER": JSON.stringify(`${browser ? 1 : 0}`),
   },

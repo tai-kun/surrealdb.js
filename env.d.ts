@@ -17,3 +17,5 @@ declare namespace NodeJS {
       | "webkit";
   }
 }
+
+declare var __DEV__: boolean;

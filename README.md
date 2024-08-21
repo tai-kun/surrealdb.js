@@ -56,7 +56,7 @@ const { Surreal } = initSurreal({
 
 ## Requirements
 
-SurrealDB v2.0.0 (currently in alpha)
+SurrealDB v2 (currently in alpha)
 
 ## Recommended environment
 
@@ -81,7 +81,7 @@ Do not expect sub-millisecond precision for dates prior to the UNIX epoch.
 ## TODO
 
 - [x] Implement basic features
-- [ ] Add functionality to improve query handling
+- [x] Add functionality to improve query handling
 - [ ] Add connection pooling
 - [ ] Add tests
 - [ ] Improve documentation

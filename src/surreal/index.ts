@@ -1,3 +1,6 @@
+export type * from "./src/auto-reconnect";
+export { default as autoReconnect } from "./src/auto-reconnect";
+
 export type * from "./src/create-query";
 export { default as createQuery } from "./src/create-query";
 

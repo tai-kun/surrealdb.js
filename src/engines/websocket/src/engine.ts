@@ -33,6 +33,7 @@ import {
   getTimeoutSignal,
   mutex,
   Serial,
+  StatefulPromise,
   type TaskEmitter,
   throwIfAborted,
 } from "@tai-kun/surrealdb/utils";
@@ -58,7 +59,7 @@ export type CreateWebSocket = (
 
 export interface EngineConfig extends EngineAbcConfig {
   readonly createWebSocket: CreateWebSocket;
-  readonly pingInterval?: number | undefined;
+  readonly pingInterval?: number | (() => number) | undefined;
 }
 
 export default class WebSocketEngine extends EngineAbc {
@@ -67,12 +68,18 @@ export default class WebSocketEngine extends EngineAbc {
   protected ws: WebSocket | null = null;
   protected readonly id = new Serial();
   protected readonly newWs: CreateWebSocket;
-  protected readonly pingInterval: number;
+  protected readonly pingInterval: () => number;
 
   constructor(config: EngineConfig) {
     super(config);
-    this.newWs = config.createWebSocket;
-    this.pingInterval = Math.max(1_000, config.pingInterval ?? 30_000);
+    const {
+      pingInterval,
+      createWebSocket,
+    } = config;
+    this.newWs = createWebSocket;
+    this.pingInterval = typeof pingInterval === "function"
+      ? pingInterval
+      : (ms => () => ms)(Math.max(3_000, pingInterval ?? 30_000));
   }
 
   @mutex
@@ -97,6 +104,10 @@ export default class WebSocketEngine extends EngineAbc {
     );
     const ws = await this.newWs(new URL(endpoint), this.fmt.wsFormat);
     ws.addEventListener("error", evt => {
+      if (__DEV__) {
+        channel.publish("websocket:ws:error", evt);
+      }
+
       this.ee.emit(
         "error",
         new WebSocketEngineError(
@@ -119,6 +130,10 @@ export default class WebSocketEngine extends EngineAbc {
       );
     });
     ws.addEventListener("close", async evt => {
+      if (__DEV__) {
+        channel.publish("websocket:ws:close", evt);
+      }
+
       this.ws = null;
       this.id.reset();
 
@@ -166,7 +181,11 @@ export default class WebSocketEngine extends EngineAbc {
         );
       }
     });
-    ws.addEventListener("open", async () => {
+    ws.addEventListener("open", async evt => {
+      if (__DEV__) {
+        channel.publish("websocket:ws:open", evt);
+      }
+
       try {
         this.ws = ws;
         await this.transition(
@@ -197,6 +216,10 @@ export default class WebSocketEngine extends EngineAbc {
       }
     });
     ws.addEventListener("message", async evt => {
+      if (__DEV__) {
+        channel.publish("websocket:ws:message", evt);
+      }
+
       try {
         // TODO(tai-kun): Blob の .stream を活用できるように。CBOR の非同期デコードを実装
         // したけど、ボディサイズによっては同期デコードの方が高速だと思うので、そのへんどうするか検討
@@ -289,51 +312,81 @@ export default class WebSocketEngine extends EngineAbc {
       ]);
     }
 
-    const pingTimeoutMs = Math.min(this.pingInterval, 5_100) - 100;
-    let pinger: any = setInterval(async () => {
-      try {
-        if (__DEV__) {
-          channel.publish("websocket:ping", {});
-        }
-
-        const rpcResp = await this.rpc({
-          signal: getTimeoutSignal(pingTimeoutMs),
-          request: {
-            method: "ping",
-          },
+    const createPromise = () => {
+      let i: any,
+        int: number,
+        res: (v: boolean) => void,
+        pro = new StatefulPromise<boolean>(r => {
+          i = setTimeout(res = r, int = this.pingInterval(), false);
         });
 
-        if (rpcResp.error) {
-          throw new RpcResponseError(rpcResp, {
-            cause: {
-              endpoint: endpoint.href,
-            },
-          });
+      return Object.assign(pro, {
+        interval: int!, // 現在未使用
+        cancel() {
+          if (pro.state === "pending") {
+            clearTimeout(i);
+            res(true);
+          }
+        },
+      });
+    };
+    let promise = createPromise();
+    const pinger = (async () => {
+      while (true) {
+        const canceled = await promise;
+
+        if (canceled) {
+          break;
         }
 
-        if (__DEV__) {
-          channel.publish("websocket:pong", {});
-        }
-      } catch (e) {
-        this.ee.emit(
-          "error",
-          new WebSocketEngineError(
-            // ping メッセージの送信に失敗したエラーを、
-            // カスタムエラーコード 3153 として報告します。
-            3153,
-            "Failed to send a ping message.",
-            {
-              cause: e,
-              fatal: false,
+        try {
+          if (__DEV__) {
+            channel.publish("websocket:ping", { type: "ping" });
+          }
+
+          const timeout = 5_000;
+          const rpcResp = await this.rpc({
+            signal: getTimeoutSignal(timeout),
+            request: {
+              method: "ping",
             },
-          ),
-        );
+          });
+
+          if (rpcResp.error) {
+            throw new RpcResponseError(rpcResp, {
+              cause: {
+                endpoint: endpoint.href,
+              },
+            });
+          }
+
+          if (__DEV__) {
+            channel.publish("websocket:pong", { type: "pong" });
+          }
+        } catch (e) {
+          this.ee.emit(
+            "error",
+            new WebSocketEngineError(
+              // ping メッセージの送信に失敗したエラーを、
+              // カスタムエラーコード 3153 として報告します。
+              3153,
+              "Failed to send a ping message.",
+              {
+                cause: e,
+                fatal: false,
+              },
+            ),
+          );
+        } finally {
+          promise = createPromise();
+        }
       }
-    }, this.pingInterval);
-    this.ee.on(CLOSING, function stopPinger(this: TaskEmitter<EngineEventMap>) {
-      this.off(CLOSING, stopPinger);
-      clearInterval(pinger);
-      pinger = null;
+    })();
+
+    this.ee.on(CLOSING, async function stop(this: TaskEmitter<EngineEventMap>) {
+      this.off(CLOSING, stop);
+      promise.cancel();
+      await pinger;
     });
   }
 

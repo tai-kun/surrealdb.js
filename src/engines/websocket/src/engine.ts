@@ -6,6 +6,7 @@ import {
   type DisconnectArgs,
   EngineAbc,
   type EngineAbcConfig,
+  type EngineEventMap,
   OPEN,
   processQueryRequest,
   type RpcArgs,
@@ -28,10 +29,11 @@ import type {
   RpcResult,
 } from "@tai-kun/surrealdb/types";
 import {
+  channel,
   getTimeoutSignal,
-  makeAbortApi,
   mutex,
   Serial,
+  type TaskEmitter,
   throwIfAborted,
 } from "@tai-kun/surrealdb/utils";
 import { isLiveResult, isRpcResponse } from "@tai-kun/surrealdb/validator";
@@ -74,18 +76,16 @@ export default class WebSocketEngine extends EngineAbc {
   }
 
   @mutex
-  async connect(
-    {
-      endpoint,
-      signal: timeoutSignal,
-    }: ConnectArgs,
-  ): Promise<void> {
-    if (this.state === OPEN) {
+  async connect({ endpoint, signal }: ConnectArgs): Promise<void> {
+    throwIfAborted(signal);
+    const conn = this.getConnectionInfo();
+
+    if (conn.state === OPEN) {
       return;
     }
 
-    if (this.state !== CLOSED) {
-      unreachable(this.state as never);
+    if (conn.state !== CLOSED) {
+      unreachable(conn as never);
     }
 
     await this.transition(
@@ -95,11 +95,6 @@ export default class WebSocketEngine extends EngineAbc {
       },
       () => CLOSED,
     );
-    const [signal, abort] = makeAbortApi(timeoutSignal);
-    const openOrError = [
-      this.ee.once(OPEN, { signal }),
-      this.ee.once("error", { signal }),
-    ];
     const ws = await this.newWs(new URL(endpoint), this.fmt.wsFormat);
     ws.addEventListener("error", evt => {
       this.ee.emit(
@@ -271,20 +266,36 @@ export default class WebSocketEngine extends EngineAbc {
       }
     });
 
-    const [result] = await Promise.race(openOrError);
-    abort();
+    const openPromise = this.ee.once(OPEN, { signal });
+    const errorPromise = this.ee.once("error", { signal });
 
-    if (result instanceof Error) {
-      throw result;
+    try {
+      const [result] = await Promise.race([
+        openPromise,
+        errorPromise,
+      ]);
+
+      if (result instanceof Error) {
+        throw result;
+      }
+
+      if ("error" in result) {
+        throw result.error;
+      }
+    } finally {
+      await Promise.all([
+        openPromise.cancel(),
+        errorPromise.cancel(),
+      ]);
     }
 
-    if ("error" in result) {
-      throw result.error;
-    }
-
-    const pingTimeoutMs = Math.min(this.pingInterval, 5_000);
+    const pingTimeoutMs = Math.min(this.pingInterval, 5_100) - 100;
     let pinger: any = setInterval(async () => {
       try {
+        if (__DEV__) {
+          channel.publish("websocket:ping", {});
+        }
+
         const rpcResp = await this.rpc({
           signal: getTimeoutSignal(pingTimeoutMs),
           request: {
@@ -298,6 +309,10 @@ export default class WebSocketEngine extends EngineAbc {
               endpoint: endpoint.href,
             },
           });
+        }
+
+        if (__DEV__) {
+          channel.publish("websocket:pong", {});
         }
       } catch (e) {
         this.ee.emit(
@@ -315,9 +330,10 @@ export default class WebSocketEngine extends EngineAbc {
         );
       }
     }, this.pingInterval);
-    this.ee.on(CLOSING, () => {
+    this.ee.on(CLOSING, function stopPinger(this: TaskEmitter<EngineEventMap>) {
+      this.off(CLOSING, stopPinger);
       clearInterval(pinger);
-      pinger = undefined;
+      pinger = null;
     });
   }
 
@@ -325,52 +341,43 @@ export default class WebSocketEngine extends EngineAbc {
   async disconnect({ signal }: DisconnectArgs): Promise<void> {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
-    const close = async () => {
-      const closed = this.ee.once(CLOSED, { signal });
 
-      if (
-        this.ws
-        && this.ws.readyState !== CLOSED
-        && this.ws.readyState !== CLOSING
-      ) {
-        this.ws.close();
-      } else {
-        this.ee.emit(CLOSED, {
-          state: CLOSED,
-        });
-      }
+    if (conn.state === CLOSED) {
+      return;
+    }
 
-      const [result] = await closed;
+    if (conn.state !== OPEN) {
+      unreachable(conn as never);
+    }
 
-      if ("error" in result) {
-        throw result.error;
-      }
-    };
+    await this.transition(
+      {
+        state: CLOSING,
+        endpoint: conn.endpoint,
+      },
+      () => ({
+        state: CLOSING,
+        endpoint: conn.endpoint,
+      }),
+    );
+    const promiseClosed = this.ee.once(CLOSED, { signal });
 
-    switch (conn.state) {
-      case OPEN:
-        await this.transition(
-          {
-            state: CLOSING,
-            endpoint: conn.endpoint,
-          },
-          () => ({
-            state: CLOSING,
-            endpoint: conn.endpoint,
-          }),
-        );
-        await close();
-        break;
+    if (
+      this.ws
+      && this.ws.readyState !== CLOSED
+      && this.ws.readyState !== CLOSING
+    ) {
+      this.ws.close();
+    } else {
+      this.ee.emit(CLOSED, {
+        state: CLOSED,
+      });
+    }
 
-      case CLOSING:
-        await close();
-        break;
+    const [result] = await promiseClosed;
 
-      case CLOSED:
-        break;
-
-      default:
-        unreachable();
+    if ("error" in result) {
+      throw result.error;
     }
   }
 

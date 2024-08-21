@@ -40,6 +40,7 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#on)
    */
   on<K extends keyof T>(
+    this: this,
     event: K,
     listener: TaskListener<T[K]>,
   ): void {
@@ -52,7 +53,8 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
 
       listeners.push({
         original: listener,
-        dispatch: args => this._queue.add(rArgs => listener(rArgs, ...args)),
+        dispatch: args =>
+          this._queue.add(rArgs => listener.apply(this, [rArgs, ...args])),
       });
     }
   }
@@ -86,8 +88,11 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   once<K extends keyof T>(
     event: K,
     options: TaskListenerOptions | undefined = {},
-  ): StatefulPromise<T[K]> {
-    return new StatefulPromise<T[K]>((resolve, reject) => {
+  ): StatefulPromise<T[K]> & {
+    readonly cancel: () => StatefulPromise<void>;
+  } {
+    let cancelFn: () => StatefulPromise<void>;
+    const promise = new StatefulPromise<T[K]>((resolve, reject) => {
       const { signal } = options;
 
       if (signal?.aborted) {
@@ -95,14 +100,26 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
         return;
       }
 
-      const taskListener: TaskListener<T[K]> = (_, ...args) => {
+      const removeAllListeners = () => {
         signal?.removeEventListener("abort", abortHandler);
         this.off(event, taskListener);
+      };
+      const taskListener: TaskListener<T[K]> = (_, ...args) => {
+        removeAllListeners();
         resolve(args);
       };
       const abortHandler = () => {
         this.off(event, taskListener);
         reject(signal!.reason);
+      };
+      cancelFn = function cancel(this: StatefulPromise<T[K]>) {
+        removeAllListeners();
+
+        if (this.state === "pending") {
+          reject("canceled");
+        }
+
+        return this.then(() => {}, () => {});
       };
 
       try {
@@ -110,15 +127,19 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
         signal?.addEventListener("abort", abortHandler, { once: true });
       } catch (e) {
         try {
-          this.off(event, taskListener);
+          signal?.removeEventListener("abort", abortHandler);
         } catch {}
 
         try {
-          signal?.removeEventListener("abort", abortHandler);
+          this.off(event, taskListener);
         } catch {}
 
         reject(e);
       }
+    });
+
+    return Object.assign(promise, {
+      cancel: cancelFn!.bind(promise),
     });
   }
 

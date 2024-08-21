@@ -8,7 +8,7 @@ export {
   type DisconnectArgs,
   EngineAbc,
   type EngineAbcConfig,
-  type EngineEvents,
+  type EngineEventMap,
   OPEN,
   type RpcArgs,
   type TransitionArgs,

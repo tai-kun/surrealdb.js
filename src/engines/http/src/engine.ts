@@ -3,6 +3,7 @@ import {
   CLOSING,
   type ConnectArgs,
   CONNECTING,
+  type DisconnectArgs,
   EngineAbc,
   type EngineAbcConfig,
   OPEN,
@@ -23,7 +24,7 @@ import type {
   RpcQueryRequest,
   RpcResult,
 } from "@tai-kun/surrealdb/types";
-import { isBrowser, mutex } from "@tai-kun/surrealdb/utils";
+import { isBrowser, mutex, throwIfAborted } from "@tai-kun/surrealdb/utils";
 import { isRpcResponse } from "@tai-kun/surrealdb/validator";
 
 export interface HttpFetcherRequestInit {
@@ -61,15 +62,17 @@ export default class HttpEngine extends EngineAbc {
       || (isBrowser() ? window.fetch.bind(window) : fetch);
   }
 
-  // TODO(tai-kun): signal
   @mutex
-  async connect({ endpoint }: ConnectArgs): Promise<void> {
-    if (this.state === OPEN) {
+  async connect({ endpoint, signal }: ConnectArgs): Promise<void> {
+    throwIfAborted(signal);
+    const conn = this.getConnectionInfo();
+
+    if (conn.state === OPEN) {
       return;
     }
 
-    if (this.state !== CLOSED) {
-      unreachable();
+    if (conn.state !== CLOSED) {
+      unreachable(conn as never);
     }
 
     await this.transition(
@@ -88,40 +91,31 @@ export default class HttpEngine extends EngineAbc {
     );
   }
 
-  // TODO(tai-kun): signal
   @mutex
-  async disconnect(): Promise<void> {
+  async disconnect({ signal }: DisconnectArgs): Promise<void> {
+    throwIfAborted(signal);
     const conn = this.getConnectionInfo();
-    const close = async () => {
-      await this.transition(CLOSED, () => CLOSED);
-    };
 
-    switch (conn.state) {
-      case OPEN:
-        this.vars = {};
-        await this.transition(
-          {
-            state: CLOSING,
-            endpoint: conn.endpoint,
-          },
-          () => ({
-            state: CLOSING,
-            endpoint: conn.endpoint,
-          }),
-        );
-        await close();
-        break;
-
-      case CLOSING:
-        await close();
-        break;
-
-      case CLOSED:
-        break;
-
-      default:
-        unreachable();
+    if (conn.state === CLOSED) {
+      return;
     }
+
+    if (conn.state !== OPEN) {
+      unreachable(conn as never);
+    }
+
+    this.vars = {};
+    await this.transition(
+      {
+        state: CLOSING,
+        endpoint: conn.endpoint,
+      },
+      () => ({
+        state: CLOSING,
+        endpoint: conn.endpoint,
+      }),
+    );
+    await this.transition(CLOSED, () => CLOSED);
   }
 
   async rpc({ request, signal }: RpcArgs): Promise<IdLessRpcResponse> {

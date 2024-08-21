@@ -106,7 +106,7 @@ function transArgsToConnInfo(args: TransitionArgs): ConnectionInfo {
   return conn;
 }
 
-export type EngineEvents =
+export type EngineEventMap =
   & {
     // 状態遷移に関するイベント。
     [S in ConnectionState]: [
@@ -129,7 +129,7 @@ export type EngineEvents =
   };
 
 export interface EngineAbcConfig {
-  readonly emitter: TaskEmitter<EngineEvents>;
+  readonly emitter: TaskEmitter<EngineEventMap>;
   readonly formatter: Formatter;
   readonly validator: Validator;
 }
@@ -154,7 +154,7 @@ export const CLOSING = 2 as const satisfies ConnectionState;
 export const CLOSED = 3 as const satisfies ConnectionState;
 
 export abstract class EngineAbc {
-  protected ee: TaskEmitter<EngineEvents>;
+  protected ee: TaskEmitter<EngineEventMap>;
   protected fmt: Formatter;
   protected v8n: Validator;
 

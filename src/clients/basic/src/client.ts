@@ -4,7 +4,7 @@ import {
   type ConnectionState,
   type EngineAbc,
   type EngineAbcConfig,
-  type EngineEvents,
+  type EngineEventMap,
   OPEN,
   processEndpoint,
 } from "@tai-kun/surrealdb/engine";
@@ -63,7 +63,7 @@ export interface ClientRpcOptions {
 }
 
 export default class BasicClient {
-  protected readonly ee: TaskEmitter<EngineEvents> = new TaskEmitter();
+  protected readonly ee: TaskEmitter<EngineEventMap> = new TaskEmitter();
   protected readonly fmt: Formatter;
   protected readonly v8n: Validator;
   protected eng: EngineAbc | null = null;
@@ -182,9 +182,9 @@ export default class BasicClient {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#on)
    */
-  on<K extends keyof EngineEvents>(
+  on<K extends keyof EngineEventMap>(
     event: K,
-    listener: TaskListener<EngineEvents[K]>,
+    listener: TaskListener<EngineEventMap[K]>,
   ): void {
     this.ee.on(event, listener);
   }
@@ -192,9 +192,9 @@ export default class BasicClient {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#off)
    */
-  off<K extends keyof EngineEvents>(
+  off<K extends keyof EngineEventMap>(
     event: K,
-    listener: TaskListener<EngineEvents[K]>,
+    listener: TaskListener<EngineEventMap[K]>,
   ): void {
     // 誤ってすべてのイベントリスナーを解除してしまわないようにするため、
     // listener が無い場合はエラーを投げる。
@@ -208,10 +208,10 @@ export default class BasicClient {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#once)
    */
-  once<K extends keyof EngineEvents>(
+  once<K extends keyof EngineEventMap>(
     event: K,
     options?: TaskListenerOptions | undefined,
-  ): StatefulPromise<EngineEvents[K]> {
+  ): StatefulPromise<EngineEventMap[K]> {
     return this.ee.once(event, options);
   }
 

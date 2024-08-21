@@ -27,10 +27,9 @@ export default function initSurreal<C extends CC>(
 ): InitializedSurreal<C> {
   const {
     Client,
-    engines,
     formatter,
-    validator,
     varPrefix,
+    ...others
   } = init;
 
   /**
@@ -43,9 +42,8 @@ export default function initSurreal<C extends CC>(
      */
     constructor() {
       super({
-        engines,
         formatter,
-        validator,
+        ...others,
       });
     }
 

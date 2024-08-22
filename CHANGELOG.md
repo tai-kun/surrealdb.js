@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.2](https://github.com/tai-kun/surrealdb.js/compare/v1.4.1...v1.4.2) (2024-08-22)
+
+
+### Bug Fixes
+
+* **clients/standard:** 変数名と型を自明に ([9d88437](https://github.com/tai-kun/surrealdb.js/commit/9d88437fb3aee51d60c1e60423ff210f7ddd32be))
+* **data-types/standard:** Decimal のstructure を encodable から拡張する ([9c64683](https://github.com/tai-kun/surrealdb.js/commit/9c646831a7b97bedec115c6d9624ec1b8ccdebe8))
+* pinger を正しく終了させる ([c879c14](https://github.com/tai-kun/surrealdb.js/commit/c879c148c93e384f17d49bc7f402ae612562cdb6))
+* **surreal:** クライエントに引数をすべて渡せていなかった ([92549e7](https://github.com/tai-kun/surrealdb.js/commit/92549e726ad30700f996b35987919338609842fe))
+
 ## [1.4.1](https://github.com/tai-kun/surrealdb.js/compare/v1.4.0...v1.4.1) (2024-08-16)
 
 

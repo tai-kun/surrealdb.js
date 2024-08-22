@@ -38,9 +38,8 @@ jobs:
           - "1.1.13"
           - "latest"
         surrealdb-version:
-          - "alpha"
-          # - "v2.0.0"
-          # - "latest"
+          - "v1.5.0"
+          - "v1.5.4"
     steps:
       - uses: actions/checkout@v4
 

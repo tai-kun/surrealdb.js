@@ -1,0 +1,32 @@
+---
+title: Inline Queries
+banner:
+  content: This is an experimental feature and the API is subject to frequent changes.
+---
+
+Inline queries are functions that allow you to execute a one-time custom query on the fly without creating an instance of the `Surreal` class. The usage is almost identical to the [`.query()`](/en/guides/querying#query) method. However, please note that `JsonFormatter` is used by default.
+
+### Import
+
+```ts
+import { query } from "@tai-kun/surrealdb";
+```
+
+### Example
+
+```ts
+import { query, rpc } from "@tai-kun/surrealdb";
+
+const token = await rpc("http://127.0.0.1:8000", "signin", {
+  params: [{
+    user: "root",
+    pass: "root",
+  }],
+});
+
+const results = await query("http://127.0.0.1:8000", "RETURN 42", {}, {
+  token,
+  namespace: "test",
+  database: "test",
+});
+```

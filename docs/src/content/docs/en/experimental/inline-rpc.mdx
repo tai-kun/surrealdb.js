@@ -1,0 +1,26 @@
+---
+title: Inline RPC
+banner:
+  content: This is an experimental feature and the API may change frequently.
+---
+
+Inline RPCs are functions that execute one-time RPCs without creating an instance of the `Surreal` class. They are used similarly to the `.rpc()` method. Note, however, that the `JsonFormatter` is used by default.
+
+### Import
+
+```ts
+import { rpc } from "@tai-kun/surrealdb";
+```
+
+### Example
+
+```ts
+import { rpc } from "@tai-kun/surrealdb";
+
+const token = await rpc("http://127.0.0.1:8000", "signin", {
+  params: [{
+    user: "root",
+    pass: "root",
+  }],
+});
+```

@@ -76,49 +76,35 @@ export default defineConfig({
                 ja: "事前に定義されたクエリー",
               },
             },
-            // {
-            //   slug: "guides/live-queries",
-            //   label: "Live Queries",
-            //   translations: {
-            //     ja: "ライブクエリー",
-            //   },
-            // },
-            // {
-            //   slug: "guides/parameters",
-            //   label: "Parameters",
-            //   translations: {
-            //     ja: "パラメーター",
-            //   },
-            // },
-            // {
-            //   slug: "guides/http",
-            //   label: "HTTP Protocol",
-            //   translations: {
-            //     ja: "HTTP プロトコル",
-            //   },
-            // },
-            // {
-            //   slug: "guides/websocket",
-            //   label: "WebSocket Protocol",
-            //   translations: {
-            //     ja: "WebSocket プロトコル",
-            //   },
-            // },
-            // {
-            //   slug: "guides/cbor",
-            //   label: "CBOR",
-            // },
-            // {
-            //   slug: "guides/json",
-            //   label: "JSON",
-            // },
-            // {
-            //   slug: "guides/inline-rpc",
-            //   label: "Inline RPC",
-            //   translations: {
-            //     ja: "インライン RPC",
-            //   },
-            // },
+          ],
+        },
+        {
+          label: "Experimental",
+          translations: {
+            ja: "実験的",
+          },
+          items: [
+            {
+              slug: "experimental/inline-rpc",
+              label: "Inline RPC",
+              translations: {
+                ja: "インライン RPC",
+              },
+            },
+            {
+              slug: "experimental/inline-query",
+              label: "Inline Query",
+              translations: {
+                ja: "インラインクエリー",
+              },
+            },
+            {
+              slug: "experimental/auto-reconnect",
+              label: "Auto Reconnect",
+              translations: {
+                ja: "自動再接続",
+              },
+            },
           ],
         },
         {
@@ -127,28 +113,6 @@ export default defineConfig({
             ja: "リファレンス",
           },
           items: [
-            // {
-            //   slug: "reference/api-design",
-            //   label: "API Design",
-            //   translations: {
-            //     ja: "API 設計",
-            //   },
-            // },
-            // {
-            //   label: "values",
-            //   translations: {
-            //     ja: "values",
-            //   },
-            //   items: [
-            //     {
-            //       slug: "reference/values/data-types",
-            //       label: "Data Types",
-            //       translations: {
-            //         ja: "データ型",
-            //       },
-            //     },
-            //   ],
-            // },
             {
               label: "cbor",
               items: [

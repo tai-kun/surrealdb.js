@@ -37,12 +37,14 @@ import { Surreal } from "@tai-kun/surrealdb";
 const db = new Surreal();
 await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
 
-await db.signin({ user: "root", pass: "root" });
-
-const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
-console.log(results); // [ 42 ]
-
-await db.disconnect();
+try {
+  await db.signin({ user: "root", pass: "root" });
+  await db.use("sample_namespace", "sample_database");
+  const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
+  console.log(results); // [ 42 ]
+} finally {
+  await db.disconnect();
+}
 ```
 
 ## カスタマイズ

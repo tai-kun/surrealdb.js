@@ -1,6 +1,9 @@
 name: Bun
 
-on: push
+on:
+  push:
+    branches:
+      - v1
 
 jobs:
   small:

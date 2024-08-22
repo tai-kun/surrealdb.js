@@ -1,6 +1,9 @@
 name: Node.js
 
-on: push
+on:
+  push:
+    branches:
+      - v1
 
 jobs:
   small:

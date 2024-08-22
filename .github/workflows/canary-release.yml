@@ -3,7 +3,7 @@ name: Canary Release on NPM
 on:
   push:
     branches:
-      - main
+      - v1
     paths:
       - ".github/workflows/canary-release.yml"
       - "scripts/**"

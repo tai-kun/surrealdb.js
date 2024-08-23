@@ -4,7 +4,7 @@ import surreal from "../surreal.js";
 
 const TIME_REGEX = /^\d+(\.\d+)?\D+$/; // e.g. 26.536µs
 
-for (const { suite, url, Surreal } of surreal) {
+for (const { suite, eng, url, Surreal } of surreal) {
   describe(suite, () => {
     test("特定の名前空間に切り替える", async () => {
       await using db = new Surreal();
@@ -176,42 +176,85 @@ for (const { suite, url, Surreal } of surreal) {
       }
     });
 
-    test("選択しているデータベースを未選択に戻す", async () => {
-      await using db = new Surreal();
-      await db.connect(url());
-      await db.signin({ user: "root", pass: "root" });
+    test(
+      "選択しているデータベースを未選択に戻せない",
+      { skip: eng === "http" },
+      async () => {
+        await using db = new Surreal();
+        await db.connect(url());
+        await db.signin({ user: "root", pass: "root" });
 
-      await db.use("my_namespace", "my_database");
-      await db.use("my_namespace", null);
+        await db.use("my_namespace", "my_database");
+        await db.use("my_namespace", null);
 
-      {
-        const info = await db.queryRaw(/*surql*/ `
+        {
+          const info = await db.queryRaw(/*surql*/ `
           INFO FOR NS;
           INFO FOR DB;
         `);
 
-        expect(info).toStrictEqual([
-          {
-            result: expect.objectContaining({
-              databases: {},
-            }),
-            status: "OK",
-            time: expect.stringMatching(TIME_REGEX),
-          },
-          {
-            result: expect.objectContaining({
-              tables: {},
-            }),
-            status: "OK",
-            time: expect.stringMatching(TIME_REGEX),
-          },
-        ]);
-        expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
-          namespace: "my_namespace",
-          database: null,
-        }));
-      }
-    });
+          expect(info).toStrictEqual([
+            {
+              result: expect.objectContaining({
+                databases: {},
+              }),
+              status: "OK",
+              time: expect.stringMatching(TIME_REGEX),
+            },
+            {
+              result: expect.objectContaining({
+                tables: {},
+              }),
+              status: "OK",
+              time: expect.stringMatching(TIME_REGEX),
+            },
+          ]);
+          expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
+            namespace: "my_namespace",
+            database: null,
+          }));
+        }
+      },
+    );
+
+    test(
+      "選択しているデータベースを未選択に戻すとエラー",
+      { skip: eng === "websocket" },
+      async () => {
+        await using db = new Surreal();
+        await db.connect(url());
+        await db.signin({ user: "root", pass: "root" });
+
+        await db.use("my_namespace", "my_database");
+        await db.use("my_namespace", null);
+
+        {
+          const info = await db.queryRaw(/*surql*/ `
+          INFO FOR NS;
+          INFO FOR DB;
+        `);
+
+          expect(info).toStrictEqual([
+            {
+              result: expect.objectContaining({
+                databases: {},
+              }),
+              status: "OK",
+              time: expect.stringMatching(TIME_REGEX),
+            },
+            {
+              result: "Specify a database to use",
+              status: "ERR",
+              time: expect.stringMatching(TIME_REGEX),
+            },
+          ]);
+          expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
+            namespace: "my_namespace",
+            database: null,
+          }));
+        }
+      },
+    );
 
     test("データベースだけを指定することはできない", async () => {
       await using db = new Surreal();
@@ -243,7 +286,50 @@ for (const { suite, url, Surreal } of surreal) {
       }));
     });
 
-    test("名前空間とデータベースを共に未選択に戻す", async () => {
+    test(
+      "名前空間とデータベースを共に未選択に戻せない",
+      { skip: eng === "http" },
+      async () => {
+        await using db = new Surreal();
+        await db.connect(url());
+        await db.signin({ user: "root", pass: "root" });
+
+        await db.use("my_namespace", "my_database");
+        await db.use(null, null);
+
+        {
+          const info = await db.queryRaw(/*surql*/ `
+          INFO FOR NS;
+          INFO FOR DB;
+        `);
+
+          expect(info).toStrictEqual([
+            {
+              result: expect.objectContaining({
+                databases: {},
+              }),
+              status: "OK",
+              time: expect.stringMatching(TIME_REGEX),
+            },
+            {
+              result: expect.objectContaining({
+                tables: {},
+              }),
+              status: "OK",
+              time: expect.stringMatching(TIME_REGEX),
+            },
+          ]);
+          expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
+            namespace: null,
+            database: null,
+          }));
+        }
+      },
+    );
+
+    test("名前空間とデータベースを共に未選択に戻すとエラー", {
+      skip: eng === "websocket",
+    }, async () => {
       await using db = new Surreal();
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
@@ -259,17 +345,13 @@ for (const { suite, url, Surreal } of surreal) {
 
         expect(info).toStrictEqual([
           {
-            result: expect.objectContaining({
-              databases: {},
-            }),
-            status: "OK",
+            result: "Specify a namespace to use",
+            status: "ERR",
             time: expect.stringMatching(TIME_REGEX),
           },
           {
-            result: expect.objectContaining({
-              tables: {},
-            }),
-            status: "OK",
+            result: "Specify a namespace to use",
+            status: "ERR",
             time: expect.stringMatching(TIME_REGEX),
           },
         ]);

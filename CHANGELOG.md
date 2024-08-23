@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.3](https://github.com/tai-kun/surrealdb.js/compare/v1.4.2...v1.4.3) (2024-08-23)
+
+
+### Bug Fixes
+
+* v1 ([8d12538](https://github.com/tai-kun/surrealdb.js/commit/8d12538c9ae7925296e4343eb999893ac62c600e))
+* スコープユーザーにする ([9353349](https://github.com/tai-kun/surrealdb.js/commit/935334909c24be9611ec0725abe37bbcb04914c7))
+
 ## [1.4.2](https://github.com/tai-kun/surrealdb.js/compare/v1.4.1...v1.4.2) (2024-08-22)
 
 

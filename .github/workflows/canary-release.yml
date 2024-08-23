@@ -10,28 +10,67 @@ on:
       - "src/**"
       - "package-lock.json"
       - "package.json"
+      - "tsconfig.build.json"
       - "tsconfig.json"
 
 jobs:
-  next:
+  test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        surrealdb-version:
+          - "alpha"
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22.x"
+          node-version: "20.x"
 
-      - run: npm ci
-
-      - run: npm run build
-
-      - name: Pin version
+      - name: 依存関係をインストール
         run: |
-          npm --no-git-tag-version version minor
+          npm ci
+          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
+
+      - name: テスト
+        run: |
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
+
+          npx vitest --run tests/
+        env:
+          VITEST_MODE: node.js
+
+      - name: SurrealDB のログ
+        run: cat /tmp/logs
+        if: always()
+
+  next:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: 依存関係をインストール
+        run: npm ci
+
+      - name: ビルド
+        run: npm run build
+
+      - name: バージョン設定
+        run: |
+          npm --no-git-tag-version version major
           npm --no-git-tag-version version "$(npm pkg get version | jq -r)-next.$(date --utc +'%Y%m%dT%H%M%S')"
 
-      - uses: JS-DevTools/npm-publish@v3
+      - name: 公開
+        uses: JS-DevTools/npm-publish@v3
         with:
           token: ${{ secrets.NPM_TOKEN }}
           access: public

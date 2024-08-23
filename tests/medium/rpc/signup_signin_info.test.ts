@@ -42,7 +42,7 @@ for (const { suite, url, Surreal } of surreal) {
       expect(jwt.payload.exp).toBeGreaterThan(jwt.payload.nbf);
       expect(jwt.payload.NS).toBe(undefined);
       expect(jwt.payload.DB).toBe(undefined);
-      expect(jwt.payload.AC).toBe(undefined);
+      expect(jwt.payload.SC).toBe(undefined);
       expect(jwt.payload.ID).toBe("root");
 
       expect(jwt.issuer).toBe("SurrealDB");
@@ -52,7 +52,7 @@ for (const { suite, url, Surreal } of surreal) {
       expect(jwt.expiresAt).toBe(jwt.payload.exp);
       expect(jwt.namespace).toBe(undefined);
       expect(jwt.database).toBe(undefined);
-      expect(jwt.access).toBe(undefined);
+      expect(jwt.scope).toBe(undefined);
       expect(jwt.user).toBe("root");
 
       expect(`${jwt}`).toBe("[REDACTED]");
@@ -103,7 +103,7 @@ for (const { suite, url, Surreal } of surreal) {
         expect(jwt.payload.exp).toBeGreaterThan(jwt.payload.nbf);
         expect(jwt.payload.NS).toBe("my_namespace");
         expect(jwt.payload.DB).toBe(undefined);
-        expect(jwt.payload.AC).toBe(undefined);
+        expect(jwt.payload.SC).toBe(undefined);
         expect(jwt.payload.ID).toBe("ns_user");
 
         expect(jwt.issuer).toBe("SurrealDB");
@@ -113,7 +113,7 @@ for (const { suite, url, Surreal } of surreal) {
         expect(jwt.expiresAt).toBe(jwt.payload.exp);
         expect(jwt.namespace).toBe("my_namespace");
         expect(jwt.database).toBe(undefined);
-        expect(jwt.access).toBe(undefined);
+        expect(jwt.scope).toBe(undefined);
         expect(jwt.user).toBe("ns_user");
 
         expect(`${jwt}`).toBe("[REDACTED]");
@@ -172,7 +172,7 @@ for (const { suite, url, Surreal } of surreal) {
         expect(jwt.payload.exp).toBeGreaterThan(jwt.payload.nbf);
         expect(jwt.payload.NS).toBe("my_namespace");
         expect(jwt.payload.DB).toBe("my_database");
-        expect(jwt.payload.AC).toBe(undefined);
+        expect(jwt.payload.SC).toBe(undefined);
         expect(jwt.payload.ID).toBe("db_user");
 
         expect(jwt.issuer).toBe("SurrealDB");
@@ -182,7 +182,7 @@ for (const { suite, url, Surreal } of surreal) {
         expect(jwt.expiresAt).toBe(jwt.payload.exp);
         expect(jwt.namespace).toBe("my_namespace");
         expect(jwt.database).toBe("my_database");
-        expect(jwt.access).toBe(undefined);
+        expect(jwt.scope).toBe(undefined);
         expect(jwt.user).toBe("db_user");
 
         expect(`${jwt}`).toBe("[REDACTED]");
@@ -206,144 +206,8 @@ for (const { suite, url, Surreal } of surreal) {
       }
     });
 
-    test(
-      "レコードアクセスでサインアップ・サインインする",
-      async () => {
-        await using db = new Surreal();
-        await db.connect(url());
-
-        try {
-          // レコードアクセスを作成する。
-          {
-            await db.use("my_namespace", "my_database");
-            await db.signin({ user: "root", pass: "root" });
-            await db.query(/*surql*/ `
-              DEFINE ACCESS account ON DATABASE TYPE RECORD
-                SIGNUP ( CREATE type::thing("user", $id) SET email = $email, pass = crypto::argon2::generate($pass) )
-                SIGNIN ( SELECT * FROM type::thing("user", $id) WHERE crypto::argon2::compare(pass, $pass) );
-            `);
-          }
-
-          // サインアップ
-          {
-            const jwt = await db.signup({
-              ns: "my_namespace",
-              db: "my_database",
-              ac: "account",
-              id: "tai-kun",
-              email: "tai-kun@example.com",
-              pass: "passw0rd",
-            });
-
-            expect(jwt.header).toStrictEqual({
-              typ: "JWT",
-              alg: "HS512",
-            });
-
-            expect(jwt.payload.iss).toBe("SurrealDB");
-            expect(jwt.payload.jti).toMatch(UUID_36_REGEX);
-            expect(jwt.payload.iat).toBeTypeOf("number");
-            expect(jwt.payload.nbf).toBeTypeOf("number");
-            expect(jwt.payload.exp).toBeTypeOf("number");
-            expect(jwt.payload.exp).toBeGreaterThan(jwt.payload.iat);
-            expect(jwt.payload.exp).toBeGreaterThan(jwt.payload.nbf);
-            expect(jwt.payload.NS).toBe("my_namespace");
-            expect(jwt.payload.DB).toBe("my_database");
-            expect(jwt.payload.AC).toBe("account");
-            expect(jwt.payload.ID).toBe("user:⟨tai-kun⟩");
-
-            expect(jwt.issuer).toBe("SurrealDB");
-            expect(jwt.id).toBe(jwt.payload.jti);
-            expect(jwt.issuedAt).toBe(jwt.payload.iat);
-            expect(jwt.notBefore).toBe(jwt.payload.nbf);
-            expect(jwt.expiresAt).toBe(jwt.payload.exp);
-            expect(jwt.namespace).toBe("my_namespace");
-            expect(jwt.database).toBe("my_database");
-            expect(jwt.access).toBe("account");
-            expect(jwt.user).toBe("user:⟨tai-kun⟩");
-
-            expect(`${jwt}`).toBe("[REDACTED]");
-            expect(decode(encode(jwt))).toBe("[REDACTED]");
-            expect(JSON.stringify(jwt)).toBe(`"[REDACTED]"`);
-            expect(toSurql(jwt)).toBe(`'[REDACTED]'`);
-
-            expect(db.getConnectionInfo()).toStrictEqual({
-              state: OPEN,
-              endpoint: new URL(`${url()}/rpc`),
-              namespace: "my_namespace",
-              database: "my_database",
-              token: jwt.raw,
-            });
-          }
-
-          // サインイン
-          {
-            const jwt = await db.signin({
-              ns: "my_namespace",
-              db: "my_database",
-              ac: "account",
-              id: "tai-kun",
-              pass: "passw0rd",
-            });
-
-            expect(jwt.header).toStrictEqual({
-              typ: "JWT",
-              alg: "HS512",
-            });
-
-            expect(jwt.payload.iss).toBe("SurrealDB");
-            expect(jwt.payload.jti).toMatch(UUID_36_REGEX);
-            expect(jwt.payload.iat).toBeTypeOf("number");
-            expect(jwt.payload.nbf).toBeTypeOf("number");
-            expect(jwt.payload.exp).toBeTypeOf("number");
-            expect(jwt.payload.exp).toBeGreaterThan(jwt.payload.iat);
-            expect(jwt.payload.exp).toBeGreaterThan(jwt.payload.nbf);
-            expect(jwt.payload.NS).toBe("my_namespace");
-            expect(jwt.payload.DB).toBe("my_database");
-            expect(jwt.payload.AC).toBe("account");
-            expect(jwt.payload.ID).toBe("user:⟨tai-kun⟩");
-
-            expect(jwt.issuer).toBe("SurrealDB");
-            expect(jwt.id).toBe(jwt.payload.jti);
-            expect(jwt.issuedAt).toBe(jwt.payload.iat);
-            expect(jwt.notBefore).toBe(jwt.payload.nbf);
-            expect(jwt.expiresAt).toBe(jwt.payload.exp);
-            expect(jwt.namespace).toBe("my_namespace");
-            expect(jwt.database).toBe("my_database");
-            expect(jwt.access).toBe("account");
-            expect(jwt.user).toBe("user:⟨tai-kun⟩");
-
-            expect(`${jwt}`).toBe("[REDACTED]");
-            expect(decode(encode(jwt))).toBe("[REDACTED]");
-            expect(JSON.stringify(jwt)).toBe(`"[REDACTED]"`);
-            expect(toSurql(jwt)).toBe(`'[REDACTED]'`);
-
-            expect(db.getConnectionInfo()).toStrictEqual({
-              state: OPEN,
-              endpoint: new URL(`${url()}/rpc`),
-              namespace: "my_namespace",
-              database: "my_database",
-              token: jwt.raw,
-            });
-          }
-
-          // 資格情報
-          // TODO(tai-kun): なんか失敗する
-          // https://github.com/surrealdb/surrealdb/issues/4489
-          // {
-          //   await expect(db.info()).resolves.toMatchObject({
-          //     email: "tai-kun@example.com",
-          //   });
-          // }
-        } finally {
-          // クリーンアップ
-          await db.signin({ user: "root", pass: "root" });
-          await db.query(/*surql*/ `
-            REMOVE ACCESS account ON DATABASE;
-            REMOVE TABLE user;
-          `);
-        }
-      },
+    test.todo(
+      "スコープユーザーでサインアップ・サインインする",
     );
   });
 }

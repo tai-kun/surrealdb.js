@@ -77,7 +77,7 @@ export interface JwtPayload {
   jti: string;
   NS?: string;
   DB?: string;
-  AC?: string;
+  SC?: string;
   ID: string;
   [p: string]: unknown;
 }
@@ -174,8 +174,8 @@ export default class Jwt implements Encodable {
     return this.#payload.DB;
   }
 
-  get access(): string | undefined {
-    return this.#payload.AC;
+  get scope(): string | undefined {
+    return this.#payload.SC;
   }
 
   get user(): string {

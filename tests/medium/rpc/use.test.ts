@@ -199,8 +199,10 @@ for (const { suite, url, Surreal } of surreal) {
             time: expect.stringMatching(TIME_REGEX),
           },
           {
-            result: "Specify a database to use",
-            status: "ERR",
+            result: expect.objectContaining({
+              tables: {},
+            }),
+            status: "OK",
             time: expect.stringMatching(TIME_REGEX),
           },
         ]);
@@ -257,13 +259,17 @@ for (const { suite, url, Surreal } of surreal) {
 
         expect(info).toStrictEqual([
           {
-            result: "Specify a namespace to use",
-            status: "ERR",
+            result: expect.objectContaining({
+              databases: {},
+            }),
+            status: "OK",
             time: expect.stringMatching(TIME_REGEX),
           },
           {
-            result: "Specify a namespace to use",
-            status: "ERR",
+            result: expect.objectContaining({
+              tables: {},
+            }),
+            status: "OK",
             time: expect.stringMatching(TIME_REGEX),
           },
         ]);

@@ -1,4 +1,4 @@
-import type { Auth, RecordAccessAuth } from "./auth";
+import type { Auth, ScopeUserAuth } from "./auth";
 import type { ReadonlyPatch } from "./patch";
 import type { PreparedQueryLike } from "./surql";
 
@@ -22,7 +22,7 @@ export type RpcInfoRequest = {
 
 export type RpcSignupRequest = {
   readonly method: "signup";
-  readonly params: readonly [auth: RecordAccessAuth];
+  readonly params: readonly [auth: ScopeUserAuth];
 };
 
 export type RpcSigninRequest = {

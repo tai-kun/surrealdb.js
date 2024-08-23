@@ -165,18 +165,11 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(input).toStrictEqual(output);
       }
       {
-        // おそらく SurrealDB のクエリーパーサーのバグで失敗する。
-        const promise = db.query(/*surql*/ `
+        const [output] = await db.query(/*surql*/ `
           RETURN ${toSurql(input)};
         `);
 
-        await expect(promise).rejects.toThrowError();
-
-        // const [output] = await db.query(/*surql*/ `
-        //   RETURN ${toSurql(input)};
-        // `);
-
-        // expect(input).toStrictEqual(output);
+        expect(input).toStrictEqual(output);
       }
     });
   });

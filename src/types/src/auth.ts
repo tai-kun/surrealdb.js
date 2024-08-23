@@ -22,10 +22,10 @@ export type DatabaseUserAuth = {
   readonly pass: string;
 };
 
-export type RecordAccessAuth = {
+export type ScopeUserAuth = {
   readonly ns: string;
   readonly db: string;
-  readonly ac: string;
+  readonly sc: string;
   readonly [p: string]: unknown;
 };
 
@@ -34,6 +34,4 @@ export type UserAuth =
   | NamespaceUserAuth
   | DatabaseUserAuth;
 
-export type AccessAuth = RecordAccessAuth;
-
-export type Auth = UserAuth | AccessAuth;
+export type Auth = UserAuth | ScopeUserAuth;

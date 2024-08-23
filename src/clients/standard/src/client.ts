@@ -9,8 +9,8 @@ import type {
   PreparedQueryLike,
   QueryResult,
   ReadonlyPatch,
-  RecordAccessAuth,
   RpcResultMapping,
+  ScopeUserAuth,
   SlotLike,
 } from "@tai-kun/surrealdb/types";
 import type { TaskListener } from "@tai-kun/surrealdb/utils";
@@ -173,7 +173,7 @@ export default class Client extends Base {
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#signup)
    */
   async signup(
-    auth: RecordAccessAuth,
+    auth: ScopeUserAuth,
     options?: ClientRpcOptions | undefined,
   ): Promise<Jwt> {
     return new Jwt(await this.rpc("signup", [auth], options));

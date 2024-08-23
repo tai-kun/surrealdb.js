@@ -25,9 +25,7 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 | ルートユーザー | `{ user: string, pass: string }` |
 | 名前空間ユーザー | `{ user: string, pass: string, ns: string }` |
 | データベースユーザー | `{ user: string, pass: string, ns: string, db: string }` |
-| アクセス | `{ ac: string, ns: string, db: string, [param: string]: unknown }` |
-
-通常アクセス認証では定義されたアクセス (`ac`) によって追加のパラメーターが必要です。
+| スコープユーザー | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
 
 ##### `options`
 
@@ -110,7 +108,7 @@ console.log(jwt.user);      // 'db_user'
 await db.disconnect();
 ```
 
-次の例ではレコードアクセスで SurrealDB にサインインします。`.user` にはレコード ID が設定されます:
+次の例ではスコープユーザーで SurrealDB にサインインします。`.user` にはレコード ID が設定されます:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -121,13 +119,13 @@ await db.connect("ws://localhost:8000");
 const jwt = await db.signin({
   ns: "my_namespace",
   db: "my_database",
-  ac: "account",
+  sc: "account",
   // ...parmeters
 });
 
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
-console.log(jwt.access);    // 'account'
+console.log(jwt.scope);     // 'account'
 console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
 
 await db.disconnect();
@@ -135,7 +133,7 @@ await db.disconnect();
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-アクセス認証で SurrealDB にサインアップします。
+スコープユーザーで SurrealDB にサインアップします。
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -145,7 +143,7 @@ signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-アクセス認証に必要な情報です。
+スコープユーザーに必要な情報です。
 
 ##### `options`
 
@@ -166,13 +164,13 @@ await db.connect("ws://localhost:8000");
 const jwt = await db.signup({
   ns: "my_namespace",
   db: "my_database",
-  ac: "account",
+  sc: "account",
   // ...parmeters
 });
 
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
-console.log(jwt.access);    // 'account'
+console.log(jwt.scope);     // 'account'
 console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
 
 await db.disconnect();

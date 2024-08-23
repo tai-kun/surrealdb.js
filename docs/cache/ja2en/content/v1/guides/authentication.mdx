@@ -4,12 +4,11 @@ title: Authentication
 
 import Badge from "~/components/en/Badge.astro";
 
-There are two authentication methods. One uses a username and password, obtained through the [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) statement. The other is custom authentication, defined through the [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement. 
-This document will refer to the former as "user authentication" and the latter as "access authentication."
+There are two ways to authenticate. One is to authenticate using a username and password. This requires the username and password defined using the [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) statement. The other is custom authentication defined by the [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement. In this document, the former will be referred to as "user authentication" and the latter as "access authentication."
 
 ### `.signin()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs you into SurrealDB using either user authentication or access authentication.
+Signs in to SurrealDB using either user authentication or access authentication.
 
 ```ts
 signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -19,28 +18,26 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-Information required for either user or access authentication. The required parameters for each authentication type are:
+The information required for user authentication or access authentication. The required parameters for each authentication type are:
 
-| Authentication Type | Parameters |
-| --- | ---|
-| Root User | `{ user: string, pass: string }` |
-| Namespace User | `{ user: string, pass: string, ns: string }` |
-| Database User | `{ user: string, pass: string, ns: string, db: string }` |
-| Access | `{ ac: string, ns: string, db: string, [param: string]: unknown }` |
-
-Typically, access authentication requires additional parameters, as defined by the access (`ac`).
+| Authentication type | Parameters |
+| --- | --- |
+| Root user | `{ user: string, pass: string }` |
+| Namespace user | `{ user: string, pass: string, ns: string }` |
+| Database user | `{ user: string, pass: string, ns: string, db: string }` |
+| Scope user | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
 
 ##### `options`
 
-Options for the RPC request.
+Options for the PRC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to a `Jwt`.
+Returns a `Promise` object that resolves with a `Jwt`.
 
-#### Examples
+#### Example
 
-The following example signs into SurrealDB as the root user:
+The following example signs in to SurrealDB as the root user:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -66,7 +63,7 @@ console.log(JSON.stringify(jwt)); // '"[REDACTED]"'
 await db.disconnect();
 ```
 
-The following example signs into SurrealDB as a namespace user:
+The following example signs in to SurrealDB as a namespace user:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -88,7 +85,7 @@ console.log(jwt.user);      // 'ns_user'
 await db.disconnect();
 ```
 
-The following example signs into SurrealDB as a database user:
+The following example signs in to SurrealDB as a database user:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -111,7 +108,7 @@ console.log(jwt.user);      // 'db_user'
 await db.disconnect();
 ```
 
-The following example signs into SurrealDB with record access. The `.user` property will be set to the record ID:
+The following example signs in to SurrealDB as a scope user. The `.user` property is set to the record ID:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -122,13 +119,13 @@ await db.connect("ws://localhost:8000");
 const jwt = await db.signin({
   ns: "my_namespace",
   db: "my_database",
-  ac: "account",
-  // ...parameters
+  sc: "account",
+  // ...parmeters
 });
 
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
-console.log(jwt.access);    // 'account'
+console.log(jwt.scope);     // 'account'
 console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
 
 await db.disconnect();
@@ -136,7 +133,7 @@ await db.disconnect();
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs up to SurrealDB using access authentication. 
+Signs up to SurrealDB as a scope user.
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -146,17 +143,17 @@ signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-Information required for access authentication. 
+The information required for the scope user.
 
 ##### `options`
 
-Options for the RPC request.
+Options for the PRC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to a `Jwt`.
+Returns a `Promise` object that resolves with a `Jwt`.
 
-#### Examples
+#### Example
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -167,13 +164,13 @@ await db.connect("ws://localhost:8000");
 const jwt = await db.signup({
   ns: "my_namespace",
   db: "my_database",
-  ac: "account",
-  // ...parameters
+  sc: "account",
+  // ...parmeters
 });
 
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
-console.log(jwt.access);    // 'account'
+console.log(jwt.scope);     // 'account'
 console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
 
 await db.disconnect();
@@ -199,7 +196,7 @@ Options for the RPC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to `undefined`. 
+Returns a `Promise` object that resolves with `undefined`.
 
 ### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -217,7 +214,7 @@ Options for the RPC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to `undefined`. 
+Returns a `Promise` object that resolves with `undefined`.
 
 {/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
 

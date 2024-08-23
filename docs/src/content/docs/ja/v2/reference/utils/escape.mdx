@@ -1,0 +1,351 @@
+---
+title: escape
+---
+
+## quoteStr
+
+`quoteStr` は文字列を引用符で囲う関数です。便宜上、空の文字列に対しても引用符で囲います。
+
+### インポート
+
+```ts
+import { quoteStr } from "@tai-kun/surrealdb/utils";
+```
+
+### 使い方
+
+```ts
+function quoteStr(str: string): string;
+```
+
+文字列を引用符 (`"` または `'`) で囲います。
+
+#### 引数
+
+##### `str`
+
+引用符で囲う文字列。
+
+#### 返値
+
+引用符で囲われた文字列を返します。囲うための引用符は、与えられた文字列に一重引用符 (`'`) が含まれているかどうかで変わります:
+
+- 与えられた文字列が空の場合
+  - `''` を返します。
+- 与えられた文字列に一重引用符が含まれて**いない**場合
+  - 一重引用符で囲います。
+- 与えられた文字列に一重引用符が含まれて**いる**場合
+  - 二重引用符で囲います。
+- 与えられた文字列に一重引用符と二重引用符の両方が含まれている場合
+  - 二重引用符で囲います。
+  - 二重引用符はバックスラッシュ (`\`) でエスケープします。
+
+#### 例
+
+次の例では、一重引用符が含まれて**いない**文字列を一重引用符で囲います:
+
+```ts
+import { quoteStr } from "@tai-kun/surrealdb/utils";
+
+console.log(quoteStr(``));
+console.log(quoteStr(`a`));
+console.log(quoteStr(`𩸽`));
+console.log(quoteStr(`👍🏽`));
+console.log(quoteStr(`パ`));
+```
+
+出力:
+
+```js
+''
+'a'
+'𩸽'
+'👍🏽'
+'パ'
+```
+
+次の例では、一重引用符が含まれて**いる**文字列を二重引用符で囲います:
+
+```ts
+import { quoteStr } from "@tai-kun/surrealdb/utils";
+
+console.log(quoteStr(`cat's`));
+console.log(quoteStr(`𩸽's`));
+console.log(quoteStr(`'👍🏽`));
+console.log(quoteStr(`'パ`));
+```
+
+出力:
+
+```js
+"cat's"
+"𩸽's"
+"'👍🏽"
+"'パ"
+```
+
+次の例では、一重引用符と二重引用符の両方が含まれている文字列を二重引用符で囲い、必要であればエスケープします:
+
+```ts
+import { quoteStr } from "@tai-kun/surrealdb/utils";
+
+console.log(quoteStr(`cat's "toy"`));
+console.log(quoteStr(`'\\"\\`));
+console.log(quoteStr(`𩸽's "feed"`));
+console.log(quoteStr(`'👍🏽"`));
+console.log(quoteStr(`'パ"`));
+```
+
+出力:
+
+```js
+"cat's \"toy\""
+"'\\\"\\"
+"𩸽's \"feed\""
+"'👍🏽\""
+"'パ\""
+```
+
+## escapeKey
+
+`escapeKey` は [`quoteStr`](/ja/reference/utils/quote-str/) と似ていますが、オブジェクトのキーについて使用する関数です。便宜上、空の文字列に対しても引用符で囲います。
+
+### インポート
+
+```ts
+import { escapeKey } from "@tai-kun/surrealdb/utils";
+```
+
+### 使い方
+
+```ts
+function escapeKey(key: string): string;
+```
+
+#### 引数
+
+##### `key`
+
+オブジェクトのキー。
+
+#### 返値
+
+エスケープされた文字列を返します。必要に応じて二重引用符で囲います:
+
+- 与えられた文字列が空の場合
+  - `""` を返します。
+- 与えられた文字列が英数字とアンダースコアのみで構成される場合
+  - そのまま返します。
+- 与えられた文字列に英数字とアンダースコア以外が含まれている場合
+  - 二重引用符で囲います。
+- 与えられた文字列にバックスラッシュ (`\`) が含まれている場合
+  - それをエスケープします。
+- 与えられた文字列に二重引用符が含まれている場合
+  - それをエスケープします。
+
+#### 例
+
+次の例では、文字列が英数字とアンダースコアのみで構成されるため、そのままの文字列を得ます:
+
+```ts
+import { escapeKey } from "@tai-kun/surrealdb/utils";
+
+console.log(escapeKey(`123`));
+console.log(escapeKey(`foo_bar`));
+```
+
+出力:
+
+```js
+123
+foo_bar
+```
+
+次の例では、文字列を二重引用符で囲い、必要であればエスケープします:
+
+```ts
+import { escapeKey } from "@tai-kun/surrealdb/utils";
+
+console.log(escapeKey(``));
+console.log(escapeKey(`foo-bar`));
+console.log(escapeKey(`'\\"\\`));
+console.log(escapeKey(`𩸽's "feed"`));
+console.log(escapeKey(`'👍🏽"`));
+console.log(escapeKey(`'パ"`));
+```
+
+出力:
+
+```js
+""
+"foo-bar"
+"'\\"\"
+"𩸽's \"feed\""
+"'👍🏽\""
+"'パ\""
+```
+
+## escapeRid
+
+`escapeRid` は [`quoteStr`](/ja/reference/utils/quote-str/) と似ていますが、レコード ID について使用する関数です。便宜上、空の文字列に対しても引用符で囲います。
+
+### インポート
+
+```ts
+import { escapeRid } from "@tai-kun/surrealdb/utils";
+```
+
+### 使い方
+
+```ts
+function escapeRid(rid: string): string;
+```
+
+#### 引数
+
+##### `rid`
+
+レコード ID の ID 部。
+
+#### 返値
+
+エスケープされた文字列を返します。必要に応じてブラケット (`⟨⟩`) で囲います:
+
+- 与えられた文字列が空の場合
+  - `⟨⟩` を返します。
+- 与えられた文字列が数字で始まらず、英数字とアンダースコアのみで構成される場合
+  - そのまま返します。
+- 与えられた文字列にブラケット (`⟩`) が含まれている場合
+  - それをエスケープします。
+- 与えられた文字列が数字で始まるか、英数字とアンダースコア以外が含まれている場合
+  - ブラケット (`⟨⟩`) で囲います。
+
+#### 例
+
+次の例では、文字列が数字で始まらず、英数字とアンダースコアのみで構成されるため、そのままの文字列を得ます
+
+```ts
+import { escapeRid } from "@tai-kun/surrealdb/utils";
+
+console.log(escapeRid(`foo_123`));
+```
+
+出力:
+
+```js
+foo_123
+```
+
+次の例では、文字列をブラケット (`⟨⟩`) で囲い、必要であればエスケープします:
+
+```ts
+import { escapeRid } from "@tai-kun/surrealdb/utils";
+
+console.log(escapeRid(``));
+console.log(escapeRid(`123`));
+console.log(escapeRid(`foo-bar`));
+console.log(escapeRid(`𩸽's ⟨feed⟩`));
+console.log(escapeRid(`'👍🏽⟩`));
+console.log(escapeRid(`'パ⟩`));
+```
+
+出力:
+
+```js
+⟨⟩
+⟨123⟩
+⟨foo-bar⟩
+⟨𩸽's ⟨feed\⟩⟩
+⟨'👍🏽\⟩⟩
+⟨'パ\⟩⟩
+```
+
+## escapeIdent
+
+`escapeIdent` は [`quoteStr`](/ja/reference/utils/quote-str/) と似ていますが、名前空間やデータベース、テーブル、フィールドの名前について使用する関数です。便宜上、空の文字列に対しても引用符で囲います。
+
+### インポート
+
+```ts
+import { escapeIdent } from "@tai-kun/surrealdb/utils";
+```
+
+### 使い方
+
+```ts
+function escapeIdent(ident: string): string;
+```
+
+#### 引数
+
+##### `ident`
+
+識別子。
+
+#### 返値
+
+エスケープされた文字列を返します。必要に応じてバックティック (<code>`</code>) で囲います:
+
+- 与えられた文字列が空の場合
+  - <code>``</code> を返します。{/* TODO(tai-kun): " になる問題解決する */}
+- 与えられた文字列が数字で始まらず、英数字とアンダースコアのみで構成される場合
+  - そのまま返します。
+- 与えられた文字列にバックティック (<code>`</code>) が含まれている場合
+  - それをエスケープします。
+- 与えられた文字列が数字で始まるか、英数字とアンダースコア以外が含まれている場合
+  - バックティック (<code>`</code>) で囲います。
+
+#### 例
+
+次の例では、文字列が数字で始まらず、英数字とアンダースコアのみで構成されるため、そのままの文字列を得ます
+
+```ts
+import { escapeIdent } from "@tai-kun/surrealdb/utils";
+
+console.log(escapeIdent(`foo_123`));
+```
+
+出力:
+
+```js
+foo_123
+```
+
+次の例では、文字列をバックティック (<code>`</code>) で囲い、必要であればエスケープします:
+
+```ts
+import { escapeIdent } from "@tai-kun/surrealdb/utils";
+
+console.log(escapeIdent(""));
+console.log(escapeIdent("123"));
+console.log(escapeIdent("foo-bar"));
+console.log(escapeIdent("𩸽's `feed`"));
+console.log(escapeIdent("'👍🏽`"));
+console.log(escapeIdent("'パ`"));
+```
+
+出力:
+
+```js
+``
+`123`
+`foo-bar`
+`𩸽's \`feed\``
+`'👍🏽\``
+`'パ\``
+```
+
+## コラム
+
+### 文字列の長さ
+
+先の例で使用した文字列は、JavaScript から見た文字列の長さと、人間から見た文字列の長さが異なる文字を含んでいます:
+
+| 種類 | 表示 | `.length` | `Uint8Array` |
+| --- | --- | --- | --- |
+| ASCII | a | 1 | `[ 0x61 ]` |
+| サロゲートペア | 𩸽 | 2 | `[ 0xF0, 0xA9, 0xB8, 0xBD ]` |
+| 異体字セレクター | 👍🏽 | 4 | `[ 0xF0, 0x9F, 0x91, 0x8D, 0xF0, 0x9F, 0x8F, 0xBD ]` |
+| 結合文字 | パ | 2 | `[ 0xE3, 0x83, 0x8F, 0xE3, 0x82, 0x9A ]` |
+
+`.length` の値が直感に反する場合、文字列に対する操作を慎重に考えなくてはなりません。

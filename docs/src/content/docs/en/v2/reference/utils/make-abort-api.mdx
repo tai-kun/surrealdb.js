@@ -1,0 +1,101 @@
+---
+title: makeAbortApi
+---
+
+The `makeAbortApi` function creates an abort signal and an associated abort function.
+
+### Import
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+```
+
+### Usage
+
+```ts
+function makeAbortApi(signal?: AbortSignal): [
+  signal: AbortSignal,
+  abort: (reason?: unknown) => void,
+];
+```
+
+#### Arguments
+
+##### `signal`
+
+The abort signal to associate with.
+
+#### Return Value
+
+Returns an array containing the following elements in order:
+
+##### `signal`
+
+The abort signal. It is not aborted initially.
+
+##### `abort`
+
+Dispatches an `"abort"` event to the abort signal. It can optionally receive one argument, `reason`, which allows you to convey the reason for aborting via the `"abort"` event.
+
+#### Examples
+
+The following example creates an Abort API without any arguments:
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+
+const [signal, abort] = makeAbortApi();
+abort();
+```
+
+The above example is almost equivalent to `new AbortController()`. The difference from `AbortController` is that `makeAbortApi` returns an array instead of an object.
+
+The following example creates an Abort API with an associated abort signal specified:
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+
+const controller = new AbortController();
+controller.signal.addEventListener("abort", function() {
+  console.log("controller.signal", this.reason);
+});
+
+const [signal] = makeAbortApi(controller.signal);
+signal.addEventListener("abort", function() {
+  console.log("signal", this.reason);
+});
+
+controller.abort("test");
+```
+
+Output:
+
+```
+controller.signal test
+signal test
+```
+
+The abort event propagates to the associated abort signal even if aborted from the Abort API:
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+
+const controller = new AbortController();
+controller.signal.addEventListener("abort", function() {
+  console.log("controller.signal", this.reason);
+});
+
+const [signal, abort] = makeAbortApi(controller.signal);
+signal.addEventListener("abort", function() {
+  console.log("signal", this.reason);
+});
+
+abort("test");
+```
+
+Output:
+
+```
+controller.signal test
+signal test
+```

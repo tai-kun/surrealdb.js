@@ -1,0 +1,63 @@
+---
+title: Tagged
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+`Tagged` は 0 から 2^64-1 までの整数値で識別されるカスタム値です。
+
+### インポート
+
+```ts
+import { Tagged } from "@tai-kun/surrealdb/cbor";
+```
+
+### `.constructor()`
+
+```ts
+new Tagged<T>(tag: number | BigInt, value: T);
+```
+
+#### 引数
+
+##### `tag`
+
+タグ付きデータアイテムを識別するための 0 から 2^64-1 までの整数値です。なお、JavaScript では 2^53-1 を超える数値を使う場合、BigInt を使用してください。
+
+##### `value`
+
+タグ付きデータアイテムの値です。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`Tagged` はそのインスタンスを返します。
+
+### `.tag` <Badge variant="instance" /><Badge variant="property" />
+
+`.tag` はタグ付きデータアイテムを識別するための 0 から 2^64-1 までの整数値を持つプロパティーです。
+
+### `.value` <Badge variant="instance" /><Badge variant="property" />
+
+`.value` タグ付きデータアイテムの値を格納するプロパティーです。
+
+### `.toCBOR()` <Badge variant="instance" /><Badge variant="method" />
+
+`.toCBOR` は CBOR にエンコードするための情報を返す関数です。
+
+```ts
+toCBOR(): [tag: number | bigint, value: unknown];
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+CBOR にエンコードするための情報を返します。
+
+### 備考
+
+次の資料も参照してください:
+
+- [https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml)

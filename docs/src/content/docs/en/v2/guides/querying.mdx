@@ -1,0 +1,133 @@
+---
+title: Query
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+### `.query()` <Badge variant="instance" /><Badge variant="method" />
+
+Executes custom SurrealQL.
+
+```ts
+query(
+  surql: string | object,
+  vars?: { [p: string]: unknown },
+  options?: ClientRpcOptions,
+): Promise<unknown[]>;
+```
+
+#### Parameters
+
+##### `surql`
+
+A string of SurrealQL or a pre-prepared query.
+
+##### `vars`
+
+Variables to pass during the execution of SurrealQL. Note that variable names must not begin with `$`.
+
+##### `options`
+
+Options for the PRC request.
+
+#### Return Value
+
+Returns a `Promise` object that resolves with an array of SurrealQL execution results. If one or more statements fail, it rejects with a `QueryFailedError` containing the error messages.
+
+This method does not provide a way to obtain execution results upon rejection. If you need to handle errors manually, you can use [`.queryRaw()`](#queryraw).
+
+#### Example
+
+The following example demonstrates a successful query execution:
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(`
+  CREATE ONLY user:foo CONTENT { age: 42 };
+`);
+console.log(results);
+// [{
+//   id: Thing { tb: 'user', id: 'foo' },
+//   age: 42
+// }]
+
+await db.disconnect();
+```
+
+The following example results in a `QueryFailedError` because one of the statements fails:
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(`
+  CREATE ONLY user:foo CONTENT { age: 42 };
+  OUTPUT 42;
+`); // throws QueryFailedError: Query failed with 1 error(s)
+```
+
+This example shows how to execute a pre-prepared query:
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const CreateUserQuery = surql`
+  CREATE ONLY user:foo CONTENT { age: 42 };
+`.returns<[{ id: Thing<"user">, age: number }]>()
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(CreateUserQuery);
+   // ^? const results: [{ id: Thing<"user">, age: number }]
+
+await db.disconnect();
+```
+
+### `.queryRaw()` <Badge variant="instance" /><Badge variant="method" />
+
+Executes custom SurrealQL.
+
+```ts
+queryRaw(
+  surql: string | object,
+  vars?: { [p: string]: unknown },
+  options?: ClientRpcOptions,
+): Promise<QueryResult[]>;
+```
+
+#### Parameters
+
+##### `surql`
+
+A string of SurrealQL or a pre-prepared query.
+
+##### `vars`
+
+Variables to pass during the execution of SurrealQL. Note that variable names must not begin with `$`.
+
+##### `options`
+
+Options for the PRC request.
+
+#### Return Value
+
+Returns a `Promise` object that resolves with an array of SurrealQL execution results.
+
+```ts
+type QueryResult = {
+  status: "OK";
+  time: string;
+  result: unknown;
+} | {
+  status: "ERR";
+  time: string;
+  result: string;
+};
+```

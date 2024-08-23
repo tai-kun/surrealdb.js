@@ -2,54 +2,114 @@
 import { getCollection } from "astro:content";
 
 export async function getStaticPaths() {
-  function parse<T extends string>(slug: T): {
-    path: T extends `${string}/${infer U}` ? U : "",
-    lang: string,
-    // lang: T extends `${infer U}/${string}` ? U : T
+  function parse<T extends `${string}/v${number}${string}`>(slug: T): {
+    path: T extends `${string}/v${number}/${infer U}` ? U : "";
+    lang: T extends `${infer U}/${string}` ? U : unknown;
+    version: T extends `${string}/v${infer U extends number}${string}` ? U : unknown;
   } {
-    const i = slug.indexOf("/");
+    const [, lang, version, path] = slug.match(/^([^/]+)\/v(\d+)\/?(.*)/) as [
+      string,
+      string,
+      string,
+      string,
+    ]
 
     // @ts-expect-error
-    return i === -1
-      ? { path: "/", lang: slug }
-      : { path: slug.slice(i + 1), lang: slug.slice(0, i) }
+    return { path, lang, version: Number(version), }
   }
 
   const docs = await getCollection("docs");
   const paths: Record<string, any> = {};
+  let latest: number;
 
   for (const { data, slug } of docs) {
     if (data.draft) {
       continue;
     }
 
-    const { path, lang } = parse(slug);
-    (paths[path] ||= {
+    const { path, lang, version } = parse(slug);
+    const rootPath = path;
+    const withLangPath = path === ""
+      ? `${lang}` as const
+      : `${lang}/${path}` as const;
+    const withVersionPath = path === ""
+      ? `v${version}` as const
+      : `v${version}/${path}` as const;
+
+    (paths[rootPath] ||= {
       params: {
-        path,
+        path: rootPath,
       },
       props: {
+        route: "both",
         title: data.title,
         langs: [],
       },
     }).props.langs.push(lang);
 
     if (lang === "en") {
-      paths[path].props.title = data.title;
+      paths[rootPath].props.title = data.title;
+    }
+
+    (paths[withLangPath] ||= {
+      params: {
+        path: withLangPath,
+      },
+      props: {
+        route: "version",
+        title: data.title,
+        langs: [],
+      },
+    }).props.langs.push(lang);
+
+    if (lang === "en") {
+      paths[withLangPath].props.title = data.title;
+    }
+
+    (paths[withVersionPath] ||= {
+      params: {
+        path: withVersionPath,
+      },
+      props: {
+        route: "lang",
+        title: data.title,
+        langs: [],
+      },
+    }).props.langs.push(lang);
+
+    if (lang === "en") {
+      paths[withVersionPath].props.title = data.title;
+    }
+
+    latest ??= version;
+
+    if (latest < version) {
+      latest = version;
     }
   }
 
-  return Object.values(paths);
+  return Object.values(paths).map(v => ({
+    ...v,
+    props: {
+      ...v.props,
+      langs: [...new Set(v.props.langs)],
+      latest,
+    },
+  }));
 }
 
 type Props = {
+  route: "both" | "lang" | "version";
   title: string;
   langs: string[];
+  latest: number;
 };
 
 const {
+  route,
   title: titleText,
   langs,
+  latest,
 } = Astro.props;
 ---
 
@@ -62,13 +122,21 @@ const {
     <script>
       declare global {
         var langs: string[]
+        var latest: number;
       }
     </script>
-    <script is:inline define:vars={{ langs }}>
+    <script is:inline define:vars={{ route, langs, latest }}>
 document.addEventListener("DOMContentLoaded", function() {
   function redirect(lang) {
-    const pathname = window.location.pathname
-      .replace(/^\/surrealdb\.js(\/)?/, "/surrealdb.js/" + lang + "/");
+    const pathname =
+      route === "both"
+    ? window.location.pathname.replace(
+      /^\/surrealdb\.js(\/)?/, `/surrealdb.js/${lang}/v${latest}/`)
+    : route === "lang"
+    ? window.location.pathname.replace(
+      /^\/surrealdb\.js(\/)?/, `/surrealdb.js/${lang}/`)
+    : window.location.pathname.replace(
+      /^\/surrealdb\.js\/([^\/]+)(\/)?/, `/surrealdb.js/$1/v${latest}/`);
     window.location.pathname = window.location.pathname === pathname
       ? "/404"
       : pathname;

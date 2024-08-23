@@ -1,0 +1,130 @@
+---
+title: Automatic Reconnection
+banner:
+  content: This is an experimental feature, and the API may change frequently.
+---
+
+This feature provides automatic reconnection attempts in case of disconnections occurring in real-time communication such as WebSocket. It attempts to reconnect based on a specific logic and emits events upon success or failure.
+
+The `autoReconnect` function creates an instance of the `AutoReconnect` class, enabling the reconnection functionality.
+
+### Import
+
+```ts
+import { autoReconnect } from "@tai-kun/surrealdb";
+```
+
+### Syntax
+
+```ts
+function autoReconnect(
+  db: Client, 
+  options?: AutoReconnectOptions
+): AutoReconnect;
+```
+
+#### Parameters
+
+##### `db`
+
+An instance object of the `Surreal` class.
+
+##### `options`
+
+Options for configuring reconnection. You can specify the reconnection interval, maximum delay, reconnection conditions, etc. This parameter is optional if you wish to use the default settings.
+
+`backoffLimit?: number`
+:   Specifies the maximum number of reconnection attempts. The default value is `Infinity`.
+
+`initialDelay?: number`
+:   The delay time (in milliseconds) before the first reconnection attempt. The default value is `500`.
+
+`maxDelay?: number`
+:   The maximum delay time (in milliseconds) for reconnection attempts. The delay increases with each backoff, but this value acts as the upper limit. The default value is `30_000` (30 seconds).
+
+`shouldReconnect?: { ping?: { threshold: number; perMillis: number }} | (error) => boolean`
+:   Specifies the conditions for attempting reconnection. If provided as a function, it determines whether to reconnect based on the error event arguments.
+
+#### Return Value
+
+Returns an instance of the `AutoReconnect` class. This instance can be used to control reconnection, get the current status, monitor events, etc.
+
+`.getReconnectionInfo(): ReconnectionInfo`
+:   Gets the current reconnection information (`.state` and `.phase`). Their meanings are as follows:
+:   `.state`:
+    - `"waiting"` ... Initial state. No reconnection attempts have been made yet.
+    - `"running"` ... Reconnection is in progress.
+    - `"success"` ... Reconnection successful.
+    - `"failure"` ... Reconnection failed.
+:   `.phase`:
+    - `"waiting"`       ... Initial state. No reconnection attempts have been made yet.
+    - `"pending"`       ... Reconnection is requested and waiting for a certain period before execution.
+    - `"disconnecting"` ... Disconnecting.
+    - `"connecting"`    ... Connecting. It will try to connect even if disconnection fails.
+    - `"succeeded"`     ... Reconnection succeeded.
+    - `"failed"`        ... Reconnection failed.
+
+| state       | phase                           |
+| ----------- | ------------------------------- |
+| `"waiting"` | `"waiting"\|"pending"`          |
+| `"running"` | `"disconnecting"\|"connecting"` |
+| `"success"` | `"pending"\|"succeeded"`        |
+| `"failure"` | `"pending"\|"failed"`           |
+
+`.enable(): void`
+:   Enables the reconnection functionality. Calling this method allows for automatic reconnection attempts. It is enabled by default.
+
+`.disable(): void`
+:   Disables the reconnection functionality. Calling this method prevents further reconnection attempts.
+
+`.reset(): void`
+:   Resets the reconnection counter. This initializes the backoff logic for reconnection attempts.
+
+`.enabled: boolean`
+:   A boolean value indicating whether the reconnection functionality is enabled. If `true`, reconnection is active.
+
+### Example
+
+```ts
+import { autoReconnect, Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+const ar = autoReconnect(db, {
+  initialDelay: 1000,
+  maxDelay: 30000,
+  backoffLimit: 5,
+  shouldReconnect: {
+    ping: {
+      perMillis: 60000, // Within 1 minute,
+      threshold: 3,     // if ping fails 3 times or more, attempt reconnection.
+    },
+  },
+});
+
+ar.on("pending", (endpoint, duration) => {
+  console.log(`Attempting to reconnect to ${endpoint} in ${duration / 1000} seconds...`);
+});
+
+ar.on("success", (endpoint) => {
+  console.log(`Reconnection to ${endpoint} successful 🎉`);
+});
+
+ar.on("failure", (endpoint, cause) => {
+  console.error(`Reconnection to ${endpoint} failed 🤯`);
+  console.error("Cause:", cause);
+});
+
+try {
+  await db.connect("ws://127.0.0.1:8000");
+
+  // Various operations running for an extended period
+
+} finally {
+  await db.disconnect();
+}
+```
+
+### Notes
+
+- The reconnection logic is crucial for properly adjusting the stability of the WebSocket connection and the frequency of connection recovery. The option settings need to be adjusted according to the system requirements and use case.
+- `autoReconnect` attempts to recover the connection upon loss, but it does not guarantee complete recovery in all cases.

@@ -1,0 +1,79 @@
+---
+title: toSurql
+---
+
+The `toSurql` function converts a JavaScript value to a SurrealQL string.
+
+### Import
+
+```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+```
+
+### Usage
+
+```ts
+function toSurql(value: unknown): string;
+```
+
+#### Arguments
+
+##### `value`
+
+The JavaScript value to convert. This can be one of the following types:
+
+- `string`
+- `number`
+- `bigint`
+- `boolean`
+- `undefined`
+- `null`
+- `{ toSurql(): string }`
+- `Date`
+- `{ toJSON(): string }`
+- `unknown[]`
+- `{ [key: string]: unknown }`
+- `Set<unknown>`
+- `Map<unknown, unknown>`
+
+`unknown` represents a value that can be composed of any of the above types.
+
+The order of the above list indicates the priority of conversion. For instance, if a plain object has both `.toJSON` and `.toSurql` functions, the `.toSurql` function will take precedence.
+
+Plain objects are determined using [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj). Therefore, if a plain object does not have `.toSurql` or `.toJSON` functions but does have `Symbol.toStringTag` or `Symbol.iterator`, it will not be recognized as a plain object and an error will be thrown.
+
+#### Returns
+
+A SurrealQL string.
+
+#### Example
+
+```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+
+const surql = toSurql({
+  bigint: 9007199254740992n, // Number.MAX_SAFE_INTEGER + 1
+  boolean: [true, false],
+  date: new Date("2024-06-01T12:34:56.789Z"),
+  map: new Map([
+    [0, {
+      toJSON: () => [0, 1],
+    }],
+  ]),
+  null: null,
+  number: 123,
+  set: new Set([{
+    toSurql: () => `<bytes>"hello"`,
+  }]),
+  string: "文字列",
+  undefined: undefined,
+});
+
+console.log(surql);
+```
+
+Output:
+
+```text
+{bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'文字列',undefined:NONE}
+```

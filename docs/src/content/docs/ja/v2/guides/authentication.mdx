@@ -1,0 +1,225 @@
+---
+title: 認証
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+認証方法には 2 種類あります。1 つはユーザー名とパスワードを使って認証する方法です。これには [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) ステートメントを使って定義されたユーザー名とパスワードを必要とします。もう 1 つは [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) ステートメントで定義されたカスタム認証です。ここでは前者を「ユーザー認証」、後者を「アクセス認証」と呼ぶことにします。
+
+### `.signin()` <Badge variant="instance" /><Badge variant="method" />
+
+ユーザー認証またはアクセス認証で SurrealDB にサインインします。
+
+```ts
+signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
+```
+
+#### 引数
+
+##### `auth`
+
+ユーザー認証またはアクセス認証に必要な情報です。各認証タイプに必要なパラメーターは次のとおりです:
+
+| 認証タイプ | パラメーター |
+| --- | ---|
+| ルートユーザー | `{ user: string, pass: string }` |
+| 名前空間ユーザー | `{ user: string, pass: string, ns: string }` |
+| データベースユーザー | `{ user: string, pass: string, ns: string, db: string }` |
+| アクセス | `{ ac: string, ns: string, db: string, [param: string]: unknown }` |
+
+通常アクセス認証では定義されたアクセス (`ac`) によって追加のパラメーターが必要です。
+
+##### `options`
+
+PRC リクエストのオプションです。
+
+#### 返値
+
+`Jwt` で解決される `Promise` オブジェクトを返します。
+
+#### 例
+
+次の例ではルートユーザーで SurrealDB にサインインします:
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  user: "root",
+  pass: "passw0rd",
+});
+
+console.log(jwt.issuedAt);  // e.g. 1722749786
+console.log(jwt.expiresAt); // e.g. 1722753386
+console.log(jwt.namespace); // undefined
+console.log(jwt.database);  // undefined
+console.log(jwt.access);    // undefined
+console.log(jwt.user);      // 'root'
+
+console.log(jwt.raw);             // 'eyJ0eXAiOiJKV1QiLCJhb ... '
+console.log(JSON.stringify(jwt)); // '"[REDACTED]"'
+
+await db.disconnect();
+```
+
+次の例では名前空間ユーザーで SurrealDB にサインインします:
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  ns: "my_namespace",
+  user: "ns_user",
+  pass: "passw0rd",
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // undefined
+console.log(jwt.access);    // undefined
+console.log(jwt.user);      // 'ns_user'
+
+await db.disconnect();
+```
+
+次の例ではデータベースユーザーで SurrealDB にサインインします:
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  ns: "my_namespace",
+  db: "my_database",
+  user: "db_user",
+  pass: "passw0rd",
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // 'my_database'
+console.log(jwt.access);    // undefined
+console.log(jwt.user);      // 'db_user'
+
+await db.disconnect();
+```
+
+次の例ではレコードアクセスで SurrealDB にサインインします。`.user` にはレコード ID が設定されます:
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  ns: "my_namespace",
+  db: "my_database",
+  ac: "account",
+  // ...parmeters
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // 'my_database'
+console.log(jwt.access);    // 'account'
+console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+
+await db.disconnect();
+```
+
+### `.signup()` <Badge variant="instance" /><Badge variant="method" />
+
+アクセス認証で SurrealDB にサインアップします。
+
+```ts
+signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
+```
+
+#### 引数
+
+##### `auth`
+
+アクセス認証に必要な情報です。
+
+##### `options`
+
+PRC リクエストのオプションです。
+
+#### 返値
+
+`Jwt` で解決される `Promise` オブジェクトを返します。
+
+#### 例
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signup({
+  ns: "my_namespace",
+  db: "my_database",
+  ac: "account",
+  // ...parmeters
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // 'my_database'
+console.log(jwt.access);    // 'account'
+console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+
+await db.disconnect();
+```
+
+### `.authenticate()` <Badge variant="instance" /><Badge variant="method" />
+
+JWT を使用して現在の接続を認証します。
+
+```ts
+authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
+```
+
+#### 引数
+
+##### `token`
+
+認証する JWT です。
+
+##### `options`
+
+RPC リクエストのオプションです。
+
+#### 返値
+
+`undefined` で解決される `Promise` オブジェクトを返します。
+
+### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
+
+現在の接続の認証を無効化します。
+
+```ts
+invalidate(options?: ClientRpcOptions): Promise<void>
+```
+
+#### 引数
+
+##### `options`
+
+RPC リクエストのオプションです。
+
+#### 返値
+
+`undefined` で解決される `Promise` オブジェクトを返します。
+
+{/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
+
+#### 引数
+
+#### 返値 */}

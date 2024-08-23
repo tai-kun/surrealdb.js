@@ -1,0 +1,86 @@
+---
+title: mutex
+---
+
+import { Aside } from "@astrojs/starlight/components"
+
+`mutex` は 1 つ以上のクラスメソッドを同時実行性 1 で非同期処理するデコレーターです。
+
+<Aside type="caution">
+  JavaScript へビルド済みのパッケージを使用する分には問題ありませんが、このパッケージのソースコード (TypeScript) を直接利用する場合は、ステージ 3 のデコレーターサポートが必要です。
+</Aside>
+
+### インポート
+
+```ts
+import { mutex } from "@tai-kun/surrealdb/utils";
+```
+
+### 使い方
+
+```ts
+function mutex(
+  target: (...args: any) => PromiseLike<any>,
+  context: ClassMethodDecoratorContext,
+): (this: any, ...args: any) => Promise<any>;
+```
+
+#### 引数
+
+##### `target`
+
+クラスメソッドです。
+
+##### `context`
+
+ステージ 3 のクラスメソッド用デコレーターコンテクストです。
+
+#### 返値
+
+同時実行性が 1 に制限された非同期関数です。
+
+#### 例
+
+次の例では、`mutex` の有無で非同期処理の狩猟タイミングが異なることを示しています:
+
+```ts
+import { mutex } from "@tai-kun/surrealdb/utils";
+
+class Runner {
+  async runWithoutMutex(ms: number, value: string) {
+    await sleep(ms);
+    console.log(value);
+  }
+
+  @mutex
+  async runWithMutex(ms: number, value: string) {
+    await sleep(ms);
+    console.log(value);
+  }
+}
+
+const runner = new Runner();
+// without mutex
+await Promise.all([
+  runner.runWithoutMutex(1000, "A"),
+  runner.runWithoutMutex(500, "B"),
+  runner.runWithoutMutex(0, "C"),
+]);
+// with mutex
+await Promise.all([
+  runner.runWithMutex(1000, "A"),
+  runner.runWithMutex(500, "B"),
+  runner.runWithMutex(0, "C"),
+]);
+```
+
+出力:
+
+```js
+C
+B
+A
+A
+B
+C
+```

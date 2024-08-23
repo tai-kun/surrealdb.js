@@ -1,0 +1,120 @@
+---
+title: encode
+---
+
+`encode` は JavaScript の値を CBOR 形式の `Uint8Array` にエンコードする関数です。
+
+### インポート
+
+```ts
+import { encode } from "@tai-kun/surrealdb/cbor";
+```
+
+### 構文
+
+```ts
+function encode(value: unknown, options?: EncodeOptions): Uint8Array;
+```
+
+#### 引数
+
+##### `value`
+
+CBOR 形式の `Uint8Array` にエンコードするための JavaScript の値です。`value` に渡せる JavaScript の値は次のとおりです:
+
+- プリミティブな値
+  - `number`
+  - `bigint`
+  - `string`
+  - `boolean`
+  - `null`
+  - `undefined`
+- `.toCBOR()` メソッドを持つオブジェクト
+- 配列または `Set`
+- プレーンオブジェクトまたは `Map`
+- `Uint8Array`
+- `Simple` オブジェクト
+- オプションの `replacer` で置換できる値
+
+プリミティブな値でなく、`toCBOR` プロパティが関数であれば、それを優先的に呼び出します。
+
+##### `options`
+
+エンコードオプションです。
+
+`replacer?: Replacer | Replacer[]`
+:   エンコーダーはデフォルトでほとんどの値を CBOR にエンコードしますが、それらに当てはまらない特殊な値を、エンコード可能な値に置換するすることができます。このオプションは、関数または関数の配列を指定することで置換処理を実装できます。関数が `Symbol.for("@tai-kun/surrealdb/cbor/continue")` で得られる `CONTINUE` シンボルを返すと後続の関数が呼び出されます。何にも置換できなかった場合は `SurrealTypeError` が投げられます。
+
+`isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
+:   このオプションは、`Map` オブジェクトのキーが安全であるか検証する関数です。関数は `key` と `map` の 2 つの引数を受け取ります。`key` はキーの値で、`map` 検証している `Map` オブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。このオプションを指定すると、デフォルトの検証が完全に上書きされることに注意してください。デフォルトの検証に独自の検証を加える場合は、`"__proto__"` または `"constructor"` も安全ではないキーと判定するべきです。
+
+`isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
+:   このオプションは、プレーンオブジェクトのキーが安全であるか検証する関数です。関数は `key` と `obj` の 2 つの引数を受け取ります。`key` はキーの値で、`obj` 検証しているプレーンオブジェクトです。この関数が `false` を返すと `CborUnsafeMapKeyError` が投げられます。デフォルトでは `"__proto__"` または `"constructor"` を安全ではないキーと判定します。このオプションを指定すると、デフォルトの検証が完全に上書きされることに注意してください。デフォルトの検証に独自の検証を加える場合は、`"__proto__"` または `"constructor"` も安全ではないキーと判定するべきです。
+
+`maxDepth?: number`
+:   オブジェクトの最大深さを指定します。オブジェクトまたは配列に入る度に深さが 1 増加します。デフォルト値は `64` です。エンコードには再帰処理が使われていないため、深さに上限値はありませんが、あまり大きくしないことを推奨します。
+
+#### 返値
+
+JavaScript の値が CBOR 形式にエンコードされた `Uint8Array` です。
+
+### 例
+
+#### `isSafeObjectKey` によるオブジェクトキーの保護
+
+```ts
+import { encode } from "@tai-kun/surrealdb/cbor";
+
+encode(
+  {
+    "API_KEY": "***"
+  },
+  {
+    isSafeObjectKey: k => !["constructor", "__proto__", "API_KEY"].includes(k),
+  }
+); // throws CborUnsafeMapKeyError
+```
+
+#### `replacer` によるシンボルの置換
+
+```ts
+import { CONTINUE, encode } from "@tai-kun/surrealdb/cbor";
+
+const bytes = encode(Symbol.for("ID"), {
+  replacer(o) {
+    switch (o) {
+      case Symbol.for("ID"):
+        return "ID";
+
+      default:
+        return CONTINUE;
+    }
+  },
+});
+
+console.log(bytes); // Uint8Array(3) [ 98, 73, 68 ]
+```
+
+#### `maxDepth` による最大深さの制限
+
+```ts
+import { encode } from "@tai-kun/surrealdb/cbor";
+
+encode(
+  {
+    // depth: 1
+    a: new Map([
+      // depth: 2
+      ["b", [
+        // depth: 3
+        new Set([
+          // depth: 4
+        ]),
+      ]],
+    ]),
+  },
+  {
+    maxDepth: 3,
+  },
+); // throws CborMaxDepthReachedError
+```

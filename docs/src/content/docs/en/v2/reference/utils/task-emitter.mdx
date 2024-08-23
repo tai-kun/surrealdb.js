@@ -1,0 +1,217 @@
+---
+title: TaskEmitter
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+`TaskEmitter` is an event emitter class for asynchronous tasks managed by `TaskQueue`.
+
+### Import
+
+```ts
+import { TaskEmitter } from "@tai-kun/surrealdb/utils";
+```
+
+### `.constructor()`
+
+```ts
+new TaskEmitter<T>();
+```
+
+#### Arguments
+
+##### `T`
+
+A type that represents the event name and the arguments (array) taken by the event as key-value pairs.
+
+#### Returns
+
+When called with `new`, `TaskEmitter` returns its instance.
+
+### `.on()` <Badge variant="instance" /><Badge variant="method" />
+
+`.on` is a function for registering an event listener to the event emitter. Attempting to register the same function multiple times for the same event will be ignored after the first registration.
+
+```ts
+on(event: string | number, listener: TaskListener): void;
+```
+
+#### Arguments
+
+##### `event`
+
+The name of the event to register the event listener for.
+
+##### `listener`
+
+The event listener to register. This function will receive the same arguments as the task runner of `TaskQueue`, followed by a variable number of arguments passed to `.emit`.
+
+#### Returns
+
+None.
+
+#### Example
+
+The following example captures the "log" event and outputs the values passed to the emitter to standard output:
+
+```ts
+import { TaskEmitter } from "@tai-kun/surrealdb/utils";
+
+type Events = {
+  log: string[];
+};
+
+const emitter = new TaskEmitter<Events>();
+
+emitter.on("log", (_, ...args) => {
+  console.log(...args);
+});
+
+emitter.emit("log", "Hello");
+emitter.emit("log", "World", "!!!");
+
+await emitter.idle();
+```
+
+Output:
+
+```js
+Hello
+World !!!
+```
+
+### `.off()` <Badge variant="instance" /><Badge variant="method" />
+
+`.off` is a function for unregistering an event listener from the event emitter. If the event listener is omitted, all event listeners registered for the target event name will be unregistered.
+
+```ts
+off(event: string | number, listener?: TaskListener): void;
+```
+
+#### Arguments
+
+##### `event`
+
+The name of the event to unregister the event listener for.
+
+##### `listener`
+
+The event listener to unregister. If omitted, all event listeners registered for the target `event` will be unregistered.
+
+#### Returns
+
+None.
+
+### `.once()` <Badge variant="instance" /><Badge variant="method" />
+
+`.once` is similar to `.on`, but it only captures the event once. It also receives the value through the returned `StatefulPromise` instead of a callback function.
+
+```ts
+once(
+  event: string | Number,
+  options?: TaskListenerOptions,
+): StatefulPromise<unknown[]>;
+```
+
+#### Example
+
+The following example captures the "log" event only once and outputs the values passed to the emitter to standard output:
+
+```ts
+import { TaskEmitter } from "@tai-kun/surrealdb/utils";
+
+type Events = {
+  log: string[];
+};
+
+const emitter = new TaskEmitter<Events>();
+
+const promise = emitter.once("log");
+
+emitter.emit("log", "Hello");
+emitter.emit("log", "World", "!!!");
+
+const received = await promise;
+console.log(received);
+
+await emitter.idle();
+```
+
+Output:
+
+```js
+[ 'Hello' ]
+```
+
+#### Arguments
+
+##### `event`
+
+The name of the event to wait for.
+
+##### `options`
+
+Options for the event listener. Allows passing an abort signal.
+
+#### Returns
+
+Returns a `StatefulPromise` that resolves with the arguments (array) of `.emit`.
+
+### `.emit()` <Badge variant="instance" /><Badge variant="method" />
+
+`.emit` is a function for dispatching values to event listeners.
+
+```ts
+emit(
+  event: string | number,
+  ...args: unknown[]
+): undefined | StatefulPromise<unknown>[];
+```
+
+#### Arguments
+
+##### `event`
+
+The name of the event to dispatch to.
+
+##### `args`
+
+The values to send to the target event listeners.
+
+#### Returns
+
+Returns `undefined` if there are no event listeners. If there are event listeners, it returns an array of `StatefulPromise` that waits for them to be resolved/rejected. Usually, you do not need to handle this `StatefulPromise`. It can be used when you need to wait for side effects caused by the event in the current context, or when you are interested in the resolution/rejection of event listeners.
+
+### `.idle()` <Badge variant="instance" /><Badge variant="method" />
+
+`.idle` is a function that waits for the completion of all currently running event listeners.
+
+```ts
+idle(): StatefulPromise<void>;
+```
+
+#### Arguments
+
+None.
+
+#### Returns
+
+Returns a `StatefulPromise` that resolves with `void`.
+
+### `.abort()` <Badge variant="instance" /><Badge variant="method" />
+
+`.abort` is a function that dispatches an abort event to the `signal` of all event listeners.
+
+```ts
+abort(reason?: unknown): void;
+```
+
+#### Arguments
+
+##### `reason`
+
+The reason for aborting.
+
+#### Returns
+
+None.

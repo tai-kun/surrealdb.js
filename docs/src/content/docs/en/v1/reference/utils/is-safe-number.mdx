@@ -1,0 +1,34 @@
+---
+title: isSafeNumber
+---
+
+The `isSafeNumber` function checks if a given number is safe for arithmetic operations.
+
+### Import
+
+```ts
+import { isSafeNumber } from "@tai-kun/surrealdb/utils";
+```
+
+### Usage
+
+```ts
+function isSafeNumber(value: number): boolean;
+```
+
+#### Arguments
+
+##### `value`
+
+The number to check.
+
+#### Returns
+
+Returns `false` if `value` is any of the following:
+
+- `NaN`
+- Infinity
+- Greater than or equal to 2^53-1
+- Less than or equal to -2^53-1
+
+Otherwise, returns `true`. 

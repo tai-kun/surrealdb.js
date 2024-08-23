@@ -1,0 +1,524 @@
+---
+title: エラー
+---
+
+## SurrealError
+
+`SurrealError` はこのライブラリが明示的に投げるエラーオブジェクトのほとんどすべてが継承する基底クラスです。このクラスは JavaScript の `Error` クラスを継承してます。このエラーオブジェクトが単体で投げられることはほとんど無く、基本的には継承先の特別な意味を持つエラーオブジェクトが投げられます。`try-catch` 構文などで補足したエラーがこのライブラリが明示的に投げたエラーであることを簡単に分類するために使うことを推奨します。
+
+`.name: "SurrealError"`
+:   エラー名です。
+
+`.message`
+:   エラーメッセージです。
+
+`.stack`
+:   スタックトレースが記録されている場合があります。
+
+`.cause`
+:   エラーが発生した原因やコンテクストが設定される場合があります。
+
+## SurrealTypeError
+
+継承元: `SurrealError`
+
+これは入力値やその他の検証に失敗した場合に投げられるエラーです。
+
+`.name: "SurrealTypeError"`
+:   エラー名です。
+
+`.expected`
+:   期待するデータ形式です。
+
+`.actual`
+:   実際の値の文字列表現です。
+
+## SurrealAggregateError
+
+継承元: `SurrealError`
+
+これは複数のエラーやエラーメッセージがまとめられたエラーです。
+
+`.name: "SurrealAggregateError"`
+:   エラー名です。
+
+`.cause: unknown[]`
+:   配列の各要素にエラーやエラーメッセージ等が含まれています。
+
+## CircularReferenceError
+
+継承元: `SurrealError`
+
+これは循環参照を検知した場合に投げられるエラーです。主に JavaScript の値を別の形式に変換する過程で、親のオブジェクトと同じオブジェクトが検知された場合に投げられます。
+
+`.name: "CircularReferenceError"`
+:   エラー名です。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+
+const a = {};
+a.a = a;
+
+console.log(a); // <ref *1> { a: [Circular *1] }
+
+toSurql(a); // throws CircularReferenceError
+```
+
+## NumberRangeError
+
+継承元: `SurrealError`
+
+これは数値が範囲外の値を取った場合に投げられるエラーです。
+
+`.name: "NumberRangeError"`
+:   エラー名です。
+
+`.range`
+:   期待する範囲です。
+
+`.actual`
+:   実際の値です。
+
+`.integer`
+:   `true` の場合、整数を期待します。
+
+## UnsupportedRuntimeError
+
+継承元: `SurrealError`
+
+これはサポートされていないランタイムを使用していると判断された場合に投げられるエラーです。
+
+`.name: "UnsupportedRuntimeError"`
+:   エラー名です。
+
+## UnreachableError
+
+継承元: `SurrealError`
+
+これは到達不可能なコードに到達した場合に投げられるエラーです。このエラーが投げられた場合、おそらくこのパッケージのバグに遭遇したものと考えられます。
+
+`.name: "UnreachableError"`
+:   エラー名です。
+
+## CircularEngineReferenceError
+
+継承元: `CircularReferenceError`
+
+これはデータベースに接続する際に、エンジン間で循環参照が発生した場合に投げられるエラーです。
+
+`.name: "CircularEngineReferenceError"`
+:   エラー名です。
+
+`.seen: string[]`
+:   循環参照が発生するまでに経由したプロトコル名のリストです。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+const { Surreal } = initSurreal({
+  engines: {
+    http: "https",
+    https: "http",
+  },
+  // ...
+});
+
+await using db = new Surreal();
+await db.connect("https://localhost:8000"); // throws CircularEngineReferenceError: Circular engine reference: http,https
+```
+
+上記の例では、https プロトコルのエンジンが http に設定されているエンジンを使うことを示しているにもかかわらず、http プロトコルのエンジンは https に設定されているエンジンを使おうとするため、循環参照エラーが投げられます。
+
+## EngineNotFoundError
+
+継承元: `SurrealError`
+
+これはエンジンが設定されていないプロトコルで接続しようとした倍に投げられるエラーです。
+
+`.name: "EngineNotFoundError"`
+:   エラー名です。
+
+`.protocol: string`
+:   接続先のプロトコル名です。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+const { Surreal } = initSurreal({
+  engines: {
+    http: config => new HttpEngine(config),
+  },
+  // ...
+});
+
+await using db = new Surreal();
+await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No https protocol engine found.
+```
+
+## ConnectionConflictError
+
+継承元: `SurrealError`
+
+これはクライエントが複数のエンドポイントに同時に接続しようとした場合に投げられるエラーです。
+
+`.name: "ConnectionConflictError"`
+:   エラー名です。
+
+`.endpoint1: string`
+:   一方のエンドポイントです。
+
+`.endpoint2: string`
+:   もう一方のエンドポイントです。
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.connect("http://localhost:11298"); // throws ConnectionConflictError: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
+```
+
+`.connect` メソッドは渡された URL のパスが `/rpc` で終わらない場合、それを末尾に追加します。そのため、一方のエンドポイントの URL パスが `/rpc` で終わる場合は、その見た目に反してエラーにならないことがあります:
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.connect("http://localhost:8000/rpc"); // OK!
+```
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000/rpc");
+await db.connect("http://localhost:8000"); // OK!
+```
+
+## NamespaceConflictError
+
+継承元: `SurrealError`
+
+これはクライアントが同時に異なる複数の名前空間に切り替えようとした場合に投げられるエラーです。
+
+`.name: "NamespaceConflictError"`
+:   エラー名です。
+
+`.namespace1: string`
+:   一方の名前空間です。
+
+`.namespace2: string`
+:   もう一方の名前空間です。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.signin({ user: "root", pass: "root" });
+await Promise.all([
+  db.use({ namespace: "foo" }),
+  db.use({ namespace: "bar" }),
+]);
+```
+
+## DatabaseConflictError
+
+継承元: `SurrealError`
+
+これはクライアントが同時に異なる複数のデータベースに切り替えようとした場合に投げられるエラーです。
+
+`.name: "DatabaseConflictError"`
+:   エラー名です。
+
+`.database1: string`
+:   一方のデータベースです。
+
+`.database2: string`
+:   もう一方のデータベースです。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.signin({ user: "root", pass: "root" });
+await Promise.all([
+  db.use({ namespace: "baz" database: "foo" }),
+  db.use({ namespace: "baz" database: "bar" }),
+]);
+```
+
+## MissingNamespaceError
+
+継承元: `SurrealError`
+
+これはデータベースを選択する前に名前空間が選択されていない場合に投げられるエラーです。または、データベースを選択したまま名前空間を未選択状態にしようとしても投げられます。
+
+`.name: "MissingNamespaceError"`
+:   エラー名です。
+
+`.database: string`
+:   データベース名です。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+await using db = new Surreal();
+await db.connect("http://localhost:8000");
+
+await db.use({ database: "example" }); // throws MissingNamespaceError: The namespace must be specified before the database.
+```
+
+## RpcResponseError
+
+継承元: `SurrealError`
+
+これは RPC レスポンスがエラーを示した場合に投げられるエラーです。接続したプロトコルによる通信やレスポンスボディのデコードなどに問題はありませんが、SurrealDB が RPC リクエストを処理できないことを意味します。
+
+`.name: "RpcResponseError"`
+:   エラー名です。
+
+`.id?: string`
+:   RPC リクエストを識別する ID です。ID は常に `<メソッド名>_` で始まります。
+
+`.code: number`
+:   SurrealDB のドキュメントに明記されていませんが、おそらく JSON-RPC のエラーコードだと思われます。
+
+## QueryFailedError
+
+継承元: `SurrealAggregateError`
+
+これはクエリーに失敗した場合に投げられるエラーです。
+
+`.name: "QueryFailedError"`
+:   エラー名です。
+
+`.cause: string[]`
+:   エラーの一覧です。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+await using db = new Surreal();
+await db.connect("http://localhost:8000");
+
+await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 1 error(s)
+```
+
+## Disconnected
+
+継承元: `SurrealError`
+
+これは接続が強制的に終了されたことを示すエラーです。
+
+`.name: "Disconnected"`
+:   エラー名です。
+
+例えば次のような場合にこのエラーを得ます:
+
+```ts
+const db = new Surreal();
+
+db.on("<event_name>", ({ signal }) => {
+  return new Promise((resolve, reject) => {
+    signal.addEventListener("abort", function() {
+      console.error(this.reason); // Disconnected
+      reject();
+    })
+
+    // ...
+  });
+});
+
+await db.disconnect({ force: true });
+```
+
+## EngineError
+
+継承元: `SurrealError`
+
+これはエンジンに起因するエラーであることを示します。イベントリスナー経由で発送されます。
+
+`.name: "EngineError"`
+:   エラー名です。
+
+`.fatal: boolean | undefined`
+:   このエラーが致命的であるかどうかを示しています。
+
+## HttpEngineError
+
+継承元: `EngineError`
+
+これは HTTP エンジンに起因するエラーであることを示します。現在は定義されているだけで、使用されていません。
+
+`.name: "HttpEngineError"`
+:   エラー名です。
+
+## WebSocketEngineError
+
+継承元: `EngineError`
+
+これは WebSocket エンジンに起因するエラーであることを示します。RPC リクエストを識別する ID を見つける前にレスポンスボディの解析に失敗した場合や、WebSocket オブジェクトからエラーイベントを受け取ったとき、WebSocket の接続を切ったときなど使用されます。
+
+`.name: "WebSocketEngineError"`
+:   エラー名です。
+
+`.code: number`
+:   次のステータスコードのうちのいずれか一つです:
+    - `1000`~`1015`: [MDN Reference](https://developer.mozilla.org/docs/Web/API/CloseEvent/code)
+    - `3150`: `WebSocket`[^1] のインスタンスから "error" イベントを受け取ったことを示しています。
+    - `3151`: WebSocket エンジンが登録する "open" イベントハンドラー内でエラーが発生したことを示しています。接続中状態から接続状態へ遷移する途中で `StateTransitionError` が発生していることがほとんどです。
+    - `3152`: WebSocket エンジンが登録する "message" イベントハンドラー内でエラーが発生したことを示しています。多用な原因が考えられますが、イベントハンドラー内で `ResponseError` または `RpcResponseError` が投げられた可能性が高いです。元をたどれば、`.query()` メソッドで誤った文法の SurrealQL カスタムクエリーをリクエストした場合や、無効な RPC パラメーターでリクエストしたことが原因と考えられます。その場合、RPC の呼び出し元のメソッドは (デフォルトで) 5 秒でタイムアウトして失敗します。
+    - `3153`: ping の送受信に失敗したことを示しています。一時的なエラーかもしれませんが、継続して受け取っているなら、接続を維持できていない可能性があります。
+    - `3154`: WebSocket エンジンが登録する "close" イベントハンドラー内でエラーが発生したことを示しています。切断中状態から切断状態へ遷移する途中で `StateTransitionError` が発生していることがほとんどです。
+:   なお、上記から次のステータスコードを除きます。このパッケージではエラーとして扱いません。
+    - `1000`: 正常に切断されています。
+    - `1001`: 早期の切断はよくあります。
+    - `1004`: 予約済み。
+    - `1005`: 予約済み。
+    - `1006`: 予約済み。
+    - `1015`: 予約済み。
+
+^1: `WebSocket` はランタイムがグローバル変数に定義しているクラスであったり、`ws` パッケージのクラスであったりします。
+
+## StateTransitionError
+
+継承元: `SurrealAggregateError`
+
+これは状態遷移中にイベントリスナーの実行に失敗した場合に投げられるエラーです。
+
+`.name: "StateTransitionError"`
+:   エラー名です。
+
+`.from: number`
+:   状態遷移開始時の状態です。
+
+`.to: number`
+:   遷移先の状態です。
+
+`.fallback: number`
+:   状態遷移に失敗した場合の代わりの遷移先です。`.to` と同じ値なら、強制的に遷移したことを意味します。
+
+例えば次のような場合にこのエラーは投げられます:
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+import { CONNECTING } from "@tai-kun/surrealdb/engine";
+
+await using db = new Surreal();
+
+db.on(CONNECTING, () => {
+  throw new Error("Don't let me connect !!!")
+});
+
+await db.connect("http://localhost:8000"); // throws ...
+// StateTransitionError: The transition from `3` to `0` failed, falling back to `3`.
+//     at <stack trace ...> {
+//   cause: [
+//     Error: Don't let me connect !!!
+//         at <stack trace ...>
+//   ],
+//   from: 3,
+//   to: 0,
+//   fallback: 3
+// }
+```
+
+## ConnectionUnavailableError
+
+継承元: `SurrealError`
+
+これは未接続状態で RPC リクエストを送信しようとした場合に投げられるエラーです。
+
+`.name: "ConnectionUnavailableError"`
+:   エラー名です。
+
+## ResponseError
+
+継承元: `SurrealError`
+
+これはレスポンスを PRC レスポンスとして解析できない場合に投げられるエラーです。`RpcResponseError` とは異なります。
+
+`.name: "ResponseError"`
+:   エラー名です。
+
+## CborError
+
+継承元: `SurrealError`
+
+これは `@tai-kun/surrealdb/cbor` が明示的に投げる、CBOR に関連したすべてのエラーが継承するクラスです。これが直接投げられることはありません。
+
+`.name: "CborError"`
+:   エラー名です。
+
+## CborWellFormednessError
+
+継承元: `CborError`
+
+これは `@tai-kun/surrealdb/cbor` が明示的に投げる、CBOR のデコードに関連したすべてのエラーが継承するクラスです。これが直接投げられることはありません。
+
+RFC8949 の付録 F にある「[Well-Formedness Errors and Examples](https://datatracker.ietf.org/doc/html/rfc8949#name-well-formedness-errors-and-)」 を参照してください。
+
+`.name: "CborWellFormednessError"`
+:   エラー名です。
+
+## CborTooMuchDataError
+
+継承元: `CborWellFormednessError`
+
+これは消費されなかった入力バイトが残っていることを示しています。
+
+[RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.2)
+
+`.name: "CborTooMuchDataError"`
+:   エラー名です。
+
+## CborTooLittleDataError
+
+継承元: `CborWellFormednessError`
+
+これは入力バイトが不完全であることを示しています。
+
+[RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.4)
+
+`.name: "CborTooLittleDataError"`
+:   エラー名です。
+
+## CborSyntaxError
+
+継承元: `CborWellFormednessError`
+
+入力バイトが CBOR のエンコード形式と一致しないことを示しています。
+
+[RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.6)
+
+`.name: "CborSyntaxError"`
+:   エラー名です。
+
+## CborMaxDepthReachedError
+
+継承元: `CborError`
+
+CBOR のエンコードまたはデコード時に JavaScript オブジェクトの深さが最大値に達した場合に投げられるエラーです。オブジェクトまたは配列に入る度に深さが 1 増加します。
+
+`.name: "CborMaxDepthReachedError"`
+:   エラー名です。
+
+`.maxDepth: number`
+:   最大深さです。
+
+## CborUnsafeMapKeyError
+
+継承元: `CborError`
+
+CBOR のエンコードまたはデコード時に安全ではないマップキーが見つかった場合に投げられるエラーです。
+
+`.name: "CborUnsafeMapKeyError"`
+:   エラー名です。
+
+`.key: unknown`
+:   安全ではないと判定されたマップキーです。

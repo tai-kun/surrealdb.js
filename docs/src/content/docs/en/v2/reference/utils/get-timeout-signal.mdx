@@ -1,0 +1,43 @@
+---
+title: getTimeoutSignal
+---
+
+The `getTimeoutSignal` function returns an `AbortSignal` object that times out after the specified number of milliseconds. It is provided for environments where `AbortSignal.timeout()` is not implemented.
+
+### Import
+
+```ts
+import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
+```
+
+### Usage
+
+```ts
+function getTimeoutSignal(milliseconds: number): AbortSignal;
+```
+
+#### Arguments
+
+##### `milliseconds`
+
+Specifies the number of milliseconds until the timeout.
+
+#### Return Value
+
+Returns a new `AbortSignal` object.
+
+#### Exceptions
+
+Throws an error if the `AbortSignal.timeout` function is not available in the server-side runtime. This is because the implementation cost of a polyfill is high. In browsers, it is implemented in a somewhat forceful manner.
+
+#### Example
+
+The following example shows how to make `fetch` time out after 5 seconds:
+
+```ts
+import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
+
+const resp = await fetch("https://example.com/", {
+  signal: getTimeoutSignal(5000),
+});
+```

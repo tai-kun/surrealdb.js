@@ -1,0 +1,42 @@
+---
+title: Simple
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+`Simple` is a simple value identified by an integer between 0 and 255.
+
+### Import
+
+```ts
+import { Simple } from "@tai-kun/surrealdb/cbor";
+```
+
+### `.constructor()`
+
+Creates a new `Simple` object.
+
+```ts
+new Simple(value: number);
+```
+
+#### Arguments
+
+##### `value`
+
+An integer between 0 and 255.
+
+#### Returns
+
+When called with `new`, `Simple` returns its instance.
+
+### `.value` <Badge variant="instance" /><Badge variant="property" />
+
+An integer between 0 and 255 that identifies the `Simple` object.
+
+### Remarks
+
+See the following resources:
+
+- [https://datatracker.ietf.org/doc/html/rfc8949#name-simple-values](https://datatracker.ietf.org/doc/html/rfc8949#name-simple-values)
+- [https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml](https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml)

@@ -1,3 +1,5 @@
+A modular SurrealDB client working in major JavaScript runtimes.
+
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=main&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml)
 <!-- [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surrealdb.js/actions/workflows/deno.yml) -->
@@ -10,6 +12,10 @@
 
 [![License](https://img.shields.io/npm/l/%40tai-kun%2Fsurrealdb?style=flat&logo=apache&color=rgb(40%2C%2038%2C%2097))](https://opensource.org/licenses/Apache-2.0)
 [![Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb?style=flat&logo=npm)](https://www.npmjs.com/package/@tai-kun/surrealdb)
+
+> [!NOTE]
+> The main branch is currently under development for SurrealDB v2.
+> You can find the repository for SurrealDB v1 [here](https://github.com/tai-kun/surrealdb.js/tree/v1).
 
 ## Document
 
@@ -63,6 +69,8 @@ const { Surreal } = initSurreal({
 ## Requirements
 
 SurrealDB v2 (currently in alpha)
+
+The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.js/tree/v1).
 
 ## Recommended environment
 

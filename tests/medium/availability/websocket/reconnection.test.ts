@@ -4,7 +4,6 @@ import { CONNECTING } from "@tai-kun/surrealdb/engine";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
 import { channel } from "@tai-kun/surrealdb/utils";
-import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
 import { WebSocket } from "isows";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { stopSurrealDb, viWaitForSurrealDb } from "../../surrealdb";
@@ -30,7 +29,6 @@ beforeEach(async () => {
       },
     },
     formatter: new JsonFormatter(),
-    validator: new NoOpValidator(),
     disableDefaultErrorHandler: true,
   }));
 });

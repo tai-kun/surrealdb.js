@@ -11,7 +11,6 @@ import type {
   RpcResponse,
 } from "@tai-kun/surrealdb/types";
 import { StatefulPromise, type TaskEmitter } from "@tai-kun/surrealdb/utils";
-import type { Validator } from "@tai-kun/surrealdb/validator";
 
 type Simplify<T> = { [P in keyof T]: T[P] } & {};
 
@@ -131,7 +130,6 @@ export type EngineEventMap =
 export interface EngineAbcConfig {
   readonly emitter: TaskEmitter<EngineEventMap>;
   readonly formatter: Formatter;
-  readonly validator: Validator;
 }
 
 export interface ConnectArgs {
@@ -156,7 +154,6 @@ export const CLOSED = 3 as const satisfies ConnectionState;
 export abstract class EngineAbc {
   protected ee: TaskEmitter<EngineEventMap>;
   protected fmt: Formatter;
-  protected v8n: Validator;
 
   private _conn: ConnectionInfo = {
     token: null,
@@ -169,7 +166,6 @@ export abstract class EngineAbc {
   constructor(config: EngineAbcConfig) {
     this.ee = config.emitter;
     this.fmt = config.formatter;
-    this.v8n = config.validator;
   }
 
   protected transition(

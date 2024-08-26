@@ -5,7 +5,6 @@ import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
-import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
 import { afterAll, beforeAll, vi } from "vitest";
 import { WebSocket } from "ws";
 
@@ -19,38 +18,30 @@ const formatters = {
   json: JsonFormatter,
 } as const;
 
-const validators = {
-  noop: NoOpValidator,
-} as const;
-
 export default [
-  define("http", "cbor", "noop"),
-  define("http", "json", "noop"),
-  define("websocket", "cbor", "noop"),
-  define("websocket", "json", "noop"),
+  define("http", "cbor"),
+  define("http", "json"),
+  define("websocket", "cbor"),
+  define("websocket", "json"),
 ];
 
 ////////////////////////////////////////////////////////////////////////////////
 
 type Engines = keyof typeof engines;
 type Formatters = keyof typeof formatters;
-type Validators = keyof typeof validators;
 
 function define(
   eng: Engines,
   fmt: Formatters,
-  v8n: Validators,
 ): InitializedSurreal<typeof Client> & {
   eng: Engines;
   fmt: Formatters;
-  v8n: Validators;
 } & {
-  suite: `${Engines}_${Formatters}_${Validators}`;
+  suite: `${Engines}_${Formatters}`;
   url(): `${"http" | "ws"}://127.0.0.1:${number}`;
 } {
   let surreal: InitializedSurreal<typeof Client>;
   let formatter;
-  let validator;
 
   switch (fmt) {
     case "cbor":
@@ -65,15 +56,6 @@ function define(
       throw new Error(`unreachable: ${fmt}`);
   }
 
-  switch (v8n) {
-    case "noop":
-      validator = new NoOpValidator();
-      break;
-
-    default:
-      throw new Error(`unreachable: ${v8n}`);
-  }
-
   switch (eng) {
     case "http":
       surreal = initSurreal({
@@ -84,7 +66,6 @@ function define(
           },
         },
         formatter,
-        validator,
       });
       break;
 
@@ -106,7 +87,6 @@ function define(
           },
         },
         formatter,
-        validator,
       });
       break;
 
@@ -118,8 +98,7 @@ function define(
     ...surreal,
     eng,
     fmt,
-    v8n,
-    suite: `${eng}_${fmt}_${v8n}`,
+    suite: `${eng}_${fmt}`,
     url(): `${"http" | "ws"}://127.0.0.1:${number}` {
       return eng === "http"
         ? `http://${host()}`

@@ -36,8 +36,6 @@
       "@tai-kun/surrealdb/formatters/cbor": ["src/formatters/cbor/index.ts"],
       "@tai-kun/surrealdb/formatters/json": ["src/formatters/json/index.ts"],
 
-      "@tai-kun/surrealdb/validators/noop": ["src/validators/noop/index.ts"],
-
       "~/*": ["src/*"]
     }
   }

@@ -32,7 +32,6 @@ import {
   type TaskListener,
   type TaskListenerOptions,
 } from "@tai-kun/surrealdb/utils";
-import type { Validator } from "@tai-kun/surrealdb/validator";
 
 export type CreateEngine = (config: EngineAbcConfig) =>
   | EngineAbc
@@ -45,7 +44,6 @@ export type ClientEngines = {
 export interface ClientConfig {
   readonly engines: ClientEngines;
   readonly formatter: Formatter;
-  readonly validator: Validator;
   readonly disableDefaultErrorHandler?: boolean | undefined;
 }
 
@@ -65,7 +63,6 @@ export interface ClientRpcOptions {
 export default class BasicClient {
   protected readonly ee: TaskEmitter<EngineEventMap> = new TaskEmitter();
   protected readonly fmt: Formatter;
-  protected readonly v8n: Validator;
   protected eng: EngineAbc | null = null;
 
   private readonly _engines: ClientEngines;
@@ -74,11 +71,9 @@ export default class BasicClient {
     const {
       engines,
       formatter,
-      validator,
       disableDefaultErrorHandler,
     } = config;
     this.fmt = formatter;
-    this.v8n = validator;
     this._engines = { ...engines }; // Shallow copy
 
     if (!disableDefaultErrorHandler) {
@@ -115,7 +110,6 @@ export default class BasicClient {
     return await engine({
       emitter: this.ee,
       formatter: this.fmt,
-      validator: this.v8n,
     });
   }
 

@@ -17,7 +17,6 @@ import {
 import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import Formatter from "@tai-kun/surrealdb/formatters/cbor";
-import Validator from "@tai-kun/surrealdb/validators/noop";
 import { WebSocket } from "isows";
 import initSurreal from "./init-surreal";
 
@@ -41,7 +40,6 @@ const {
       });
     },
   },
-  validator: /* @__PURE__ */ new Validator(),
   formatter: /* @__PURE__ */ new Formatter({
     Uuid,
     Table,

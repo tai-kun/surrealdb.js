@@ -109,11 +109,6 @@
       "import": "./dist/formatter/index.mjs",
       "require": "./dist/formatter/index.cjs"
     },
-    "./validator": {
-      "types": "./dist/validator/index.d.ts",
-      "import": "./dist/validator/index.mjs",
-      "require": "./dist/validator/index.cjs"
-    },
     "./data-types/decode-only": {
       "types": "./dist/data-types/decode-only/index.d.ts",
       "import": "./dist/data-types/decode-only/index.mjs",
@@ -158,11 +153,6 @@
       "types": "./dist/formatters/json/index.d.ts",
       "import": "./dist/formatters/json/index.mjs",
       "require": "./dist/formatters/json/index.cjs"
-    },
-    "./validators/noop": {
-      "types": "./dist/validators/noop/index.d.ts",
-      "import": "./dist/validators/noop/index.mjs",
-      "require": "./dist/validators/noop/index.cjs"
     }
   }
 }

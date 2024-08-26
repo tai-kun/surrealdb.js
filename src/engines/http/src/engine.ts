@@ -131,12 +131,6 @@ export default class HttpEngine extends EngineAbc {
       throw new ConnectionUnavailableError();
     }
 
-    request = this.v8n.parseRpcRequest({
-      input: request,
-      engine: this.name,
-      endpoint: new URL(conn.endpoint),
-    });
-
     switch (request.method) {
       case "use": {
         let { namespace, database } = conn;
@@ -276,12 +270,7 @@ export default class HttpEngine extends EngineAbc {
       const rpc = {
         method: request.method,
         params: request.params,
-        result: rpcResp.result = this.v8n.parseRpcResult({
-          input: rpcResp.result,
-          engine: this.name,
-          request,
-          endpoint: new URL(conn.endpoint),
-        }),
+        result: rpcResp.result,
       } as {
         [M in (typeof request)["method"]]: {
           method: M;

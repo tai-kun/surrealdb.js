@@ -10,7 +10,7 @@ declare namespace NodeJS {
     BROWSER: `${1 | 0}`;
     RUNTIME:
       | "node.js"
-      // | "deno"
+      | "deno"
       | "bun"
       | "chromium"
       | "firefox"

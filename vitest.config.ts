@@ -1,3 +1,4 @@
+import process from "node:process";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
@@ -11,7 +12,7 @@ switch (runtime) {
     break;
 
   case "node.js":
-  // case "deno":
+  case "deno":
   case "bun":
     browser = false;
     break;

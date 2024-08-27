@@ -1,13 +1,9 @@
 import {
-  CLOSED,
-  CLOSING,
   type ConnectArgs,
-  CONNECTING,
   type DisconnectArgs,
   EngineAbc,
   type EngineAbcConfig,
   type EngineEventMap,
-  OPEN,
   processQueryRequest,
   type RpcArgs,
 } from "@tai-kun/surrealdb/engine";
@@ -87,20 +83,20 @@ export default class WebSocketEngine extends EngineAbc {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
 
-    if (conn.state === OPEN) {
+    if (conn.state === "open") {
       return;
     }
 
-    if (conn.state !== CLOSED) {
+    if (conn.state !== "closed") {
       unreachable(conn as never);
     }
 
     await this.transition(
       {
-        state: CONNECTING,
+        state: "connecting",
         endpoint,
       },
-      () => CLOSED,
+      () => "closed",
     );
     const ws = await this.newWs(new URL(endpoint), this.fmt.wsFormat);
     ws.addEventListener("error", evt => {
@@ -166,7 +162,7 @@ export default class WebSocketEngine extends EngineAbc {
       }
 
       try {
-        await this.transition(CLOSED, () => CLOSED);
+        await this.transition("closed", () => "closed");
       } catch (e) {
         this.ee.emit(
           "error",
@@ -190,13 +186,13 @@ export default class WebSocketEngine extends EngineAbc {
         this.ws = ws;
         await this.transition(
           {
-            state: OPEN,
+            state: "open",
             endpoint,
           },
           () => {
             this.ws = null;
 
-            return CLOSED;
+            return "closed";
           },
         );
       } catch (e) {
@@ -283,7 +279,7 @@ export default class WebSocketEngine extends EngineAbc {
       }
     });
 
-    const openPromise = this.ee.once(OPEN, { signal });
+    const openPromise = this.ee.once("open", { signal });
     const errorPromise = this.ee.once("error", { signal });
 
     try {
@@ -377,11 +373,14 @@ export default class WebSocketEngine extends EngineAbc {
       }
     })();
 
-    this.ee.on(CLOSING, async function stop(this: TaskEmitter<EngineEventMap>) {
-      this.off(CLOSING, stop);
-      promise.cancel();
-      await pinger;
-    });
+    this.ee.on(
+      "closing",
+      async function stop(this: TaskEmitter<EngineEventMap>) {
+        this.off("closing", stop);
+        promise.cancel();
+        await pinger;
+      },
+    );
   }
 
   @mutex
@@ -389,35 +388,35 @@ export default class WebSocketEngine extends EngineAbc {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
 
-    if (conn.state === CLOSED) {
+    if (conn.state === "closed") {
       return;
     }
 
-    if (conn.state !== OPEN) {
+    if (conn.state !== "open") {
       unreachable(conn as never);
     }
 
     await this.transition(
       {
-        state: CLOSING,
+        state: "closing",
         endpoint: conn.endpoint,
       },
       () => ({
-        state: CLOSING,
+        state: "closing",
         endpoint: conn.endpoint,
       }),
     );
-    const promiseClosed = this.ee.once(CLOSED, { signal });
+    const promiseClosed = this.ee.once("closed", { signal });
 
     if (
       this.ws
-      && this.ws.readyState !== CLOSED
-      && this.ws.readyState !== CLOSING
+      && this.ws.readyState !== 3 // WebSocket.CLOSED
+      && this.ws.readyState !== 2 // WebSocket.CLOSING
     ) {
       this.ws.close();
     } else {
-      this.ee.emit(CLOSED, {
-        state: CLOSED,
+      this.ee.emit("closed", {
+        state: "closed",
       });
     }
 
@@ -429,15 +428,15 @@ export default class WebSocketEngine extends EngineAbc {
   }
 
   async rpc({ request, signal }: RpcArgs): Promise<BidirectionalRpcResponse> {
-    if (this.state === CONNECTING) {
-      await this.ee.once(OPEN, { signal });
+    if (this.state === "connecting") {
+      await this.ee.once("open", { signal });
     }
 
     // 接続情報のスナップショットを取得します。
     // 以降、接続情報を参照する際はこれを使用します。
     const conn = this.getConnectionInfo();
 
-    if (!this.ws || conn.state !== OPEN) {
+    if (!this.ws || conn.state !== "open") {
       throw new ConnectionUnavailableError();
     }
 

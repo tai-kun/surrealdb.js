@@ -24,13 +24,7 @@ type NonNullKeysOf<T> = {
   [P in keyof T]: null extends T[P] ? never : P;
 }[keyof T];
 
-/**
- * - `0` CONNECTING
- * - `1` OPEN
- * - `2` CLOSING
- * - `3` CLOSED
- */
-export type ConnectionState = 0 | 1 | 2 | 3;
+export type ConnectionState = "connecting" | "open" | "closing" | "closed";
 
 export namespace ConnectionInfo {
   type Info<S extends ConnectionState, E, N, D, T> = {
@@ -41,10 +35,10 @@ export namespace ConnectionInfo {
     token: T;
   };
 
-  export type Connecting = Info<typeof CONNECTING, URL, null, null, null>;
+  export type Connecting = Info<"connecting", URL, null, null, null>;
 
   export type Open = Info<
-    typeof OPEN,
+    "open",
     URL,
     string | null,
     string | null,
@@ -52,14 +46,14 @@ export namespace ConnectionInfo {
   >;
 
   export type Closing = Info<
-    typeof CLOSING,
+    "closing",
     URL,
     string | null,
     string | null,
     string | null
   >;
 
-  export type Closed = Info<typeof CLOSED, null, null, null, null>;
+  export type Closed = Info<"closed", null, null, null, null>;
 }
 
 export type ConnectionInfo =
@@ -89,7 +83,7 @@ function transArgsToConnInfo(args: TransitionArgs): ConnectionInfo {
     endpoint: null,
     database: null,
     namespace: null,
-    ...(typeof args === "number" ? { state: args } : args),
+    ...(typeof args === "string" ? { state: args } : args),
   };
 
   if (conn.endpoint) {
@@ -140,18 +134,13 @@ export interface RpcArgs {
   request: RpcRequest;
 }
 
-export const CONNECTING = 0 as const satisfies ConnectionState;
-export const OPEN = 1 as const satisfies ConnectionState;
-export const CLOSING = 2 as const satisfies ConnectionState;
-export const CLOSED = 3 as const satisfies ConnectionState;
-
-export abstract class EngineAbc {
+export default abstract class EngineAbc {
   protected ee: TaskEmitter<EngineEventMap>;
   protected fmt: Formatter;
 
   private _conn: ConnectionInfo = {
     token: null,
-    state: CLOSED,
+    state: "closed",
     endpoint: null,
     database: null,
     namespace: null,
@@ -202,7 +191,7 @@ export abstract class EngineAbc {
   }
 
   set namespace(ns: string | null) {
-    if (this._conn.state === OPEN) {
+    if (this._conn.state === "open") {
       this._conn.namespace = ns;
     }
   }
@@ -212,7 +201,7 @@ export abstract class EngineAbc {
   }
 
   set database(db: string | null) {
-    if (this._conn.state === OPEN) {
+    if (this._conn.state === "open") {
       this._conn.database = db;
     }
   }
@@ -222,7 +211,7 @@ export abstract class EngineAbc {
   }
 
   set token(token: string | null) {
-    if (this._conn.state === OPEN) {
+    if (this._conn.state === "open") {
       this._conn.token = token;
     }
   }

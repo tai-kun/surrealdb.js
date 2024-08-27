@@ -141,12 +141,8 @@ getConnectionInfo(): ConnectionInfo | undefined;
 
 接続が確立している場合は接続情報を返します。そうでない場合は `undefined` を返します。接続情報には次の項目が含まれます。
 
-`state: 0 | 1 | 2 | 3`
+`state: "connecting" | "open" | "closing" | "closed"`
 :   現在の接続状態を示す数値です。それぞれの数値は次の意味を示します:
-:   - `0` ... 接続を確立している最中です。
-    - `1` ... 接続が確立されています。
-    - `2` ... 切断中です。
-    - `3` ... 切断されています。
 
 `endpoint: URL | null`
 :   接続先のエンドポイントです。切断状態でのみ `null` です。
@@ -162,29 +158,22 @@ getConnectionInfo(): ConnectionInfo | undefined;
 
 各接続状態における接続情報のとりえる値は次の表のとおりです:
 
-| state | endpoint | namespace      | database       | token          |
-| ----- | -------- | -------------- | -------------- | -------------- |
-| `0`   | `URL`    | `null`         | `null`         | `null`         |
-| `1`   | `URL`    | `string\|null` | `string\|null` | `string\|null` |
-| `2`   | `URL`    | `string\|null` | `string\|null` | `string\|null` |
-| `3`   | `null`   | `null`         | `null`         | `null`         |
+| state          | endpoint | namespace      | database       | token          |
+| -------------- | -------- | -------------- | -------------- | -------------- |
+| `"connecting"` | `URL`    | `null`         | `null`         | `null`         |
+| `"open"`       | `URL`    | `string\|null` | `string\|null` | `string\|null` |
+| `"closing"`    | `URL`    | `string\|null` | `string\|null` | `string\|null` |
+| `"closed"`     | `null`   | `null`         | `null`         | `null`         |
 
 ### `.state` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
 現在の接続状態を示す数値です。
 
 ```ts
-state: 0 | 1 | 2 | 3
+state: "connecting" | "open" | "closing" | "closed"
 ```
 
-それぞれの数値は次の意味を示します:
-
-- `0` ... 接続を確立している最中です。
-- `1` ... 接続が確立されています。
-- `2` ... 切断中です。
-- `3` ... 切断されています。
-
-便宜上、接続が確立されていない場合でも `3` になります (`undefined` ではありません。)
+便宜上、接続が確立されていない場合でも `"closed"` になります (`undefined` ではありません。)
 
 関連: [`.getConnectionInfo()`](#getconnectioninfo) も参照してください。
 
@@ -235,7 +224,7 @@ token: string | null | undefined
 ```ts
 off(
   event:
-    | 0 | 1 | 2 | 3
+    | "connecting" | "open" | "closing" | "closed"
     | `rpc_${RpcMethod}_${number}`
     | `live_${string}`
     | "error",
@@ -249,7 +238,7 @@ off(
 
 監視するイベント名です。
 
-`0 | 1 | 2 | 3`
+`"connecting" | "open" | "closing" | "closed"`
 :   接続情報が遷移するとき、または遷移に失敗してときに発生するイベントです。
 
 `rpc_${RpcMethod}_${number}`
@@ -265,10 +254,10 @@ off(
 
 イベントが発生したときに実行される関数です。[タスクエミッター](/ja/reference/utils/task-emitter#on)も参照してください。`eventArgs` に渡される値はイベントによって異なります。
 
-`0 | 1 | 2 | 3`
+`"connecting" | "open" | "closing" | "closed"`
 :   次のいずれかです:
-:   - `{ state: 0 | 1 | 2 | 3 }`
-    - `{ state: 0 | 1 | 2 | 3, error: unknown }`
+:   - `{ state: "connecting" | "open" | "closing" | "closed" }`
+    - `{ state: "connecting" | "open" | "closing" | "closed", error: unknown }`
 
 `rpc_${RpcMethod}_${number}`
 :   次のいずれかです:
@@ -298,7 +287,7 @@ off(
 ```ts
 once(
   event:
-    | 0 | 1 | 2 | 3
+    | "connecting" | "open" | "closing" | "closed"
     | `rpc_${RpcMethod}_${number}`
     | `live_${string}`
     | "error",
@@ -327,7 +316,7 @@ once(
 ```ts
 off(
   event:
-    | 0 | 1 | 2 | 3
+    | "connecting" | "open" | "closing" | "closed"
     | `rpc_${RpcMethod}_${number}`
     | `live_${string}`
     | "error",

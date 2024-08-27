@@ -1,6 +1,5 @@
 import { autoReconnect, initSurreal } from "@tai-kun/surrealdb";
 import Client from "@tai-kun/surrealdb/clients/standard";
-import { CONNECTING } from "@tai-kun/surrealdb/engine";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
 import { channel } from "@tai-kun/surrealdb/utils";
@@ -37,24 +36,26 @@ afterEach(async () => {
   await stopSurrealDb(port);
 });
 
+function lockdown(db: InstanceType<typeof Surreal>) {
+  const unsubscribe = channel.subscribe("websocket:pong", () => {
+    throw null; // ping の応答を失敗させる。
+  });
+  const blocker = () => {
+    throw null; // 接続させない。
+  };
+  db.on("connecting", blocker);
+
+  return function openup() {
+    unsubscribe();
+    db.off("connecting", blocker);
+  };
+}
+
 test("再接続", { timeout: 60_000 }, async () => {
   await using db = new Surreal();
   const ar = autoReconnect(db);
   await db.connect(`ws://127.0.0.1:${port}`);
-  const lockdown = () => {
-    const unsubscribe = channel.subscribe("websocket:pong", () => {
-      throw null; // ping の応答を失敗させる。
-    });
-    const blocker = () => {
-      throw null; // 接続させない。
-    };
-    db.on(CONNECTING, blocker);
 
-    return () => {
-      unsubscribe();
-      db.off(CONNECTING, blocker);
-    };
-  };
   const events: string[] = [];
   ar.on("success", () => (events.push("success"), void 0));
   ar.on("failure", () => (events.push("failure"), void 0));
@@ -81,7 +82,7 @@ test("再接続", { timeout: 60_000 }, async () => {
       });
     }
 
-    const openup = lockdown(); // ping を不能にする。
+    const openup = lockdown(db); // ping を不能にする。
 
     // 再接続に失敗する。
     {

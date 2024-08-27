@@ -105,9 +105,9 @@ export class StateTransitionError extends SurrealAggregateError {
   }
 
   constructor(
-    public from: number,
-    public to: number,
-    public fallback: number,
+    public from: string,
+    public to: string,
+    public fallback: string,
     errors: readonly unknown[],
     options?: Omit<SurrealErrorOptions, "cause"> | undefined,
   ) {

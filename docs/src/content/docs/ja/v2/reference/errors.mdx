@@ -394,13 +394,13 @@ await db.disconnect({ force: true });
 `.name: "StateTransitionError"`
 :   エラー名です。
 
-`.from: number`
+`.from: string`
 :   状態遷移開始時の状態です。
 
-`.to: number`
+`.to: string`
 :   遷移先の状態です。
 
-`.fallback: number`
+`.fallback: string`
 :   状態遷移に失敗した場合の代わりの遷移先です。`.to` と同じ値なら、強制的に遷移したことを意味します。
 
 例えば次のような場合にこのエラーは投げられます:

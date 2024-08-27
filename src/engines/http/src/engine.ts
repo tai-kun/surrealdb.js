@@ -1,12 +1,8 @@
 import {
-  CLOSED,
-  CLOSING,
   type ConnectArgs,
-  CONNECTING,
   type DisconnectArgs,
   EngineAbc,
   type EngineAbcConfig,
-  OPEN,
   processQueryRequest,
   type RpcArgs,
 } from "@tai-kun/surrealdb/engine";
@@ -67,27 +63,27 @@ export default class HttpEngine extends EngineAbc {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
 
-    if (conn.state === OPEN) {
+    if (conn.state === "open") {
       return;
     }
 
-    if (conn.state !== CLOSED) {
+    if (conn.state !== "closed") {
       unreachable(conn as never);
     }
 
     await this.transition(
       {
-        state: CONNECTING,
+        state: "connecting",
         endpoint,
       },
-      () => CLOSED,
+      () => "closed",
     );
     await this.transition(
       {
-        state: OPEN,
+        state: "open",
         endpoint,
       },
-      () => CLOSED,
+      () => "closed",
     );
   }
 
@@ -96,38 +92,38 @@ export default class HttpEngine extends EngineAbc {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
 
-    if (conn.state === CLOSED) {
+    if (conn.state === "closed") {
       return;
     }
 
-    if (conn.state !== OPEN) {
+    if (conn.state !== "open") {
       unreachable(conn as never);
     }
 
     this.vars = {};
     await this.transition(
       {
-        state: CLOSING,
+        state: "closing",
         endpoint: conn.endpoint,
       },
       () => ({
-        state: CLOSING,
+        state: "closing",
         endpoint: conn.endpoint,
       }),
     );
-    await this.transition(CLOSED, () => CLOSED);
+    await this.transition("closed", () => "closed");
   }
 
   async rpc({ request, signal }: RpcArgs): Promise<IdLessRpcResponse> {
-    if (this.state === CONNECTING) {
-      await this.ee.once(OPEN, { signal });
+    if (this.state === "connecting") {
+      await this.ee.once("open", { signal });
     }
 
     // 接続情報のスナップショットを取得します。
     // 以降、接続情報を参照する際はこれを使用します。
     const conn = this.getConnectionInfo();
 
-    if (conn.state !== OPEN) {
+    if (conn.state !== "open") {
       throw new ConnectionUnavailableError();
     }
 

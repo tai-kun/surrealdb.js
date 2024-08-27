@@ -1,4 +1,3 @@
-import { CLOSED, CLOSING, CONNECTING, OPEN } from "@tai-kun/surrealdb/engine";
 import { describe, expect, test, vi } from "vitest";
 import surreal from "../surreal";
 
@@ -8,7 +7,7 @@ for (const { suite, Surreal, url } of surreal) {
       await using db = new Surreal();
       await db.connect(url());
 
-      expect(db.state).toBe(OPEN);
+      expect(db.state).toBe("open");
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
     });
 
@@ -20,7 +19,7 @@ for (const { suite, Surreal, url } of surreal) {
         db.connect(url()),
       ]);
 
-      expect(db.state).toBe(OPEN);
+      expect(db.state).toBe("open");
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
     });
 
@@ -36,7 +35,7 @@ for (const { suite, Surreal, url } of surreal) {
   "message": "Connection conflict between ${url()}/rpc and ${url()}/other/rpc.",
   "name": "ConnectionConflictError",
 }`);
-      expect(db.state).toBe(OPEN);
+      expect(db.state).toBe("open");
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
     });
 
@@ -44,22 +43,22 @@ for (const { suite, Surreal, url } of surreal) {
       await using db = new Surreal();
       await db.connect(url());
 
-      expect(db.state).toBe(OPEN);
+      expect(db.state).toBe("open");
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
 
       await db.disconnect();
 
-      expect(db.state).toBe(CLOSED);
+      expect(db.state).toBe("closed");
       expect(db.endpoint?.toString()).toBe(undefined);
     });
 
     test("接続状態の遷移を監視できる", async () => {
       await using db = new Surreal();
       const listener = vi.fn();
-      db.on(CONNECTING, (_, result) => listener(result));
-      db.on(OPEN, (_, result) => listener(result));
-      db.on(CLOSING, (_, result) => listener(result));
-      db.on(CLOSED, (_, result) => listener(result));
+      db.on("connecting", (_, result) => listener(result));
+      db.on("open", (_, result) => listener(result));
+      db.on("closing", (_, result) => listener(result));
+      db.on("closed", (_, result) => listener(result));
 
       // 2 回やる
       for (const _ of [1, 2]) {
@@ -69,27 +68,27 @@ for (const { suite, Surreal, url } of surreal) {
 
       expect(listener.mock.calls).toStrictEqual([
         // 1 回目
-        [{ state: CONNECTING }],
-        [{ state: OPEN }],
-        [{ state: CLOSING }],
-        [{ state: CLOSED }],
+        [{ state: "connecting" }],
+        [{ state: "open" }],
+        [{ state: "closing" }],
+        [{ state: "closed" }],
         // 2 回目
-        [{ state: CONNECTING }],
-        [{ state: OPEN }],
-        [{ state: CLOSING }],
-        [{ state: CLOSED }],
+        [{ state: "connecting" }],
+        [{ state: "open" }],
+        [{ state: "closing" }],
+        [{ state: "closed" }],
       ]);
     });
 
     test("接続状態の遷移を一度だけ監視できる", async () => {
       await using db = new Surreal();
-      const promieOpen = db.once(OPEN);
-      const promiseClosed = db.once(CLOSED);
+      const promieOpen = db.once("open");
+      const promiseClosed = db.once("closed");
       await db.connect(url());
       await db.disconnect();
 
-      await expect(promieOpen).resolves.toStrictEqual([{ state: OPEN }]);
-      await expect(promiseClosed).resolves.toStrictEqual([{ state: CLOSED }]);
+      await expect(promieOpen).resolves.toStrictEqual([{ state: "open" }]);
+      await expect(promiseClosed).resolves.toStrictEqual([{ state: "closed" }]);
     });
   });
 }

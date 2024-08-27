@@ -1,5 +1,4 @@
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
-import { OPEN } from "@tai-kun/surrealdb/engine";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test } from "vitest";
 import surreal from "../surreal.js";
@@ -61,7 +60,7 @@ for (const { suite, url, Surreal } of surreal) {
       expect(toSurql(jwt)).toBe(`'[REDACTED]'`);
 
       expect(db.getConnectionInfo()).toStrictEqual({
-        state: OPEN,
+        state: "open",
         endpoint: new URL(`${url()}/rpc`),
         namespace: null,
         database: null,
@@ -122,7 +121,7 @@ for (const { suite, url, Surreal } of surreal) {
         expect(toSurql(jwt)).toBe(`'[REDACTED]'`);
 
         expect(db.getConnectionInfo()).toStrictEqual({
-          state: OPEN,
+          state: "open",
           endpoint: new URL(`${url()}/rpc`),
           namespace: "my_namespace",
           database: null,
@@ -191,7 +190,7 @@ for (const { suite, url, Surreal } of surreal) {
         expect(toSurql(jwt)).toBe(`'[REDACTED]'`);
 
         expect(db.getConnectionInfo()).toStrictEqual({
-          state: OPEN,
+          state: "open",
           endpoint: new URL(`${url()}/rpc`),
           namespace: "my_namespace",
           database: "my_database",
@@ -268,7 +267,7 @@ for (const { suite, url, Surreal } of surreal) {
             expect(toSurql(jwt)).toBe(`'[REDACTED]'`);
 
             expect(db.getConnectionInfo()).toStrictEqual({
-              state: OPEN,
+              state: "open",
               endpoint: new URL(`${url()}/rpc`),
               namespace: "my_namespace",
               database: "my_database",
@@ -319,7 +318,7 @@ for (const { suite, url, Surreal } of surreal) {
             expect(toSurql(jwt)).toBe(`'[REDACTED]'`);
 
             expect(db.getConnectionInfo()).toStrictEqual({
-              state: OPEN,
+              state: "open",
               endpoint: new URL(`${url()}/rpc`),
               namespace: "my_namespace",
               database: "my_database",

@@ -1,11 +1,9 @@
 import {
-  CLOSED,
   type ConnectionInfo,
   type ConnectionState,
   type EngineAbc,
   type EngineAbcConfig,
   type EngineEventMap,
-  OPEN,
   processEndpoint,
 } from "@tai-kun/surrealdb/engine";
 import {
@@ -121,7 +119,7 @@ export default class BasicClient {
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#state)
    */
   get state(): ConnectionState {
-    return this.eng?.state ?? CLOSED;
+    return this.eng?.state ?? "closed";
   }
 
   /**
@@ -224,7 +222,7 @@ export default class BasicClient {
     const conn = this.getConnectionInfo();
     endpoint = processEndpoint(endpoint);
 
-    if (conn?.state === OPEN) {
+    if (conn?.state === "open") {
       if (conn.endpoint.href === endpoint.href) {
         return;
       }

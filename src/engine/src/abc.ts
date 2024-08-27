@@ -11,13 +11,7 @@ import type {
   RpcResponse,
 } from "@tai-kun/surrealdb/types";
 import { StatefulPromise, type TaskEmitter } from "@tai-kun/surrealdb/utils";
-
-type Simplify<T> = { [P in keyof T]: T[P] } & {};
-
-type SetOptional<T, P extends keyof T> = Simplify<
-  & Omit<T, P>
-  & { [K in P]+?: T[K] }
->;
+import type { SetOptional, Simplify } from "type-fest";
 
 type OptionalOnNull<T> = SetOptional<
   T,

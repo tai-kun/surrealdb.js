@@ -52,7 +52,7 @@ function escapeNormal(
   return str;
 }
 
-function escapeNumeric(
+function escapeStartsNumeric(
   str: string,
   left: string,
   right: string,
@@ -68,6 +68,33 @@ function escapeNumeric(
     if (!(isAsciiAlphaNumeric(code) || code === UNDERSCORE)) {
       return escape(str, left, right, escaped);
     }
+  }
+
+  return str;
+}
+
+function escapeFullNumeric(
+  str: string,
+  left: string,
+  right: string,
+  escaped: string,
+): string {
+  let numeric = true;
+
+  for (let i = 0, len = str.length, code: number; i < len; i++) {
+    code = str.charCodeAt(i);
+
+    if (!(isAsciiAlphaNumeric(code) || code === UNDERSCORE)) {
+      return escape(str, left, right, escaped);
+    }
+
+    if (numeric && !isAsciiDigit(code)) {
+      numeric = false;
+    }
+  }
+
+  if (numeric) {
+    return escape(str, left, right, escaped);
   }
 
   return str;
@@ -113,7 +140,7 @@ export function escapeRid(rid: string): string {
     return BRACKET_L + BRACKET_R;
   }
 
-  return escapeNumeric(rid, BRACKET_L, BRACKET_R, BRACKET_ESC);
+  return escapeFullNumeric(rid, BRACKET_L, BRACKET_R, BRACKET_ESC);
 }
 
 /**
@@ -124,5 +151,5 @@ export function escapeIdent(ident: string): string {
     return BACKTICK + BACKTICK;
   }
 
-  return escapeNumeric(ident, BACKTICK, BACKTICK, BACKTICK_ESC);
+  return escapeStartsNumeric(ident, BACKTICK, BACKTICK, BACKTICK_ESC);
 }

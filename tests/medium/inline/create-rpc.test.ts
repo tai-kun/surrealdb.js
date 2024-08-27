@@ -10,7 +10,9 @@ test("エンドポイントを事前に設定", async () => {
 });
 
 test("デフォルトのタイムアウト時間を設定", async () => {
+  const delay = (ms: number) => new Promise(r => setTimeout(r, ms));
   const rpc = createRpc(`http://${host()}`, {
+    fetch: (...args) => delay(100).then(() => fetch(...args)),
     timeout: 0,
   });
 

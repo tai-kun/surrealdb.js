@@ -6,10 +6,13 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## JavaScript
 
-このパッケージは `bigint` を使用しているため、JavaScript の言語仕様として ES2020 以降を必要としています。次のブラウザーで動作することが期待されます:
+この SDK は `bigint` を使用しているため、JavaScript の言語仕様として ES2020 以降を必要としています。加えてこの SDK がランタイムに要求する機能を考慮すれば、以下のランタイムで動作することが期待されます:
 
-| ブラウザー | バージョン |
+| ランタイム | バージョン |
 | --- | --- |
+| Node.js | `18.x`,`20.x`,`^22.5.1` |
+| Deno | `^1.44.3` |
+| Bun | `^1.1.13` |
 | Chrome  | `>=78` |
 | Edge    | `>=79` |
 | Safari  | `>=14` |
@@ -17,23 +20,25 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## テスト
 
+テストには Vitest および Playwright を使用しています。これらが機能する最小のバージョンのランタイムでテストしているため、実際には以下に示すバージョンよりも古いランタイムでも機能する可能性があります。
+
 ### サーバー
 
-| 環境 | バージョン | ステータス |
+| ランタイム | バージョン | ステータス |
 | --- | --- | --- |
 | SurrealDB | `^2.0.0` | [GitHub](https://github.com/surrealdb/surrealdb) |
 | Node.js   | `18.x`,<br/>`20.x`,<br/>`^22.5.1` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=main&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml) |
-| Deno      | `^1.44.3` | 未テスト |
+| Deno      | `1.x` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surrealdb.js/actions/workflows/deno.yml) |
 | Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
 
 - SurrealDB v2 以上のバージョンを前提としています。v2 は現在アルファ版であることに注意してください。
 - Node.js v22 を使用する場合は、それがまだ LTS ではないことに注意してください。
-- Deno ではテストできていませんが、おそらく機能します。だたし v1.44.3 以上のバージョンを推奨します。それ未満のバージョンでは、`AbortSignal.timeout()` をリソースリークと誤検知するバグがあります。
+- Deno は常に最新のバージョンを利用することを推奨します。
 - Bun は常に最新のバージョンを利用することを推奨します。
 
 ### ブラウザー
 
-| 環境 | バージョン | ステータス |
+| ランタイム | バージョン | ステータス |
 | --- | --- | --- |
 | Chromium  | `>=104` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/chromium.yml?branch=main&logo=googlechrome&label=Chromium)](https://github.com/tai-kun/surrealdb.js/actions/workflows/chromium.yml) |
 | Firefox | `>=100` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=main&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml) |

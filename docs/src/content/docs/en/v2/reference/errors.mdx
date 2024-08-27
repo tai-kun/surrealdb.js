@@ -4,57 +4,57 @@ title: Errors
 
 ## SurrealError
 
-`SurrealError` is the base class that most error objects explicitly thrown by this library inherit. This class inherits from the JavaScript `Error` class. This error object is rarely thrown on its own, but is basically inherited by an error object that has a special meaning. It is recommended to use it to easily classify whether an error supplemented by a `try-catch` construct is an error explicitly thrown by this library.
+`SurrealError` is the base class that almost all error objects explicitly thrown by this SDK inherit from. This class inherits from the JavaScript `Error` class. This error object is rarely thrown by itself, and basically, a more specific error object that inherits from it is thrown. It is recommended to use it to easily classify whether an error supplemented by a `try-catch` construct or the like is an error explicitly thrown by this SDK.
 
 `.name: "SurrealError"`
-:  Error name.
+:   The error name.
 
 `.message`
-:  Error message.
+:   The error message.
 
 `.stack`
-:  The stack trace may be recorded.
+:   A stack trace may be recorded.
 
 `.cause`
-:  The cause or context of the error may be set.
+:   The cause or context in which the error occurred may be set.
 
 ## SurrealTypeError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown if input validation or other validation fails.
+This error is thrown if an input value or other validation fails.
 
 `.name: "SurrealTypeError"`
-:  Error name.
+:   The error name.
 
 `.expected`
-:  Expected data format.
+:   The expected data type.
 
 `.actual`
-:  String representation of the actual value.
+:   A string representation of the actual value.
 
 ## SurrealAggregateError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This is an error that aggregates multiple errors and error messages.
+This is an error that aggregates multiple errors or error messages.
 
 `.name: "SurrealAggregateError"`
-:  Error name.
+:   The error name.
 
 `.cause: unknown[]`
-:  Each element of the array contains an error, an error message, etc.
+:   Each element of the array contains an error, an error message, etc.
 
 ## CircularReferenceError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown if a circular reference is detected. This is mainly thrown when the same object as the parent object is detected in the process of converting a JavaScript value to another format.
+This error is thrown when a circular reference is detected. It is mainly thrown during the process of converting a JavaScript value to another format, when the same object as the parent object is detected.
 
 `.name: "CircularReferenceError"`
-:  Error name.
+:   The error name.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 import { toSurql } from "@tai-kun/surrealdb/utils";
@@ -69,53 +69,53 @@ toSurql(a); // throws CircularReferenceError
 
 ## NumberRangeError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown if a number takes a value outside the range.
+This error is thrown when a number takes a value outside the allowed range.
 
 `.name: "NumberRangeError"`
-:  Error name.
+:   The error name.
 
 `.range`
-:  Expected range.
+:   The expected range.
 
 `.actual`
-:  The actual value.
+:   The actual value.
 
 `.integer`
-:  If `true`, an integer is expected.
+:   If `true`, an integer is expected.
 
 ## UnsupportedRuntimeError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown if it is determined that an unsupported runtime is being used.
+This error is thrown when it is determined that an unsupported runtime is being used.
 
 `.name: "UnsupportedRuntimeError"`
-:  Error name.
+:   The error name.
 
 ## UnreachableError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown if unreachable code is reached. If this error is thrown, it probably means that you have encountered a bug in this package.
+This error is thrown when unreachable code is reached. If this error is thrown, you have probably encountered a bug in this SDK.
 
 `.name: "UnreachableError"`
-:  Error name.
+:   The error name.
 
 ## CircularEngineReferenceError
 
-Inherited from: `CircularReferenceError`
+Inherits from: `CircularReferenceError`
 
-This error is thrown if a circular reference occurs between engines when connecting to a database.
+This error is thrown when a circular reference occurs between engines when connecting to the database.
 
 `.name: "CircularEngineReferenceError"`
-:  Error name.
+:   The error name.
 
 `.seen: string[]`
-:  A list of protocol names that have been passed through before a circular reference occurs.
+:   A list of protocol names that have been passed through before the circular reference occurs.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 const { Surreal } = initSurreal({
@@ -130,21 +130,21 @@ await using db = new Surreal();
 await db.connect("https://localhost:8000"); // throws CircularEngineReferenceError: Circular engine reference: http,https
 ```
 
-In the above example, a circular reference error is thrown because the https protocol engine tries to use the engine set to http, even though it indicates that it uses the engine set to http.
+In the example above, a circular reference error is thrown because the engine for the https protocol is configured to use the engine configured for http, even though the engine for the http protocol is configured to use the engine configured for https.
 
 ## EngineNotFoundError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown when trying to connect with a protocol for which no engine is set.
+This error is thrown when attempting to connect with a protocol for which no engine is configured.
 
 `.name: "EngineNotFoundError"`
-:  Error name.
+:   The error name.
 
 `.protocol: string`
-:  The name of the protocol to connect to.
+:   The name of the protocol to connect to.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 const { Surreal } = initSurreal({
@@ -160,18 +160,18 @@ await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No ht
 
 ## ConnectionConflictError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown when a client attempts to connect to multiple endpoints simultaneously.
+This error is thrown when the client attempts to connect to multiple endpoints simultaneously.
 
 `.name: "ConnectionConflictError"`
-:  Error name.
+:   The error name.
 
 `.endpoint1: string`
-:  One endpoint.
+:   One of the endpoints.
 
 `.endpoint2: string`
-:  The other endpoint.
+:   The other endpoint.
 
 ```ts
 await using db = new Surreal();
@@ -180,7 +180,7 @@ await db.connect("http://localhost:8000");
 await db.connect("http://localhost:11298"); // throws ConnectionConflictError: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
 ```
 
-The `.connect` method appends `/rpc` to the end of the passed URL if it doesn't already end in `/rpc`. Therefore, if the URL path of one endpoint ends with `/rpc`, an error may not occur despite its appearance:
+The `.connect` method will append `/rpc` to the end of the URL path passed to it if it does not already end with `/rpc`. Therefore, if the URL path of one endpoint ends with `/rpc`, it may not result in an error, contrary to its appearance:
 
 ```ts
 await using db = new Surreal();
@@ -198,20 +198,20 @@ await db.connect("http://localhost:8000"); // OK!
 
 ## NamespaceConflictError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown when the client attempts to switch to multiple different namespaces at the same time.
+This error is thrown when the SDK attempts to switch to different namespaces at the same time.
 
 `.name: "NamespaceConflictError"`
-:  Error name.
+:   The error name.
 
 `.namespace1: string`
-:  One namespace.
+:   One of the namespaces.
 
 `.namespace2: string`
-:  The other namespace.
+:   The other namespace.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 await using db = new Surreal();
@@ -226,20 +226,20 @@ await Promise.all([
 
 ## DatabaseConflictError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown when the client attempts to switch to multiple different databases at the same time.
+This error is thrown when the SDK attempts to switch to different databases at the same time.
 
 `.name: "DatabaseConflictError"`
-:  Error name.
+:   The error name.
 
 `.database1: string`
-:  One database.
+:   One of the databases.
 
 `.database2: string`
-:  The other database.
+:   The other database.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 await using db = new Surreal();
@@ -254,17 +254,17 @@ await Promise.all([
 
 ## MissingNamespaceError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown if no namespace is selected before selecting a database. This will also be thrown if you try to deselect a namespace while a database is selected.
+This error is thrown if a namespace has not been selected before selecting a database. It is also thrown if you try to unselect a namespace while a database is selected.
 
 `.name: "MissingNamespaceError"`
-:  Error name.
+:   The error name.
 
 `.database: string`
-:  Database name.
+:   The database name.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 await using db = new Surreal();
@@ -275,32 +275,32 @@ await db.use({ database: "example" }); // throws MissingNamespaceError: The name
 
 ## RpcResponseError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown when the RPC response indicates an error. This means that there was no problem with the communication over the connected protocol or decoding the response body, but SurrealDB was unable to process the RPC request.
+This error is thrown if the RPC response indicates an error. It means that there is no problem with the communication over the connected protocol or decoding of the response body, but SurrealDB is unable to process the RPC request.
 
 `.name: "RpcResponseError"`
-:  Error name.
+:   The error name.
 
 `.id?: string`
-:  An ID that identifies the RPC request. The ID always starts with `<method name>_`.
+:   An ID that identifies the RPC request. The ID always starts with `<method name>_`.
 
 `.code: number`
-:  Not documented in SurrealDB, but probably a JSON-RPC error code.
+:   Not documented in SurrealDB documentation, but probably the JSON-RPC error code.
 
 ## QueryFailedError
 
-Inherited from: `SurrealAggregateError`
+Inherits from: `SurrealAggregateError`
 
 This error is thrown when a query fails.
 
 `.name: "QueryFailedError"`
-:  Error name.
+:   The error name.
 
 `.cause: string[]`
-:  List of errors.
+:   A list of errors.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 await using db = new Surreal();
@@ -311,14 +311,14 @@ await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 
 
 ## Disconnected
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error indicates that the connection was forcibly terminated.
+This error indicates that the connection has been forcibly terminated.
 
 `.name: "Disconnected"`
-:  Error name.
+:   The error name.
 
-For example, you get this error in the following cases:
+For example, this error is obtained in the following case:
 
 ```ts
 const db = new Surreal();
@@ -339,43 +339,43 @@ await db.disconnect({ force: true });
 
 ## EngineError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This indicates an error originating from the engine. Shipped via event listener.
+Indicates that the error is caused by the engine. Shipped via an event listener.
 
 `.name: "EngineError"`
-:  Error name.
+:   The error name.
 
 `.fatal: boolean | undefined`
-:  Indicates whether this error is fatal.
+:   Indicates whether this error is fatal.
 
 ## HttpEngineError
 
-Inherited from: `EngineError`
+Inherits from: `EngineError`
 
-This indicates an error originating from the HTTP engine. Currently only defined and not used.
+Indicates that the error is caused by the HTTP engine. It is currently only defined and not used.
 
 `.name: "HttpEngineError"`
-:  Error name.
+:   The error name.
 
 ## WebSocketEngineError
 
-Inherited from: `EngineError`
+Inherits from: `EngineError`
 
-This indicates an error originating from the WebSocket engine. It is used when the response body fails to be parsed before finding the ID that identifies the RPC request, when an error event is received from the WebSocket object, or when the WebSocket connection is disconnected.
+Indicates that the error is caused by the WebSocket engine. It is used when the response body fails to be parsed before finding the ID that identifies the RPC request, when an error event is received from the WebSocket object, or when the WebSocket connection is closed.
 
 `.name: "WebSocketEngineError"`
-:  Error name.
+:   The error name.
 
 `.code: number`
-:  One of the following status codes:
-    - `1000`~`1015`: [MDN Reference](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent/code)
-    - `3150`: Indicates that an "error" event was received from the `WebSocket`[^1] instance.
-    - `3151`: Indicates an error occurred in the "open" event handler registered by the WebSocket engine. Most likely, a `StateTransitionError` occurred during the transition from connecting to connected.
-    - `3152`: Indicates an error occurred in the "message" event handler registered by the WebSocket engine. There are many possible causes, but it is likely that a `ResponseError` or `RpcResponseError` was thrown within the event handler. Tracing back, this could be due to requesting a syntactically incorrect SurrealQL custom query with the `.query()` method, or requesting with invalid RPC parameters. In that case, the method that called the RPC will (by default) time out after 5 seconds and fail.
-    - `3153`: Indicates that ping sending or receiving failed. This may be a temporary error, but if you are receiving it continuously, the connection may not be maintained.
-    - `3154`: Indicates that an error occurred in the "close" event handler registered by the WebSocket engine. Most likely, a `StateTransitionError` occurred in the middle of transitioning from closing to closed.
-:   Note that the following status codes are excluded from the above. They are not treated as errors in this package.
+:   One of the following status codes:
+    - `1000`~`1015`: [MDN Reference](https://developer.mozilla.org/docs/Web/API/CloseEvent/code)
+    - `3150`: Indicates that an "error" event was received from the instance of `WebSocket`[^1].
+    - `3151`: Indicates that an error occurred within the "open" event handler registered by the WebSocket engine. In most cases, a `StateTransitionError` occurred while transitioning from a connecting state to a connected state.
+    - `3152`: Indicates that an error occurred within the "message" event handler registered by the WebSocket engine. There are various possible causes, but it is highly likely that a `ResponseError` or `RpcResponseError` was thrown within the event handler. Tracing back, this could be due to requesting an incorrectly formatted SurrealQL custom query with the `.query()` method, or requesting with invalid RPC parameters. In that case, the calling method of the RPC will time out and fail (by default) after 5 seconds.
+    - `3153`: Indicates that sending or receiving a ping failed. This may be a temporary error, but if you are receiving it continuously, you may not be able to maintain a connection.
+    - `3154`: Indicates that an error occurred within the "close" event handler registered by the WebSocket engine. In most cases, a `StateTransitionError` occurred while transitioning from a closing state to a closed state.
+:   Note that the following status codes are excluded from the above. They are not treated as errors in this SDK.
     - `1000`: Closed normally.
     - `1001`: Early closure is common.
     - `1004`: Reserved.
@@ -383,27 +383,27 @@ This indicates an error originating from the WebSocket engine. It is used when t
     - `1006`: Reserved.
     - `1015`: Reserved.
 
-^1: `WebSocket` is a class defined by the runtime in a global variable or the `ws` package.
+^1: `WebSocket` can be a class that the runtime defines in a global variable, or a class from the `ws` SDK.
 
 ## StateTransitionError
 
-Inherited from: `SurrealAggregateError`
+Inherits from: `SurrealAggregateError`
 
-This error is thrown when an event listener fails to execute during a state transition.
+This error is thrown if an event listener fails to execute during a state transition.
 
 `.name: "StateTransitionError"`
-:  Error name.
+:   The error name.
 
 `.from: number`
-:  The state at the start of the state transition.
+:   The state at the start of the state transition.
 
 `.to: number`
-:  The state to transition to.
+:   The state to transition to.
 
 `.fallback: number`
-:  An alternative transition destination if the state transition fails. Same value as `.to` means the transition was forced.
+:   Alternative transition destination if state transition fails. If the value is the same as `.to`, it means that the transition was forced.
 
-For example, this error will be thrown in the following case:
+For example, this error is thrown in the following case:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -430,95 +430,95 @@ await db.connect("http://localhost:8000"); // throws ...
 
 ## ConnectionUnavailableError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown when attempting to send an RPC request in a disconnected state.
+This error is thrown when an attempt is made to send an RPC request while disconnected.
 
 `.name: "ConnectionUnavailableError"`
-:  Error name.
+:   The error name.
 
 ## ResponseError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This error is thrown when the response cannot be parsed as a PRC response. This is different from `RpcResponseError`.
+This error is thrown if the response cannot be parsed as a PRC response. It is different from `RpcResponseError`.
 
 `.name: "ResponseError"`
-:  Error name.
+:   The error name.
 
 ## CborError
 
-Inherited from: `SurrealError`
+Inherits from: `SurrealError`
 
-This is the class that all CBOR-related errors explicitly thrown by `@tai-kun/surrealdb/cbor` inherit. It is never thrown directly.
+This is the class that all CBOR-related errors explicitly thrown by `@tai-kun/surrealdb/cbor` inherit from. It is never thrown directly.
 
 `.name: "CborError"`
-:  Error name.
+:   The error name.
 
 ## CborWellFormednessError
 
-Inherited from: `CborError`
+Inherits from: `CborError`
 
-This is the class that all CBOR decoding related errors explicitly thrown by `@tai-kun/surrealdb/cbor` inherit. It is never thrown directly.
+This is the class that all CBOR decoding related errors explicitly thrown by `@tai-kun/surrealdb/cbor` inherit from. It is never thrown directly.
 
 See "[Well-Formedness Errors and Examples](https://datatracker.ietf.org/doc/html/rfc8949#name-well-formedness-errors-and-)" in Appendix F of RFC8949.
 
 `.name: "CborWellFormednessError"`
-:  Error name.
+:   The error name.
 
 ## CborTooMuchDataError
 
-Inherited from: `CborWellFormednessError`
+Inherits from: `CborWellFormednessError`
 
-This indicates that unconsumed input bytes remain.
+This indicates that there are unconsumed input bytes remaining.
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.2)
 
 `.name: "CborTooMuchDataError"`
-:  Error name.
+:   The error name.
 
 ## CborTooLittleDataError
 
-Inherited from: `CborWellFormednessError`
+Inherits from: `CborWellFormednessError`
 
 This indicates that the input bytes are incomplete.
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.4)
 
 `.name: "CborTooLittleDataError"`
-:  Error name.
+:   The error name.
 
 ## CborSyntaxError
 
-Inherited from: `CborWellFormednessError`
+Inherits from: `CborWellFormednessError`
 
 Indicates that the input bytes do not match the CBOR encoding format.
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.6)
 
 `.name: "CborSyntaxError"`
-:  Error name.
+:   The error name.
 
 ## CborMaxDepthReachedError
 
-Inherited from: `CborError`
+Inherits from: `CborError`
 
-This error is thrown if the maximum depth of the JavaScript object is reached when encoding or decoding CBOR. The depth increases by 1 each time you enter an object or array.
+This error is thrown when the maximum depth of a JavaScript object is reached when encoding or decoding CBOR. The depth increases by 1 for each object or array entered.
 
 `.name: "CborMaxDepthReachedError"`
-:  Error name.
+:   The error name.
 
 `.maxDepth: number`
-:  Maximum depth.
+:   The maximum depth.
 
 ## CborUnsafeMapKeyError
 
-Inherited from: `CborError`
+Inherits from: `CborError`
 
-Error thrown when unsafe map keys are found when encoding or decoding CBOR.
+This error is thrown when an unsafe map key is encountered when encoding or decoding CBOR.
 
 `.name: "CborUnsafeMapKeyError"`
-:  Error name.
+:   The error name.
 
 `.key: unknown`
-:  The map key that was determined to be unsafe.
+:   The map key that was determined to be unsafe.

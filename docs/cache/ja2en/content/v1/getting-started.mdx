@@ -54,7 +54,6 @@ import { initSurreal } from "@tai-kun/surrealdb";
 import Client from "@tai-kun/surrealdb/clients/standard";
 import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
-import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
 
 const { Surreal } = initSurreal({
   Client: Client,
@@ -66,6 +65,5 @@ const { Surreal } = initSurreal({
     https: "http",
   },
   formatter: new JsonFormatter(),
-  validator: new NoOpValidator(),
 });
 ```

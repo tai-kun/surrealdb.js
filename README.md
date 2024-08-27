@@ -2,7 +2,7 @@ A modular SurrealDB client working in major JavaScript runtimes.
 
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=main&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml)
-<!-- [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surrealdb.js/actions/workflows/deno.yml) -->
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surrealdb.js/actions/workflows/deno.yml)
 
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/chromium.yml?branch=main&logo=googlechrome&label=Chromium)](https://github.com/tai-kun/surrealdb.js/actions/workflows/chromium.yml)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=main&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml)
@@ -77,16 +77,17 @@ The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.j
 | Env | Version |
 | --- | --- |
 | Node.js | `20.x`,`^22.5.1` *1 |
-| Deno | `^1.44.3` (not tested) |
+| Deno | `1.x` *2 |
 | Bun | `^1.1.13` |
-| Chromium | `>=104` *2 |
-| Firefox | `>=100` *3 |
-| WebKit | `>=15.4` *4 |
+| Chromium | `>=104` *3 |
+| Firefox | `>=100` *4 |
+| WebKit | `>=15.4` *5 |
 
 *1: Probably works with `18.x`  
-*2: Probably works with `>=78`  
-*3: Probably works with `>=68`  
-*4: Probably works with `>=14`
+*2: Probably works with `^1.44.3`  
+*3: Probably works with `>=78`  
+*4: Probably works with `>=68`  
+*5: Probably works with `>=14`
 
 and:
 

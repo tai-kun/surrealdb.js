@@ -1,16 +1,31 @@
 // @ts-check
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import {
+  GoogleGenerativeAI,
+  GoogleGenerativeAIFetchError,
+} from "@google/generative-ai";
 import { glob } from "glob";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
+import { setTimeout } from "node:timers/promises";
 
 const API_KEY = process.env["API_KEY"];
 
 if (!API_KEY) {
   throw new Error("API_KEY not found");
 }
+
+const PROMPT = `
+あなたにはこれから日本語で書かれたドキュメントを自然な英語にしてもらいます。
+
+以下の指示に従ってください。
+- 日本語ドキュメントには主に、TypeScriptコードで書かれた、SurreaDBのSDKの使用方法に関する内容が記されています。
+- 公にするドキュメントとして適切な文体になるように配慮してください。ただし、技術的なニュアンスを保ってください。
+- ファイルパスやURLは絶対に変更しないでください。
+
+それでは、以下の日本語で書かれた MDX 形式のドキュメントを自然な英語にして、その結果だけを示してください。
+`.trim();
 
 /**
  * @type {Record<string, string>}
@@ -58,22 +73,26 @@ try {
 
     console.log(progress + file);
 
-    const result = await model.generateContent(
-      [
-        "あなたにはこれから日本語で書かれたドキュメントを自然な英語にしてもらいます。",
-        "",
-        "以下の指示に従ってください。",
-        "- 日本語ドキュメントには主に、TypeScriptコードで書かれた、SurreaDBのクライアント"
-        + "ライブラリの使用方法に関する内容が記されています。",
-        "- 公にするドキュメントとして適切な文体になるように配慮してください。ただし、技術的なニュアンスを保ってください。",
-        "- ファイルパスやURLは絶対に変更しないでください。",
-        "",
-        "それでは、以下の日本語で書かれた MDX 形式のドキュメントを自然な英語にして、その結果だけを"
-        + "示してください。",
-        "",
-        content,
-      ].join("\n"),
-    );
+    let result;
+
+    while (true) {
+      try {
+        result = await model.generateContent(`${PROMPT}\n${content}`);
+        break;
+      } catch (e) {
+        if (e instanceof GoogleGenerativeAIFetchError) {
+          console.error(e.message);
+        } else {
+          console.error(e);
+        }
+
+        console.log(" ".repeat(progress.length) + "3 分間待ってやります。");
+        await setTimeout(3 * 60e3);
+
+        continue;
+      }
+    }
+
     const text = result.response.text()
       .replace(/\/ja\//g, "/en/")
       .replace(/\/components\/(?!en\/)/g, "/components/en/");

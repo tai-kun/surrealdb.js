@@ -6,7 +6,7 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## JavaScript
 
-このパッケージは `bigint` を使用しているため、JavaScript の言語仕様として ES2020 以降を必要としています。次のブラウザーで動作することが期待されます:
+この SDK は `bigint` を使用しているため、JavaScript の言語仕様として ES2020 以降を必要としています。次のブラウザーで動作することが期待されます:
 
 | ブラウザー | バージョン |
 | --- | --- |
@@ -26,7 +26,6 @@ import { Aside } from "@astrojs/starlight/components"
 | Deno      | `^1.44.3` | 未テスト |
 | Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=v1&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
 
-- SurrealDB v2 以上のバージョンを前提としています。v2 は現在アルファ版であることに注意してください。
 - Node.js v22 を使用する場合は、それがまだ LTS ではないことに注意してください。
 - Deno ではテストできていませんが、おそらく機能します。だたし v1.44.3 以上のバージョンを推奨します。それ未満のバージョンでは、`AbortSignal.timeout()` をリソースリークと誤検知するバグがあります。
 - Bun は常に最新のバージョンを利用することを推奨します。

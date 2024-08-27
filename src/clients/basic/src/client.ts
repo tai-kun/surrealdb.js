@@ -45,6 +45,10 @@ export interface ClientConfig {
   readonly engines: ClientEngines;
   readonly formatter: Formatter;
   readonly disableDefaultErrorHandler?: boolean | undefined;
+  /**
+   * @deprecated
+   */
+  readonly validator?: never;
 }
 
 export interface ClientConnectOptions {

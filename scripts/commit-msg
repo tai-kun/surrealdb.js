@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KIND='(chore|docs|feat|fix|perf|refactor|release|revert|style|test)'
+KIND='chore|docs|feat|fix|perf|refactor|release|revert|style'
 EXCLUDES=(
     'cache' '.cache'
     'temp' '.temp' 'tmp' '.tmp'
@@ -8,6 +8,7 @@ EXCLUDES=(
     '.Trash'
     'target' 'debug'
     'node_modules'
+    'build'
     'dist'
     'src'
 )
@@ -50,6 +51,7 @@ function match() {
 }
 
 function check() {
+    local kind="$1"
     local scope=''
     local i
 
@@ -64,18 +66,20 @@ function check() {
     done
 
     if [ "$scope" != '' ]; then
-        match "^$KIND\((${scope//$/\\$})\): ."
+        match "^($kind)!?\((${scope//$/\\$})\): ."
     fi
 }
 
-match "^$KIND: ."
-match "^ci: ."
+match '^ci: .'
 match '^chore\(deps\): .'
 match '^chore\(deps-dev\): .'
-check "$(listup . -m 1)"
-check "$(listup src)"
-check "$(listup tests -p tests/)"
-check "$(listup scripts -p scripts/)"
+
+match '^test: .'
+check 'test' "$(listup tests)"
+
+match "^($KIND)!?: ."
+check "$KIND" "$(listup src)"
+check "$KIND" 'scripts'
 
 echo 'Invalid Commit Message'
 exit 1

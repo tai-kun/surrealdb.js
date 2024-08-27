@@ -74,6 +74,12 @@ test(".toString(foo-bar)", () => {
   expect(`${t}`).toBe("⟨⟩:⟨foo-bar⟩");
 });
 
+test(".toString(0ABC)", () => {
+  const t = new Thing("", "0ABC");
+
+  expect(`${t}`).toBe("⟨⟩:0ABC");
+});
+
 test(".toString({ ... })", () => {
   const t = new Thing("", {
     string: "😢",

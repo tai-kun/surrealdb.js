@@ -58,6 +58,9 @@ export { default as query } from "./src/query";
 export type * from "./src/rpc";
 export { default as rpc } from "./src/rpc";
 
+export type * from "./src/raw";
+export { default as Raw } from "./src/raw";
+
 export type * from "./src/slot";
 export { default as Slot } from "./src/slot";
 

@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`.toString() 明示的に定義されていないならエラー 1`] = `
+{
+  "actual": "object",
+  "expected": "object",
+  "message": "Expected object but got object.",
+  "name": "SurrealTypeError",
+}
+`;
+
+exports[`数値を入力してエラー 1`] = `
+{
+  "actual": "number",
+  "expected": "string | object",
+  "message": "Expected string | object but got number.",
+  "name": "SurrealTypeError",
+}
+`;

@@ -1,6 +1,7 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import PreparedQuery from "./prepared-query";
+import Raw, { type RawValue } from "./raw";
 import Slot from "./slot";
 
 export interface Surql {
@@ -8,6 +9,9 @@ export interface Surql {
     texts: readonly string[] | TemplateStringsArray,
     ...values: V
   ): PreparedQuery<Extract<V[number], Slot>>;
+  raw: {
+    (value: RawValue): Raw;
+  };
   slot: {
     <N extends string, T>(name: N): Slot<N, true, T | undefined>;
     <N extends string, T>(name: N, defaultValue: T): Slot<N, false, T>;
@@ -74,6 +78,8 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
           slots.push(v);
           named.push(v.name);
         }
+      } else if (v instanceof Raw) {
+        text += v.toString();
       } else {
         text += "$" + varPrefix + j;
 
@@ -90,6 +96,10 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
     );
   }
 
+  function raw(value: RawValue): Raw {
+    return new Raw(value);
+  }
+
   function slot(...args: [name: string, defaultValue?: unknown]): Slot {
     return args.length === 1
       ? new Slot(args[0], true, { formatter })
@@ -100,5 +110,5 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
   }
 
   // @ts-expect-error
-  return Object.assign(surql, { slot });
+  return Object.assign(surql, { raw, slot });
 }

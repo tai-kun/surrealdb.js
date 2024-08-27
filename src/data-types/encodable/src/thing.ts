@@ -3,54 +3,11 @@ import {
   type ThingIdSource,
   type ThingTbSource,
 } from "@tai-kun/surrealdb/data-types/decode-only";
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import { escapeRid, quoteStr, toSurql } from "@tai-kun/surrealdb/utils";
+import { escapeRid, quoteStr } from "@tai-kun/surrealdb/utils";
+import { escapeId, toString } from "~/data-types/thing";
 import { CBOR_TAG_RECORDID, type Encodable } from "./spec";
 
 export type * from "~/data-types/decode-only/src/thing";
-
-function escapeId(id: unknown): string {
-  switch (typeof id) {
-    case "string":
-      switch (id) {
-        case "ulid()":
-        case "uuid()":
-        case "rand()":
-          return id;
-
-        default:
-          return escapeRid(id);
-      }
-
-    case "number":
-      if (id !== id || id === Infinity || id === -Infinity) {
-        break;
-      }
-
-      return id < 0 || !Number.isInteger(id)
-        ? escapeRid(id + "")
-        : Object.is(id, -0)
-        ? escapeRid("-0")
-        : (id + "");
-
-    case "bigint":
-      return id < 0
-        ? escapeRid(id + "")
-        : (id + "");
-
-    case "object":
-      if (id === null) {
-        break;
-      }
-
-      return toSurql(id);
-  }
-
-  throw new SurrealTypeError(
-    "string | number | bigint | object",
-    id === null ? "null" : typeof id,
-  );
-}
 
 export default class Thing<
   T extends ThingTbSource = ThingTbSource,
@@ -61,9 +18,7 @@ export default class Thing<
   }
 
   override toString(): string {
-    // SurrealDB では String を escape_rid でエスケープしている:
-    // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/src/sql/thing.rs#L97
-    return escapeRid(this.tb) + ":" + escapeId(this.id);
+    return toString(this);
   }
 
   [Symbol.toPrimitive](hint: "default" | "string"): string;
@@ -83,15 +38,17 @@ export default class Thing<
     tag: typeof CBOR_TAG_RECORDID,
     value: [tb: string, id: unknown] | string,
   ] {
-    switch (this.id) {
-      case "ulid()":
-      case "uuid()":
-      case "rand()":
-        return [CBOR_TAG_RECORDID, this.toString()];
+    // ID ジェネレーターを使いたければ surql`${surql.raw(<...>)}` を使う。
+    return [CBOR_TAG_RECORDID, [this.tb, this.id]];
+    // switch (this.id) {
+    //   case "ulid()":
+    //   case "uuid()":
+    //   case "rand()":
+    //     return [CBOR_TAG_RECORDID, this.toString()];
 
-      default:
-        return [CBOR_TAG_RECORDID, [this.tb, this.id]];
-    }
+    //   default:
+    //     return [CBOR_TAG_RECORDID, [this.tb, this.id]];
+    // }
   }
 
   toJSON(): string {

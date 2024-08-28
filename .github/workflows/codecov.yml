@@ -43,6 +43,7 @@ jobs:
         with:
           files: ./coverage/node.js/coverage-final.json,./coverage/chromium/coverage-final.json
           token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
 
       - name: SurrealDB のログ
         run: cat /tmp/logs

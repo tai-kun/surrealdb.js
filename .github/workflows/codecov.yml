@@ -15,13 +15,6 @@ jobs:
   coverage:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        surrealdb-version:
-          - "alpha"
-          # - "v2.0.0"
-          # - "latest"
     steps:
       - uses: actions/checkout@v4
 
@@ -34,20 +27,21 @@ jobs:
       - name: 依存関係をインストール
         run: |
           npm ci
-          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
+          npm i -D playwright@latest
+          npx playwright install --with-deps chromium
+          bash scripts/pretest/setup_surrealdb.sh alpha
 
       - name: カバレッジ
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-          npx vitest tests/ --run --coverage
-        env:
-          VITEST_MODE: node.js
+          VITEST_MODE='node.js'  npx vitest tests/ --run --coverage
+          VITEST_MODE='chromium' npx vitest tests/ --run --coverage
 
       - uses: codecov/codecov-action@v4
         with:
-          files: ./coverage/coverage-final.json
+          files: ./coverage/node.js/coverage-final.json,./coverage/chromium/coverage-final.json
           token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: SurrealDB のログ

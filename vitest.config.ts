@@ -6,11 +6,6 @@ let runtime = (process.env["VITEST_MODE"] || "Node.js").toLowerCase();
 let browser: boolean;
 
 switch (runtime) {
-  case "test":
-    runtime = "node.js";
-    browser = false;
-    break;
-
   case "node.js":
   case "deno":
   case "bun":
@@ -44,7 +39,7 @@ switch (runtime) {
   case "firefox":
     break;
 
-  case "wenkit":
+  case "webkit":
     break;
 }
 
@@ -69,6 +64,7 @@ export default defineConfig({
       reporter: process.env["CI"]
         ? ["json", "text-summary", "text"]
         : ["html", "text-summary"],
+      reportsDirectory: `coverage/${runtime}`,
     },
     setupFiles: [
       "scripts/vitest-helpful-error.js",

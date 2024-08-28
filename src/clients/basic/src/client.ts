@@ -136,12 +136,6 @@ export default class BasicClient {
     return this.eng?.namespace;
   }
 
-  set namespace(ns: string | null) {
-    if (this.eng) {
-      this.eng.namespace = ns;
-    }
-  }
-
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#database)
    */
@@ -149,23 +143,11 @@ export default class BasicClient {
     return this.eng?.database;
   }
 
-  set database(db: string | null) {
-    if (this.eng) {
-      this.eng.database = db;
-    }
-  }
-
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#token)
    */
   get token(): string | null | undefined {
     return this.eng?.token;
-  }
-
-  set token(token: string | null) {
-    if (this.eng) {
-      this.eng.token = token;
-    }
   }
 
   /**

@@ -191,9 +191,7 @@ export default abstract class EngineAbc {
   }
 
   set namespace(ns: string | null) {
-    if (this._conn.state === "open") {
-      this._conn.namespace = ns;
-    }
+    this._conn.namespace = ns;
   }
 
   get database(): string | null {
@@ -201,9 +199,7 @@ export default abstract class EngineAbc {
   }
 
   set database(db: string | null) {
-    if (this._conn.state === "open") {
-      this._conn.database = db;
-    }
+    this._conn.database = db;
   }
 
   get token(): string | null {
@@ -211,9 +207,7 @@ export default abstract class EngineAbc {
   }
 
   set token(token: string | null) {
-    if (this._conn.state === "open") {
-      this._conn.token = token;
-    }
+    this._conn.token = token;
   }
 
   getConnectionInfo(): ConnectionInfo {

@@ -69,7 +69,7 @@ for (const { suite, url, Surreal } of surreal) {
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
 
-      await db.use("my_namespace", "my_database");
+      await db.use({ ns: "my_namespace", db: "my_database" });
 
       {
         const info = await db.queryRaw(/*surql*/ `
@@ -105,8 +105,8 @@ for (const { suite, url, Surreal } of surreal) {
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
 
-      await db.use("my_namespace", "my_database");
-      await db.use("my_namespace_2");
+      await db.use({ namespace: "my_namespace", database: "my_database" });
+      await db.use(["my_namespace_2"]);
 
       {
         const info = await db.queryRaw(/*surql*/ `
@@ -182,7 +182,7 @@ for (const { suite, url, Surreal } of surreal) {
       await db.signin({ user: "root", pass: "root" });
 
       await db.use("my_namespace", "my_database");
-      await db.use("my_namespace", null);
+      await db.use(["my_namespace", null]);
 
       {
         const info = await db.queryRaw(/*surql*/ `
@@ -216,7 +216,7 @@ for (const { suite, url, Surreal } of surreal) {
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
 
-      await expect(db.use(undefined, "my_database"))
+      await expect(db.use([undefined, "my_database"]))
         .rejects
         .toThrowError(MissingNamespaceError);
       expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
@@ -232,7 +232,7 @@ for (const { suite, url, Surreal } of surreal) {
 
       await db.use("my_namespace", "my_database");
 
-      await expect(db.use(null, "my_database"))
+      await expect(db.use({ ns: null, db: "my_database" }))
         .rejects
         .toThrowError(MissingNamespaceError);
       expect(db.getConnectionInfo()).toStrictEqual(expect.objectContaining({
@@ -246,8 +246,8 @@ for (const { suite, url, Surreal } of surreal) {
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
 
-      await db.use("my_namespace", "my_database");
-      await db.use(null, null);
+      await db.use(["my_namespace", "my_database"]);
+      await db.use({ namespace: null, database: null });
 
       {
         const info = await db.queryRaw(/*surql*/ `

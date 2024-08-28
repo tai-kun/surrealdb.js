@@ -24,7 +24,7 @@ export type RpcResultMapping = {
   query: QueryResult[];
   select: Arrayable<TableRecord>;
   create: Arrayable<TableRecord>;
-  insert: Arrayable<TableRecord>;
+  insert: TableRecord[];
   update: Arrayable<TableRecord>;
   upsert: Arrayable<TableRecord>;
   merge: Arrayable<TableRecord>;

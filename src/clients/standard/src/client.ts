@@ -14,7 +14,7 @@ import type {
   SlotLike,
 } from "@tai-kun/surrealdb/types";
 import type { TaskListener } from "@tai-kun/surrealdb/utils";
-import type { Simplify, UnionToIntersection } from "type-fest";
+import type { IsLiteral, Simplify, UnionToIntersection } from "type-fest";
 import type { DataType } from "~/surreal/src/data-types";
 import Jwt from "./jwt";
 
@@ -41,20 +41,21 @@ export interface LiveOptions extends ClientRpcOptions {
 export type LiveHandler<T extends LiveResult<any, any> = LiveResult> =
   TaskListener<[response: T]>;
 
-// dprint-ignore
 export type InferLiveResult<
   I extends string | object,
   T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-  P extends Patch[] = Patch[]
-> = I extends { __diff: true }  ? LiveDiff<T, P>
+  P extends Patch[] = Patch[],
+> = I extends { __diff: true } ? LiveDiff<T, P>
   : I extends { __diff: false } ? LiveData<T>
-  : LiveResult<T, P>
+  : LiveResult<T, P>;
 
-// dprint-ignore
-export type ActionResult<T extends { readonly [p: string]: unknown } = { [p: string]: unknown }>
-  = "id" extends keyof T
-  ? T
-  : Simplify<T & { id: string | object }>;
+export type ActionResult<
+  T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+> = [Extract<keyof T, "id">] extends [never]
+  ? IsLiteral<keyof T> extends true
+    ? Simplify<{ id: string | DataType.Thing } & T>
+  : ({ id: string | DataType.Thing } & T)
+  : T;
 
 export interface PatchOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
@@ -392,7 +393,7 @@ export default class Client extends Base {
     U extends { readonly [p: string]: unknown } = T,
   >(
     table: DataType.Table | string,
-    data?: U | undefined,
+    content?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>[]>;
 
@@ -401,7 +402,7 @@ export default class Client extends Base {
     U extends { readonly [p: string]: unknown } = T,
   >(
     thing: DataType.Thing,
-    data?: U | undefined,
+    content?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
@@ -409,10 +410,10 @@ export default class Client extends Base {
     target:
       | (DataType.Table | string)
       | DataType.Thing,
-    data?: { readonly [p: string]: unknown } | undefined,
+    content?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
-    return await this.rpc("create", [target, data], options);
+    return await this.rpc("create", [target, content], options);
   }
 
   async insert<
@@ -424,19 +425,8 @@ export default class Client extends Base {
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>[]>;
 
-  async insert<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
-  >(
-    thing: DataType.Thing,
-    data?: U | undefined,
-    options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
-
   async insert(
-    target:
-      | (DataType.Table | string)
-      | DataType.Thing,
+    target: DataType.Table | string,
     data?:
       | { readonly [p: string]: unknown }
       | readonly { readonly [p: string]: unknown }[]
@@ -451,7 +441,7 @@ export default class Client extends Base {
     U extends { readonly [p: string]: unknown } = T,
   >(
     table: DataType.Table | string,
-    data?: U | undefined,
+    content?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>[]>;
 
@@ -460,7 +450,7 @@ export default class Client extends Base {
     U extends { readonly [p: string]: unknown } = T,
   >(
     thing: DataType.Thing,
-    data?: U | undefined,
+    content?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
@@ -468,10 +458,10 @@ export default class Client extends Base {
     target:
       | (DataType.Table | string)
       | DataType.Thing,
-    data?: { readonly [p: string]: unknown } | undefined,
+    content?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
-    return await this.rpc("update", [target, data], options);
+    return await this.rpc("update", [target, content], options);
   }
 
   async upsert<
@@ -479,7 +469,7 @@ export default class Client extends Base {
     U extends { readonly [p: string]: unknown } = T,
   >(
     table: DataType.Table | string,
-    data?: U | undefined,
+    content?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>[]>;
 
@@ -488,7 +478,7 @@ export default class Client extends Base {
     U extends { readonly [p: string]: unknown } = T,
   >(
     thing: DataType.Thing,
-    data?: U | undefined,
+    content?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<T>>;
 
@@ -496,10 +486,10 @@ export default class Client extends Base {
     target:
       | (DataType.Table | string)
       | DataType.Thing,
-    data?: { readonly [p: string]: unknown } | undefined,
+    content?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
-    return await this.rpc("upsert", [target, data], options);
+    return await this.rpc("upsert", [target, content], options);
   }
 
   async merge<

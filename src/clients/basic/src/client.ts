@@ -251,16 +251,6 @@ export default class BasicClient {
     params: RpcParams<M>,
     options: ClientRpcOptions | undefined = {},
   ): Promise<T> {
-    // if (this.state === CONNECTING) {
-    //   const [result] = await this.ee.once(OPEN, { signal });
-
-    //   if ("error" in result) {
-    //     throw new ConnectionUnavailableError({
-    //       cause: result.error,
-    //     });
-    //   }
-    // }
-
     if (!this.eng) {
       throw new ConnectionUnavailableError();
     }

@@ -41,7 +41,7 @@ jobs:
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-          npx vitest --run tests/
+          npx vitest tests/
         env:
           VITEST_MODE: node.js
 

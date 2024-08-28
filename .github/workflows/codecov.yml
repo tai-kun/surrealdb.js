@@ -36,8 +36,8 @@ jobs:
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-          VITEST_MODE='node.js'  npx vitest tests/ --run --coverage
-          VITEST_MODE='chromium' npx vitest tests/ --run --coverage
+          VITEST_MODE='node.js'  npx vitest tests/ --coverage
+          VITEST_MODE='chromium' npx vitest tests/ --coverage
 
       - uses: codecov/codecov-action@v4
         with:

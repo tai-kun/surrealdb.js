@@ -61,6 +61,7 @@ export default defineConfig({
     ],
     coverage: {
       include: ["src/**/*"],
+      provider: "istanbul",
       reporter: process.env["CI"]
         ? ["json", "text-summary", "text"]
         : ["html", "text-summary"],

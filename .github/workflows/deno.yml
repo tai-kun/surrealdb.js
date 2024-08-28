@@ -30,7 +30,7 @@ jobs:
         run: npm ci
 
       - name: テスト
-        run: deno -A npm:vitest --run tests/small/
+        run: deno -A npm:vitest tests/small/
         env:
           VITEST_MODE: deno
 
@@ -70,7 +70,7 @@ jobs:
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-          deno -A npm:vitest --run tests/medium/
+          deno -A npm:vitest tests/medium/
         env:
           VITEST_MODE: deno
 

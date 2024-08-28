@@ -67,7 +67,7 @@ jobs:
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-          npx vitest --run tests/medium/
+          npx vitest tests/medium/
         env:
           VITEST_MODE: node.js
 
@@ -110,7 +110,7 @@ jobs:
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-          npx vitest --run tests/medium/
+          npx vitest tests/medium/
         env:
           VITEST_MODE: node.js
 

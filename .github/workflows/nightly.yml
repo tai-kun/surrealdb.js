@@ -1,0 +1,70 @@
+name: Nightly tests
+
+on:
+  schedule:
+    - cron: "0 9 * * *"
+
+jobs:
+  nodejs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 依存関係をインストール
+        run: |
+          npm ci
+          bash scripts/pretest/setup_surrealdb.sh nightly
+
+      - name: テスト
+        run: |
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
+
+          npx vitest tests/
+        env:
+          VITEST_MODE: node.js
+
+      - name: SurrealDB のログ
+        run: cat /tmp/logs
+        if: always()
+
+  chromium:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      - name: 依存関係をインストール
+        run: |
+          npm ci
+          npm i -D playwright@latest
+          npx playwright install --with-deps chromium
+          bash scripts/pretest/setup_surrealdb.sh nightly
+
+      - name: テスト
+        run: |
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
+
+          npx vitest tests/
+        env:
+          VITEST_MODE: chromium
+
+      - name: SurrealDB のログ
+        run: cat /tmp/logs
+        if: always()

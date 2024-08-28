@@ -12,8 +12,11 @@ import {
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
 import type { RpcParams, RpcResultMapping } from "@tai-kun/surrealdb/types";
-import { getTimeoutSignal, throwIfAborted } from "@tai-kun/surrealdb/utils";
-import { isRpcResponse } from "@tai-kun/surrealdb/validator";
+import {
+  getTimeoutSignal,
+  isRpcResponse,
+  throwIfAborted,
+} from "@tai-kun/surrealdb/utils";
 import type { UnionToIntersection, ValueOf } from "type-fest";
 
 export type InlineRpcFetcherRequestInit = {

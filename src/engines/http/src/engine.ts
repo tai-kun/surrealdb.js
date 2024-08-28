@@ -20,8 +20,12 @@ import type {
   RpcQueryRequest,
   RpcResult,
 } from "@tai-kun/surrealdb/types";
-import { isBrowser, mutex, throwIfAborted } from "@tai-kun/surrealdb/utils";
-import { isRpcResponse } from "@tai-kun/surrealdb/validator";
+import {
+  isBrowser,
+  isRpcResponse,
+  mutex,
+  throwIfAborted,
+} from "@tai-kun/surrealdb/utils";
 
 export interface HttpFetcherRequestInit {
   method: "POST";

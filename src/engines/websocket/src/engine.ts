@@ -27,13 +27,14 @@ import type {
 import {
   channel,
   getTimeoutSignal,
+  isLiveResult,
+  isRpcResponse,
   mutex,
   Serial,
   StatefulPromise,
   type TaskEmitter,
   throwIfAborted,
 } from "@tai-kun/surrealdb/utils";
-import { isLiveResult, isRpcResponse } from "@tai-kun/surrealdb/validator";
 import type { Promisable } from "type-fest";
 import type { WebSocket as WsWebSocket } from "ws";
 

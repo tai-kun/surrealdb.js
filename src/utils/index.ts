@@ -1,3 +1,6 @@
+export type * from "./src/base64url";
+export { default as base64url } from "./src/base64url";
+
 export type * from "./src/diagnostics-channel";
 export { default as channel } from "./src/diagnostics-channel";
 

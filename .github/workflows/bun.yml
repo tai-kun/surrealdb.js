@@ -26,7 +26,9 @@ jobs:
         run: bun install
 
       - name: テスト
-        run: VITEST_MODE='bun' bunx vitest tests/small/
+        run: bunx vitest tests/small/
+        env:
+          VITEST_MODE: bun
 
   medium:
     runs-on: ubuntu-latest

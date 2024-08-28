@@ -28,7 +28,9 @@ jobs:
         run: npm ci
 
       - name: テスト
-        run: VITEST_MODE='node.js' npx vitest tests/small/
+        run: npx vitest tests/small/
+        env:
+          VITEST_MODE: node.js
 
   medium:
     runs-on: ubuntu-latest

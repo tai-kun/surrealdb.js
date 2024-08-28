@@ -42,6 +42,7 @@ jobs:
       - uses: codecov/codecov-action@v4
         with:
           files: ./coverage/node.js/coverage-final.json,./coverage/chromium/coverage-final.json
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: SurrealDB のログ
         run: cat /tmp/logs

@@ -1,6 +1,5 @@
 import { Slot, surql } from "@tai-kun/surrealdb";
 import type { Writer } from "@tai-kun/surrealdb/cbor";
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { EncodedCBOR } from "@tai-kun/surrealdb/formatter";
 import { afterEach, describe, expect, test, vi } from "vitest";
 

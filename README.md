@@ -93,15 +93,6 @@ and:
 
 Do not expect sub-millisecond precision for dates prior to the UNIX epoch.
 
-## TODO
-
-- [x] Implement basic features
-- [x] Add functionality to improve query handling
-- [ ] Add connection pooling
-- [ ] Add tests
-- [ ] Improve documentation
-- [ ] Add benchmarks
-
 ## License
 
 [Apache-2.0](https://github.com/tai-kun/surrealdb.js/blob/main/LICENSE)

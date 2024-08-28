@@ -1,0 +1,6 @@
+- [ ] CBOR に Range を追加
+- [ ] CBOR に Future を追加
+- [ ] rpc に graphql を追加
+- [ ] rpc に insert_relation を追加
+- [ ] ライブクエリが機能しないのはどっちの問題？
+- [ ] コネクションプールを追加

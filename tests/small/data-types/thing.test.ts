@@ -2,6 +2,7 @@ import { CONTINUE, decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_RECORDID,
   Thing,
+  Uuid,
 } from "@tai-kun/surrealdb/data-types/standard";
 import { expect, test } from "vitest";
 
@@ -44,43 +45,49 @@ test(".clone", () => {
   expect(t1.toString()).toBe(t2.toString());
 });
 
-test(".toString(-0)", () => {
+test(".toString: -0", () => {
   const t = new Thing("", -0);
 
   expect(`${t}`).toBe("⟨⟩:⟨-0⟩");
 });
 
-test(".toString(0)", () => {
+test(".toString: 0", () => {
   const t = new Thing("", 0);
 
   expect(`${t}`).toBe("⟨⟩:0");
 });
 
-test(".toString(0n)", () => {
+test(".toString: 0n", () => {
   const t = new Thing("", 0n);
 
   expect(`${t}`).toBe("⟨⟩:0");
 });
 
-test(".toString(-1n)", () => {
+test(".toString: -1n", () => {
   const t = new Thing("", -1n);
 
   expect(`${t}`).toBe("⟨⟩:⟨-1⟩");
 });
 
-test(".toString(foo-bar)", () => {
+test(".toString: foo-bar", () => {
   const t = new Thing("", "foo-bar");
 
   expect(`${t}`).toBe("⟨⟩:⟨foo-bar⟩");
 });
 
-test(".toString(0ABC)", () => {
+test(".toString: 0ABC", () => {
   const t = new Thing("", "0ABC");
 
   expect(`${t}`).toBe("⟨⟩:0ABC");
 });
 
-test(".toString({ ... })", () => {
+test(".toString: <uuid>", () => {
+  const t = new Thing("", new Uuid("018fb2c0-7bb7-7fca-8308-b24d0be065dc"));
+
+  expect(`${t}`).toBe("⟨⟩:u'018fb2c0-7bb7-7fca-8308-b24d0be065dc'");
+});
+
+test(".toString: { ... }", () => {
   const t = new Thing("", {
     string: "😢",
     number: [

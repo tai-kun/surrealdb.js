@@ -1,22 +1,21 @@
 import type { DataItem } from "@tai-kun/surrealdb/cbor";
 import { defineAsThing } from "~/data-types/define";
-// import type Uuid from "./uuid";
+import Uuid from "./uuid";
+
+export type ThingTypes<U extends typeof Uuid = typeof Uuid> = {
+  readonly Uuid: U;
+};
 
 export type ThingTbSource = DataItem.Utf8String.FixedLength["value"];
 
-// Uuid は https://github.com/surrealdb/surrealdb/pull/4491 がマージされてリリース
-// されたら使って OK
-// export type ThingIdSource<U extends Uuid = Uuid> =
-//   | U
-export type ThingIdSource =
+export type ThingIdSource<T extends ThingTypes = ThingTypes> =
   | DataItem.UnsignedInteger["value"]
   | DataItem.NegativeInteger["value"]
   | DataItem.Utf8String.FixedLength["value"]
-  // DataItem.Array
-  | readonly unknown[]
-  // DataItem.Map
-  | { readonly [p: string]: unknown }
-  | ReadonlyMap<unknown, unknown>;
+  | readonly unknown[] // DataItem.Array
+  | ReadonlyMap<unknown, unknown> // DataItem.Map
+  | { readonly [p: string]: unknown } // DataItem.Map
+  | InstanceType<T["Uuid"]>;
 
 export type ThingSource<
   T extends ThingTbSource = ThingTbSource,
@@ -26,16 +25,27 @@ export type ThingSource<
   id: I,
 ];
 
-export default class Thing<
-  T extends ThingTbSource = ThingTbSource,
-  I extends ThingIdSource = ThingIdSource,
+export class ThingBase<
+  S extends ThingTypes,
+  T extends ThingTbSource,
+  I extends ThingIdSource<S>,
 > {
   readonly tb: T;
-
   readonly id: I;
 
-  constructor(value: ThingSource<T, I>) {
+  constructor(source: ThingSource<T, I>, protected readonly types: S) {
+    [this.tb, this.id] = source;
     defineAsThing(this);
-    [this.tb, this.id] = value;
+  }
+}
+
+export class Thing<
+  T extends ThingTbSource = ThingTbSource,
+  I extends ThingIdSource = ThingIdSource,
+> extends ThingBase<ThingTypes, T, I> {
+  static readonly Uuid = Uuid;
+
+  constructor(source: ThingSource<T, I>) {
+    super(source, Thing);
   }
 }

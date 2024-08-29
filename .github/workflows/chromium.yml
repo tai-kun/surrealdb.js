@@ -32,7 +32,7 @@ jobs:
           - "1.23" # Chromium 104
           - "latest"
         surrealdb-version:
-          - "alpha"
+          - "beta"
           # - "v2.0.0"
           # - "latest"
       fail-fast: false

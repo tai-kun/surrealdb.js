@@ -29,7 +29,7 @@ jobs:
           npm ci
           npm i -D playwright@latest
           npx playwright install --with-deps chromium
-          bash scripts/pretest/setup_surrealdb.sh alpha
+          bash scripts/pretest/setup_surrealdb.sh beta
 
       - name: カバレッジ
         run: |

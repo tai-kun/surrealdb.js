@@ -33,7 +33,7 @@ jobs:
   #         - "1.23" # WebKit 15.4
   #         - "latest"
   #       surrealdb-version:
-  #         - "alpha"
+  #         - "beta"
   #         # - "v2.0.0"
   #         # - "latest"
   #     fail-fast: false

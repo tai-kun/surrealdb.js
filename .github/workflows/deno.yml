@@ -43,7 +43,7 @@ jobs:
         deno-version:
           - "1.x"
         surrealdb-version:
-          - "alpha"
+          - "beta"
           # - "v2.0.0"
           # - "latest"
     steps:

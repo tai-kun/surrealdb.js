@@ -33,7 +33,7 @@ jobs:
   #         - "1.23" # Firefox 100
   #         - "latest"
   #       surrealdb-version:
-  #         - "alpha"
+  #         - "beta"
   #         # - "v2.0.0"
   #         # - "latest"
   #     fail-fast: false

@@ -6,6 +6,33 @@ on:
       - main
 
 jobs:
+  static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        nodejs-version:
+          - "20.x"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Node.js ${{ matrix.nodejs-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.nodejs-version }}
+
+      - name: 依存関係をインストール
+        run: npm ci
+
+      - name: 型確認
+        run: npx tsc --noEmit
+        if: always()
+
+      - name: 体裁確認
+        run: npx dprint check
+        if: always()
+
   small:
     runs-on: ubuntu-latest
     timeout-minutes: 30

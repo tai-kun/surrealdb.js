@@ -149,7 +149,16 @@ for (const { suite, fmt, url, Surreal } of surreal) {
           geometryMultiLine,
           geometryMultiPolygon,
         ]),
-        thing: new Thing(new Table("user"), { name: "tai-kun" }),
+        thing: {
+          object: new Thing(
+            new Table("user"),
+            { name: "tai-kun" },
+          ),
+          uuidv7: new Thing(
+            new Table("user"),
+            new Uuid("019025ed-803c-7b9a-b0b0-cd884d7bb4fb"),
+          ),
+        },
         uuidv1: new Uuid("ad7aea20-2c9b-11ef-9454-0242ac120002"),
         uuidv4: new Uuid("e1edeaeb-6413-469a-8e5f-cfbc085a5584"),
         uuidv7: new Uuid("019025ed-803c-7b9a-b0b0-cd884d7bb4fb"),

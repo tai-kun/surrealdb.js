@@ -1,6 +1,6 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { escapeTb, toString } from "~/data-types/_internals/thing";
-import { isThing } from "./data-types";
+import { isThing } from "~/surreal/src/data-types";
 
 function isGenerator(id: unknown): id is string {
   return id === "uuid()" || id === "ulid()" || id === "rand()";

@@ -1,34 +1,19 @@
 import {
-  ThingBase as Base,
-  type ThingIdSource as ThingIdSourceBase,
-  type ThingSource as ThingSourceBase,
+  Thing as Base,
+  type ThingIdSource,
+  type ThingSource,
   type ThingTbSource,
-  type ThingTypes as ThingTypesBase,
-  type Uuid as UuidBase,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import { escapeRid, quoteStr } from "@tai-kun/surrealdb/utils";
 import { escapeId, toString } from "~/data-types/_internals/thing";
 import { CBOR_TAG_RECORDID, type Encodable } from "./spec";
-import Uuid from "./uuid";
 
-export type ThingTypes<U extends typeof UuidBase = typeof Uuid> =
-  ThingTypesBase<U>;
+export type { ThingIdSource, ThingSource, ThingTbSource };
 
-export type { ThingTbSource };
-
-export type ThingIdSource<T extends ThingTypesBase = ThingTypes> =
-  ThingIdSourceBase<T>;
-
-export type ThingSource<
+export default class Thing<
   T extends ThingTbSource = ThingTbSource,
   I extends ThingIdSource = ThingIdSource,
-> = ThingSourceBase<T, I>;
-
-export class ThingBase<
-  S extends ThingTypesBase,
-  T extends ThingTbSource,
-  I extends ThingIdSource<S>,
-> extends Base<S, T, I> implements Encodable {
+> extends Base<T, I> implements Encodable {
   override valueOf(): string {
     return this.toString();
   }
@@ -122,16 +107,5 @@ export class ThingBase<
       tb,
       id,
     };
-  }
-}
-
-export class Thing<
-  T extends ThingTbSource = ThingTbSource,
-  I extends ThingIdSource = ThingIdSource,
-> extends ThingBase<ThingTypes, T, I> {
-  static readonly Uuid = Uuid;
-
-  constructor(source: ThingSource<T, I>) {
-    super(source, Thing);
   }
 }

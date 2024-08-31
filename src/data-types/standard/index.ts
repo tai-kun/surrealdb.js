@@ -60,14 +60,8 @@ export {
 export type * from "./src/table";
 export { default as Table } from "./src/table";
 
-export {
-  Thing,
-  ThingBase,
-  type ThingIdSource,
-  type ThingSource,
-  type ThingTbSource,
-  type ThingTypes,
-} from "./src/thing";
+export type * from "./src/thing";
+export { default as Thing } from "./src/thing";
 
 export type * from "./src/uuid";
 export { default as Uuid } from "./src/uuid";

@@ -43,7 +43,7 @@ export class SurrealTypeError extends SurrealError {
   ) {
     expected = typeof expected === "string"
       ? expected
-      : expected.toSorted().join(" | ");
+      : expected.slice().sort().join(" | ");
     actual = getType(actual);
     super(`Expected ${expected} but got ${actual}.`, options);
     this.expected = expected;
@@ -63,7 +63,7 @@ export class SurrealValueError extends SurrealError {
   ) {
     expected = typeof expected === "string"
       ? expected
-      : expected.toSorted().join(" | ");
+      : expected.slice().sort().join(" | ");
     let s = String(actual);
     s = s && (
       typeof actual === "string"

@@ -33,6 +33,10 @@ jobs:
         run: npx dprint check
         if: always()
 
+      - name: サイズ確認
+        run: npm run size
+        if: always()
+
   small:
     runs-on: ubuntu-latest
     timeout-minutes: 30

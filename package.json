@@ -27,6 +27,7 @@
     "type-fest": "^4.23.0"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^11.1.4",
     "@tsconfig/strictest": "^2.0.5",
     "@types/node": "^20.14.14",
     "@types/unzipper": "^0.10.9",
@@ -37,6 +38,7 @@
     "esbuild-plugin-replace": "^1.4.0",
     "glob": "^11.0.0",
     "node-inspect-extracted": "^3.0.2",
+    "size-limit": "^11.1.4",
     "tar": "^7.4.3",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.5.4",
@@ -63,6 +65,7 @@
     "test:medium:firefox": "exit 1",
     "test:medium:webkit": "exit 1",
     "test:examples": "node scripts/test.js nodejs examples",
+    "test:size": "npm run build && size-limit",
     "docs:dev": "cd docs && npm run dev",
     "docs:ja2en": "cd docs && npm run ja2en",
     "docs:build": "cd docs && npm run build",
@@ -152,5 +155,33 @@
       "import": "./dist/formatters/json/index.mjs",
       "require": "./dist/formatters/json/index.cjs"
     }
-  }
+  },
+  "size-limit": [
+    {
+      "name": "default",
+      "limit": "30 kB",
+      "path": "./dist/surreal/index.mjs"
+    },
+    {
+      "name": "http-json",
+      "limit": "15 kB",
+      "import": {
+        "./dist/surreal/index.mjs": "{ initSurreal }",
+        "./dist/clients/standard/index.mjs": "Client",
+        "./dist/engines/http/index.mjs": "HttpEngine",
+        "./dist/formatters/json/index.mjs": "JsonFormatter"
+      }
+    },
+    {
+      "name": "websocket-cbor-decodeonly",
+      "limit": "20 kB",
+      "import": {
+        "./dist/surreal/index.mjs": "{ initSurreal }",
+        "./dist/clients/standard/index.mjs": "Client",
+        "./dist/engines/websocket/index.mjs": "WebSocketEngine",
+        "./dist/formatters/cbor/index.mjs": "CborFormatter",
+        "./dist/data-types/decode-only/index.mjs": "{ Uuid, Table, Thing, Decimal, Datetime, Duration, GeometryLine, GeometryPoint, GeometryPolygon, GeometryMultiLine, GeometryCollection, GeometryMultiPoint, GeometryMultiPolygon }"
+      }
+    }
+  ]
 }

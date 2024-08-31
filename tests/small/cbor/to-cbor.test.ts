@@ -1,5 +1,4 @@
 import { encode, writeNumber, type Writer } from "@tai-kun/surrealdb/cbor";
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { expect, test } from "vitest";
 
 const bytes = new Uint8Array([
@@ -50,7 +49,7 @@ test("3 つ以上の要素を持つ配列を返してエラー", () => {
     toCBOR: () => [0, 1, 2],
   };
 
-  expect(() => encode(cborValue)).toThrowError(SurrealTypeError);
+  expect(() => encode(cborValue)).toThrowErrorMatchingSnapshot();
 });
 
 test("空配列を返してエラー", () => {
@@ -58,5 +57,5 @@ test("空配列を返してエラー", () => {
     toCBOR: () => [],
   };
 
-  expect(() => encode(cborValue)).toThrowError(SurrealTypeError);
+  expect(() => encode(cborValue)).toThrowErrorMatchingSnapshot();
 });

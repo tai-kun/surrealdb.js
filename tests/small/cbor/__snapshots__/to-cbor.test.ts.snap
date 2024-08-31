@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`3 つ以上の要素を持つ配列を返してエラー 1`] = `
+{
+  "actual": "an array of length 3",
+  "expected": "an array of length 1 or 2",
+  "message": "Expected an array of length 1 or 2 but got type String of "an array of length 3".",
+  "name": "SurrealValueError",
+}
+`;
+
+exports[`空配列を返してエラー 1`] = `
+{
+  "actual": "an array of length 0",
+  "expected": "an array of length 1 or 2",
+  "message": "Expected an array of length 1 or 2 but got type String of "an array of length 0".",
+  "name": "SurrealValueError",
+}
+`;

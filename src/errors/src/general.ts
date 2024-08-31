@@ -1,3 +1,5 @@
+import getType, { type TypeName } from "./get-type-name";
+
 // dprint-ignore
 type ErrorOptionsBase =
   "cause" extends keyof Error
@@ -31,12 +33,51 @@ export class SurrealTypeError extends SurrealError {
     this.prototype.name = "SurrealTypeError";
   }
 
+  expected: string;
+  actual: TypeName;
+
   constructor(
-    public expected: string,
-    public actual: string,
+    expected: TypeName | readonly TypeName[],
+    actual: unknown,
     options?: SurrealErrorOptions | undefined,
   ) {
+    expected = typeof expected === "string"
+      ? expected
+      : expected.toSorted().join(" | ");
+    actual = getType(actual);
     super(`Expected ${expected} but got ${actual}.`, options);
+    this.expected = expected;
+    this.actual = actual as string;
+  }
+}
+
+export class SurrealValueError extends SurrealError {
+  static {
+    this.prototype.name = "SurrealValueError";
+  }
+
+  constructor(
+    public expected: string | readonly string[],
+    public actual: unknown,
+    options?: SurrealErrorOptions | undefined,
+  ) {
+    expected = typeof expected === "string"
+      ? expected
+      : expected.toSorted().join(" | ");
+    let s = String(actual);
+    s = s && (
+      typeof actual === "string"
+        ? actual.length < 30 - 2
+          ? JSON.stringify(actual)
+          : JSON.stringify(`${actual.slice(0, 11)} ... ${actual.slice(-11)}`)
+        : s.length < 30
+        ? s
+        : `${s.slice(0, 12)} ... ${s.slice(-12)}`
+    );
+    super(
+      `Expected ${expected} but got type ${getType(actual)}${s && ` of ${s}`}.`,
+      options,
+    );
   }
 }
 

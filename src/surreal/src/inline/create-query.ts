@@ -62,7 +62,7 @@ export default function createQuery(
     } = options;
 
     if (defaults.token !== undefined && tokenProp !== undefined) {
-      throw new SurrealTypeError("token === undefined", typeof tokenProp);
+      throw new SurrealTypeError("undefined", tokenProp);
     }
 
     if (bindings) {

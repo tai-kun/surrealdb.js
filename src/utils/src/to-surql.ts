@@ -1,6 +1,7 @@
 import {
   CircularReferenceError,
   SurrealTypeError,
+  SurrealValueError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import { escapeKey, quoteStr } from "./escape";
@@ -27,7 +28,7 @@ export default function toSurql(value: unknown): string {
       case "number":
         // Number.MAX_VALUE などを許容するため、Number.isFinite で十分な検証。
         if (!Number.isFinite(x)) {
-          throw new SurrealTypeError("finite-number", String(x));
+          throw new SurrealValueError("finite-number", x);
         }
 
         return x + "";
@@ -44,8 +45,8 @@ export default function toSurql(value: unknown): string {
       case "symbol":
       case "function":
         throw new SurrealTypeError(
-          "object | string | number | bigint | boolean | undefined",
-          typeof x,
+          ["Object", "String", "Number", "BigInt", "Boolean", "undefined"],
+          x,
         );
 
       default:
@@ -152,7 +153,7 @@ export default function toSurql(value: unknown): string {
       return s;
     }
 
-    throw new SurrealTypeError("Object", String(x));
+    throw new SurrealTypeError("Object", x);
   }
 
   return inner(value, {

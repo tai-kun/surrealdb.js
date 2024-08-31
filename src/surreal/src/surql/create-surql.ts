@@ -1,4 +1,4 @@
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import PreparedQuery from "./prepared-query";
 import Raw, { type RawValue } from "./raw";
@@ -31,7 +31,7 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
 
   function surql(texts: readonly string[], ...values: unknown[]) {
     if (texts.length - values.length !== 1) {
-      throw new SurrealTypeError(
+      throw new SurrealValueError(
         "template string",
         `texts.length=${texts.length} and values.length=${values.length}`,
       );
@@ -69,7 +69,7 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
 
         if (j === i && named.indexOf(v.name) < 0) {
           if ((v.name as string).startsWith(varPrefix)) {
-            throw new SurrealTypeError(
+            throw new SurrealValueError(
               `a variable name that do not start with "${varPrefix}"`,
               v.name,
             );

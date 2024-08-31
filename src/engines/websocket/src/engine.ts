@@ -501,7 +501,7 @@ export default class WebSocketEngine extends EngineAbc {
     });
 
     if (typeof body !== "string" && !(body instanceof Uint8Array)) {
-      throw new SurrealTypeError("string | Uint8Array", String(body));
+      throw new SurrealTypeError(["String", "Uint8Array"], body);
     }
 
     const resp = this.ee.once(`rpc_${id}`, { signal });

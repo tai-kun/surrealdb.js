@@ -3,7 +3,7 @@ import {
   type DatetimeSource,
   type Encodable,
 } from "@tai-kun/surrealdb/data-types/encodable";
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { isSafeNumber, quoteStr } from "@tai-kun/surrealdb/utils";
 import { toISOString } from "~/data-types/_internals/datetime";
 import { defineAsDatetime } from "~/data-types/_internals/define";
@@ -189,8 +189,8 @@ export default class Datetime extends Date implements Encodable {
 
       this._nanoseconds = this.processNsTime(nsTime);
     } else {
-      throw new SurrealTypeError(
-        "arguments of Date | bigint | Array | Object",
+      throw new SurrealValueError(
+        "Date, BigInt, Array or Object arguments",
         String(args),
       );
     }

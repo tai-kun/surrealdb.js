@@ -1,4 +1,4 @@
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealTypeError, SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { escapeTb, toString } from "~/data-types/_internals/thing";
 import { isThing } from "~/surreal/src/data-types";
 
@@ -33,12 +33,10 @@ export default class Raw {
       } else if (Object.hasOwn(value, Symbol.toPrimitive)) {
         this._str = (value as any)[Symbol.toPrimitive]!("string");
       } else {
-        // TODO(tai-kun): エラーメッセージ改善
-        throw new SurrealTypeError("object", typeof value);
+        throw new SurrealValueError("Object contains encode methods", value);
       }
     } else {
-      // TODO(tai-kun): エラーメッセージ改善
-      throw new SurrealTypeError("string | object", typeof value);
+      throw new SurrealTypeError(["String", "Object"], value);
     }
   }
 

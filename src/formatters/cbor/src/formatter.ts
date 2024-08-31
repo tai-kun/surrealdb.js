@@ -242,8 +242,8 @@ function toEncodedData(data: Data): Uint8ArrayLike {
 
     default:
       throw new SurrealTypeError(
-        "string | Buffer | ArrayBuffer | Uint8Array | Buffer[]",
-        String(data),
+        ["String", "Buffer", "ArrayBuffer", "Uint8Array", "Buffer[]"],
+        data,
       );
   }
 }

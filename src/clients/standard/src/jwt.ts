@@ -1,5 +1,5 @@
 import type { Encodable } from "@tai-kun/surrealdb/data-types/encodable";
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { base64url, quoteStr } from "@tai-kun/surrealdb/utils";
 
 const JWT_REGEX =
@@ -51,7 +51,7 @@ export default class Jwt implements Encodable {
     } = options;
 
     if (typeof jwt !== "string" || !JWT_REGEX.test(jwt)) {
-      throw new SurrealTypeError("well formed JWT", jwt);
+      throw new SurrealValueError("well formed JWT", jwt);
     }
 
     this.#parts = jwt.split(".", 2) as [string, string];

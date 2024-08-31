@@ -1,5 +1,5 @@
 import { Thing } from "@tai-kun/surrealdb";
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { describe, expect, test } from "vitest";
 import surreal from "../surreal.js";
 
@@ -51,7 +51,7 @@ for (const { suite, fmt, url, Surreal, surql } of surreal) {
         // @ts-expect-error エラーが期待される。
         await db.query(CreateUserQuery);
       };
-      await expect(query).rejects.toThrowError(SurrealTypeError);
+      await expect(query).rejects.toThrowError(SurrealValueError);
     });
 
     test;

@@ -5,6 +5,7 @@ import {
 import {
   NumberRangeError,
   SurrealTypeError,
+  SurrealValueError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import { isSafeNumber } from "@tai-kun/surrealdb/utils";
@@ -120,8 +121,8 @@ export default class Duration extends Base {
 
           while (rest) {
             if (!(match = rest.match(DURATION_PART_REGEX))) {
-              throw new SurrealTypeError(
-                /^([0-9]+(ms|us|µs|μs|nss|m|h|d|w|y))+$/.source,
+              throw new SurrealValueError(
+                `matches ${/^([0-9]+(ms|us|µs|μs|nss|m|h|d|w|y))+$/.source}`,
                 value,
               );
             }
@@ -190,8 +191,8 @@ export default class Duration extends Base {
 
     if (source === undefined) {
       throw new SurrealTypeError(
-        "number | bigint | string | Array | Object",
-        typeof source,
+        ["Number", "BigInt", "String", "Array", "Object"],
+        source,
       );
     }
 

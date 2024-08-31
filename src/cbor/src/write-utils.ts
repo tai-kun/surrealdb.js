@@ -4,6 +4,7 @@ import {
   CircularReferenceError,
   NumberRangeError,
   SurrealTypeError,
+  SurrealValueError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
@@ -556,7 +557,7 @@ export function write(
       // TODO(tai-kun): エラーメッセージを改善
       throw new CircularReferenceError(String(value));
     } else if (hasToCBOR(value)) {
-      const cbor = (value as ToCBOR).toCBOR(w);
+      const cbor = value.toCBOR(w);
 
       if (Array.isArray(cbor)) {
         begin({
@@ -570,7 +571,7 @@ export function write(
         } else if (cbor.length === 1) {
           value = cbor[0];
         } else {
-          throw new SurrealTypeError(
+          throw new SurrealValueError(
             "an array of length 1 or 2",
             `an array of length ${(cbor as any[]).length}`,
           );
@@ -642,8 +643,16 @@ export function write(
       }
 
       throw new SurrealTypeError(
-        "number | bigint | string | boolean | object | undefined | null",
-        typeof value,
+        [
+          "BigInt",
+          "Boolean",
+          "null",
+          "Number",
+          "Object",
+          "String",
+          "undefined",
+        ],
+        value,
       );
     }
 

@@ -4,7 +4,7 @@ import {
   CborTooLittleDataError,
   // CborTooMuchDataError,
   CborUnsafeMapKeyError,
-  SurrealTypeError,
+  SurrealValueError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
@@ -848,7 +848,10 @@ export default class Decoder {
             }
           } else {
             // 将来的にはカスタムオブジェクトを指定できるようにしたい。
-            throw new SurrealTypeError("'Object' | 'Map'", this.mapType);
+            throw new SurrealValueError(
+              ["\"Object\"", "\"Object\""],
+              this.mapType,
+            );
           }
 
           break;

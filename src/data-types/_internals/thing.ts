@@ -32,10 +32,7 @@ export function escapeId(id: unknown): string {
       return toSurql(id);
   }
 
-  throw new SurrealTypeError(
-    "string | number | bigint | object",
-    id === null ? "null" : typeof id,
-  );
+  throw new SurrealTypeError(["String", "Number", "BigInt", "Object"], id);
 }
 
 export function toString(

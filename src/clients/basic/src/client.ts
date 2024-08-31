@@ -173,7 +173,7 @@ export default class BasicClient {
     // 誤ってすべてのイベントリスナーを解除してしまわないようにするため、
     // listener が無い場合はエラーを投げる。
     if (typeof listener !== "function") {
-      throw new SurrealTypeError("function", typeof listener);
+      throw new SurrealTypeError("Function", listener);
     }
 
     this.ee.off(event, listener);

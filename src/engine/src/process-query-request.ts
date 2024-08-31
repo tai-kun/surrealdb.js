@@ -1,4 +1,4 @@
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import type {
   PreparedQueryLike,
   RpcQueryRequest,
@@ -33,7 +33,7 @@ export default function processQueryRequest(request: RpcQueryRequest): {
   }
 
   if (required.length > 0) {
-    throw new SurrealTypeError(
+    throw new SurrealValueError(
       `variables containing key(s) ${slots.map(slot => slot.name)}`,
       `without key(s) ${required}`,
     );

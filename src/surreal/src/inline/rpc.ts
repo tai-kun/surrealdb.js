@@ -8,6 +8,7 @@ import {
   ResponseError,
   RpcResponseError,
   SurrealTypeError,
+  SurrealValueError,
 } from "@tai-kun/surrealdb/errors";
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
@@ -94,7 +95,7 @@ async function rpc(
   }
 
   if (!fmt.mimeType) {
-    throw new SurrealTypeError("non-empty string", String(fmt.mimeType));
+    throw new SurrealValueError("non-empty string", fmt.mimeType);
   }
 
   if (method === "query") {
@@ -107,7 +108,7 @@ async function rpc(
   const body: unknown = fmt.encodeSync({ method, params });
 
   if (typeof body !== "string" && !(body instanceof Uint8Array)) {
-    throw new SurrealTypeError("string | Uint8Array", String(body));
+    throw new SurrealTypeError(["String", "Uint8Array"], body);
   }
 
   endpoint = processEndpoint(endpoint).href;

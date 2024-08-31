@@ -2,7 +2,7 @@ import {
   Uuid as Base,
   type UuidSource,
 } from "@tai-kun/surrealdb/data-types/encodable";
-import { SurrealTypeError, unreachable } from "@tai-kun/surrealdb/errors";
+import { SurrealValueError, unreachable } from "@tai-kun/surrealdb/errors";
 import { isValidBytes } from "~/data-types/_internals/uuid";
 
 export type * from "~/data-types/encodable/src/uuid";
@@ -68,7 +68,7 @@ function parseUuid36(uuid: string): Uint8Array {
   // }
 
   if (uuid.length !== 36) {
-    throw new SurrealTypeError("valid uuid", uuid);
+    throw new SurrealValueError("a valid uuid", uuid);
   }
 
   const bytes = new Uint8Array(16);
@@ -96,7 +96,7 @@ export default class Uuid extends Base {
 
   override set bytes(v: Uint8Array) {
     if (!isValidBytes(v)) {
-      throw new SurrealTypeError("valid uuid", `[${Array.from(v)}]`);
+      throw new SurrealValueError("a valid uuid", v);
     }
 
     this._bytes = v;

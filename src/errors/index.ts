@@ -45,7 +45,11 @@ export {
   SurrealError,
   type SurrealErrorOptions,
   SurrealTypeError,
+  SurrealValueError,
   unreachable,
   UnreachableError,
   UnsupportedRuntimeError,
 } from "./src/general";
+
+export type * from "./src/get-type-name";
+export { default as getTypeName } from "./src/get-type-name";

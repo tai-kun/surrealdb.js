@@ -1,4 +1,4 @@
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import { SurrealTypeError, SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { defineAsUuid } from "~/data-types/_internals/define";
 import { isValidBytes } from "~/data-types/_internals/uuid";
 
@@ -11,11 +11,11 @@ export default class Uuid {
     defineAsUuid(this);
 
     if (!(value instanceof Uint8Array)) {
-      throw new SurrealTypeError("Uint8Array", typeof value);
+      throw new SurrealTypeError("Uint8Array", value);
     }
 
     if (!isValidBytes(value)) {
-      throw new SurrealTypeError("a valid uuid", `[${Array.from(value)}]`);
+      throw new SurrealValueError("a valid uuid", Array.from(value));
     }
 
     this._bytes = value;

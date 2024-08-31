@@ -70,7 +70,7 @@ export default function createRpc(
     } = options;
 
     if (defaults.token !== undefined && tokenProp !== undefined) {
-      throw new SurrealTypeError("token === undefined", typeof tokenProp);
+      throw new SurrealTypeError("undefined", tokenProp);
     }
 
     const result = await callRpc(endpoint, method, {

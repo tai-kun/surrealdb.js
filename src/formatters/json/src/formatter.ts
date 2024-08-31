@@ -71,8 +71,8 @@ function toString(data: Data): string {
 
     default:
       throw new SurrealTypeError(
-        "string | Buffer | ArrayBuffer | Uint8Array | Buffer[]",
-        String(data),
+        ["String", "Buffer", "ArrayBuffer", "Uint8Array", "Buffer[]"],
+        data,
       );
   }
 }

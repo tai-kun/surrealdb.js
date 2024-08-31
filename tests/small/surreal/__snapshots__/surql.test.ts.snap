@@ -4,7 +4,7 @@ exports[`エラー > 特定の変数名から始まるスロットでエラー 1
 {
   "actual": "_jst_foo",
   "expected": "a variable name that do not start with "_jst_"",
-  "message": "Expected a variable name that do not start with "_jst_" but got _jst_foo.",
-  "name": "SurrealTypeError",
+  "message": "Expected a variable name that do not start with "_jst_" but got type String of "_jst_foo".",
+  "name": "SurrealValueError",
 }
 `;

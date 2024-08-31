@@ -34,7 +34,7 @@ jobs:
         if: always()
 
       - name: サイズ確認
-        run: npm run size
+        run: npm run test:size
         if: always()
 
   small:

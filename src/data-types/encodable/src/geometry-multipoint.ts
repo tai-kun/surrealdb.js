@@ -1,27 +1,41 @@
-import { GeometryMultiPointBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import {
+  GeometryMultiPointBase as Base,
+  type GeometryMultiPointSource as GeometryMultiPointSourceBase,
+  type GeometryMultiPointTypes as GeometryMultiPointTypesBase,
+} from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { type Coord, map } from "~/data-types/geometry";
 import {
   type GeoJsonPoint,
   GeometryPoint,
   type GeometryPointBase,
+  type GeometryPointTypes,
 } from "./geometry-point";
 import { CBOR_TAG_GEOMETRY_MULTIPOINT, type Encodable } from "./spec";
+
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
+
+export type GeometryMultiPointTypes<P extends PointBase = PointBase> =
+  GeometryMultiPointTypesBase<P>;
+
+export type GeometryMultiPointSource<
+  T extends GeometryMultiPointTypes = GeometryMultiPointTypes,
+> = GeometryMultiPointSourceBase<T>;
 
 export type GeoJsonMultiPoint = {
   type: "MultiPoint";
   // https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.3
-  // For type "MultiPoint", the "coordinates" member is an array of positions.
+  // > For type "MultiPoint", the "coordinates" member is an array of positions.
   coordinates: GeoJsonPoint["coordinates"][];
 };
 
-type Point = GeometryPointBase<Coord>;
-
-export class GeometryMultiPointBase<P extends new(arg: any) => Point>
-  extends Base<P>
+export class GeometryMultiPointBase<T extends GeometryMultiPointTypes>
+  extends Base<T>
   implements Encodable
 {
-  get coordinates(): InstanceType<P>["coordinates"][] {
+  get coordinates(): InstanceType<T["Point"]>["coordinates"][] {
     return map(this.points, p => p.coordinates);
   }
 
@@ -43,21 +57,20 @@ export class GeometryMultiPointBase<P extends new(arg: any) => Point>
     });
   }
 
-  structure(): GeoJsonMultiPoint {
-    return this.toJSON();
+  structure() {
+    return {
+      type: this.type,
+      points: this.points,
+    };
   }
 }
 
 export class GeometryMultiPoint
-  extends GeometryMultiPointBase<typeof GeometryPoint>
+  extends GeometryMultiPointBase<GeometryMultiPointTypes<typeof GeometryPoint>>
 {
   static readonly Point = GeometryPoint;
 
-  constructor(
-    points:
-      | readonly ConstructorParameters<typeof GeometryPoint>[0][]
-      | Readonly<Pick<GeometryMultiPoint, "points">>,
-  ) {
-    super(GeometryMultiPoint, points);
+  constructor(source: GeometryMultiPointSource<typeof GeometryMultiPoint>) {
+    super(source, GeometryMultiPoint);
   }
 }

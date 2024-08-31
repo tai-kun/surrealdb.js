@@ -1,52 +1,61 @@
 import { defineAsGeometryMultiPolygon } from "~/data-types/define";
-import { type Geometry, map } from "~/data-types/geometry";
-import { GeometryPolygon, type GeometryPolygonBase } from "./geometry-polygon";
+import { type Coord, type Geometry, map } from "~/data-types/geometry";
+import type { GeometryLineBase, GeometryLineTypes } from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
+import {
+  GeometryPolygon,
+  type GeometryPolygonBase,
+  type GeometryPolygonTypes,
+} from "./geometry-polygon";
 
-type Polygon = GeometryPolygonBase<new(_: any) => any>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export class GeometryMultiPolygonBase<P extends new(arg: any) => Polygon>
-  implements Geometry
-{
-  protected readonly _geo: {
-    readonly Polygon: P;
-  };
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
+type PolygonBase = new(
+  source: any,
+) => GeometryPolygonBase<GeometryPolygonTypes<LineBase>>;
+
+export type GeometryMultiPolygonTypes<P extends PolygonBase = PolygonBase> = {
+  readonly Polygon: P;
+};
+
+export type GeometryMultiPolygonSource<
+  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> = readonly (
+  | ConstructorParameters<T["Polygon"]>[0]
+  | InstanceType<T["Polygon"]>
+)[];
+
+export class GeometryMultiPolygonBase<
+  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> implements Geometry {
   readonly type = "MultiPolygon" as const;
 
-  readonly polygons: readonly InstanceType<P>[];
+  readonly polygons: readonly InstanceType<T["Polygon"]>[];
 
-  constructor(
-    geo: {
-      readonly Polygon: P;
-    },
-    polygons:
-      | readonly ConstructorParameters<P>[0][]
-      | Readonly<Pick<GeometryMultiPolygonBase<P>, "polygons">>,
-  ) {
-    this._geo = geo;
-    this.polygons = !Array.isArray(polygons)
-      ? [...polygons.polygons]
-      : map(
-        polygons,
-        (p: any) =>
-          (
-            p instanceof geo.Polygon ? p : new geo.Polygon(p)
-          ) as InstanceType<P>,
-      );
+  constructor(source: GeometryMultiPolygonSource<T>, readonly types: T) {
+    this.polygons = map(
+      source,
+      (p: any) =>
+        (p instanceof types.Polygon
+          ? p
+          : new types.Polygon(p)) as InstanceType<T["Polygon"]>,
+    );
     defineAsGeometryMultiPolygon(this);
   }
 }
 
-export class GeometryMultiPolygon
-  extends GeometryMultiPolygonBase<typeof GeometryPolygon>
-{
+export class GeometryMultiPolygon extends GeometryMultiPolygonBase<
+  GeometryMultiPolygonTypes<typeof GeometryPolygon>
+> {
   static readonly Polygon = GeometryPolygon;
 
-  constructor(
-    polygons:
-      | readonly ConstructorParameters<typeof GeometryPolygon>[0][]
-      | Readonly<Pick<GeometryMultiPolygon, "polygons">>,
-  ) {
-    super(GeometryMultiPolygon, polygons);
+  constructor(source: GeometryMultiPolygonSource<typeof GeometryMultiPolygon>) {
+    super(source, GeometryMultiPolygon);
   }
 }

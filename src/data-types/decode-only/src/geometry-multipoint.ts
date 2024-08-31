@@ -1,50 +1,51 @@
 import { defineAsGeometryMultiPoint } from "~/data-types/define";
 import { type Coord, type Geometry, map } from "~/data-types/geometry";
-import { GeometryPoint, type GeometryPointBase } from "./geometry-point";
+import {
+  GeometryPoint,
+  type GeometryPointBase,
+  GeometryPointTypes,
+} from "./geometry-point";
 
-type Point = GeometryPointBase<Coord>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export class GeometryMultiPointBase<P extends new(arg: any) => Point>
+export type GeometryMultiPointTypes<P extends PointBase = PointBase> = {
+  readonly Point: P;
+};
+
+export type GeometryMultiPointSource<
+  T extends GeometryMultiPointTypes = GeometryMultiPointTypes,
+> = readonly (
+  | ConstructorParameters<T["Point"]>[0]
+  | InstanceType<T["Point"]>
+)[];
+
+export class GeometryMultiPointBase<T extends GeometryMultiPointTypes>
   implements Geometry
 {
-  protected readonly _geo: {
-    readonly Point: P;
-  };
-
   readonly type = "MultiPoint" as const;
 
-  readonly points: readonly InstanceType<P>[];
+  readonly points: readonly InstanceType<T["Point"]>[];
 
-  constructor(
-    geo: {
-      readonly Point: P;
-    },
-    points:
-      | readonly ConstructorParameters<P>[0][]
-      | Readonly<Pick<GeometryMultiPointBase<P>, "points">>,
-  ) {
-    this._geo = geo;
-    this.points = !Array.isArray(points)
-      ? [...points.points]
-      : map(
-        points,
-        (p: any) =>
-          (p instanceof geo.Point ? p : new geo.Point(p)) as InstanceType<P>,
-      );
+  constructor(source: GeometryMultiPointSource<T>, readonly types: T) {
+    this.points = map(
+      source,
+      (p: any) =>
+        (p instanceof types.Point
+          ? p
+          : new types.Point(p)) as InstanceType<T["Point"]>,
+    );
     defineAsGeometryMultiPoint(this);
   }
 }
 
 export class GeometryMultiPoint
-  extends GeometryMultiPointBase<typeof GeometryPoint>
+  extends GeometryMultiPointBase<GeometryMultiPointTypes<typeof GeometryPoint>>
 {
   static readonly Point = GeometryPoint;
 
-  constructor(
-    points:
-      | readonly ConstructorParameters<typeof GeometryPoint>[0][]
-      | Readonly<Pick<GeometryMultiPoint, "points">>,
-  ) {
-    super(GeometryMultiPoint, points);
+  constructor(source: GeometryMultiPointSource<typeof GeometryMultiPoint>) {
+    super(source, GeometryMultiPoint);
   }
 }

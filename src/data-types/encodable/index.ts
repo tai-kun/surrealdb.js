@@ -11,36 +11,50 @@ export {
   type GeoJsonCollection,
   GeometryCollection,
   GeometryCollectionBase,
+  type GeometryCollectionSource,
+  type GeometryCollectionTypes,
 } from "./src/geometry-collection";
 export {
   type GeoJsonLineString,
   GeometryLine,
   GeometryLineBase,
+  type GeometryLineSource,
+  type GeometryLineTypes,
 } from "./src/geometry-line";
 export {
   type GeoJsonMultiLine,
   GeometryMultiLine,
   GeometryMultiLineBase,
+  type GeometryMultiLineSource,
+  type GeometryMultiLineTypes,
 } from "./src/geometry-multiline";
 export {
   type GeoJsonMultiPoint,
   GeometryMultiPoint,
   GeometryMultiPointBase,
+  type GeometryMultiPointSource,
+  type GeometryMultiPointTypes,
 } from "./src/geometry-multipoint";
 export {
   type GeoJsonMultiPolygon,
   GeometryMultiPolygon,
   GeometryMultiPolygonBase,
+  type GeometryMultiPolygonSource,
+  type GeometryMultiPolygonTypes,
 } from "./src/geometry-multipolygon";
 export {
   type GeoJsonPoint,
   GeometryPoint,
   GeometryPointBase,
+  type GeometryPointSource,
+  type GeometryPointTypes,
 } from "./src/geometry-point";
 export {
   type GeoJsonPolygon,
   GeometryPolygon,
   GeometryPolygonBase,
+  type GeometryPolygonSource,
+  type GeometryPolygonTypes,
 } from "./src/geometry-polygon";
 
 export type * from "./src/table";

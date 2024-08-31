@@ -8,42 +8,39 @@ import {
   map,
 } from "~/data-types/geometry";
 
-export class GeometryPointBase<C extends Coord> implements Geometry {
-  protected readonly _geo: {
-    readonly Coord: C;
-  };
+export type GeometryPointTypes<C extends Coord = Coord> = {
+  readonly Coord: C;
+};
 
+export type GeometryPointSource<
+  T extends GeometryPointTypes = GeometryPointTypes,
+> = readonly [
+  x: CoordArg<T["Coord"]> | CoordValue<T["Coord"]>,
+  y: CoordArg<T["Coord"]> | CoordValue<T["Coord"]>,
+];
+
+export class GeometryPointBase<T extends GeometryPointTypes>
+  implements Geometry
+{
   readonly type = "Point" as const;
 
   readonly point: readonly [
-    x: CoordValue<C>,
-    y: CoordValue<C>,
+    x: CoordValue<T["Coord"]>,
+    y: CoordValue<T["Coord"]>,
   ];
 
-  constructor(
-    geo: {
-      readonly Coord: C;
-    },
-    point:
-      | readonly [x: CoordArg<C>, y: CoordArg<C>]
-      | Readonly<Pick<GeometryPointBase<C>, "point">>,
-  ) {
-    this._geo = geo;
-    this.point = !Array.isArray(point)
-      ? [...point.point]
-      : map(point, arg => coord(geo.Coord, arg));
+  constructor(source: GeometryPointSource<T>, readonly types: T) {
+    this.point = map(source, arg => coord(types.Coord, arg));
     defineAsGeometryPoint(this);
   }
 }
 
-export class GeometryPoint extends GeometryPointBase<typeof Number> {
+export class GeometryPoint
+  extends GeometryPointBase<GeometryPointTypes<typeof Number>>
+{
   static readonly Coord = Number;
 
-  constructor(
-    point:
-      | readonly [x: unknown, y: unknown]
-      | Readonly<Pick<GeometryPoint, "point">>,
-  ) {
-    super(GeometryPoint, point);
+  constructor(source: GeometryPointSource<typeof GeometryPoint>) {
+    super(source, GeometryPoint);
   }
 }

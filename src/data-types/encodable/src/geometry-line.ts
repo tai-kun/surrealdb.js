@@ -1,17 +1,34 @@
-import { GeometryLineBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import {
+  GeometryLineBase as Base,
+  type GeometryLineSource as GeometryLineSourceBase,
+  type GeometryLineTypes as GeometryLineTypesBase,
+} from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { type Coord, map } from "~/data-types/geometry";
 import {
   type GeoJsonPoint,
   GeometryPoint,
   type GeometryPointBase,
+  type GeometryPointTypes,
 } from "./geometry-point";
 import { CBOR_TAG_GEOMETRY_LINE, type Encodable } from "./spec";
+
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
+
+export type GeometryLineTypes<P extends PointBase = PointBase> =
+  GeometryLineTypesBase<P>;
+
+export type GeometryLineSource<
+  T extends GeometryLineTypes = GeometryLineTypes,
+> = GeometryLineSourceBase<T>;
 
 export type GeoJsonLineString = {
   type: "LineString";
   // https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.4
-  // For type "LineString", the "coordinates" member is an array of two or more positions.
+  // > For type "LineString", the "coordinates" member is an array of two or
+  // > more positions.
   coordinates: [
     GeoJsonPoint["coordinates"],
     GeoJsonPoint["coordinates"],
@@ -19,15 +36,13 @@ export type GeoJsonLineString = {
   ];
 };
 
-type Point = GeometryPointBase<Coord>;
-
-export class GeometryLineBase<P extends new(arg: any) => Point> extends Base<P>
+export class GeometryLineBase<T extends GeometryLineTypes> extends Base<T>
   implements Encodable
 {
   get coordinates(): [
-    InstanceType<P>["coordinates"],
-    InstanceType<P>["coordinates"],
-    ...InstanceType<P>["coordinates"][],
+    InstanceType<T["Point"]>["coordinates"],
+    InstanceType<T["Point"]>["coordinates"],
+    ...InstanceType<T["Point"]>["coordinates"][],
   ] {
     return map(this.line, p => p.coordinates);
   }
@@ -50,23 +65,20 @@ export class GeometryLineBase<P extends new(arg: any) => Point> extends Base<P>
     });
   }
 
-  structure(): GeoJsonLineString {
-    return this.toJSON();
+  structure() {
+    return {
+      type: this.type,
+      line: this.line,
+    };
   }
 }
 
-export class GeometryLine extends GeometryLineBase<typeof GeometryPoint> {
+export class GeometryLine
+  extends GeometryLineBase<GeometryLineTypes<typeof GeometryPoint>>
+{
   static readonly Point = GeometryPoint;
 
-  constructor(
-    line:
-      | readonly [
-        ConstructorParameters<typeof GeometryPoint>[0],
-        ConstructorParameters<typeof GeometryPoint>[0],
-        ...ConstructorParameters<typeof GeometryPoint>[0][],
-      ]
-      | Readonly<Pick<GeometryLine, "line">>,
-  ) {
-    super(GeometryLine, line);
+  constructor(source: GeometryLineSource<typeof GeometryLine>) {
+    super(source, GeometryLine);
   }
 }

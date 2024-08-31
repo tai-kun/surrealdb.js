@@ -1,12 +1,33 @@
-import { GeometryPolygonBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import {
+  GeometryPolygonBase as Base,
+  type GeometryPolygonSource as GeometryPolygonSourceBase,
+  type GeometryPolygonTypes as GeometryPolygonTypesBase,
+} from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
-import { map } from "~/data-types/geometry";
+import { type Coord, map } from "~/data-types/geometry";
 import {
   type GeoJsonLineString,
   GeometryLine,
   type GeometryLineBase,
+  type GeometryLineTypes,
 } from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 import { CBOR_TAG_GEOMETRY_POLYGON, type Encodable } from "./spec";
+
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
+
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
+
+export type GeometryPolygonTypes<L extends LineBase = LineBase> =
+  GeometryPolygonTypesBase<L>;
+
+export type GeometryPolygonSource<
+  T extends GeometryPolygonTypes = GeometryPolygonTypes,
+> = GeometryPolygonSourceBase<T>;
 
 export type GeoJsonPolygon = {
   type: "Polygon";
@@ -17,15 +38,12 @@ export type GeoJsonPolygon = {
   ];
 };
 
-type Line = GeometryLineBase<new(_: any) => any>;
-
-export class GeometryPolygonBase<L extends new(arg: any) => Line>
-  extends Base<L>
-  implements Encodable
-{
+export class GeometryPolygonBase<
+  T extends GeometryPolygonTypes = GeometryPolygonTypes,
+> extends Base<T> implements Encodable {
   get coordinates(): [
-    InstanceType<L>["coordinates"],
-    ...InstanceType<L>["coordinates"][],
+    InstanceType<T["Line"]>["coordinates"],
+    ...InstanceType<T["Line"]>["coordinates"][],
   ] {
     return map(this.polygon, l => l.coordinates);
   }
@@ -48,22 +66,20 @@ export class GeometryPolygonBase<L extends new(arg: any) => Line>
     });
   }
 
-  structure(): GeoJsonPolygon {
-    return this.toJSON();
+  structure() {
+    return {
+      type: this.type,
+      polygon: this.polygon,
+    };
   }
 }
 
-export class GeometryPolygon extends GeometryPolygonBase<typeof GeometryLine> {
+export class GeometryPolygon
+  extends GeometryPolygonBase<GeometryPolygonTypes<typeof GeometryLine>>
+{
   static readonly Line = GeometryLine;
 
-  constructor(
-    polygon:
-      | readonly [
-        ConstructorParameters<typeof GeometryLine>[0],
-        ...ConstructorParameters<typeof GeometryLine>[0][],
-      ]
-      | Readonly<Pick<GeometryPolygon, "polygon">>,
-  ) {
-    super(GeometryPolygon, polygon);
+  constructor(source: GeometryPolygonSource<typeof GeometryPolygon>) {
+    super(source, GeometryPolygon);
   }
 }

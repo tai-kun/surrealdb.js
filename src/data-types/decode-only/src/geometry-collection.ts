@@ -1,93 +1,116 @@
 import { defineAsGeometryCollection } from "~/data-types/define";
 import type { Coord, Geometry } from "~/data-types/geometry";
-import { GeometryLine, type GeometryLineBase } from "./geometry-line";
+import {
+  GeometryLine,
+  type GeometryLineBase,
+  GeometryLineTypes,
+} from "./geometry-line";
 import {
   GeometryMultiLine,
   type GeometryMultiLineBase,
+  type GeometryMultiLineTypes,
 } from "./geometry-multiline";
 import {
   GeometryMultiPoint,
   type GeometryMultiPointBase,
+  type GeometryMultiPointTypes,
 } from "./geometry-multipoint";
 import {
   GeometryMultiPolygon,
   type GeometryMultiPolygonBase,
+  type GeometryMultiPolygonTypes,
 } from "./geometry-multipolygon";
-import { GeometryPoint, type GeometryPointBase } from "./geometry-point";
-import { GeometryPolygon, type GeometryPolygonBase } from "./geometry-polygon";
+import {
+  GeometryPoint,
+  type GeometryPointBase,
+  type GeometryPointTypes,
+} from "./geometry-point";
+import {
+  GeometryPolygon,
+  type GeometryPolygonBase,
+  type GeometryPolygonTypes,
+} from "./geometry-polygon";
 
-type Point = GeometryPointBase<Coord>;
-type MultiPoint = GeometryMultiPointBase<new(_: any) => any>;
-type Line = GeometryLineBase<new(_: any) => any>;
-type MultiLine = GeometryMultiLineBase<new(_: any) => any>;
-type Polygon = GeometryPolygonBase<new(_: any) => any>;
-type MultiPolygon = GeometryMultiPolygonBase<new(_: any) => any>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export class GeometryCollectionBase<
-  Pt extends new(arg: any) => Point,
-  MPt extends new(arg: any) => MultiPoint,
-  Li extends new(arg: any) => Line,
-  MLi extends new(arg: any) => MultiLine,
-  Pg extends new(arg: any) => Polygon,
-  MPg extends new(arg: any) => MultiPolygon,
-> implements Geometry {
-  protected readonly _geo: {
-    readonly Point: Pt;
-    readonly MultiPoint: MPt;
-    readonly Line: Li;
-    readonly MultiLine: MLi;
-    readonly Polygon: Pg;
-    readonly MultiPolygon: MPg;
-  };
+type MultiPointBase = new(
+  source: any,
+) => GeometryMultiPointBase<GeometryMultiPointTypes<PointBase>>;
 
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
+
+type MultiLineBase = new(
+  source: any,
+) => GeometryMultiLineBase<GeometryMultiLineTypes<LineBase>>;
+
+type PolygonBase = new(
+  source: any,
+) => GeometryPolygonBase<GeometryPolygonTypes<LineBase>>;
+
+type MultiPolygonBase = new(
+  source: any,
+) => GeometryMultiPolygonBase<GeometryMultiPolygonTypes<PolygonBase>>;
+
+export type GeometryCollectionTypes<
+  Pt extends PointBase = PointBase,
+  MPt extends MultiPointBase = MultiPointBase,
+  Li extends LineBase = LineBase,
+  MLi extends MultiLineBase = MultiLineBase,
+  Pg extends PolygonBase = PolygonBase,
+  MPg extends MultiPolygonBase = MultiPolygonBase,
+> = {
+  readonly Point: Pt;
+  readonly MultiPoint: MPt;
+  readonly Line: Li;
+  readonly MultiLine: MLi;
+  readonly Polygon: Pg;
+  readonly MultiPolygon: MPg;
+};
+
+export type GeometryCollectionSource<
+  T extends GeometryCollectionTypes = GeometryCollectionTypes,
+> = readonly (
+  | InstanceType<T["Point"]>
+  | InstanceType<T["MultiPoint"]>
+  | InstanceType<T["Line"]>
+  | InstanceType<T["MultiLine"]>
+  | InstanceType<T["Polygon"]>
+  | InstanceType<T["MultiPolygon"]>
+)[];
+
+export class GeometryCollectionBase<T extends GeometryCollectionTypes>
+  implements Geometry
+{
   readonly type = "GeometryCollection" as const;
 
   readonly collection: readonly (
-    | InstanceType<Pt>
-    | InstanceType<MPt>
-    | InstanceType<Li>
-    | InstanceType<MLi>
-    | InstanceType<Pg>
-    | InstanceType<MPg>
+    | InstanceType<T["Point"]>
+    | InstanceType<T["MultiPoint"]>
+    | InstanceType<T["Line"]>
+    | InstanceType<T["MultiLine"]>
+    | InstanceType<T["Polygon"]>
+    | InstanceType<T["MultiPolygon"]>
   )[];
 
-  constructor(
-    geo: {
-      readonly Point: Pt;
-      readonly MultiPoint: MPt;
-      readonly Line: Li;
-      readonly MultiLine: MLi;
-      readonly Polygon: Pg;
-      readonly MultiPolygon: MPg;
-    },
-    collection:
-      | readonly (
-        | InstanceType<Li>
-        | InstanceType<MLi>
-        | InstanceType<Pt>
-        | InstanceType<MPt>
-        | InstanceType<Pg>
-        | InstanceType<MPg>
-      )[]
-      | Readonly<
-        Pick<GeometryCollectionBase<Pt, MPt, Li, MLi, Pg, MPg>, "collection">
-      >,
-  ) {
-    this._geo = geo;
-    this.collection = !Array.isArray(collection)
-      ? [...collection.collection]
-      : [...collection];
+  constructor(collection: GeometryCollectionSource<T>, readonly types: T) {
+    this.collection = collection.slice();
     defineAsGeometryCollection(this);
   }
 }
 
 export class GeometryCollection extends GeometryCollectionBase<
-  typeof GeometryPoint,
-  typeof GeometryMultiPoint,
-  typeof GeometryLine,
-  typeof GeometryMultiLine,
-  typeof GeometryPolygon,
-  typeof GeometryMultiPolygon
+  GeometryCollectionTypes<
+    typeof GeometryPoint,
+    typeof GeometryMultiPoint,
+    typeof GeometryLine,
+    typeof GeometryMultiLine,
+    typeof GeometryPolygon,
+    typeof GeometryMultiPolygon
+  >
 > {
   static readonly Point = GeometryPoint;
   static readonly MultiPoint = GeometryMultiPoint;
@@ -96,18 +119,7 @@ export class GeometryCollection extends GeometryCollectionBase<
   static readonly Polygon = GeometryPolygon;
   static readonly MultiPolygon = GeometryMultiPolygon;
 
-  constructor(
-    collection:
-      | readonly (
-        | GeometryPoint
-        | GeometryMultiPoint
-        | GeometryLine
-        | GeometryMultiLine
-        | GeometryPolygon
-        | GeometryMultiPolygon
-      )[]
-      | Readonly<Pick<GeometryCollection, "collection">>,
-  ) {
-    super(GeometryCollection, collection);
+  constructor(source: GeometryCollectionSource<typeof GeometryCollection>) {
+    super(source, GeometryCollection);
   }
 }

@@ -1,51 +1,59 @@
 import { defineAsGeometryPolygon } from "~/data-types/define";
-import { type Geometry, map } from "~/data-types/geometry";
-import { GeometryLine, type GeometryLineBase } from "./geometry-line";
+import { type Coord, type Geometry, map } from "~/data-types/geometry";
+import {
+  GeometryLine,
+  type GeometryLineBase,
+  type GeometryLineTypes,
+} from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 
-type Line = GeometryLineBase<new(_: any) => any>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export class GeometryPolygonBase<L extends new(arg: any) => Line>
-  implements Geometry
-{
-  protected readonly _geo: {
-    readonly Line: L;
-  };
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
+export type GeometryPolygonTypes<L extends LineBase = LineBase> = {
+  readonly Line: L;
+};
+
+export type GeometryPolygonSource<
+  T extends GeometryPolygonTypes = GeometryPolygonTypes,
+> = readonly [
+  (ConstructorParameters<T["Line"]>[0] | InstanceType<T["Line"]>),
+  ...(ConstructorParameters<T["Line"]>[0] | InstanceType<T["Line"]>)[],
+];
+
+export class GeometryPolygonBase<
+  T extends GeometryPolygonTypes = GeometryPolygonTypes,
+> implements Geometry {
   readonly type = "Polygon" as const;
 
-  readonly polygon: readonly [InstanceType<L>, ...InstanceType<L>[]];
+  readonly polygon: readonly [
+    InstanceType<T["Line"]>,
+    ...InstanceType<T["Line"]>[],
+  ];
 
-  constructor(
-    geo: {
-      readonly Line: L;
-    },
-    polygon:
-      | readonly [ConstructorParameters<L>[0], ...ConstructorParameters<L>[0][]]
-      | Readonly<Pick<GeometryPolygonBase<L>, "polygon">>,
-  ) {
-    this._geo = geo;
-    this.polygon = !Array.isArray(polygon)
-      ? [...polygon.polygon]
-      : map(
-        polygon,
-        (l: any) =>
-          (l instanceof geo.Line ? l : new geo.Line(l)) as InstanceType<L>,
-      );
+  constructor(source: GeometryPolygonSource<T>, readonly types: T) {
+    this.polygon = map(
+      source,
+      (l: any) =>
+        (l instanceof types.Line
+          ? l
+          : new types.Line(l)) as InstanceType<T["Line"]>,
+    );
     defineAsGeometryPolygon(this);
   }
 }
 
-export class GeometryPolygon extends GeometryPolygonBase<typeof GeometryLine> {
+export class GeometryPolygon
+  extends GeometryPolygonBase<GeometryPolygonTypes<typeof GeometryLine>>
+{
   static readonly Line = GeometryLine;
 
-  constructor(
-    polygon:
-      | readonly [
-        ConstructorParameters<typeof GeometryLine>[0],
-        ...ConstructorParameters<typeof GeometryLine>[0][],
-      ]
-      | Readonly<Pick<GeometryPolygon, "polygon">>,
-  ) {
-    super(GeometryPolygon, polygon);
+  constructor(source: GeometryPolygonSource<typeof GeometryPolygon>) {
+    super(source, GeometryPolygon);
   }
 }

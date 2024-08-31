@@ -1,62 +1,75 @@
-import { GeometryMultiLineBase as Base } from "~/data-types/encodable";
-import { isGeometryMultiLine, map } from "~/data-types/geometry";
-import { GeometryLine, type GeometryLineBase } from "./geometry-line";
+import {
+  type GeoJsonMultiLine,
+  GeometryMultiLineBase as Base,
+  type GeometryMultiLineSource as GeometryMultiLineSourceBase,
+  type GeometryMultiLineTypes as GeometryMultiLineTypesBase,
+} from "~/data-types/encodable";
+import { type Coord, isGeometryMultiLine, map } from "~/data-types/geometry";
+import {
+  GeometryLine,
+  type GeometryLineBase,
+  type GeometryLineTypes,
+} from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 
-type Line = GeometryLineBase<new(_: any) => any>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type { GeoJsonMultiLine } from "@tai-kun/surrealdb/data-types/encodable";
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export class GeometryMultiLineBase<P extends new(arg: any) => Line>
-  extends Base<P>
-{
+export type GeometryMultiLineTypes<L extends LineBase = LineBase> =
+  GeometryMultiLineTypesBase<L>;
+
+export type GeometryMultiLineSource<
+  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> = GeometryMultiLineSourceBase<T>;
+
+export type { GeoJsonMultiLine };
+
+export class GeometryMultiLineBase<
+  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> extends Base<T> {
   // @ts-expect-error readonly を外すだけ。
-  override lines: InstanceType<P>[];
+  override lines: InstanceType<T["Line"]>[];
 
-  override get coordinates(): InstanceType<P>["coordinates"][] {
-    return map(this.lines, p => p.coordinates);
+  override get coordinates(): InstanceType<T["Line"]>["coordinates"][] {
+    return this.lines.map(l => l.coordinates);
   }
 
-  override set coordinates(v: readonly ConstructorParameters<P>[0][]) {
+  override set coordinates(source: GeometryMultiLineSource<T>) {
     this.lines = map(
-      v,
-      (p: any) =>
-        (p instanceof this._geo.Line
-          ? p
-          : new this._geo.Line(p)) as InstanceType<P>,
+      source,
+      (l: any) =>
+        (l instanceof this.types.Line
+          ? l
+          : new this.types.Line(l)) as InstanceType<T["Line"]>,
     );
   }
 
   clone(): this {
-    // @ts-expect-error
-    return new this.constructor(this._geo, {
-      lines: this.lines.map(p => p.clone()),
-    });
+    const This = this.constructor as typeof GeometryMultiLineBase;
+
+    return new This(this.lines.map(l => l.clone()), this.types) as this;
   }
 
   equals(other: unknown): boolean {
-    return isGeometryMultiLine<GeometryMultiLineBase<P>>(other)
+    return isGeometryMultiLine<
+      GeometryMultiLineBase<GeometryMultiLineTypes>
+    >(other)
       && other.lines.length === this.lines.length
-      && other.lines.every((p, i) => this.lines[i]!.equals(p));
+      && other.lines.every((l, i) => this.lines[i]!.equals(l));
   }
 }
 
 export class GeometryMultiLine
-  extends GeometryMultiLineBase<typeof GeometryLine>
+  extends GeometryMultiLineBase<GeometryMultiLineTypes<typeof GeometryLine>>
 {
   static readonly Line = GeometryLine;
 
-  constructor(
-    lines:
-      | readonly ConstructorParameters<typeof GeometryLine>[0][]
-      | Readonly<Pick<GeometryMultiLine, "lines">>,
-  ) {
-    super(GeometryMultiLine, lines);
-  }
-
-  override clone(): this {
-    // @ts-expect-error
-    return new this.constructor({
-      lines: this.lines.map(p => p.clone()),
-    });
+  constructor(source: GeometryMultiLineSource<typeof GeometryMultiLine>) {
+    super(source, GeometryMultiLine);
   }
 }

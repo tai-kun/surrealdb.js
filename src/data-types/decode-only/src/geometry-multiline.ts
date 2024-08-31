@@ -1,50 +1,56 @@
 import { defineAsGeometryMultiLine } from "~/data-types/define";
-import { type Geometry, map } from "~/data-types/geometry";
-import { GeometryLine, type GeometryLineBase } from "./geometry-line";
+import { type Coord, type Geometry, map } from "~/data-types/geometry";
+import {
+  GeometryLine,
+  type GeometryLineBase,
+  type GeometryLineTypes,
+} from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 
-type Line = GeometryLineBase<new(_: any) => any>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export class GeometryMultiLineBase<L extends new(arg: any) => Line>
-  implements Geometry
-{
-  protected readonly _geo: {
-    readonly Line: L;
-  };
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
+export type GeometryMultiLineTypes<L extends LineBase = LineBase> = {
+  readonly Line: L;
+};
+
+export type GeometryMultiLineSource<
+  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> = readonly (
+  | ConstructorParameters<T["Line"]>[0]
+  | InstanceType<T["Line"]>
+)[];
+
+export class GeometryMultiLineBase<
+  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> implements Geometry {
   readonly type = "MultiLineString" as const;
 
-  readonly lines: readonly InstanceType<L>[];
+  readonly lines: readonly InstanceType<T["Line"]>[];
 
-  constructor(
-    geo: {
-      readonly Line: L;
-    },
-    lines:
-      | readonly ConstructorParameters<L>[0][]
-      | Readonly<Pick<GeometryMultiLineBase<L>, "lines">>,
-  ) {
-    this._geo = geo;
-    this.lines = !Array.isArray(lines)
-      ? [...lines.lines]
-      : map(
-        lines,
-        (l: any) =>
-          (l instanceof geo.Line ? l : new geo.Line(l)) as InstanceType<L>,
-      );
+  constructor(source: GeometryMultiLineSource<T>, readonly types: T) {
+    this.lines = map(
+      source,
+      (l: any) =>
+        (l instanceof types.Line
+          ? l
+          : new types.Line(l)) as InstanceType<T["Line"]>,
+    );
     defineAsGeometryMultiLine(this);
   }
 }
 
 export class GeometryMultiLine
-  extends GeometryMultiLineBase<typeof GeometryLine>
+  extends GeometryMultiLineBase<GeometryMultiLineTypes<typeof GeometryLine>>
 {
   static readonly Line = GeometryLine;
 
-  constructor(
-    lines:
-      | readonly ConstructorParameters<typeof GeometryLine>[0][]
-      | Readonly<Pick<GeometryMultiLine, "lines">>,
-  ) {
-    super(GeometryMultiLine, lines);
+  constructor(source: GeometryMultiLineSource<typeof GeometryMultiLine>) {
+    super(source, GeometryMultiLine);
   }
 }

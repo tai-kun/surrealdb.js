@@ -1,54 +1,63 @@
-import { GeometryLineBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
+import {
+  type GeoJsonLineString,
+  GeometryLineBase as Base,
+  type GeometryLineSource as GeometryLineSourceBase,
+  type GeometryLineTypes as GeometryLineTypesBase,
+} from "@tai-kun/surrealdb/data-types/encodable";
 import { type Coord, isGeometryLine, map } from "~/data-types/geometry";
-import { GeometryPoint, type GeometryPointBase } from "./geometry-point";
+import {
+  GeometryPoint,
+  type GeometryPointBase,
+  type GeometryPointTypes,
+} from "./geometry-point";
 
-type Point = GeometryPointBase<Coord>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type { GeoJsonLineString } from "@tai-kun/surrealdb/data-types/encodable";
+export type GeometryLineTypes<P extends PointBase = PointBase> =
+  GeometryLineTypesBase<P>;
 
-export class GeometryLineBase<P extends new(arg: any) => Point>
-  extends Base<P>
-{
+export type GeometryLineSource<
+  T extends GeometryLineTypes = GeometryLineTypes,
+> = GeometryLineSourceBase<T>;
+
+export type { GeoJsonLineString };
+
+export class GeometryLineBase<T extends GeometryLineTypes> extends Base<T> {
   // @ts-expect-error readonly を外すだけ。
   override line: [
-    InstanceType<P>,
-    InstanceType<P>,
-    ...InstanceType<P>[],
+    InstanceType<T["Point"]>,
+    InstanceType<T["Point"]>,
+    ...InstanceType<T["Point"]>[],
   ];
 
   override get coordinates(): [
-    InstanceType<P>["coordinates"],
-    InstanceType<P>["coordinates"],
-    ...InstanceType<P>["coordinates"][],
+    InstanceType<T["Point"]>["coordinates"],
+    InstanceType<T["Point"]>["coordinates"],
+    ...InstanceType<T["Point"]>["coordinates"][],
   ] {
     return map(this.line, p => p.coordinates);
   }
 
-  override set coordinates(
-    v: readonly [
-      ConstructorParameters<P>[0],
-      ConstructorParameters<P>[0],
-      ...ConstructorParameters<P>[0][],
-    ],
-  ) {
+  override set coordinates(source: GeometryLineSource<T>) {
     this.line = map(
-      v,
-      (p: any) =>
-        (p instanceof this._geo.Point
+      source,
+      p =>
+        (p instanceof this.types.Point
           ? p
-          : new this._geo.Point(p)) as InstanceType<P>,
+          : new this.types.Point(p)) as InstanceType<T["Point"]>,
     );
   }
 
   clone(): this {
-    // @ts-expect-error
-    return new this.constructor(this._geo, {
-      line: this.line.map(p => p.clone()),
-    });
+    const This = this.constructor as typeof GeometryLineBase;
+
+    return new This(map(this.line, p => p.clone()), this.types) as this;
   }
 
   equals(other: unknown): boolean {
-    return isGeometryLine<GeometryLineBase<P>>(other)
+    return isGeometryLine<GeometryLineBase<GeometryLineTypes>>(other)
       && other.line.length === this.line.length
       && other.line.every((p, i) => this.line[i]!.equals(p));
   }
@@ -57,39 +66,26 @@ export class GeometryLineBase<P extends new(arg: any) => Point>
     return this.line[0].equals(this.line[this.line.length - 1]);
   }
 
-  close(): void {
-    if (!this.isClosed()) {
-      this.line = [...this.line, this.line[0].clone()];
-    }
-  }
-
   toClosed(): this {
     const line = this.clone();
     line.close();
 
     return line;
   }
+
+  close(): void {
+    if (!this.isClosed()) {
+      this.line = [...this.line, this.line[0].clone()];
+    }
+  }
 }
 
-export class GeometryLine extends GeometryLineBase<typeof GeometryPoint> {
+export class GeometryLine
+  extends GeometryLineBase<GeometryLineTypes<typeof GeometryPoint>>
+{
   static readonly Point = GeometryPoint;
 
-  constructor(
-    line:
-      | readonly [
-        ConstructorParameters<typeof GeometryPoint>[0],
-        ConstructorParameters<typeof GeometryPoint>[0],
-        ...ConstructorParameters<typeof GeometryPoint>[0][],
-      ]
-      | Readonly<Pick<GeometryLine, "line">>,
-  ) {
-    super(GeometryLine, line);
-  }
-
-  override clone(): this {
-    // @ts-expect-error
-    return new this.constructor({
-      line: this.line.map(p => p.clone()),
-    });
+  constructor(source: GeometryLineSource<typeof GeometryLine>) {
+    super(source, GeometryLine);
   }
 }

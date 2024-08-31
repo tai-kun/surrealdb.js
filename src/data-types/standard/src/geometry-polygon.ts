@@ -1,84 +1,92 @@
-import { GeometryPolygonBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
-import { isGeometryPolygon, map } from "~/data-types/geometry";
-import { GeometryLine, type GeometryLineBase } from "./geometry-line";
+import {
+  type GeoJsonPolygon,
+  GeometryPolygonBase as Base,
+  type GeometryPolygonSource as GeometryPolygonSourceBase,
+  type GeometryPolygonTypes as GeometryPolygonTypesBase,
+} from "@tai-kun/surrealdb/data-types/encodable";
+import { type Coord, isGeometryPolygon, map } from "~/data-types/geometry";
+import {
+  GeometryLine,
+  type GeometryLineBase,
+  type GeometryLineTypes,
+} from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 
-type Line = GeometryLineBase<new(_: any) => any>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type { GeoJsonPolygon } from "@tai-kun/surrealdb/data-types/encodable";
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export class GeometryPolygonBase<L extends new(arg: any) => Line>
-  extends Base<L>
-{
+export type GeometryPolygonTypes<L extends LineBase = LineBase> =
+  GeometryPolygonTypesBase<L>;
+
+export type GeometryPolygonSource<
+  T extends GeometryPolygonTypes = GeometryPolygonTypes,
+> = GeometryPolygonSourceBase<T>;
+
+export type { GeoJsonPolygon };
+
+export class GeometryPolygonBase<
+  T extends GeometryPolygonTypes = GeometryPolygonTypes,
+> extends Base<T> {
   // @ts-expect-error readonly を外すだけ。
-  override polygon: [InstanceType<L>, ...InstanceType<L>[]];
+  override polygon: [InstanceType<T["Line"]>, ...InstanceType<T["Line"]>[]];
 
   override get coordinates(): [
-    InstanceType<L>["coordinates"],
-    ...InstanceType<L>["coordinates"][],
+    InstanceType<T["Line"]>["coordinates"],
+    ...InstanceType<T["Line"]>["coordinates"][],
   ] {
     return map(this.polygon, l => l.coordinates);
   }
 
-  override set coordinates(
-    v: readonly [ConstructorParameters<L>[0], ...ConstructorParameters<L>[0][]],
-  ) {
+  override set coordinates(source: GeometryPolygonSource<T>) {
     this.polygon = map(
-      v,
+      source,
       (l: any) =>
-        (l instanceof this._geo.Line
+        (l instanceof this.types.Line
           ? l
-          : new this._geo.Line(l)) as InstanceType<L>,
+          : new this.types.Line(l)) as InstanceType<T["Line"]>,
     );
   }
 
-  get exteriorRing(): InstanceType<L> {
+  get exteriorRing(): InstanceType<T["Line"]> {
     return this.polygon[0];
   }
 
-  set exteriorRing(v: InstanceType<L>) {
+  set exteriorRing(v: InstanceType<T["Line"]>) {
     this.polygon = [v, ...this.interiorRings];
   }
 
-  get interiorRings(): InstanceType<L>[] {
+  get interiorRings(): InstanceType<T["Line"]>[] {
     return this.polygon.slice(1);
   }
 
-  set interiorRings(v: InstanceType<L>[]) {
+  set interiorRings(v: InstanceType<T["Line"]>[]) {
     this.polygon = [this.exteriorRing, ...v];
   }
 
   clone(): this {
-    // @ts-expect-error
-    return new this.constructor(this._geo, {
-      polygon: this.polygon.map(l => l.clone()),
-    });
+    const This = this.constructor as typeof GeometryPolygonBase;
+
+    return new This(map(this.polygon, l => l.clone()), this.types) as this;
   }
 
   equals(other: unknown): boolean {
-    return isGeometryPolygon<GeometryPolygonBase<L>>(other)
+    return isGeometryPolygon<GeometryPolygonBase<GeometryPolygonTypes>>(other)
       && other.polygon.length === this.polygon.length
       && other.polygon.every((l, i) => this.polygon[i]!.equals(l));
   }
 }
 
-export class GeometryPolygon extends GeometryPolygonBase<typeof GeometryLine> {
+export class GeometryPolygon
+  extends GeometryPolygonBase<GeometryPolygonTypes<typeof GeometryLine>>
+{
   static readonly Line = GeometryLine;
 
-  constructor(
-    polygon:
-      | readonly [
-        ConstructorParameters<typeof GeometryLine>[0],
-        ...ConstructorParameters<typeof GeometryLine>[0][],
-      ]
-      | Readonly<Pick<GeometryPolygon, "polygon">>,
-  ) {
-    super(GeometryPolygon, polygon);
-  }
-
-  override clone(): this {
-    // @ts-expect-error
-    return new this.constructor({
-      polygon: this.polygon.map(l => l.clone()),
-    });
+  constructor(source: GeometryPolygonSource<typeof GeometryPolygon>) {
+    super(source, GeometryPolygon);
   }
 }

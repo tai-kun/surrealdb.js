@@ -1,12 +1,38 @@
-import { GeometryMultiPolygonBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import {
+  GeometryMultiPolygonBase as Base,
+  type GeometryMultiPolygonSource as GeometryMultiPolygonSourceBase,
+  type GeometryMultiPolygonTypes as GeometryMultiPolygonTypesBase,
+} from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
-import { map } from "~/data-types/geometry";
+import { type Coord, map } from "~/data-types/geometry";
+import type { GeometryLineBase, GeometryLineTypes } from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 import {
   type GeoJsonPolygon,
   GeometryPolygon,
   type GeometryPolygonBase,
+  type GeometryPolygonTypes,
 } from "./geometry-polygon";
 import { CBOR_TAG_GEOMETRY_MULTIPOLYGON, type Encodable } from "./spec";
+
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
+
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
+
+type PolygonBase = new(
+  source: any,
+) => GeometryPolygonBase<GeometryPolygonTypes<LineBase>>;
+
+export type GeometryMultiPolygonTypes<P extends PolygonBase = PolygonBase> =
+  GeometryMultiPolygonTypesBase<P>;
+
+export type GeometryMultiPolygonSource<
+  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> = GeometryMultiPolygonSourceBase<T>;
 
 export type GeoJsonMultiPolygon = {
   type: "MultiPolygon";
@@ -15,13 +41,10 @@ export type GeoJsonMultiPolygon = {
   coordinates: GeoJsonPolygon["coordinates"][];
 };
 
-type Polygon = GeometryPolygonBase<new(_: any) => any>;
-
-export class GeometryMultiPolygonBase<P extends new(arg: any) => Polygon>
-  extends Base<P>
-  implements Encodable
-{
-  get coordinates(): InstanceType<P>["coordinates"][] {
+export class GeometryMultiPolygonBase<
+  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> extends Base<T> implements Encodable {
+  get coordinates(): InstanceType<T["Polygon"]>["coordinates"][] {
     return map(this.polygons, p => p.coordinates);
   }
 
@@ -46,21 +69,20 @@ export class GeometryMultiPolygonBase<P extends new(arg: any) => Polygon>
     });
   }
 
-  structure(): GeoJsonMultiPolygon {
-    return this.toJSON();
+  structure() {
+    return {
+      type: this.type,
+      polygons: this.polygons,
+    };
   }
 }
 
-export class GeometryMultiPolygon
-  extends GeometryMultiPolygonBase<typeof GeometryPolygon>
-{
+export class GeometryMultiPolygon extends GeometryMultiPolygonBase<
+  GeometryMultiPolygonTypes<typeof GeometryPolygon>
+> {
   static readonly Polygon = GeometryPolygon;
 
-  constructor(
-    polygons:
-      | readonly ConstructorParameters<typeof GeometryPolygon>[0][]
-      | Readonly<Pick<GeometryMultiPolygon, "polygons">>,
-  ) {
-    super(GeometryMultiPolygon, polygons);
+  constructor(source: GeometryMultiPolygonSource<typeof GeometryMultiPolygon>) {
+    super(source, GeometryMultiPolygon);
   }
 }

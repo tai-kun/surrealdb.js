@@ -1,12 +1,33 @@
-import { GeometryMultiLineBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import {
+  GeometryMultiLineBase as Base,
+  type GeometryMultiLineSource as GeometryMultiLineSourceBase,
+  type GeometryMultiLineTypes as GeometryMultiLineTypesBase,
+} from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
-import { map } from "~/data-types/geometry";
+import { type Coord, map } from "~/data-types/geometry";
 import {
   type GeoJsonLineString,
   GeometryLine,
   type GeometryLineBase,
+  type GeometryLineTypes,
 } from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 import { CBOR_TAG_GEOMETRY_MULTILINE, type Encodable } from "./spec";
+
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
+
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
+
+export type GeometryMultiLineTypes<L extends LineBase = LineBase> =
+  GeometryMultiLineTypesBase<L>;
+
+export type GeometryMultiLineSource<
+  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> = GeometryMultiLineSourceBase<T>;
 
 export type GeoJsonMultiLine = {
   type: "MultiLineString";
@@ -15,13 +36,10 @@ export type GeoJsonMultiLine = {
   coordinates: GeoJsonLineString["coordinates"][];
 };
 
-type Line = GeometryLineBase<new(_: any) => any>;
-
-export class GeometryMultiLineBase<P extends new(arg: any) => Line>
-  extends Base<P>
-  implements Encodable
-{
-  get coordinates(): InstanceType<P>["coordinates"][] {
+export class GeometryMultiLineBase<
+  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> extends Base<T> implements Encodable {
+  get coordinates(): InstanceType<T["Line"]>["coordinates"][] {
     return map(this.lines, p => p.coordinates);
   }
 
@@ -43,21 +61,20 @@ export class GeometryMultiLineBase<P extends new(arg: any) => Line>
     });
   }
 
-  structure(): GeoJsonMultiLine {
-    return this.toJSON();
+  structure() {
+    return {
+      type: this.type,
+      lines: this.lines,
+    };
   }
 }
 
 export class GeometryMultiLine
-  extends GeometryMultiLineBase<typeof GeometryLine>
+  extends GeometryMultiLineBase<GeometryMultiLineTypes<typeof GeometryLine>>
 {
   static readonly Line = GeometryLine;
 
-  constructor(
-    lines:
-      | readonly ConstructorParameters<typeof GeometryLine>[0][]
-      | Readonly<Pick<GeometryMultiLine, "lines">>,
-  ) {
-    super(GeometryMultiLine, lines);
+  constructor(source: GeometryMultiLineSource<typeof GeometryMultiLine>) {
+    super(source, GeometryMultiLine);
   }
 }

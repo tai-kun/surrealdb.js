@@ -1,62 +1,80 @@
-import { GeometryMultiPolygonBase as Base } from "~/data-types/encodable";
-import { isGeometryMultiPolygon, map } from "~/data-types/geometry";
-import { GeometryPolygon, type GeometryPolygonBase } from "./geometry-polygon";
+import {
+  type GeoJsonMultiPolygon,
+  GeometryMultiPolygonBase as Base,
+  type GeometryMultiPolygonSource as GeometryMultiPolygonSourceBase,
+  type GeometryMultiPolygonTypes as GeometryMultiPolygonTypesBase,
+} from "@tai-kun/surrealdb/data-types/encodable";
+import { type Coord, isGeometryMultiPolygon, map } from "~/data-types/geometry";
+import type { GeometryLineBase, GeometryLineTypes } from "./geometry-line";
+import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
+import {
+  GeometryPolygon,
+  type GeometryPolygonBase,
+  type GeometryPolygonTypes,
+} from "./geometry-polygon";
 
-type Polygon = GeometryPolygonBase<new(_: any) => any>;
+type PointBase = new(
+  source: any,
+) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type { GeoJsonMultiPolygon } from "@tai-kun/surrealdb/data-types/encodable";
+type LineBase = new(
+  source: any,
+) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export class GeometryMultiPolygonBase<P extends new(arg: any) => Polygon>
-  extends Base<P>
-{
+type PolygonBase = new(
+  source: any,
+) => GeometryPolygonBase<GeometryPolygonTypes<LineBase>>;
+
+export type GeometryMultiPolygonTypes<P extends PolygonBase = PolygonBase> =
+  GeometryMultiPolygonTypesBase<P>;
+
+export type GeometryMultiPolygonSource<
+  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> = GeometryMultiPolygonSourceBase<T>;
+
+export type { GeoJsonMultiPolygon };
+
+export class GeometryMultiPolygonBase<
+  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> extends Base<T> {
   // @ts-expect-error readonly を外すだけ。
-  override polygons: InstanceType<P>[];
+  override polygons: InstanceType<T["Polygon"]>[];
 
-  override get coordinates(): InstanceType<P>["coordinates"][] {
-    return map(this.polygons, p => p.coordinates);
+  override get coordinates(): InstanceType<T["Polygon"]>["coordinates"][] {
+    return this.polygons.map(p => p.coordinates);
   }
 
-  override set coordinates(v: readonly ConstructorParameters<P>[0][]) {
+  override set coordinates(source: GeometryMultiPolygonSource<T>) {
     this.polygons = map(
-      v,
+      source,
       (p: any) =>
-        (p instanceof this._geo.Polygon
+        (p instanceof this.types.Polygon
           ? p
-          : new this._geo.Polygon(p)) as InstanceType<P>,
+          : new this.types.Polygon(p)) as InstanceType<T["Polygon"]>,
     );
   }
 
   clone(): this {
-    // @ts-expect-error
-    return new this.constructor(this._geo, {
-      polygons: this.polygons.map(p => p.clone()),
-    });
+    const This = this.constructor as typeof GeometryMultiPolygonBase;
+
+    return new This(this.polygons.map(p => p.clone()), this.types) as this;
   }
 
   equals(other: unknown): boolean {
-    return isGeometryMultiPolygon<GeometryMultiPolygonBase<P>>(other)
+    return isGeometryMultiPolygon<
+      GeometryMultiPolygonBase<GeometryMultiPolygonTypes>
+    >(other)
       && other.polygons.length === this.polygons.length
       && other.polygons.every((p, i) => this.polygons[i]!.equals(p));
   }
 }
 
-export class GeometryMultiPolygon
-  extends GeometryMultiPolygonBase<typeof GeometryPolygon>
-{
+export class GeometryMultiPolygon extends GeometryMultiPolygonBase<
+  GeometryMultiPolygonTypes<typeof GeometryPolygon>
+> {
   static readonly Polygon = GeometryPolygon;
 
-  constructor(
-    polygons:
-      | readonly ConstructorParameters<typeof GeometryPolygon>[0][]
-      | Readonly<Pick<GeometryMultiPolygon, "polygons">>,
-  ) {
-    super(GeometryMultiPolygon, polygons);
-  }
-
-  override clone(): this {
-    // @ts-expect-error
-    return new this.constructor({
-      polygons: this.polygons.map(p => p.clone()),
-    });
+  constructor(source: GeometryMultiPolygonSource<typeof GeometryMultiPolygon>) {
+    super(source, GeometryMultiPolygon);
   }
 }

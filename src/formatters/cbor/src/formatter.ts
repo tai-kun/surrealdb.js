@@ -11,6 +11,12 @@ import type {
   DatetimeSource,
   DecimalSource,
   DurationSource,
+  GeometryLineSource,
+  GeometryMultiLineSource,
+  GeometryMultiPointSource,
+  GeometryMultiPolygonSource,
+  GeometryPointSource,
+  GeometryPolygonSource,
   TableSource,
   ThingSource,
   UuidSource,
@@ -35,8 +41,6 @@ import {
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import {
   type Data,
-  // type DecodingContext,
-  // type DecodingStrategy,
   EncodedCBOR,
   type Formatter,
 } from "@tai-kun/surrealdb/formatter";
@@ -50,20 +54,19 @@ import {
 const hasBuffer = typeof Buffer !== "undefined";
 
 export interface CborDataTypes {
-  readonly Uuid: new(_: UuidSource) => any;
-  readonly Table: new(_: TableSource) => any;
-  readonly Thing: new(_: ThingSource) => any;
-  readonly Decimal: new(_: DecimalSource) => any;
-  readonly Datetime: new(_: DatetimeSource) => any;
-  readonly Duration: new(_: DurationSource) => any;
-  // TODO(tai-kun): Geometry???Source を追加
-  readonly GeometryLine: new(_: any) => any;
-  readonly GeometryPoint: new(_: any) => any;
-  readonly GeometryPolygon: new(_: any) => any;
-  readonly GeometryMultiLine: new(_: any) => any;
-  readonly GeometryMultiPoint: new(_: any) => any;
-  readonly GeometryCollection: new(_: any) => any;
-  readonly GeometryMultiPolygon: new(_: any) => any;
+  readonly Uuid: new(source: UuidSource) => any;
+  readonly Table: new(source: TableSource) => any;
+  readonly Thing: new(source: ThingSource) => any;
+  readonly Decimal: new(source: DecimalSource) => any;
+  readonly Datetime: new(source: DatetimeSource) => any;
+  readonly Duration: new(source: DurationSource) => any;
+  readonly GeometryLine: new(source: GeometryLineSource) => any;
+  readonly GeometryPoint: new(source: GeometryPointSource) => any;
+  readonly GeometryPolygon: new(source: GeometryPolygonSource) => any;
+  readonly GeometryMultiLine: new(source: GeometryMultiLineSource) => any;
+  readonly GeometryMultiPoint: new(source: GeometryMultiPointSource) => any;
+  readonly GeometryCollection: new(source: any) => any;
+  readonly GeometryMultiPolygon: new(source: GeometryMultiPolygonSource) => any;
 }
 
 export interface EncodeOptions extends CborEncodeOptions {}
@@ -230,7 +233,8 @@ function toEncodedData(data: Data): Uint8ArrayLike {
       return new Uint8Array(data);
 
     case hasBuffer
-      && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
+      && Array.isArray(data)
+      && data.every(b => Buffer.isBuffer(b)):
       return Buffer.concat(data);
 
     case typeof data === "string":

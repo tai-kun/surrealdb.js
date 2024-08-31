@@ -10,22 +10,45 @@ export { default as Duration } from "./src/duration";
 export {
   GeometryCollection,
   GeometryCollectionBase,
+  type GeometryCollectionSource,
+  type GeometryCollectionTypes,
 } from "./src/geometry-collection";
-export { GeometryLine, GeometryLineBase } from "./src/geometry-line";
+export {
+  GeometryLine,
+  GeometryLineBase,
+  type GeometryLineSource,
+  type GeometryLineTypes,
+} from "./src/geometry-line";
 export {
   GeometryMultiLine,
   GeometryMultiLineBase,
+  type GeometryMultiLineSource,
+  type GeometryMultiLineTypes,
 } from "./src/geometry-multiline";
 export {
   GeometryMultiPoint,
   GeometryMultiPointBase,
+  type GeometryMultiPointSource,
+  type GeometryMultiPointTypes,
 } from "./src/geometry-multipoint";
 export {
   GeometryMultiPolygon,
   GeometryMultiPolygonBase,
+  type GeometryMultiPolygonSource,
+  type GeometryMultiPolygonTypes,
 } from "./src/geometry-multipolygon";
-export { GeometryPoint, GeometryPointBase } from "./src/geometry-point";
-export { GeometryPolygon, GeometryPolygonBase } from "./src/geometry-polygon";
+export {
+  GeometryPoint,
+  GeometryPointBase,
+  type GeometryPointSource,
+  type GeometryPointTypes,
+} from "./src/geometry-point";
+export {
+  GeometryPolygon,
+  GeometryPolygonBase,
+  type GeometryPolygonSource,
+  type GeometryPolygonTypes,
+} from "./src/geometry-polygon";
 
 export type * from "./src/table";
 export { default as Table } from "./src/table";

@@ -28,17 +28,29 @@ export interface Clone {
 }
 
 export function hasToJSON(value: object): value is ToJSON {
-  return "toJSON" in value && typeof value.toJSON === "function";
+  return typeof value === "object"
+    && value !== null
+    && "toJSON" in value
+    && typeof value.toJSON === "function";
 }
 
 export function hasToSurql(value: object): value is ToSurql {
-  return "toSurql" in value && typeof value.toSurql === "function";
+  return typeof value === "object"
+    && value !== null
+    && "toSurql" in value
+    && typeof value.toSurql === "function";
 }
 
 export function hasToPlain(value: object): value is ToPlain {
-  return "toPlain" in value && typeof value.toPlain === "function";
+  return typeof value === "object"
+    && value !== null
+    && "toPlain" in value
+    && typeof value.toPlain === "function";
 }
 
 export function hasClone(value: object): value is Clone {
-  return "clone" in value && typeof value.clone === "function";
+  return typeof value === "object"
+    && value !== null
+    && "clone" in value
+    && typeof value.clone === "function";
 }

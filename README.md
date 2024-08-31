@@ -35,12 +35,14 @@ import { Surreal } from "@tai-kun/surrealdb";
 const db = new Surreal();
 await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
 
-await db.signin({ user: "root", pass: "root" });
-
-const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
-console.log(results); // [ 42 ]
-
-await db.disconnect();
+try {
+  await db.signin({ user: "root", pass: "root" });
+  await db.use("sample_namespace", "sample_database");
+  const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
+  console.log(results); // [ 42 ]
+} finally {
+  await db.disconnect();
+}
 ```
 
 ## Customization
@@ -50,7 +52,6 @@ import { initSurreal } from "@tai-kun/surrealdb";
 import Client from "@tai-kun/surrealdb/clients/standard";
 import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
-import NoOpValidator from "@tai-kun/surrealdb/validators/noop";
 
 const { Surreal } = initSurreal({
   Client: Client,
@@ -62,7 +63,6 @@ const { Surreal } = initSurreal({
     https: "http",
   },
   formatter: new JsonFormatter(),
-  validator: new NoOpValidator(),
 });
 ```
 

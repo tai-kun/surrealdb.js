@@ -3,8 +3,8 @@ import {
   SurrealTypeError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
-import isPlainObject from "is-plain-obj";
 import { escapeKey, quoteStr } from "./escape";
+import isPlainObject from "./is-plain-object";
 import { hasToJSON, hasToSurql } from "./traits";
 
 /**
@@ -60,101 +60,99 @@ export default function toSurql(value: unknown): string {
       throw new CircularReferenceError(String(x));
     }
 
-    const o = x as { readonly [key: string]: unknown }; // cast
-
-    if (hasToSurql(o)) {
-      c.seen.add(o);
-      const s = o["toSurql"]();
-      c.seen.delete(o);
+    if (hasToSurql(x)) {
+      c.seen.add(x);
+      const s = x["toSurql"]();
+      c.seen.delete(x);
 
       return s;
     }
 
-    if (o instanceof Date) {
-      return "d" + quoteStr(o.toISOString());
+    if (x instanceof Date) {
+      return "d" + quoteStr(x.toISOString());
     }
 
-    if (hasToJSON(o)) {
-      c.seen.add(o);
-      const s = inner(o["toJSON"](), c);
-      c.seen.delete(o);
+    if (hasToJSON(x)) {
+      c.seen.add(x);
+      const s = inner(x["toJSON"](), c);
+      c.seen.delete(x);
 
       return s;
     }
 
-    if (Array.isArray(o)) {
-      c.seen.add(o);
+    if (Array.isArray(x)) {
+      c.seen.add(x);
       let s = "[";
 
-      for (let i = 0, len = o.length; i < len; i++) {
+      for (let i = 0, len = x.length; i < len; i++) {
         i && (s += ",");
-        s += inner(o[i], c);
+        s += inner(x[i], c);
       }
 
       s += "]";
-      c.seen.delete(o);
+      c.seen.delete(x);
 
       return s;
     }
 
-    if (isPlainObject(o)) {
-      c.seen.add(o);
+    if (isPlainObject(x)) {
+      c.seen.add(x);
       let s = "{";
 
       for (
         let i = 0,
-          kys = Object.keys(o).sort(),
+          kys = Object.keys(x).sort(),
           len = kys.length;
         i < len;
         i++
       ) {
         i && (s += ",");
-        s += escapeKey(kys[i]!) + ":" + inner(o[kys[i]!], c);
+        s += escapeKey(kys[i]!) + ":" + inner(x[kys[i]!], c);
       }
 
       s += "}";
-      c.seen.delete(o);
+      c.seen.delete(x);
 
       return s;
     }
 
-    if (o instanceof Set) {
-      c.seen.add(o);
+    if (x instanceof Set) {
+      c.seen.add(x);
       let s = "[";
 
-      for (let i = 0, arr = Array.from(o), len = arr.length; i < len; i++) {
+      for (let i = 0, arr = Array.from(x), len = arr.length; i < len; i++) {
         i && (s += ",");
         s += inner(arr[i], c);
       }
 
       s += "]";
-      c.seen.delete(o);
+      c.seen.delete(x);
 
       return s;
     }
 
-    if (o instanceof Map) {
-      c.seen.add(o);
+    if (x instanceof Map) {
+      c.seen.add(x);
       let s = "{";
 
       for (
         let i = 0,
-          kys = Array.from(o.keys()).sort(),
+          kys = Array.from(x.keys()).sort(),
           len = kys.length;
         i < len;
         i++
       ) {
         i && (s += ",");
-        s += inner(kys[i]!, c) + ":" + inner(o.get(kys[i]!), c);
+        s += inner(kys[i]!, c) + ":" + inner(x.get(kys[i]!), c);
       }
 
       s += "}";
-      c.seen.delete(o);
+      c.seen.delete(x);
 
       return s;
     }
 
-    throw new SurrealTypeError("Object", String(o));
+    throw new SurrealTypeError("Object", String(x));
   }
 
   return inner(value, {

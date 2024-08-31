@@ -31,6 +31,9 @@ export { default as isLiveResult } from "./src/is-live-result";
 export type * from "./src/is-rpc-response";
 export { default as isRpcResponse } from "./src/is-rpc-response";
 
+export type * from "./src/is-plain-object";
+export { default as isPlainObject } from "./src/is-plain-object";
+
 export type * from "./src/is-safe-number";
 export { default as isSafeNumber } from "./src/is-safe-number";
 

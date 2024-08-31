@@ -7,8 +7,7 @@ import {
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
-import { utf8 } from "@tai-kun/surrealdb/utils";
-import isPlainObject from "is-plain-obj";
+import { isPlainObject, utf8 } from "@tai-kun/surrealdb/utils";
 import { ianaReplacer } from "./iana";
 import {
   AI_EIGHT_BYTES,

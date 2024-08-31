@@ -1,6 +1,6 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import { defineAsUuid } from "~/data-types/define";
-import { isValidBytes } from "~/data-types/uuid";
+import { defineAsUuid } from "~/data-types/_internals/define";
+import { isValidBytes } from "~/data-types/_internals/uuid";
 
 export type UuidSource = Uint8Array;
 

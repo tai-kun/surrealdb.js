@@ -1,5 +1,5 @@
 import type { DataItem } from "@tai-kun/surrealdb/cbor";
-import { defineAsThing } from "~/data-types/define";
+import { defineAsThing } from "~/data-types/_internals/define";
 import Uuid from "./uuid";
 
 export type ThingTypes<U extends typeof Uuid = typeof Uuid> = {

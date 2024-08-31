@@ -1,5 +1,5 @@
 import type { DataItem } from "@tai-kun/surrealdb/cbor";
-import { defineAsTable } from "~/data-types/define";
+import { defineAsTable } from "~/data-types/_internals/define";
 
 export type TableSource = DataItem.Utf8String.FixedLength["value"];
 

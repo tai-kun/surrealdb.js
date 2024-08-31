@@ -7,7 +7,7 @@ import {
   type Uuid as UuidBase,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import { escapeRid, quoteStr } from "@tai-kun/surrealdb/utils";
-import { escapeId, toString } from "~/data-types/thing";
+import { escapeId, toString } from "~/data-types/_internals/thing";
 import { CBOR_TAG_RECORDID, type Encodable } from "./spec";
 import Uuid from "./uuid";
 

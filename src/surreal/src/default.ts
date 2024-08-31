@@ -18,7 +18,7 @@ import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import Formatter from "@tai-kun/surrealdb/formatters/cbor";
 import { WebSocket } from "isows";
-import initSurreal from "./init-surreal";
+import initSurreal from "./surql/init-surreal";
 
 const {
   surql,

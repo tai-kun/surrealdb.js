@@ -1,10 +1,14 @@
 import {
+  type Coord,
+  isGeometryMultiPoint,
+  map,
+} from "~/data-types/_internals/geometry";
+import {
   type GeoJsonMultiPoint,
   GeometryMultiPointBase as Base,
   type GeometryMultiPointSource as GeometryMultiPointSourceBase,
   type GeometryMultiPointTypes as GeometryMultiPointTypesBase,
 } from "~/data-types/encodable";
-import { type Coord, isGeometryMultiPoint, map } from "~/data-types/geometry";
 import {
   GeometryPoint,
   type GeometryPointBase,

@@ -1,5 +1,9 @@
-import { defineAsGeometryMultiPolygon } from "~/data-types/define";
-import { type Coord, type Geometry, map } from "~/data-types/geometry";
+import { defineAsGeometryMultiPolygon } from "~/data-types/_internals/define";
+import {
+  type Coord,
+  type Geometry,
+  map,
+} from "~/data-types/_internals/geometry";
 import type { GeometryLineBase, GeometryLineTypes } from "./geometry-line";
 import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 import {

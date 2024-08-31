@@ -4,7 +4,7 @@ import {
   type GeometryCollectionTypes as GeometryCollectionTypesBase,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
-import type { Coord } from "~/data-types/geometry";
+import type { Coord } from "~/data-types/_internals/geometry";
 import {
   type GeoJsonLineString,
   GeometryLine,

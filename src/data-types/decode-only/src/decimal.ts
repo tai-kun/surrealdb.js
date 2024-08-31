@@ -1,5 +1,5 @@
 import type { DataItem } from "@tai-kun/surrealdb/cbor";
-import { defineAsDecimal } from "~/data-types/define";
+import { defineAsDecimal } from "~/data-types/_internals/define";
 
 export type DecimalSource = DataItem.Utf8String.FixedLength["value"];
 

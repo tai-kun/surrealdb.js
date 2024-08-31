@@ -3,7 +3,7 @@ import {
   type UuidSource,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError, unreachable } from "@tai-kun/surrealdb/errors";
-import { isValidBytes } from "~/data-types/uuid";
+import { isValidBytes } from "~/data-types/_internals/uuid";
 
 export type * from "~/data-types/encodable/src/uuid";
 

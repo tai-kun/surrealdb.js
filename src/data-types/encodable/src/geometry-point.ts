@@ -4,7 +4,7 @@ import {
   type GeometryPointTypes,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
-import { type CoordValue, map } from "~/data-types/geometry";
+import { type CoordValue, map } from "~/data-types/_internals/geometry";
 import { CBOR_TAG_GEOMETRY_POINT, type Encodable } from "./spec";
 
 export type { GeometryPointSource, GeometryPointTypes };

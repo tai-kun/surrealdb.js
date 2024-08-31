@@ -9,7 +9,7 @@ import {
   type CoordValue,
   isGeometryPoint,
   map,
-} from "~/data-types/geometry";
+} from "~/data-types/_internals/geometry";
 
 function clone<T>(v: T): T {
   return typeof v === "object" && v

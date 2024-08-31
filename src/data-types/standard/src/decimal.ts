@@ -3,7 +3,7 @@ import {
   type Encodable,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { Big as Decimal, type BigSource } from "big.js";
-import { defineAsDecimal } from "~/data-types/define";
+import { defineAsDecimal } from "~/data-types/_internals/define";
 
 export type DecimalSource = BigSource;
 

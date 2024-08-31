@@ -1,6 +1,6 @@
 import { Datetime as Base } from "@tai-kun/surrealdb/data-types/decode-only";
 import { quoteStr } from "@tai-kun/surrealdb/utils";
-import { toISOString } from "~/data-types/datetime";
+import { toISOString } from "~/data-types/_internals/datetime";
 import { CBOR_TAG_CUSTOM_DATETIME, type Encodable } from "./spec";
 
 export type * from "~/data-types/decode-only/src/datetime";

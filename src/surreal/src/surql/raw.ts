@@ -1,5 +1,5 @@
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
-import { escapeTb, toString } from "~/data-types/thing";
+import { escapeTb, toString } from "~/data-types/_internals/thing";
 import { isThing } from "./data-types";
 
 function isGenerator(id: unknown): id is string {

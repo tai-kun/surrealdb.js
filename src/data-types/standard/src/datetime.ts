@@ -5,8 +5,8 @@ import {
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { isSafeNumber, quoteStr } from "@tai-kun/surrealdb/utils";
-import { toISOString } from "~/data-types/datetime";
-import { defineAsDatetime } from "~/data-types/define";
+import { toISOString } from "~/data-types/_internals/datetime";
+import { defineAsDatetime } from "~/data-types/_internals/define";
 
 export type * from "~/data-types/encodable/src/datetime";
 

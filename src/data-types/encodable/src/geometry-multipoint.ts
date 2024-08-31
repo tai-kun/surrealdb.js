@@ -4,7 +4,7 @@ import {
   type GeometryMultiPointTypes as GeometryMultiPointTypesBase,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
-import { type Coord, map } from "~/data-types/geometry";
+import { type Coord, map } from "~/data-types/_internals/geometry";
 import {
   type GeoJsonPoint,
   GeometryPoint,

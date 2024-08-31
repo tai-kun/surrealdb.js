@@ -4,7 +4,11 @@ import {
   type GeometryMultiPolygonSource as GeometryMultiPolygonSourceBase,
   type GeometryMultiPolygonTypes as GeometryMultiPolygonTypesBase,
 } from "@tai-kun/surrealdb/data-types/encodable";
-import { type Coord, isGeometryMultiPolygon, map } from "~/data-types/geometry";
+import {
+  type Coord,
+  isGeometryMultiPolygon,
+  map,
+} from "~/data-types/_internals/geometry";
 import type { GeometryLineBase, GeometryLineTypes } from "./geometry-line";
 import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 import {

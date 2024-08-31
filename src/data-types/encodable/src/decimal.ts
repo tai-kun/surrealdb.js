@@ -39,7 +39,7 @@ export default class Decimal extends Base implements Encodable {
     return this._value + "dec";
   }
 
-  structure(): {
+  toPlain(): {
     value: string;
   } {
     return {

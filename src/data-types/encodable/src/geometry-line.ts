@@ -65,7 +65,7 @@ export class GeometryLineBase<T extends GeometryLineTypes> extends Base<T>
     });
   }
 
-  structure() {
+  toPlain() {
     return {
       type: this.type,
       line: this.line,

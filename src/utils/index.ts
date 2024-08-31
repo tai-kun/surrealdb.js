@@ -58,7 +58,17 @@ export { default as throwIfAborted } from "./src/throw-if-aborted";
 export type * from "./src/to-surql";
 export { default as toSurql } from "./src/to-surql";
 
-export type * from "./src/types";
+export type {
+  Clone,
+  Jsonifiable,
+  JsonifiableArray,
+  JsonifiableObject,
+  JsonPrimitive,
+  ToJSON,
+  ToPlain,
+  ToSurql,
+} from "./src/traits";
+export { hasClone, hasToJSON, hasToPlain, hasToSurql } from "./src/traits";
 
 export type * from "./src/utf8";
 export { default as utf8 } from "./src/utf8";

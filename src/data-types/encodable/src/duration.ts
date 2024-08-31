@@ -148,7 +148,7 @@ export default class Duration extends Base implements Encodable {
     return this.toString();
   }
 
-  structure(): {
+  toPlain(): {
     seconds: bigint;
     nanoseconds: number;
   } {

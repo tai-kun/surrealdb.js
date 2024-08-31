@@ -52,7 +52,7 @@ export class GeometryPointBase<T extends GeometryPointTypes> extends Base<T>
     });
   }
 
-  structure() {
+  toPlain() {
     return {
       type: this.type,
       point: this.point,

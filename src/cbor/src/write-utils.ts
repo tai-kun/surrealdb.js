@@ -28,7 +28,8 @@ import {
   MT_BYTE_STRING,
   Simple,
 } from "./spec";
-import type { ToCBOR, Writer } from "./writer";
+import { hasToCBOR, type ToCBOR } from "./traits";
+import type { Writer } from "./writer";
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeheader)
@@ -486,9 +487,6 @@ type Parent = {
   value: ToCBOR;
 };
 
-const isTagged = (value: {}): value is ToCBOR =>
-  typeof (value as ToCBOR).toCBOR === "function";
-
 const CONTINUE = Symbol.for("@tai-kun/surrealdb/cbor/continue"); // decorder.ts と同じ
 
 export type Replacer = (value: symbol | object) => unknown | typeof CONTINUE;
@@ -558,7 +556,7 @@ export function write(
     } else if (seen.has(value)) {
       // TODO(tai-kun): エラーメッセージを改善
       throw new CircularReferenceError(String(value));
-    } else if (isTagged(value)) {
+    } else if (hasToCBOR(value)) {
       const cbor = (value as ToCBOR).toCBOR(w);
 
       if (Array.isArray(cbor)) {

@@ -340,7 +340,7 @@ export default class Datetime extends Date implements Encodable {
     return "d" + quoteStr(iso);
   }
 
-  structure(): {
+  toPlain(): {
     seconds: number;
     nanoseconds: number;
   } {

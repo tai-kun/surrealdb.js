@@ -7,7 +7,7 @@ import { describe, expect, test } from "vitest";
 const valid = Object.entries({
   0: {
     input: 0,
-    structure: {
+    toPlain: {
       seconds: 0n,
       nanoseconds: 0,
     },
@@ -22,7 +22,7 @@ const valid = Object.entries({
   },
   "12345ns": {
     input: "12345ns",
-    structure: {
+    toPlain: {
       seconds: 0n,
       nanoseconds: 12_345,
     },
@@ -37,7 +37,7 @@ const valid = Object.entries({
   },
   "012345us": {
     input: "012345us",
-    structure: {
+    toPlain: {
       seconds: 0n,
       nanoseconds: 12_345_000,
     },
@@ -52,7 +52,7 @@ const valid = Object.entries({
   },
   "012345µs": {
     input: "012345µs",
-    structure: {
+    toPlain: {
       seconds: 0n,
       nanoseconds: 12_345_000,
     },
@@ -67,7 +67,7 @@ const valid = Object.entries({
   },
   "012345μs": {
     input: "012345μs",
-    structure: {
+    toPlain: {
       seconds: 0n,
       nanoseconds: 12_345_000,
     },
@@ -82,7 +82,7 @@ const valid = Object.entries({
   },
   "123456ms": {
     input: "123456ms",
-    structure: {
+    toPlain: {
       seconds: 123n,
       nanoseconds: 456_000_000,
     },
@@ -97,7 +97,7 @@ const valid = Object.entries({
   },
   "3601s": {
     input: "3601s",
-    structure: {
+    toPlain: {
       seconds: 3601n,
       nanoseconds: 0,
     },
@@ -112,7 +112,7 @@ const valid = Object.entries({
   },
   "10000m": {
     input: "10000m",
-    structure: {
+    toPlain: {
       seconds: 600_000n,
       nanoseconds: 0,
     },
@@ -130,7 +130,7 @@ const valid = Object.entries({
   },
   "90d": {
     input: "90d",
-    structure: {
+    toPlain: {
       seconds: 7_776_000n, // 90 * 24 * 60 * 60
       nanoseconds: 0,
     },
@@ -145,7 +145,7 @@ const valid = Object.entries({
   },
   "100w": {
     input: "100w",
-    structure: {
+    toPlain: {
       seconds: 60_480_000n, // 100 * 7 * 24 * 60 * 60
       nanoseconds: 0,
     },
@@ -165,7 +165,7 @@ const valid = Object.entries({
   },
   "2y": {
     input: "2y",
-    structure: {
+    toPlain: {
       seconds: 63_072_000n,
       nanoseconds: 0,
     },
@@ -180,7 +180,7 @@ const valid = Object.entries({
   },
   "1ns1us1ms1s1m": {
     input: "1ns1us1ms1s1m",
-    structure: {
+    toPlain: {
       seconds: 61n,
       nanoseconds: 1_001_001,
     },
@@ -195,7 +195,7 @@ const valid = Object.entries({
   },
   "1ms1m": {
     input: "1ms1m",
-    structure: {
+    toPlain: {
       seconds: 60n,
       nanoseconds: 1_000_000,
     },
@@ -210,7 +210,7 @@ const valid = Object.entries({
   },
   "1m1s1m1s1m1s": {
     input: "1m1s1m1s1m1s",
-    structure: {
+    toPlain: {
       seconds: 183n,
       nanoseconds: 0,
     },
@@ -225,7 +225,7 @@ const valid = Object.entries({
   },
   "1234.567890": {
     input: 1234.567890,
-    structure: {
+    toPlain: {
       seconds: 1n,
       nanoseconds: 234_567_890,
     },
@@ -246,15 +246,15 @@ for (const [i, t] of valid) {
       const d = new Duration(t.input);
 
       expect({ seconds: d.seconds, nanoseconds: d.nanoseconds })
-        .toStrictEqual(t.structure);
+        .toStrictEqual(t.toPlain);
     });
 
     test("コンパクト表現", () => {
       const d = new Duration(t.input);
 
       expect(d.getCompact()).toStrictEqual([
-        t.structure.seconds,
-        t.structure.nanoseconds,
+        t.toPlain.seconds,
+        t.toPlain.nanoseconds,
       ]);
     });
 
@@ -317,10 +317,10 @@ for (const [i, t] of valid) {
       expect(surql).toBe(t.surql);
     });
 
-    test(".structure()", () => {
-      const structure = new Duration(t.input).structure();
+    test(".toPlain()", () => {
+      const toPlain = new Duration(t.input).toPlain();
 
-      expect(structure).toStrictEqual(t.structure);
+      expect(toPlain).toStrictEqual(t.toPlain);
     });
   });
 }

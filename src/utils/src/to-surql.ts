@@ -5,6 +5,7 @@ import {
 } from "@tai-kun/surrealdb/errors";
 import isPlainObject from "is-plain-obj";
 import { escapeKey, quoteStr } from "./escape";
+import { hasToJSON, hasToSurql } from "./traits";
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/to-surql/)
@@ -61,7 +62,7 @@ export default function toSurql(value: unknown): string {
 
     const o = x as { readonly [key: string]: unknown }; // cast
 
-    if (typeof o["toSurql"] === "function") {
+    if (hasToSurql(o)) {
       c.seen.add(o);
       const s = o["toSurql"]();
       c.seen.delete(o);
@@ -73,7 +74,7 @@ export default function toSurql(value: unknown): string {
       return "d" + quoteStr(o.toISOString());
     }
 
-    if (typeof o["toJSON"] === "function") {
+    if (hasToJSON(o)) {
       c.seen.add(o);
       const s = inner(o["toJSON"](), c);
       c.seen.delete(o);

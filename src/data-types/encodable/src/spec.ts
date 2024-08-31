@@ -1,11 +1,7 @@
 import type { ToCBOR } from "@tai-kun/surrealdb/cbor";
-import type { Jsonifiable } from "@tai-kun/surrealdb/utils";
+import type { ToJSON, ToPlain, ToSurql } from "@tai-kun/surrealdb/utils";
 
-export interface Encodable extends ToCBOR {
-  toJSON(): Jsonifiable;
-  toSurql(): string;
-  structure(): Record<string, unknown>;
-}
+export interface Encodable extends ToCBOR, ToJSON, ToPlain, ToSurql {}
 
 // See: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
 export const CBOR_TAG_SPEC_DATETIME = 0; // decode

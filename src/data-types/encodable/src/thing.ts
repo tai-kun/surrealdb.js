@@ -51,7 +51,7 @@ export default class Thing<
     return "r" + quoteStr(this.toString());
   }
 
-  structure(
+  toPlain(
     options?: {
       readonly escape?: undefined | false | {
         readonly tb?: boolean | undefined;
@@ -63,7 +63,7 @@ export default class Thing<
     id: unknown;
   };
 
-  structure(
+  toPlain(
     options?: {
       readonly escape?: undefined | true | {
         readonly tb?: boolean | undefined;
@@ -75,7 +75,7 @@ export default class Thing<
     id: string;
   };
 
-  structure(
+  toPlain(
     options: {
       readonly escape?: undefined | boolean | {
         readonly tb?: boolean | undefined;

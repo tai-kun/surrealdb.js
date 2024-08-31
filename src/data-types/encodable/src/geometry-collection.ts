@@ -123,7 +123,7 @@ export class GeometryCollectionBase<
     });
   }
 
-  structure() {
+  toPlain() {
     return {
       type: this.type,
       collection: this.collection,

@@ -1,13 +1,5 @@
 import type { Uint8ArrayLike } from "@tai-kun/surrealdb/types";
 import type { AllocatedMemoryBlock } from "./memory";
-import type { DataItem } from "./spec";
-
-export interface ToCBOR {
-  readonly toCBOR: (writer: Writer) =>
-    | [tag: DataItem.Tag["value"], value: unknown]
-    | [value: unknown]
-    | void;
-}
 
 export interface WriterOptions {
   readonly maxDepth?: number | undefined;

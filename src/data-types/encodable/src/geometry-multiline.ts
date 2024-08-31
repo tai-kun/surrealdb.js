@@ -61,7 +61,7 @@ export class GeometryMultiLineBase<
     });
   }
 
-  structure() {
+  toPlain() {
     return {
       type: this.type,
       lines: this.lines,

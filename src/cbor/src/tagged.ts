@@ -1,5 +1,5 @@
 import type { DataItem } from "./spec";
-import type { ToCBOR } from "./writer";
+import type { ToCBOR } from "./traits";
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/tagged/)

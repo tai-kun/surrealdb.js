@@ -67,7 +67,7 @@ export default class Uuid extends Base implements Encodable {
     return "u" + quoteStr(unsafe_toString36(this.bytes));
   }
 
-  structure(): {
+  toPlain(): {
     bytes: Uint8Array;
   } {
     return {

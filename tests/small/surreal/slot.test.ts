@@ -83,7 +83,7 @@ test("型を変更する", () => {
   expect(slot.name).toBe("foo");
   expect(slot.isRequired).toBe(true);
   expect(slot).not.toHaveProperty("defaultValue");
-  expect(slot.parse("0")).toBe("0"); // 検証しない。
+  expect(slot._parse("0")).toBe("0"); // 検証しない。
 });
 
 test("バリデーターで型を変更する", () => {
@@ -107,8 +107,8 @@ test("バリデーターで型を変更する", () => {
   expect(slot.name).toBe("foo");
   expect(slot.isRequired).toBe(true);
   expect(slot).not.toHaveProperty("defaultValue");
-  expect(slot.parse(0)).toBe(0);
-  expect(() => slot.parse("0")).toThrowErrorMatchingSnapshot(); // 検証する。
+  expect(slot._parse(0)).toBe(0);
+  expect(() => slot._parse("0")).toThrowErrorMatchingSnapshot(); // 検証する。
 });
 
 test("変数名を変える", () => {

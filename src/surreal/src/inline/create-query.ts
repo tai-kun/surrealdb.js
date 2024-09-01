@@ -24,7 +24,7 @@ export default function createQuery(
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: InlineQueryOptions | undefined,
   ): Promise<T>;
-  <T extends readonly unknown[]>(
+  <T>(
     surql: Override<PreparedQueryLike, {
       readonly slots: readonly (never | SlotLike<string, false>)[];
       readonly __type: T;
@@ -32,7 +32,7 @@ export default function createQuery(
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: InlineQueryOptions | undefined,
   ): Promise<T>;
-  <S extends SlotLike, T extends readonly unknown[]>(
+  <S extends SlotLike, T>(
     surql: Override<PreparedQueryLike, {
       readonly slots: readonly S[];
       readonly __type: T;

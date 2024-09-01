@@ -17,7 +17,7 @@ export default class Slot<
 > implements SlotLike {
   protected readonly fmt?: Formatter;
 
-  readonly parse: (value: unknown) => V;
+  readonly _parse: (value: unknown) => V;
   readonly defaultValue?: V | Encoded<V>;
 
   constructor(
@@ -25,7 +25,7 @@ export default class Slot<
     readonly isRequired: R,
     options: SlotOptions<V> = {},
   ) {
-    this.parse = options.parse || passthrough;
+    this._parse = options.parse || passthrough;
 
     if (options.formatter) {
       this.fmt = options.formatter;
@@ -38,7 +38,7 @@ export default class Slot<
 
   protected toOptions(): SlotOptions<V> {
     const options: Writable<SlotOptions> = {
-      parse: this.parse,
+      parse: this._parse,
       formatter: this.fmt,
     };
 
@@ -78,7 +78,7 @@ export default class Slot<
     const This = this.constructor as typeof Slot;
 
     return new This(this.name, false, {
-      parse: this.parse,
+      parse: this._parse,
       formatter: this.fmt,
       defaultValue: this.fmt?.toEncoded?.(defaultValue) || defaultValue,
       // TODO(tai-kun): ここでパースする必要あるか検討 (高コストだけどコンストラクター内でやる？)
@@ -90,7 +90,7 @@ export default class Slot<
     const This = this.constructor as typeof Slot;
 
     return new This(this.name, false, {
-      parse: this.parse,
+      parse: this._parse,
       formatter: this.fmt,
     });
   }
@@ -99,7 +99,7 @@ export default class Slot<
     const This = this.constructor as typeof Slot;
 
     return new This(this.name, true, {
-      parse: this.parse,
+      parse: this._parse,
       formatter: this.fmt,
     });
   }

@@ -1,6 +1,6 @@
 import { Thing } from "@tai-kun/surrealdb";
 import { SurrealValueError } from "@tai-kun/surrealdb/errors";
-import { describe, expect, test } from "vitest";
+import { describe, expect, expectTypeOf, test } from "vitest";
 import surreal from "../surreal.js";
 
 for (const { suite, fmt, url, Surreal, surql } of surreal) {
@@ -54,6 +54,27 @@ for (const { suite, fmt, url, Surreal, surql } of surreal) {
       await expect(query).rejects.toThrowError(SurrealValueError);
     });
 
-    test;
+    test("クエリーの結果を変換する", async () => {
+      await using db = new Surreal();
+      await db.connect(url());
+      await db.signin({ user: "root", pass: "root" });
+      await db.use(suite, "transform");
+
+      const CreateUserQuery = surql`CREATE usr:foo;`
+        .returns<[[{ id: Thing<"usr"> }]]>()
+        .transform(results => results[0][0]);
+
+      const result = await db.query(CreateUserQuery, {
+        id: new Thing("usr", "foo"),
+      });
+
+      expectTypeOf<typeof result>().toEqualTypeOf<{
+        id: Thing<"usr">;
+      }>();
+
+      expect(result).toStrictEqual({
+        id: new Thing("usr", "foo"),
+      });
+    });
   });
 }

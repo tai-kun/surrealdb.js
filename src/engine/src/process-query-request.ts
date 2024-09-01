@@ -24,7 +24,7 @@ export default function processQueryRequest(request: RpcQueryRequest): {
 
   for (const slot of slots) {
     if (slot.name in vars) {
-      vars[slot.name] = slot.parse(vars[slot.name]);
+      vars[slot.name] = slot._parse(vars[slot.name]);
     } else if (slot.isRequired) {
       required.push(slot.name);
     } else if ("defaultValue" in slot) {

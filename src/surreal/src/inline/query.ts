@@ -21,7 +21,7 @@ function query<T extends readonly unknown[] = unknown[]>(
 /**
  * @experimental
  */
-function query<T extends readonly unknown[]>(
+function query<T>(
   endpoint: string | URL,
   surql: Override<PreparedQueryLike, {
     readonly slots: readonly (never | SlotLike<string, false>)[];
@@ -34,7 +34,7 @@ function query<T extends readonly unknown[]>(
 /**
  * @experimental
  */
-function query<S extends SlotLike, T extends readonly unknown[]>(
+function query<S extends SlotLike, T>(
   endpoint: string | URL,
   surql: Override<PreparedQueryLike, {
     readonly slots: readonly S[];
@@ -49,7 +49,7 @@ async function query(
   surql: string | PreparedQueryLike,
   vars?: { readonly [p: string]: unknown } | undefined,
   options?: InlineQueryOptions | undefined,
-): Promise<unknown[]> {
+): Promise<unknown> {
   const results = await rpc(endpoint, "query", {
     ...options,
     params: [surql, vars],
@@ -73,7 +73,7 @@ async function query(
     return output;
   }
 
-  return surql.parse(output);
+  return surql._trans(surql._parse(output));
 }
 
 export default query;

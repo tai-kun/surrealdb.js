@@ -301,7 +301,7 @@ export default class Client extends Base {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
    */
-  async query<T extends readonly unknown[]>(
+  async query<T>(
     surql: Override<PreparedQueryLike, {
       readonly slots: readonly (never | SlotLike<string, false>)[];
       readonly __type: T;
@@ -313,7 +313,7 @@ export default class Client extends Base {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
    */
-  async query<S extends SlotLike, T extends readonly unknown[]>(
+  async query<S extends SlotLike, T>(
     surql: Override<PreparedQueryLike, {
       readonly slots: readonly S[];
       readonly __type: T;
@@ -326,7 +326,7 @@ export default class Client extends Base {
     surql: string | PreparedQueryLike,
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<unknown[]> {
+  ): Promise<unknown> {
     const results = await this.queryRaw(surql, vars, options);
     const output: unknown[] = [];
     const errors: string[] = [];
@@ -347,7 +347,7 @@ export default class Client extends Base {
       return output;
     }
 
-    return surql.parse(output);
+    return surql._trans(surql._parse(output));
   }
 
   async let(

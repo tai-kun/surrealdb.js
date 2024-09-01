@@ -13,8 +13,8 @@ export interface Surql {
     (value: RawValue): Raw;
   };
   slot: {
-    <N extends string, T>(name: N): Slot<N, true, T | undefined>;
-    <N extends string, T>(name: N, defaultValue: T): Slot<N, false, T>;
+    <const N extends string, T>(name: N): Slot<N, true, T | undefined>;
+    <const N extends string, T>(name: N, defaultValue: T): Slot<N, false, T>;
   };
 }
 

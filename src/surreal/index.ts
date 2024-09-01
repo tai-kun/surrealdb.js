@@ -28,6 +28,8 @@ export { default as Slot } from "./src/surql/slot";
 export type * from "./src/utils/auto-reconnect";
 export { default as autoReconnect } from "./src/utils/auto-reconnect";
 
+export type * from "./src/utils/types";
+
 export {
   type DataType,
   isDatetime,

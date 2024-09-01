@@ -28,7 +28,7 @@ import {
   MT_BYTE_STRING,
   Simple,
 } from "./spec";
-import { hasToCBOR, type ToCBOR } from "./traits";
+import { canToCBOR, type ToCBOR } from "./traits";
 import type { Writer } from "./writer";
 
 /**
@@ -556,7 +556,7 @@ export function write(
     } else if (seen.has(value)) {
       // TODO(tai-kun): エラーメッセージを改善
       throw new CircularReferenceError(String(value));
-    } else if (hasToCBOR(value)) {
+    } else if (canToCBOR(value)) {
       const cbor = value.toCBOR(w);
 
       if (Array.isArray(cbor)) {

@@ -71,7 +71,7 @@ export type {
   ToPlain,
   ToSurql,
 } from "./src/traits";
-export { hasClone, hasToJSON, hasToPlain, hasToSurql } from "./src/traits";
+export { canClone, canToJSON, canToPlain, canToSurql } from "./src/traits";
 
 export type * from "./src/utf8";
 export { default as utf8 } from "./src/utf8";

@@ -52,7 +52,7 @@ export type * from "./src/tagged";
 export { default as Tagged } from "./src/tagged";
 
 export type { ToCBOR } from "./src/traits";
-export { hasToCBOR } from "./src/traits";
+export { canToCBOR } from "./src/traits";
 
 export {
   type Replacer,

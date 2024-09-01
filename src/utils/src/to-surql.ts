@@ -6,7 +6,7 @@ import {
 } from "@tai-kun/surrealdb/errors";
 import { escapeKey, quoteStr } from "./escape";
 import isPlainObject from "./is-plain-object";
-import { hasToJSON, hasToSurql } from "./traits";
+import { canToJSON, canToSurql } from "./traits";
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/to-surql/)
@@ -61,7 +61,7 @@ export default function toSurql(value: unknown): string {
       throw new CircularReferenceError(String(x));
     }
 
-    if (hasToSurql(x)) {
+    if (canToSurql(x)) {
       c.seen.add(x);
       const s = x["toSurql"]();
       c.seen.delete(x);
@@ -73,7 +73,7 @@ export default function toSurql(value: unknown): string {
       return "d" + quoteStr(x.toISOString());
     }
 
-    if (hasToJSON(x)) {
+    if (canToJSON(x)) {
       c.seen.add(x);
       const s = inner(x["toJSON"](), c);
       c.seen.delete(x);

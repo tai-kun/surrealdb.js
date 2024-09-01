@@ -27,28 +27,28 @@ export interface Clone {
   readonly clone: () => any;
 }
 
-export function hasToJSON(value: object): value is ToJSON {
+export function canToJSON(value: unknown): value is ToJSON {
   return typeof value === "object"
     && value !== null
     && "toJSON" in value
     && typeof value.toJSON === "function";
 }
 
-export function hasToSurql(value: object): value is ToSurql {
+export function canToSurql(value: unknown): value is ToSurql {
   return typeof value === "object"
     && value !== null
     && "toSurql" in value
     && typeof value.toSurql === "function";
 }
 
-export function hasToPlain(value: object): value is ToPlain {
+export function canToPlain(value: unknown): value is ToPlain {
   return typeof value === "object"
     && value !== null
     && "toPlain" in value
     && typeof value.toPlain === "function";
 }
 
-export function hasClone(value: object): value is Clone {
+export function canClone(value: unknown): value is Clone {
   return typeof value === "object"
     && value !== null
     && "clone" in value

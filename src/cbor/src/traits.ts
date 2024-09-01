@@ -8,7 +8,7 @@ export interface ToCBOR {
     | void;
 }
 
-export function hasToCBOR(value: unknown): value is ToCBOR {
+export function canToCBOR(value: unknown): value is ToCBOR {
   return typeof value === "object"
     && value !== null
     && "toCBOR" in value

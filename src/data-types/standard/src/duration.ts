@@ -10,7 +10,7 @@ import {
 } from "@tai-kun/surrealdb/errors";
 import { isSafeNumber } from "@tai-kun/surrealdb/utils";
 
-export type * from "~/data-types/encodable/src/duration";
+export type * from "../../encodable/src/duration";
 
 export interface DurationLike {
   seconds: bigint;

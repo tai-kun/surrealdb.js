@@ -4,10 +4,7 @@ import {
   type GeometryCollectionSource as GeometryCollectionSourceBase,
   type GeometryCollectionTypes as GeometryCollectionTypesBase,
 } from "@tai-kun/surrealdb/data-types/encodable";
-import {
-  type Coord,
-  isGeometryCollection,
-} from "~/data-types/_internals/geometry";
+import { type Coord, isGeometryCollection } from "../../_internals/geometry";
 import {
   GeometryLine,
   type GeometryLineBase,

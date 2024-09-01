@@ -4,11 +4,7 @@ import {
   type GeometryPolygonSource as GeometryPolygonSourceBase,
   type GeometryPolygonTypes as GeometryPolygonTypesBase,
 } from "@tai-kun/surrealdb/data-types/encodable";
-import {
-  type Coord,
-  isGeometryPolygon,
-  map,
-} from "~/data-types/_internals/geometry";
+import { type Coord, isGeometryPolygon, map } from "../../_internals/geometry";
 import {
   GeometryLine,
   type GeometryLineBase,

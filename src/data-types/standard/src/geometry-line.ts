@@ -4,11 +4,7 @@ import {
   type GeometryLineSource as GeometryLineSourceBase,
   type GeometryLineTypes as GeometryLineTypesBase,
 } from "@tai-kun/surrealdb/data-types/encodable";
-import {
-  type Coord,
-  isGeometryLine,
-  map,
-} from "~/data-types/_internals/geometry";
+import { type Coord, isGeometryLine, map } from "../../_internals/geometry";
 import {
   GeometryPoint,
   type GeometryPointBase,

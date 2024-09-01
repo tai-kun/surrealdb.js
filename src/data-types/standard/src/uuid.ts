@@ -3,9 +3,9 @@ import {
   type UuidSource,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealValueError, unreachable } from "@tai-kun/surrealdb/errors";
-import { isValidBytes } from "~/data-types/_internals/uuid";
+import { isValidBytes } from "../../_internals/uuid";
 
-export type * from "~/data-types/encodable/src/uuid";
+export type * from "../../encodable/src/uuid";
 
 // const UUID_36_REGEX =
 //   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-7][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/

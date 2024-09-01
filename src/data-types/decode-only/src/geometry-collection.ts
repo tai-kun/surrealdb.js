@@ -1,5 +1,5 @@
-import { defineAsGeometryCollection } from "~/data-types/_internals/define";
-import type { Coord, Geometry } from "~/data-types/_internals/geometry";
+import { defineAsGeometryCollection } from "../../_internals/define";
+import type { Coord, Geometry } from "../../_internals/geometry";
 import {
   GeometryLine,
   type GeometryLineBase,

@@ -8,7 +8,7 @@ import {
   type Coord,
   isGeometryMultiPolygon,
   map,
-} from "~/data-types/_internals/geometry";
+} from "../../_internals/geometry";
 import type { GeometryLineBase, GeometryLineTypes } from "./geometry-line";
 import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 import {

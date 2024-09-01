@@ -5,10 +5,10 @@ import {
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { isSafeNumber, quoteStr } from "@tai-kun/surrealdb/utils";
-import { toISOString } from "~/data-types/_internals/datetime";
-import { defineAsDatetime } from "~/data-types/_internals/define";
+import { toISOString } from "../../_internals/datetime";
+import { defineAsDatetime } from "../../_internals/define";
 
-export type * from "~/data-types/encodable/src/datetime";
+export type * from "../../encodable/src/datetime";
 
 const MILLISECONDS_PER_SECOND = 1e3;
 const NANOSECONDS_PER_SECOND = 1e9;

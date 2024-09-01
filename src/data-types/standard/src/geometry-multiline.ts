@@ -2,13 +2,13 @@ import {
   type Coord,
   isGeometryMultiLine,
   map,
-} from "~/data-types/_internals/geometry";
+} from "../../_internals/geometry";
 import {
   type GeoJsonMultiLine,
   GeometryMultiLineBase as Base,
   type GeometryMultiLineSource as GeometryMultiLineSourceBase,
   type GeometryMultiLineTypes as GeometryMultiLineTypesBase,
-} from "~/data-types/encodable";
+} from "../../encodable";
 import {
   GeometryLine,
   type GeometryLineBase,

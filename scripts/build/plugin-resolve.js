@@ -89,7 +89,6 @@ export function resolve(options) {
       const __filename = fileURLToPath(import.meta.url);
       const __dirname = path.dirname(__filename);
       const rootDir = path.join(__dirname, "..", "..");
-      const srcDir = path.join(rootDir, "src");
       const { compilerOptions: { paths } } = JSON.parse(
         fs.readFileSync(path.join(rootDir, "tsconfig.json"), "utf8"),
       );
@@ -100,25 +99,6 @@ export function resolve(options) {
         switch (true) {
           case namespace !== "file" || kind !== "import-statement":
             return null;
-
-          case pkg.startsWith("~/"): {
-            const builtPath = getBuiltPath(srcDir, pkg.slice(2));
-
-            if (builtPath) {
-              return {
-                path: toOutFilePath(resolveDir, builtPath),
-                external: true,
-              };
-            }
-
-            return {
-              errors: [
-                {
-                  text: `Cannot resolve "${pkg}"`,
-                },
-              ],
-            };
-          }
 
           case pkg.startsWith("@tai-kun/surrealdb/"): {
             const filepath = paths[pkg][0].replace(/\.ts$/, "");

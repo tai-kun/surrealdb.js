@@ -3,7 +3,7 @@ import {
   type TableSource,
 } from "@tai-kun/surrealdb/data-types/encodable";
 
-export type * from "~/data-types/encodable/src/table";
+export type * from "../../encodable/src/table";
 
 export interface TableLike<T extends TableSource = TableSource> {
   readonly name: T;

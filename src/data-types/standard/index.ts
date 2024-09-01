@@ -85,4 +85,4 @@ export {
   CBOR_TAG_STRING_UUID,
   CBOR_TAG_TABLE,
   type Encodable,
-} from "~/data-types/encodable/src/spec";
+} from "../encodable/src/spec";

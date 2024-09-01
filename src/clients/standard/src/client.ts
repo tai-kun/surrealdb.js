@@ -15,7 +15,7 @@ import type {
 } from "@tai-kun/surrealdb/types";
 import type { TaskListener } from "@tai-kun/surrealdb/utils";
 import type { IsLiteral, Simplify, UnionToIntersection } from "type-fest";
-import type { DataType } from "~/surreal/src/data-types";
+import type { DataType } from "../../../surreal/src/data-types";
 import Jwt from "./jwt";
 
 // re-exports

@@ -1,9 +1,5 @@
-import { defineAsGeometryPolygon } from "~/data-types/_internals/define";
-import {
-  type Coord,
-  type Geometry,
-  map,
-} from "~/data-types/_internals/geometry";
+import { defineAsGeometryPolygon } from "../../_internals/define";
+import { type Coord, type Geometry, map } from "../../_internals/geometry";
 import {
   GeometryLine,
   type GeometryLineBase,

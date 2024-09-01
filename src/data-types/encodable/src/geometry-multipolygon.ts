@@ -4,7 +4,7 @@ import {
   type GeometryMultiPolygonTypes as GeometryMultiPolygonTypesBase,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import { toSurql } from "@tai-kun/surrealdb/utils";
-import { type Coord, map } from "~/data-types/_internals/geometry";
+import { type Coord, map } from "../../_internals/geometry";
 import type { GeometryLineBase, GeometryLineTypes } from "./geometry-line";
 import type { GeometryPointBase, GeometryPointTypes } from "./geometry-point";
 import {

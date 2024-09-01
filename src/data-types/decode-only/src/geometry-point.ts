@@ -1,4 +1,4 @@
-import { defineAsGeometryPoint } from "~/data-types/_internals/define";
+import { defineAsGeometryPoint } from "../../_internals/define";
 import {
   type Coord,
   coord,
@@ -6,7 +6,7 @@ import {
   type CoordValue,
   type Geometry,
   map,
-} from "~/data-types/_internals/geometry";
+} from "../../_internals/geometry";
 
 export type GeometryPointTypes<C extends Coord = Coord> = {
   readonly Coord: C;

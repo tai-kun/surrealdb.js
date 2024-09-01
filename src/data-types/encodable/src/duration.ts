@@ -2,7 +2,7 @@ import { Duration as Base } from "@tai-kun/surrealdb/data-types/decode-only";
 import { NumberRangeError } from "@tai-kun/surrealdb/errors";
 import { CBOR_TAG_CUSTOM_DURATION, type Encodable } from "./spec";
 
-export type * from "~/data-types/decode-only/src/duration";
+export type * from "../../decode-only/src/duration";
 
 const SECONDS_PER_MINUTE = 60n;
 const SECONDS_PER_HOUR = 60n * SECONDS_PER_MINUTE;

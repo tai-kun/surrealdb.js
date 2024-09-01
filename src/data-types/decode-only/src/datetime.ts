@@ -1,5 +1,5 @@
 import type { DataItem } from "@tai-kun/surrealdb/cbor";
-import { defineAsDatetime } from "~/data-types/_internals/define";
+import { defineAsDatetime } from "../../_internals/define";
 
 // See: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
 // SurrealDB では日時にタグ 100, 1, 1004 を使っていない模様

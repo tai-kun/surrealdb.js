@@ -152,7 +152,7 @@ export default class Jwt implements Encodable {
     return quoteStr(this.redactedText);
   }
 
-  toPlain(): {
+  toPlainObject(): {
     header: JwtHeader;
     payload: JwtPayload;
   } {

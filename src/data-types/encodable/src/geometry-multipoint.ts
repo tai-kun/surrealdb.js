@@ -57,7 +57,7 @@ export class GeometryMultiPointBase<T extends GeometryMultiPointTypes>
     });
   }
 
-  toPlain() {
+  toPlainObject() {
     return {
       type: this.type,
       points: this.points,

@@ -66,7 +66,7 @@ export class GeometryPolygonBase<
     });
   }
 
-  toPlain() {
+  toPlainObject() {
     return {
       type: this.type,
       polygon: this.polygon,

@@ -19,8 +19,8 @@ export interface ToSurql {
   readonly toSurql: () => string;
 }
 
-export interface ToPlain {
-  readonly toPlain: () => Record<string, unknown>;
+export interface ToPlainObject {
+  readonly toPlainObject: () => Record<string, unknown>;
 }
 
 export interface Clone {
@@ -41,11 +41,11 @@ export function canToSurql(value: unknown): value is ToSurql {
     && typeof value.toSurql === "function";
 }
 
-export function canToPlain(value: unknown): value is ToPlain {
+export function canToPlainObject(value: unknown): value is ToPlainObject {
   return typeof value === "object"
     && value !== null
-    && "toPlain" in value
-    && typeof value.toPlain === "function";
+    && "toPlainObject" in value
+    && typeof value.toPlainObject === "function";
 }
 
 export function canClone(value: unknown): value is Clone {

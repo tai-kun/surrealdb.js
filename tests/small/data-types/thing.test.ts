@@ -25,10 +25,10 @@ test(".toSurql", () => {
   expect(t.toSurql()).toBe("r'foo:bar'");
 });
 
-test(".toPlain", () => {
+test(".toPlainObject", () => {
   const t = new Thing("foo", "bar");
 
-  expect(t.toPlain()).toStrictEqual({
+  expect(t.toPlainObject()).toStrictEqual({
     tb: "foo",
     id: "bar",
   });

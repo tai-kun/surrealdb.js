@@ -206,10 +206,11 @@ describe("decode-only/encodable", () => {
         expect(surql).toBe(c.surql);
       });
 
-      test(".toPlain()", () => {
-        const toPlain = new EncodableDatetime(...c.args as [any]).toPlain();
+      test(".toPlainObject()", () => {
+        const toPlainObject = new EncodableDatetime(...c.args as [any])
+          .toPlainObject();
 
-        expect(toPlain).toStrictEqual({
+        expect(toPlainObject).toStrictEqual({
           seconds: c.seconds,
           nanoseconds: c.nanoseconds,
         });
@@ -220,7 +221,7 @@ describe("decode-only/encodable", () => {
   test("-0 を 0 にする", () => {
     const dt = new EncodableDatetime([-0, -0]);
 
-    expect(dt.toPlain()).toStrictEqual({
+    expect(dt.toPlainObject()).toStrictEqual({
       seconds: 0,
       nanoseconds: 0,
     });
@@ -493,10 +494,10 @@ describe("standard", () => {
         expect(surql).toBe(c.surql);
       });
 
-      test(".toPlain()", () => {
-        const toPlain = new Datetime(...c.args as [any]).toPlain();
+      test(".toPlainObject()", () => {
+        const toPlainObject = new Datetime(...c.args as [any]).toPlainObject();
 
-        expect(toPlain).toStrictEqual({
+        expect(toPlainObject).toStrictEqual({
           seconds: c.seconds,
           nanoseconds: c.nanoseconds,
         });
@@ -692,7 +693,7 @@ describe("standard", () => {
   test("-0 を 0 にする", () => {
     const dt = new Datetime([-0, -0]);
 
-    expect(dt.toPlain()).toStrictEqual({
+    expect(dt.toPlainObject()).toStrictEqual({
       seconds: 0,
       nanoseconds: 0,
     });

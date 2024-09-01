@@ -64,10 +64,10 @@ describe("decode-only/encodable", () => {
       expect(surql).toBe("1.23e1dec");
     });
 
-    test(".toPlain()", () => {
-      const toPlain = new EncodableDecimal("1.23e1").toPlain();
+    test(".toPlainObject()", () => {
+      const toPlainObject = new EncodableDecimal("1.23e1").toPlainObject();
 
-      expect(toPlain).toStrictEqual({
+      expect(toPlainObject).toStrictEqual({
         value: "1.23e1",
       });
     });
@@ -138,10 +138,10 @@ describe("standard", () => {
       expect(surql).toBe("12.3dec");
     });
 
-    test(".toPlain()", () => {
-      const toPlain = new Decimal("1.23e1").toPlain();
+    test(".toPlainObject()", () => {
+      const toPlainObject = new Decimal("1.23e1").toPlainObject();
 
-      expect(toPlain).toStrictEqual({
+      expect(toPlainObject).toStrictEqual({
         value: "12.3",
         exponent: 1,
         sign: 1,
@@ -211,10 +211,10 @@ describe("standard", () => {
       expect(surql).toBe("3.14dec");
     });
 
-    test(".toPlain()", () => {
-      const toPlain = new Decimal(3.14).toPlain();
+    test(".toPlainObject()", () => {
+      const toPlainObject = new Decimal(3.14).toPlainObject();
 
-      expect(toPlain).toStrictEqual({
+      expect(toPlainObject).toStrictEqual({
         value: "3.14",
         exponent: 0,
         sign: 1,

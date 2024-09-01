@@ -20,10 +20,10 @@ test(".toSurql", () => {
   expect(tb.toSurql()).toBe("`foo-bar`");
 });
 
-test(".toPlain", () => {
+test(".toPlainObject", () => {
   const tb = new Table("foo-bar");
 
-  expect(tb.toPlain()).toStrictEqual({
+  expect(tb.toPlainObject()).toStrictEqual({
     name: "foo-bar",
   });
 });

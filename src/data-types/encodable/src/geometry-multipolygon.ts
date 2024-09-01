@@ -69,7 +69,7 @@ export class GeometryMultiPolygonBase<
     });
   }
 
-  toPlain() {
+  toPlainObject() {
     return {
       type: this.type,
       polygons: this.polygons,

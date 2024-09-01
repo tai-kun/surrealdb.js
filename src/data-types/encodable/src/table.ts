@@ -45,7 +45,7 @@ export default class Table<T extends TableSource = TableSource> extends Base<T>
     return escapeIdent(this.name);
   }
 
-  toPlain(): {
+  toPlainObject(): {
     name: string;
   } {
     return {

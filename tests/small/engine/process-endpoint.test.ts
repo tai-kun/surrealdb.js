@@ -4,8 +4,17 @@ import {
 } from "@tai-kun/surrealdb/engine";
 import { expect, test } from "vitest";
 
-test("transformEndpoint が 'preserve' でない場合、エンドポイントが /rpc で終わっていなければ /rpc を追加する", () => {
+test("エンドポイントが /rpc で終わっていなければ /rpc を追加する", () => {
   const endpoint = "https://example.com/api";
+  const expected = "https://example.com/api/rpc";
+
+  const result = processEndpoint(endpoint);
+
+  expect(result.toString()).toBe(expected);
+});
+
+test("エンドポイントが rpc で終わっていなければ rpc を追加する", () => {
+  const endpoint = "https://example.com/api/";
   const expected = "https://example.com/api/rpc";
 
   const result = processEndpoint(endpoint);
@@ -15,15 +24,6 @@ test("transformEndpoint が 'preserve' でない場合、エンドポイント�
 
 test("エンドポイントがすでに /rpc で終わっている場合、何も追加しない", () => {
   const endpoint = "https://example.com/api/rpc";
-  const expected = "https://example.com/api/rpc";
-
-  const result = processEndpoint(endpoint);
-
-  expect(result.toString()).toBe(expected);
-});
-
-test("エンドポイントが / で終わっていない場合、/rpc を追加する前に / を追加する", () => {
-  const endpoint = "https://example.com/api";
   const expected = "https://example.com/api/rpc";
 
   const result = processEndpoint(endpoint);

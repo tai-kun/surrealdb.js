@@ -1,6 +1,7 @@
 import type { Jwt } from "@tai-kun/surrealdb/clients/standard";
 import {
   processEndpoint,
+  type ProcessEndpointOptions,
   processQueryRequest,
 } from "@tai-kun/surrealdb/engine";
 import {
@@ -38,7 +39,7 @@ export type InlineRpcFetcher = (
   init: InlineRpcFetcherRequestInit,
 ) => Response | PromiseLike<Response>;
 
-export type InlineRpcOptions = {
+export type InlineRpcOptions = ProcessEndpointOptions & {
   readonly formatter?: Formatter | undefined;
   readonly namespace?: string | undefined;
   readonly database?: string | undefined;
@@ -83,6 +84,7 @@ async function rpc(
     database: db,
     formatter: fmt = new JsonFormatter() as never,
     namespace: ns,
+    transformEndpoint,
   } = options;
   let {
     params = [],
@@ -111,7 +113,7 @@ async function rpc(
     throw new SurrealTypeError(["String", "Uint8Array"], body);
   }
 
-  endpoint = processEndpoint(endpoint).href;
+  endpoint = processEndpoint(endpoint, { transformEndpoint }).href;
   const resp = await fetch(endpoint, {
     body,
     method: "POST",

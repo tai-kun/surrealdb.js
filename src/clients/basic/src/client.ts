@@ -5,6 +5,7 @@ import {
   type EngineAbcConfig,
   type EngineEventMap,
   processEndpoint,
+  type ProcessEndpointOptions,
 } from "@tai-kun/surrealdb/engine";
 import {
   CircularEngineReferenceError,
@@ -45,7 +46,7 @@ export interface ClientConfig {
   readonly disableDefaultErrorHandler?: boolean | undefined;
 }
 
-export interface ClientConnectOptions {
+export interface ClientConnectOptions extends ProcessEndpointOptions {
   readonly signal?: AbortSignal | undefined;
 }
 
@@ -198,7 +199,7 @@ export default class BasicClient {
     options: ClientConnectOptions | undefined = {},
   ): Promise<void> {
     const conn = this.getConnectionInfo();
-    endpoint = processEndpoint(endpoint);
+    endpoint = processEndpoint(endpoint, options);
 
     if (conn?.state === "open") {
       if (conn.endpoint.href === endpoint.href) {

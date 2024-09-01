@@ -4,6 +4,7 @@ import {
   type GeometryPointSource,
   type GeometryPointTypes,
 } from "@tai-kun/surrealdb/data-types/encodable";
+import { canClone } from "@tai-kun/surrealdb/utils";
 import {
   coord,
   type CoordValue,
@@ -12,10 +13,7 @@ import {
 } from "../../_internals/geometry";
 
 function clone<T>(v: T): T {
-  return typeof v === "object" && v
-      // @ts-expect-error
-      && typeof v.clone === "function"
-    // @ts-expect-error
+  return canClone(v)
     ? v.clone()
     : v;
 }

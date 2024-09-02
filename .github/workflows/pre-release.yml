@@ -56,8 +56,7 @@ jobs:
           tag="${suf%%.*}"
           echo "tag=$tag" >>$GITHUB_OUTPUT
 
-          ver="${ref%-*}"
-          ver="${ver#v}"
+          ver="${ref#v}"
           echo "ver=$ver" >>$GITHUB_OUTPUT
 
           now="$(date --utc +'%Y-%m-%d')"
@@ -83,6 +82,13 @@ jobs:
       - name: バージョン設定
         run: npm --no-git-tag-version version "${{ github.ref_name }}"
 
+      - name: 公開
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public
+          tag: ${{ steps.params.outputs.tag }}
+
       - name: GitHub リリースを作成
         uses: ncipollo/release-action@v1
         with:
@@ -90,13 +96,18 @@ jobs:
           name: ${{ github.ref_name }}
           body: |
             ## [${{ steps.params.outputs.ver }}](https://github.com/tai-kun/surrealdb.js/compare/${{ steps.params.outputs.pre }}...${{ github.ref_name }}) (${{ steps.params.outputs.now }})
+
+            ### Install
+
+            npm:
+            ```bash
+            npm i @tai-kun/surrealdb@${{ steps.params.outputs.ver }}
+            ```
+
+            ### Links
+
+            * [npm](https://www.npmjs.com/package/@tai-kun/surrealdb/v/${{ steps.params.outputs.ver }})
+
           token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: true
           makeLatest: legacy
-
-      - name: 公開
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          access: public
-          tag: ${{ steps.params.outputs.tag }}

@@ -11,20 +11,31 @@ A modular SurrealDB client working in major JavaScript runtimes.
 [![codecov](https://codecov.io/github/tai-kun/surrealdb.js/graph/badge.svg?token=T76SYSJZZV)](https://app.codecov.io/github/tai-kun/surrealdb.js)
 
 [![License](https://img.shields.io/npm/l/%40tai-kun%2Fsurrealdb?style=flat&logo=apache&color=rgb(40%2C%2038%2C%2097))](https://opensource.org/licenses/Apache-2.0)
-[![Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb?style=flat&logo=npm)](https://www.npmjs.com/package/@tai-kun/surrealdb)
+
+[![Latest Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb?style=flat&logo=npm)](https://www.npmjs.com/package/@tai-kun/surrealdb)
+![Alpha Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb/alpha?style=flat&logo=npm)
+![Next Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb/next?style=flat&logo=npm)
 
 > [!NOTE]
 > The main branch is currently under development for SurrealDB v2.
 > You can find the repository for SurrealDB v1 [here](https://github.com/tai-kun/surrealdb.js/tree/v1).
 
-## Document
+## Document (JA/EN)
 
 [https://tai-kun.github.io/surrealdb.js/getting-started/](https://tai-kun.github.io/surrealdb.js/getting-started/)
 
 ## Install
 
+Alpha release:
+
 ```sh
-npm i @tai-kun/surrealdb
+npm i @tai-kun/surrealdb@alpha
+```
+
+Canary release:
+
+```sh
+npm i @tai-kun/surrealdb@next
 ```
 
 ## Quick Start
@@ -68,7 +79,7 @@ const { Surreal } = initSurreal({
 
 ## Requirements
 
-SurrealDB v2 (currently in alpha)
+SurrealDB v2 (currently in beta)
 
 The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.js/tree/v1).
 

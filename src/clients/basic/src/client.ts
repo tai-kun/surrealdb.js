@@ -74,7 +74,7 @@ export default class BasicClient {
       disableDefaultErrorHandler,
     } = config;
     this.fmt = formatter;
-    this._engines = { ...engines }; // Shallow copy
+    this._engines = engines;
 
     if (!disableDefaultErrorHandler) {
       this.ee.on("error", (_, e) => {

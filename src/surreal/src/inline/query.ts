@@ -50,10 +50,11 @@ async function query(
   vars?: { readonly [p: string]: unknown } | undefined,
   options?: InlineQueryOptions | undefined,
 ): Promise<unknown> {
-  const results = await rpc(endpoint, "query", {
-    ...options,
-    params: [surql, vars],
-  });
+  const results = await rpc(
+    endpoint,
+    "query",
+    Object.assign({ params: [surql, vars] as const }, options),
+  );
   const output: unknown[] = [];
   const errors: string[] = [];
 

@@ -24,8 +24,8 @@ export class CircularEngineReferenceError extends CircularReferenceError {
     seen: Iterable<string>,
     options?: SurrealErrorOptions | undefined,
   ) {
-    super(`Circular engine reference: ${[...seen]}`, options);
-    this.seen = [...seen];
+    super(`Circular engine reference: ${seen = [...seen]}`, options);
+    this.seen = seen as string[];
   }
 }
 

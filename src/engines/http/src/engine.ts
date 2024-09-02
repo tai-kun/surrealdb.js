@@ -172,7 +172,7 @@ export default class HttpEngine extends EngineAbc {
 
       case "query": {
         const req = processQueryRequest(request);
-        req.params[1] = { ...this.vars, ...req.params[1] };
+        req.params[1] = Object.assign({}, this.vars, req.params[1]);
         request = req as RpcQueryRequest;
         break;
       }
@@ -192,17 +192,28 @@ export default class HttpEngine extends EngineAbc {
       throw new SurrealTypeError(["String", "Uint8Array"], body);
     }
 
+    const headers: HttpFetcherRequestInit["headers"] = {
+      Accept: this.fmt.mimeType,
+      "Content-Type": this.fmt.mimeType,
+    };
+
+    if (conn.namespace != null) {
+      headers["Surreal-NS"] = conn.namespace;
+    }
+
+    if (conn.database != null) {
+      headers["Surreal-DB"] = conn.database;
+    }
+
+    if (conn.token) {
+      headers["Authorization"] = `Bearer ${conn.token}`;
+    }
+
     const resp: unknown = await this.fetch(conn.endpoint.href, {
       body,
       signal,
       method: "POST",
-      headers: {
-        Accept: this.fmt.mimeType,
-        "Content-Type": this.fmt.mimeType,
-        ...(conn.namespace != null ? { "Surreal-NS": conn.namespace } : {}),
-        ...(conn.database != null ? { "Surreal-DB": conn.database } : {}),
-        ...(conn.token ? { Authorization: `Bearer ${conn.token}` } : {}),
-      },
+      headers,
     });
     const cause = {
       method: request.method,
@@ -215,20 +226,18 @@ export default class HttpEngine extends EngineAbc {
 
     if (!(resp instanceof Response) || resp.body === null) {
       throw new ResponseError("Expected `Response` contains a non-null body.", {
-        cause: {
+        cause: Object.assign(cause, {
           response: resp,
-          ...cause,
-        },
+        }),
       });
     }
 
     if (resp.status !== 200) {
       const message = await resp.text();
       throw new ResponseError(message, {
-        cause: {
+        cause: Object.assign(cause, {
           status: resp.status,
-          ...cause,
-        },
+        }),
       });
     }
 
@@ -253,10 +262,9 @@ export default class HttpEngine extends EngineAbc {
 
     if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
       throw new ResponseError("Expected id-less rpc response.", {
-        cause: {
+        cause: Object.assign(cause, {
           response: rpcResp,
-          ...cause,
-        },
+        }),
       });
     }
 

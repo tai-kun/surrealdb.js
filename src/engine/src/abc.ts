@@ -66,7 +66,7 @@ export type ConnectionInfo =
  * {@link TransitionArgs}
  */
 type _TransitionArgs<S, T> =
-  | Readonly<OptionalOnNull<T>>
+  | OptionalOnNull<T>
   // state のみ必須なら、その値だけを受け入れられるようにする。
   | (NonNullKeysOf<T> extends "state" ? S : never);
 
@@ -78,13 +78,17 @@ export type TransitionArgs = {
 }[ConnectionState];
 
 function transArgsToConnInfo(args: TransitionArgs): ConnectionInfo {
-  const conn: ConnectionInfo = {
-    token: null,
-    endpoint: null,
-    database: null,
-    namespace: null,
-    ...(typeof args === "string" ? { state: args } : args),
-  };
+  const conn: ConnectionInfo = Object.assign(
+    {
+      token: null,
+      endpoint: null,
+      database: null,
+      namespace: null,
+    },
+    typeof args === "string"
+      ? { state: args }
+      : args,
+  );
 
   if (conn.endpoint) {
     conn.endpoint = new URL(conn.endpoint); // コピー
@@ -211,7 +215,7 @@ export default abstract class EngineAbc {
   }
 
   getConnectionInfo(): ConnectionInfo {
-    const conn = { ...this._conn }; // コピー
+    const conn = Object.assign({}, this._conn); // コピー
 
     if (conn.endpoint) {
       conn.endpoint = new URL(conn.endpoint); // コピー

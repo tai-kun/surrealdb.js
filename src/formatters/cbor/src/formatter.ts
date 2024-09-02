@@ -122,7 +122,7 @@ export default class CborFormatter implements Formatter {
       GeometryMultiPolygon,
     };
     this.encodeOptions = encode;
-    this.decodeOptions = {
+    this.decodeOptions = Object.assign({
       reviver: {
         tagged: (t: Tagged<any>) => {
           switch (t.tag) {
@@ -176,8 +176,7 @@ export default class CborFormatter implements Formatter {
           }
         },
       },
-      ...decode,
-    };
+    }, decode);
   }
 
   toEncoded<T = unknown>(data: T): EncodedCBOR<T> {
@@ -205,10 +204,7 @@ export default class CborFormatter implements Formatter {
     data: ReadableStream<Uint8Array>,
     signal: AbortSignal,
   ): StatefulPromise<unknown> {
-    return decodeStream(data, {
-      ...this.decodeOptions,
-      signal,
-    });
+    return decodeStream(data, Object.assign({ signal }, this.decodeOptions));
   }
 
   // /** @experimental */

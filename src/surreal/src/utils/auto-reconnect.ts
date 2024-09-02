@@ -218,7 +218,7 @@ class AutoReconnect extends TaskEmitter<AutoReconnectEventMap> {
   }
 
   getReconnectionInfo(): ReconnectionInfo {
-    return { ...this._info };
+    return Object.assign({}, this._info);
   }
 
   get state(): ReconnectionState {

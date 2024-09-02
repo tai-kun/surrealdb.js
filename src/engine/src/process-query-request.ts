@@ -8,7 +8,9 @@ export default function processQueryRequest(request: RpcQueryRequest): {
   method: "query";
   params: [
     text: PreparedQueryLike["text"],
-    vars: { [p: string]: unknown },
+    vars: {
+      readonly [p: string]: unknown;
+    },
   ];
 } {
   const [arg0, args] = request.params;
@@ -19,7 +21,7 @@ export default function processQueryRequest(request: RpcQueryRequest): {
   } = typeof arg0 === "string"
     ? { text: arg0, vars: {}, slots: [] }
     : arg0;
-  const vars = { ...args };
+  const vars = Object.assign({}, args) as { [p: string]: unknown };
   const required: string[] = [];
 
   for (const slot of slots) {
@@ -41,6 +43,6 @@ export default function processQueryRequest(request: RpcQueryRequest): {
 
   return {
     method: request.method,
-    params: [text, { ...preparedVars, ...vars }],
+    params: [text, Object.assign({}, preparedVars, vars)],
   };
 }

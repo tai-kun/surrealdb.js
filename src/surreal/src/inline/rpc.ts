@@ -4,6 +4,7 @@ import {
   type ProcessEndpointOptions,
   processQueryRequest,
 } from "@tai-kun/surrealdb/engine";
+import type { HttpFetcherRequestInit } from "@tai-kun/surrealdb/engines/http";
 import {
   MissingNamespaceError,
   ResponseError,
@@ -113,21 +114,29 @@ async function rpc(
     throw new SurrealTypeError(["String", "Uint8Array"], body);
   }
 
+  const headers: HttpFetcherRequestInit["headers"] = {
+    Accept: fmt.mimeType,
+    "Content-Type": fmt.mimeType,
+  };
+
+  if (ns != null) {
+    headers["Surreal-NS"] = ns;
+  }
+
+  if (db != null) {
+    headers["Surreal-DB"] = db;
+  }
+
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   endpoint = processEndpoint(endpoint, { transformEndpoint }).href;
   const resp = await fetch(endpoint, {
     body,
     method: "POST",
     signal,
-    headers: {
-      Accept: fmt.mimeType,
-      "Content-Type": fmt.mimeType,
-      ...(ns != null ? { "Surreal-NS": ns } : {}),
-      ...(db != null ? { "Surreal-DB": db } : {}),
-      ...(!token ? {} : {
-        Authorization: "Bearer "
-          + (typeof token === "string" ? token : token.raw),
-      }),
-    },
+    headers,
   });
   const cause = {
     request: {
@@ -142,20 +151,14 @@ async function rpc(
 
   if (!(resp instanceof Response) || resp.body === null) {
     throw new ResponseError("Expected `Response` contains a non-null body.", {
-      cause: {
-        response: resp,
-        ...cause,
-      },
+      cause: Object.assign({ response: resp }, cause),
     });
   }
 
   if (resp.status !== 200) {
     const message = await resp.text();
     throw new ResponseError(message, {
-      cause: {
-        response: resp,
-        ...cause,
-      },
+      cause: Object.assign({ response: resp }, cause),
     });
   }
 
@@ -180,10 +183,7 @@ async function rpc(
 
   if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
     throw new ResponseError("Expected id-less rpc response.", {
-      cause: {
-        response: rpcResp,
-        ...cause,
-      },
+      cause: Object.assign({ response: rpcResp }, cause),
     });
   }
 

@@ -15,7 +15,9 @@ import {
   Uuid,
 } from "@tai-kun/surrealdb/data-types/standard";
 import HttpEngine from "@tai-kun/surrealdb/engines/http";
-import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
+import WebSocketEngine, {
+  type WebSocketEngineConfig,
+} from "@tai-kun/surrealdb/engines/websocket";
 import Formatter from "@tai-kun/surrealdb/formatters/cbor";
 import { WebSocket } from "isows";
 import initSurreal from "./surql/init-surreal";
@@ -32,12 +34,16 @@ const {
       return new HttpEngine(config);
     },
     ws(config) {
-      return new WebSocketEngine({
-        ...config,
-        createWebSocket(address, protocol) {
-          return new WebSocket(address, protocol);
-        },
-      });
+      return new WebSocketEngine(
+        Object.assign<
+          Pick<WebSocketEngineConfig, "createWebSocket">,
+          Omit<WebSocketEngineConfig, "createWebSocket">
+        >({
+          createWebSocket(address, protocol) {
+            return new WebSocket(address, protocol);
+          },
+        }, config),
+      );
     },
   },
   formatter: /* @__PURE__ */ new Formatter({

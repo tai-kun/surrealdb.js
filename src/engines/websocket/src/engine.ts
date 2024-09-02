@@ -53,7 +53,7 @@ export type CreateWebSocket = (
   protocol: string | undefined,
 ) => Promisable<WebSocket>;
 
-export interface EngineConfig extends EngineAbcConfig {
+export interface WebSocketEngineConfig extends EngineAbcConfig {
   readonly createWebSocket: CreateWebSocket;
   readonly pingInterval?: number | (() => number) | undefined;
 }
@@ -66,7 +66,7 @@ export default class WebSocketEngine extends EngineAbc {
   protected readonly newWs: CreateWebSocket;
   protected readonly pingInterval: () => number;
 
-  constructor(config: EngineConfig) {
+  constructor(config: WebSocketEngineConfig) {
     super(config);
     const {
       pingInterval,
@@ -463,14 +463,14 @@ export default class WebSocketEngine extends EngineAbc {
         {
           if (ns === undefined && conn.namespace !== null) {
             request = {
-              ...request,
+              method: request.method,
               params: [conn.namespace, request.params[1]],
             };
           }
 
           if (db === undefined && conn.database !== null) {
             request = {
-              ...request,
+              method: request.method,
               params: [request.params[0], conn.database],
             };
           }

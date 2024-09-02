@@ -67,10 +67,7 @@ export default function createQuery(
 
     if (bindings) {
       if (vars) {
-        vars = {
-          ...bindings,
-          ...vars,
-        };
+        vars = Object.assign({}, bindings, vars);
       } else {
         vars = bindings;
       }

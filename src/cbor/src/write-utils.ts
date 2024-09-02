@@ -522,7 +522,7 @@ export function write(
   } = options;
   const replacers: Replacer[] = typeof replacer === "function"
     ? [replacer, ianaReplacer]
-    : [...replacer, ianaReplacer];
+    : replacer.concat(ianaReplacer);
   let parent: Parent | undefined;
   const parents: Parent[] = [];
   const seen = new Set<{}>();

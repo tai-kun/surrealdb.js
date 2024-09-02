@@ -15,6 +15,7 @@ import {
   EngineNotFoundError,
   RpcResponseError,
   SurrealTypeError,
+  unreachable,
 } from "@tai-kun/surrealdb/errors";
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import type {
@@ -194,56 +195,73 @@ export default class BasicClient {
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#connect)
    */
   @mutex
-  async connect(
+  connect(
     endpoint: string | URL,
     options: ClientConnectOptions | undefined = {},
   ): Promise<void> {
-    const conn = this.getConnectionInfo();
-    endpoint = processEndpoint(endpoint, options);
+    try {
+      const conn = this.getConnectionInfo();
+      endpoint = processEndpoint(endpoint, options);
 
-    if (conn?.state === "open") {
-      if (conn.endpoint.href === endpoint.href) {
-        return;
+      if (conn?.state === "open") {
+        if (conn.endpoint.href === endpoint.href) {
+          return Promise.resolve();
+        }
+
+        throw new ConnectionConflictError(conn.endpoint, endpoint);
       }
 
-      throw new ConnectionConflictError(conn.endpoint, endpoint);
-    }
+      if (this.eng) {
+        unreachable(conn as never);
+      }
 
-    const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
-    const engine = await this.createEngine(protocol);
-    const { signal = getTimeoutSignal(15_000) } = options;
-    await engine.connect({ endpoint, signal });
-    this.eng = engine;
+      const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
+      const { signal = getTimeoutSignal(15_000) } = options;
+
+      return (async () => {
+        try {
+          this.eng = await this.createEngine(protocol);
+          await this.eng.connect({ endpoint, signal });
+        } catch (e) {
+          this.eng = null;
+          throw e;
+        }
+      })();
+    } catch (e) {
+      return Promise.reject(e);
+    }
   }
 
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#disconnect)
    */
   @mutex
-  async disconnect(
+  disconnect(
     options: ClientDisconnectOptions | undefined = {},
   ): Promise<void> {
     if (!this.eng) {
-      return;
+      return Promise.resolve();
     }
 
-    const {
-      force = false,
-      signal = getTimeoutSignal(15_000),
-    } = options;
+    const eng = this.eng;
+    this.eng = null;
 
     try {
-      if (force) {
+      if (options.force) {
         this.ee.abort(new Disconnected("force disconnect"));
       }
 
-      try {
-        await this.eng.disconnect({ signal });
-      } finally {
-        await this.ee.idle(); // エラーを投げない。
-      }
-    } finally {
-      this.eng = null;
+      return (async () => {
+        try {
+          await eng.disconnect({
+            signal: options.signal || getTimeoutSignal(15_000),
+          });
+        } finally {
+          await this.ee.idle(); // エラーを投げない。
+        }
+      })();
+    } catch (e) {
+      return Promise.reject(e);
     }
   }
 
@@ -252,30 +270,51 @@ export default class BasicClient {
     params: RpcParams<M>,
     options: ClientRpcOptions | undefined = {},
   ): Promise<T> {
+    const { signal = getTimeoutSignal(5_000) } = options;
+
+    if (this.eng?.state !== "open") {
+      await this.ee.once("open", { signal });
+    }
+
     if (!this.eng) {
       throw new ConnectionUnavailableError();
     }
 
-    const { signal = getTimeoutSignal(5_000) } = options;
-    const resp: RpcResponse<any> = await this.eng.rpc({
+    return await rpc({
+      engine: this.eng,
       signal,
-      // @ts-expect-error
-      request: {
-        method,
-        params,
-      },
-    });
-
-    if ("result" in resp) {
-      return resp.result;
-    }
-
-    throw new RpcResponseError(resp, {
-      cause: {
-        method,
-        // TODO(tai-kun): params には機微情報が含まれている可能性があるので、method のみにしておく？
-        params,
-      },
+      method,
+      params,
     });
   }
+}
+
+async function rpc<M extends RpcMethod, T extends RpcResult<M>>(
+  args: {
+    readonly engine: EngineAbc;
+    readonly signal: AbortSignal;
+    readonly method: M;
+    readonly params: RpcParams<M>;
+  },
+): Promise<T> {
+  const resp: RpcResponse<any> = await args.engine.rpc({
+    signal: args.signal,
+    // @ts-expect-error
+    request: {
+      method: args.method,
+      params: args.params,
+    },
+  });
+
+  if ("result" in resp) {
+    return resp.result;
+  }
+
+  throw new RpcResponseError(resp, {
+    cause: {
+      method: args.method,
+      // TODO(tai-kun): params には機微情報が含まれている可能性があるので、method のみにしておく？
+      params: args.params,
+    },
+  });
 }

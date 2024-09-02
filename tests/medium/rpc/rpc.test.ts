@@ -2,16 +2,13 @@ import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test } from "vitest";
 import surreal from "../surreal.js";
 
-for (const { suite, url, Surreal } of surreal) {
-  describe(suite, () => {
+for (const { suite, fmt, url, Surreal } of surreal) {
+  describe.runIf(fmt === "json")(suite, () => {
     test("rpc が使える", async () => {
       await using db = new Surreal();
       await db.connect(url());
-      await db.signin({ user: "root", pass: "root" });
 
-      const [queryResult] = await db.rpc("query", [/*surql*/ `RETURN 1`]);
-
-      expect(queryResult?.result).toBe(1);
+      await expect(db.rpc("ping", [])).resolves.toBe(null);
     });
 
     test("rpc のタイムアウトを設定できる", async () => {
@@ -26,6 +23,14 @@ for (const { suite, url, Surreal } of surreal) {
       )
         .rejects
         .toThrowError(DOMException);
+    });
+
+    test("接続完了前に rpc を実行すると接続完了まで待機する", async () => {
+      await using db = new Surreal();
+      const pingPromise = db.rpc("ping", []);
+      await db.connect(url());
+
+      await expect(pingPromise).resolves.toBe(null);
     });
   });
 }

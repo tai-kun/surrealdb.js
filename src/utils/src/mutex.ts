@@ -26,7 +26,7 @@ export default function mutex<T extends (...args: any) => PromiseLike<any>>(
     }
   });
 
-  return function(...args) {
+  return function mutexWrapper(...args) {
     let queue: (() => void)[] = this[MUTEX_QUEUE],
       promise: Promise<void>,
       resolve: () => void,
@@ -46,7 +46,7 @@ export default function mutex<T extends (...args: any) => PromiseLike<any>>(
     }
 
     return promise
-      .then(async () => await target.apply(this, args))
+      .then(() => target.apply(this, args))
       .finally(dequeue);
   };
 }

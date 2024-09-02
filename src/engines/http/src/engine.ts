@@ -24,7 +24,6 @@ import type {
 import {
   isBrowser,
   isRpcResponse,
-  mutex,
   throwIfAborted,
 } from "@tai-kun/surrealdb/utils";
 
@@ -63,7 +62,6 @@ export default class HttpEngine extends EngineAbc {
       || (isBrowser() ? window.fetch.bind(window) : fetch);
   }
 
-  @mutex
   async connect({ endpoint, signal }: ConnectArgs): Promise<void> {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
@@ -92,7 +90,6 @@ export default class HttpEngine extends EngineAbc {
     );
   }
 
-  @mutex
   async disconnect({ signal }: DisconnectArgs): Promise<void> {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
@@ -120,10 +117,6 @@ export default class HttpEngine extends EngineAbc {
   }
 
   async rpc({ request, signal }: RpcArgs): Promise<IdLessRpcResponse> {
-    if (this.state === "connecting") {
-      await this.ee.once("open", { signal });
-    }
-
     // 接続情報のスナップショットを取得します。
     // 以降、接続情報を参照する際はこれを使用します。
     const conn = this.getConnectionInfo();

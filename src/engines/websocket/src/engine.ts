@@ -29,7 +29,6 @@ import {
   getTimeoutSignal,
   isLiveResult,
   isRpcResponse,
-  mutex,
   Serial,
   StatefulPromise,
   type TaskEmitter,
@@ -79,7 +78,6 @@ export default class WebSocketEngine extends EngineAbc {
       : (ms => () => ms)(Math.max(3_000, pingInterval ?? 30_000));
   }
 
-  @mutex
   async connect({ endpoint, signal }: ConnectArgs): Promise<void> {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
@@ -384,7 +382,6 @@ export default class WebSocketEngine extends EngineAbc {
     );
   }
 
-  @mutex
   async disconnect({ signal }: DisconnectArgs): Promise<void> {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
@@ -429,10 +426,6 @@ export default class WebSocketEngine extends EngineAbc {
   }
 
   async rpc({ request, signal }: RpcArgs): Promise<BidirectionalRpcResponse> {
-    if (this.state === "connecting") {
-      await this.ee.once("open", { signal });
-    }
-
     // 接続情報のスナップショットを取得します。
     // 以降、接続情報を参照する際はこれを使用します。
     const conn = this.getConnectionInfo();

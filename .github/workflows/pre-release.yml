@@ -1,0 +1,102 @@
+name: pre-release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+-[a-z]+.[0-9]+" # e.g. v2.0.0-alpha.1
+
+env:
+  NODE_VERSION: 20.x
+  SURREALDB_VERSION: beta
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+
+      - name: Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 依存関係をインストール
+        run: |
+          npm ci
+          bash scripts/pretest/setup_surrealdb.sh ${{ env.SURREALDB_VERSION }}
+
+      - name: テスト
+        run: |
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
+
+          npx vitest tests/
+        env:
+          VITEST_MODE: node.js
+
+      - name: SurrealDB のログ
+        run: cat /tmp/logs
+        if: always()
+
+  release:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    needs:
+      - test
+    steps:
+      - name: パラメーター
+        run: |
+          ref="${{ github.ref_name }}"
+
+          suf="${ref#*-}"
+          tag="${suf%%.*}"
+          echo "tag=$tag" >>$GITHUB_OUTPUT
+
+          ver="${ref%-*}"
+          ver="${ver#v}"
+          echo "ver=$ver" >>$GITHUB_OUTPUT
+
+          now="$(date --utc +'%Y-%m-%d')"
+          echo "now=$now" >>$GITHUB_OUTPUT
+
+          pre="$(curl -s https://api.github.com/repos/tai-kun/surrealdb.js/releases/latest | grep -oP '"tag_name": "\K(.*)(?=")')"
+          echo "pre=$pre" >>$GITHUB_OUTPUT
+        id: params
+
+      - uses: actions/checkout@v4
+
+      - name: Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: 依存関係をインストール
+        run: npm ci
+
+      - name: ビルド
+        run: npm run build
+
+      - name: バージョン設定
+        run: npm --no-git-tag-version version "${{ github.ref_name }}"
+
+      - name: GitHub リリースを作成
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref }}
+          name: ${{ github.ref_name }}
+          body: |
+            ## [${{ steps.params.outputs.ver }}](https://github.com/tai-kun/surrealdb.js/compare/${{ steps.params.outputs.pre }}...${{ github.ref_name }}) (${{ steps.params.outputs.now }})
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: true
+          makeLatest: legacy
+
+      - name: 公開
+        uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+          access: public
+          tag: ${{ steps.params.outputs.tag }}

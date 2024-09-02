@@ -7,6 +7,7 @@ on:
 
 jobs:
   static:
+    name: static (node@${{ matrix.nodejs-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -38,6 +39,7 @@ jobs:
         if: always()
 
   small:
+    name: small (node@${{ matrix.nodejs-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -64,6 +66,7 @@ jobs:
           VITEST_MODE: node.js
 
   medium:
+    name: medium (node@${{ matrix.nodejs-version }}, surrealdb@${{ matrix.surrealdb-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -107,6 +110,7 @@ jobs:
         if: always()
 
   examples:
+    name: examples (node@${{ matrix.nodejs-version }}, surrealdb@${{ matrix.surrealdb-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -116,7 +120,6 @@ jobs:
           # TODO(tai-kun): v18 だけなんか失敗する。要調査。
           # - "18.x"
           - "20.x"
-          - "^22.5.1"
         surrealdb-version:
           - "beta"
           # - "v2.0.0"
@@ -141,7 +144,7 @@ jobs:
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-          npx vitest tests/medium/
+          npx vitest tests/examples/
         env:
           VITEST_MODE: node.js
 

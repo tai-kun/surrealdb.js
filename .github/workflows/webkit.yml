@@ -7,6 +7,7 @@ on:
 
 jobs:
   small:
+    name: small (playwright@${{ matrix.playwright-version }})
     uses: ./.github/workflows/browser.small.yml
     with:
       browser-name: webkit
@@ -21,6 +22,7 @@ jobs:
 
   # TODO(tai-kun): CORS を無効化する方法を探す。
   # medium:
+  #   name: medium (playwright@${{ matrix.playwright-version }}, surrealdb@${{ matrix.surrealdb-version }})
   #   uses: ./.github/workflows/browser.medium.yml
   #   with:
   #     browser-name: webkit

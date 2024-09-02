@@ -13,28 +13,30 @@ on:
       - "tsconfig.build.json"
       - "tsconfig.json"
 
+env:
+  NODE_VERSION: 20.x
+  SURREALDB_VERSION: beta
+  BUMP_PACKAGE_VERSION: major # major, minor
+  PRERELEASE_PACKAGE_TAG: next
+
 jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    strategy:
-      fail-fast: false
-      matrix:
-        surrealdb-version:
-          - "beta"
     steps:
       - uses: actions/checkout@v4
 
       - uses: oven-sh/setup-bun@v2
 
-      - uses: actions/setup-node@v4
+      - name: Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: 依存関係をインストール
         run: |
           npm ci
-          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
+          bash scripts/pretest/setup_surrealdb.sh ${{ env.SURREALDB_VERSION }}
 
       - name: テスト
         run: |
@@ -56,9 +58,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: 依存関係をインストール
         run: npm ci
@@ -68,7 +71,7 @@ jobs:
 
       - name: バージョン設定
         run: |
-          npm --no-git-tag-version version major
+          npm --no-git-tag-version version ${{ env.BUMP_PACKAGE_VERSION }}
           npm --no-git-tag-version version "$(npm pkg get version | jq -r)-next.$(date --utc +'%Y%m%dT%H%M%S')"
 
       - name: 公開
@@ -76,4 +79,4 @@ jobs:
         with:
           token: ${{ secrets.NPM_TOKEN }}
           access: public
-          tag: next
+          tag: ${{ env.PRERELEASE_PACKAGE_TAG }}

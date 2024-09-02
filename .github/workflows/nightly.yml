@@ -6,22 +6,31 @@ on:
 
 jobs:
   nodejs:
+    name: Server (node@${{ matrix.nodejs-version }}, surrealdb@${{ matrix.surrealdb-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        nodejs-version:
+          - "20.x"
+          - "22.x"
+        surrealdb-version:
+          - "nightly"
     steps:
       - uses: actions/checkout@v4
 
       - uses: oven-sh/setup-bun@v2
 
-      - name: Node.js 20.x
+      - name: Node.js ${{ matrix.nodejs-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: ${{ matrix.nodejs-version }}
 
       - name: 依存関係をインストール
         run: |
           npm ci
-          bash scripts/pretest/setup_surrealdb.sh nightly
+          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
       - name: テスト
         run: |
@@ -37,8 +46,17 @@ jobs:
         if: always()
 
   chromium:
+    name: Browser (playwright@${{ matrix.playwright-version }}, surrealdb@${{ matrix.surrealdb-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        playwright-version:
+          - "1.23" # Chromium 104
+          - "latest"
+        surrealdb-version:
+          - "nightly"
     steps:
       - uses: actions/checkout@v4
 
@@ -52,9 +70,9 @@ jobs:
       - name: 依存関係をインストール
         run: |
           npm ci
-          npm i -D playwright@latest
+          npm i -D playwright@${{ matrix.playwright-version }}
           npx playwright install --with-deps chromium
-          bash scripts/pretest/setup_surrealdb.sh nightly
+          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
       - name: テスト
         run: |

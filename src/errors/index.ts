@@ -53,3 +53,5 @@ export {
 
 export type * from "./get-type-name";
 export { default as getTypeName } from "./get-type-name";
+
+export { JsonError, JsonUnsafeMapKeyError } from "./json";

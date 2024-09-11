@@ -1,4 +1,7 @@
-import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import {
+  JsonUnsafeMapKeyError,
+  SurrealTypeError,
+} from "@tai-kun/surrealdb/errors";
 import {
   cloneSync,
   type Data,
@@ -6,6 +9,12 @@ import {
   type Formatter,
 } from "@tai-kun/surrealdb/formatter";
 import { isArrayBuffer, utf8 } from "@tai-kun/surrealdb/utils";
+
+// https://github.com/fastify/secure-json-parse
+const __PROTO__REGEX =
+  /"(?:_|\\u005[Ff])(?:_|\\u005[Ff])(?:p|\\u0070)(?:r|\\u0072)(?:o|\\u006[Ff])(?:t|\\u0074)(?:o|\\u006[Ff])(?:_|\\u005[Ff])(?:_|\\u005[Ff])"\s*:/;
+const CONSTRUCTOR_REGEX =
+  /"(?:c|\\u0063)(?:o|\\u006[Ff])(?:n|\\u006[Ee])(?:s|\\u0073)(?:t|\\u0074)(?:r|\\u0072)(?:u|\\u0075)(?:c|\\u0063)(?:t|\\u0074)(?:o|\\u006[Ff])(?:r|\\u0072)"\s*:/;
 
 // TODO(tai-kun): isSafeMapKey, isSafeObjectKey をオプションに追加
 export default class JsonFormatter implements Formatter {
@@ -16,6 +25,16 @@ export default class JsonFormatter implements Formatter {
   }
 
   decodeSync(data: Data): unknown {
+    const json = toString(data);
+
+    if (__PROTO__REGEX.test(json)) {
+      throw new JsonUnsafeMapKeyError("__proto__");
+    }
+
+    if (CONSTRUCTOR_REGEX.test(json)) {
+      throw new JsonUnsafeMapKeyError("constructor");
+    }
+
     return JSON.parse(toString(data));
   }
 

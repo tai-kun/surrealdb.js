@@ -34,18 +34,18 @@ for (const { suite, fmt, url, Surreal } of surreal) {
       });
 
       test("テーブル名でレコードを作成する", async () => {
-        const records = await db.create<{ name: string }>("user", {
+        const record = await db.create<{ name: string }>("user", {
           name: "ichiro",
         });
 
-        expectTypeOf<typeof records>().toEqualTypeOf<
+        expectTypeOf<typeof record>().toEqualTypeOf<
           {
             id: string | DataType.Thing;
             name: string;
-          }[]
+          }
         >();
 
-        expect(records).toStrictEqual([
+        expect(record).toStrictEqual(
           {
             id: expect.objectContaining({
               tb: "user",
@@ -53,22 +53,22 @@ for (const { suite, fmt, url, Surreal } of surreal) {
             }),
             name: "ichiro",
           },
-        ]);
+        );
       });
 
       test("テーブルオブジェクトでレコードを作成する", async () => {
-        const records = await db.create<{ name: string }>(new Table("user"), {
+        const record = await db.create<{ name: string }>(new Table("user"), {
           name: "jiro",
         });
 
-        expectTypeOf<typeof records>().toEqualTypeOf<
+        expectTypeOf<typeof record>().toEqualTypeOf<
           {
             id: string | DataType.Thing;
             name: string;
-          }[]
+          }
         >();
 
-        expect(records).toStrictEqual([
+        expect(record).toStrictEqual(
           {
             id: expect.objectContaining({
               tb: "user",
@@ -76,7 +76,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
             }),
             name: "jiro",
           },
-        ]);
+        );
       });
 
       test("レコード ID でレコードを作成する", async () => {

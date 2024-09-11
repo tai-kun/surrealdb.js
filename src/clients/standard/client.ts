@@ -395,7 +395,7 @@ export default class Client extends Base {
     table: DataType.Table | string,
     content?: U | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<T>>;
 
   async create<
     T extends { readonly [p: string]: unknown } = { [p: string]: unknown },

@@ -1,19 +1,27 @@
 {
-  "release-as": "2.0.0-alpha.3",
-  "prerelease": true,
-  "release-type": "node",
-  "changelog-sections": [
-    { "type": "change", "section": "Changes" },
-    { "type": "feat", "section": "Features" },
-    { "type": "fix", "section": "Bug Fixes" },
-    { "type": "revert", "section": "Reverts" },
-    { "type": "docs", "section": "Documentation", "hidden": true },
-    { "type": "perf", "section": "Performance Improvements", "hidden": true },
-    { "type": "chore", "section": "Miscellaneous Chores", "hidden": true },
-    { "type": "test", "section": "Tests", "hidden": true },
-    { "type": "style", "section": "Styles", "hidden": true },
-    { "type": "refactor", "section": "Code Refactoring", "hidden": true },
-    { "type": "ci", "section": "Continuous Integration", "hidden": true }
-  ],
+  "last-release-sha": "8aa5775276dd38a24766619f8d16226e49db03c7",
+  "packages": {
+    ".": {
+      "release-as": "2.0.0-alpha.3",
+      "versioning": "prerelease",
+      "prerelease": true,
+      "prerelease-type": "alpha",
+      "release-type": "node",
+      "include-component-in-tag": false,
+      "changelog-sections": [
+        { "type": "change", "section": "Changes" },
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Bug Fixes" },
+        { "type": "revert", "section": "Reverts" },
+        { "type": "docs", "section": "Documentation", "hidden": true },
+        { "type": "perf", "section": "Performance Improvements", "hidden": true },
+        { "type": "chore", "section": "Miscellaneous Chores", "hidden": true },
+        { "type": "test", "section": "Tests", "hidden": true },
+        { "type": "style", "section": "Styles", "hidden": true },
+        { "type": "refactor", "section": "Code Refactoring", "hidden": true },
+        { "type": "ci", "section": "Continuous Integration", "hidden": true }
+      ]
+    }
+  },
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }

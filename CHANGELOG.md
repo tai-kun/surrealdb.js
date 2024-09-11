@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-alpha.4](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2024-09-11)
+
+
+### Bug Fixes
+
+* a ([2e3c7df](https://github.com/tai-kun/surrealdb.js/commit/2e3c7dfac6e387f77977eff2c5b24f1cedaa9c44))
+
 ## [2.0.0-alpha.3](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.3...v2.0.0-alpha.3) (2024-09-11)
 
 

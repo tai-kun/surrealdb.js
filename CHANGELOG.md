@@ -1,5 +1,42 @@
 # Changelog
 
+## [2.0.0-alpha.3](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.3...v2.0.0-alpha.3) (2024-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* disconnect を close に改名
+* v2
+
+### Changes
+
+* disconnect を close に改名 ([a4588a9](https://github.com/tai-kun/surrealdb.js/commit/a4588a96eb84773321f93aebe5e0e82b0827860f))
+* **formatters/json:** CBOR と同様に __proto__ と constructor を安全ではないキーとみなす ([30b7357](https://github.com/tai-kun/surrealdb.js/commit/30b73570ef363e120cecf9373a400ce6dba5f97c))
+* **scripts:** Vitest が報告するエラーのフォーマットを変更 ([4ef9e8e](https://github.com/tai-kun/surrealdb.js/commit/4ef9e8e3bd36ce1899b2e97f0d28f417464bd602))
+
+
+### Features
+
+* **surreal:** SurrealQL に文字列を埋め込む surql.raw を追加 ([4bff2a6](https://github.com/tai-kun/surrealdb.js/commit/4bff2a67e13b934d0e95dd13b94ab8ab0a97b107))
+* **surreal:** エンドポイントを自動変形させないためのオプションを追加 ([cdb90bc](https://github.com/tai-kun/surrealdb.js/commit/cdb90bc81ce0135a97fb383128da669b001253f9))
+* **surreal:** 事前準備されたクエリーが持つ型を推論するユーティリティを追加 ([aa345be](https://github.com/tai-kun/surrealdb.js/commit/aa345be9630751ad140fb7dbb353d7437c38a41a))
+* **surreal:** 事前準備されたクエリーが結果を変形できるようにする ([fea1e9d](https://github.com/tai-kun/surrealdb.js/commit/fea1e9de84b58aeefddae2ca2f695622c70b3da3))
+
+
+### Bug Fixes
+
+* `~/` エイリアスを削除 ([95eb7e9](https://github.com/tai-kun/surrealdb.js/commit/95eb7e9ef4c38a9c668247969c3310326dbaa9c1))
+* **errors:** .toSorted() が使えない環境に対応 ([1c1cd38](https://github.com/tai-kun/surrealdb.js/commit/1c1cd384696309978dbb4fb42df915626e4fa196))
+* insert の型を修正 ([3048988](https://github.com/tai-kun/surrealdb.js/commit/30489882a03bcec48cafdb097954c489180d6511))
+* PR ([e8597bb](https://github.com/tai-kun/surrealdb.js/commit/e8597bbc3c3be8f3f1969b1f488ccab87ef224e5))
+* trait に検証項目を追加 ([35e2784](https://github.com/tai-kun/surrealdb.js/commit/35e2784bddf6ae381a5d5d832e4959d8bc7fec53))
+* **utils:** レコード ID のエスケープを修正 ([ab00006](https://github.com/tai-kun/surrealdb.js/commit/ab0000645311b7c481d4f4147aaeb8ad772fef9d))
+
+
+### Code Refactoring
+
+* v2 ([a81cf50](https://github.com/tai-kun/surrealdb.js/commit/a81cf504313c08b5f978f3f3268f0996c1607cc8))
+
 ## [2.0.0-alpha.3](https://github.com/tai-kun/surrealdb.js/compare/v1.4.2...v2.0.0-alpha.3) (2024-09-11)
 
 

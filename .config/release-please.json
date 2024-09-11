@@ -1,9 +1,11 @@
 {
   "packages": {
     ".": {
+      "release-as": "2.0.0-alpha.3",
       "prerelease": true,
       "release-type": "node",
       "changelog-path": "CHANGELOG.md",
+      "include-component-in-tag": false,
       "changelog-sections": [
         { "type": "change", "section": "Changes" },
         { "type": "feat", "section": "Features" },

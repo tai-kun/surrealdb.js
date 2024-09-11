@@ -3,9 +3,11 @@
     ".": {
       "release-as": "2.0.0-alpha.3",
       "last-release-sha": "da111604d73bf2f8fba02e7f5ac9de56a55485a7",
+      "versioning": "prerelease",
       "prerelease": true,
-      "prerelease-type": "alpfa",
+      "prerelease-type": "alpha",
       "release-type": "node",
+      "include-component-in-tag": false,
       "changelog-sections": [
         { "type": "change", "section": "Changes" },
         { "type": "feat", "section": "Features" },

@@ -48,7 +48,7 @@ export default function initSurreal<C extends CC>(
     }
 
     async [Symbol.asyncDispose || Symbol.for("Symbol.asyncDispose")]() {
-      await this.disconnect();
+      await this.close();
     }
   }
 

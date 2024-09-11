@@ -24,7 +24,11 @@ type NonNullKeysOf<T> = {
   [P in keyof T]: null extends T[P] ? never : P;
 }[keyof T];
 
-export type ConnectionState = "connecting" | "open" | "closing" | "closed";
+export type ConnectionState =
+  | "connecting"
+  | "open"
+  | "closing"
+  | "closed";
 
 export namespace ConnectionInfo {
   type Info<S extends ConnectionState, E, N, D, T> = {
@@ -129,7 +133,7 @@ export interface ConnectArgs {
   endpoint: URL;
 }
 
-export interface DisconnectArgs {
+export interface CloseArgs {
   signal: AbortSignal;
 }
 
@@ -228,7 +232,7 @@ export default abstract class EngineAbc {
 
   abstract connect(args: ConnectArgs): PromiseLike<void>;
 
-  abstract disconnect(args: DisconnectArgs): PromiseLike<void>;
+  abstract close(args: CloseArgs): PromiseLike<void>;
 
   abstract rpc(args: RpcArgs): PromiseLike<RpcResponse>;
 }

@@ -1,6 +1,6 @@
 import {
+  type CloseArgs,
   type ConnectArgs,
-  type DisconnectArgs,
   EngineAbc,
   type EngineAbcConfig,
   processQueryRequest,
@@ -90,7 +90,7 @@ export default class HttpEngine extends EngineAbc {
     );
   }
 
-  async disconnect({ signal }: DisconnectArgs): Promise<void> {
+  async close({ signal }: CloseArgs): Promise<void> {
     throwIfAborted(signal);
     const conn = this.getConnectionInfo();
 

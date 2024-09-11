@@ -9,9 +9,9 @@ import {
 } from "@tai-kun/surrealdb/engine";
 import {
   CircularEngineReferenceError,
+  Closed,
   ConnectionConflictError,
   ConnectionUnavailableError,
-  Disconnected,
   EngineNotFoundError,
   RpcResponseError,
   SurrealTypeError,
@@ -51,7 +51,7 @@ export interface ClientConnectOptions extends ProcessEndpointOptions {
   readonly signal?: AbortSignal | undefined;
 }
 
-export interface ClientDisconnectOptions {
+export interface ClientCloseOptions {
   readonly force?: boolean | undefined;
   readonly signal?: AbortSignal | undefined;
 }
@@ -80,7 +80,7 @@ export default class BasicClient {
       this.ee.on("error", (_, e) => {
         if (e.fatal) {
           console.error("[@tai-kun/surrealdb]", "FATAL", e);
-          this.disconnect({ force: true }).then(null, reason => {
+          this.close({ force: true }).then(null, reason => {
             console.error("[@tai-kun/surrealdb]", reason);
           });
         } else {
@@ -233,11 +233,11 @@ export default class BasicClient {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#disconnect)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#close)
    */
   @mutex
-  disconnect(
-    options: ClientDisconnectOptions | undefined = {},
+  close(
+    options: ClientCloseOptions | undefined = {},
   ): Promise<void> {
     if (!this.eng) {
       return Promise.resolve();
@@ -248,12 +248,12 @@ export default class BasicClient {
 
     try {
       if (options.force) {
-        this.ee.abort(new Disconnected("force disconnect"));
+        this.ee.abort(new Closed("force close"));
       }
 
       return (async () => {
         try {
-          await eng.disconnect({
+          await eng.close({
             signal: options.signal || getTimeoutSignal(15_000),
           });
         } finally {

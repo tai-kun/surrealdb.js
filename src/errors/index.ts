@@ -16,9 +16,9 @@ export {
 
 export {
   CircularEngineReferenceError,
+  Closed,
   ConnectionConflictError,
   DatabaseConflictError,
-  Disconnected,
   EngineNotFoundError,
   MissingNamespaceError,
   NamespaceConflictError,

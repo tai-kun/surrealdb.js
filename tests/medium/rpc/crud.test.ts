@@ -21,7 +21,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
     });
 
     afterEach(async () => {
-      await db.disconnect();
+      await db.close();
     });
 
     describe("create", () => {

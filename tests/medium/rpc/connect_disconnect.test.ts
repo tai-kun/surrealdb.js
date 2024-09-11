@@ -46,7 +46,7 @@ for (const { suite, Surreal, url } of surreal) {
       expect(db.state).toBe("open");
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
 
-      await db.disconnect();
+      await db.close();
 
       expect(db.state).toBe("closed");
       expect(db.endpoint?.toString()).toBe(undefined);
@@ -63,7 +63,7 @@ for (const { suite, Surreal, url } of surreal) {
       // 2 回やる
       for (const _ of [1, 2]) {
         await db.connect(url());
-        await db.disconnect();
+        await db.close();
       }
 
       expect(listener.mock.calls).toStrictEqual([
@@ -85,7 +85,7 @@ for (const { suite, Surreal, url } of surreal) {
       const promieOpen = db.once("open");
       const promiseClosed = db.once("closed");
       await db.connect(url());
-      await db.disconnect();
+      await db.close();
 
       await expect(promieOpen).resolves.toStrictEqual([{ state: "open" }]);
       await expect(promiseClosed).resolves.toStrictEqual([{ state: "closed" }]);

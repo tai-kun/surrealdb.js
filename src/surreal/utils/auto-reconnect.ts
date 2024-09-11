@@ -62,7 +62,7 @@ export interface AutoReconnectOptions {
 // phase
 // - waiting: 初期状態
 // - pending: 再接続する時が来るまで待機
-// - disconnecting: 切断中
+// - closing: 切断中
 // - connecting: 再接続中
 // - succeeded: 再接続に成功した
 // - failed: 再接続に失敗した
@@ -71,7 +71,7 @@ export type ReconnectionInfo = {
   phase: "waiting" | "pending";
 } | {
   state: "running";
-  phase: "disconnecting" | "connecting";
+  phase: "closing" | "connecting";
 } | {
   state: "success";
   phase: "pending" | "succeeded";
@@ -167,11 +167,11 @@ class AutoReconnect extends TaskEmitter<AutoReconnectEventMap> {
     this.on("connect", async ({ signal }, endpoint) => {
       this._info = {
         state: "running",
-        phase: "disconnecting",
+        phase: "closing",
       };
 
       try {
-        await this.db.disconnect({ signal });
+        await this.db.close({ signal });
       } catch (e) {
         this.emit("error", e);
       }

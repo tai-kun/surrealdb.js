@@ -187,10 +187,10 @@ export class QueryFailedError extends SurrealAggregateError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#disconnected)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#closeed)
  */
-export class Disconnected extends SurrealError {
+export class Closed extends SurrealError {
   static {
-    this.prototype.name = "Disconnected";
+    this.prototype.name = "Closed";
   }
 }

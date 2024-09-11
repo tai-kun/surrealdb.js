@@ -8,6 +8,7 @@ on:
       - ".github/workflows/codecov.yml"
       - "src/**"
       - "tests/**"
+      - "scripts/**"
       - "*.json"
       - "*.ts"
 

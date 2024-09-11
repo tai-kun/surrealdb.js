@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0-alpha.0](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.0...v3.0.0-alpha.0) (2024-09-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* disconnect を close に改名
+
+### change
+
+* disconnect を close に改名 ([a4588a9](https://github.com/tai-kun/surrealdb.js/commit/a4588a96eb84773321f93aebe5e0e82b0827860f))
+
 ## [1.4.2](https://github.com/tai-kun/surrealdb.js/compare/v1.4.1...v1.4.2) (2024-08-22)
 
 

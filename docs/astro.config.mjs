@@ -140,6 +140,7 @@ export default defineConfig({
                   },
                 },
               ],
+              collapsed: false,
             },
             {
               label: "utils",
@@ -197,6 +198,7 @@ export default defineConfig({
                   label: "toSurql",
                 },
               ],
+              collapsed: false,
             },
             {
               slug: "v2/reference/errors",

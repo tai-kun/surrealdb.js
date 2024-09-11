@@ -55,7 +55,7 @@ console.log(results);
 //   age: 42
 // }]
 
-await db.disconnect();
+await db.close();
 ```
 
 次の例では一方のステートメントが失敗するため、クエリーは `QueryFailedError` で拒否されます:
@@ -87,7 +87,7 @@ await db.connect("ws://localhost:8000");
 const results = await db.query(CreateUserQuery);
    // ^? const results: [{ id: Thing<"user">, age: number }]
 
-await db.disconnect();
+await db.close();
 ```
 
 ### `.queryRaw()` <Badge variant="instance" /><Badge variant="method" />

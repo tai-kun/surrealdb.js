@@ -374,7 +374,7 @@ This indicates that the error originates from the WebSocket engine. It is used w
     - `3151`: Indicates that an error occurred in the "open" event handler registered by the WebSocket engine. In most cases, a `StateTransitionError` occurs during the transition from the connecting state to the connected state.
     - `3152`: Indicates that an error occurred in the "message" event handler registered by the WebSocket engine. There are various possible causes, but it is highly likely that a `ResponseError` or `RpcResponseError` was thrown within the event handler. Tracing back the origin, it is considered that a SurrealQL custom query with incorrect syntax was requested by the `.query()` method, or a request was made with invalid RPC parameters. In that case, the calling method of the RPC will time out (by default after 5 seconds) and fail.
     - `3153`: Indicates that sending or receiving a ping failed. This may be a transient error, but if you keep receiving it, you may not be able to maintain the connection.
-    - `3154`: Indicates that an error occurred in the "close" event handler registered by the WebSocket engine. In most cases, a `StateTransitionError` occurs during the transition from the closing state to the closed state.
+    - `3154`: Indicates that an error occurred in the "close" event handler registered by the WebSocket engine. In most cases, a `StateTransitionError` occurs during the transition from the disconnecting state to the closed state.
 :   Note that the following status codes are excluded from the above. They are not treated as errors in this SDK.
     - `1000`: Closed normally.
     - `1001`: Early closure is common.

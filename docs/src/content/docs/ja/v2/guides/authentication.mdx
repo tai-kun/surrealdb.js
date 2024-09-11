@@ -62,7 +62,7 @@ console.log(jwt.user);      // 'root'
 console.log(jwt.raw);             // 'eyJ0eXAiOiJKV1QiLCJhb ... '
 console.log(JSON.stringify(jwt)); // '"[REDACTED]"'
 
-await db.disconnect();
+await db.close();
 ```
 
 次の例では名前空間ユーザーで SurrealDB にサインインします:
@@ -84,7 +84,7 @@ console.log(jwt.database);  // undefined
 console.log(jwt.access);    // undefined
 console.log(jwt.user);      // 'ns_user'
 
-await db.disconnect();
+await db.close();
 ```
 
 次の例ではデータベースユーザーで SurrealDB にサインインします:
@@ -107,7 +107,7 @@ console.log(jwt.database);  // 'my_database'
 console.log(jwt.access);    // undefined
 console.log(jwt.user);      // 'db_user'
 
-await db.disconnect();
+await db.close();
 ```
 
 次の例ではレコードアクセスで SurrealDB にサインインします。`.user` にはレコード ID が設定されます:
@@ -130,7 +130,7 @@ console.log(jwt.database);  // 'my_database'
 console.log(jwt.access);    // 'account'
 console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
 
-await db.disconnect();
+await db.close();
 ```
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
@@ -175,7 +175,7 @@ console.log(jwt.database);  // 'my_database'
 console.log(jwt.access);    // 'account'
 console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
 
-await db.disconnect();
+await db.close();
 ```
 
 ### `.authenticate()` <Badge variant="instance" /><Badge variant="method" />

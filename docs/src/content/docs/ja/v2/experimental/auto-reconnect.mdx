@@ -57,19 +57,19 @@ function autoReconnect(
     - `"success"` ... 再接続に成功しました。
     - `"failure"` ... 再接続に失敗しました。
 :   `.phase`:
-    - `"waiting"`       ... 初期状態です。再接続は 1 度も行われていません。
-    - `"pending"`       ... 再接続が要求され、実行するまで一定時間待機しているところです。
-    - `"disconnecting"` ... 切断中です。
-    - `"connecting"`    ... 接続中です。切断に失敗しても接続しようとします。
-    - `"succeeded"`     ... 再接続に成功しました。
-    - `"failed"`        ... 再接続に失敗しました。
+    - `"waiting"`    ... 初期状態です。再接続は 1 度も行われていません。
+    - `"pending"`    ... 再接続が要求され、実行するまで一定時間待機しているところです。
+    - `"closing"`    ... 切断中です。
+    - `"connecting"` ... 接続中です。切断に失敗しても接続しようとします。
+    - `"succeeded"`  ... 再接続に成功しました。
+    - `"failed"`     ... 再接続に失敗しました。
 
-| state       | phase                           |
-| ----------- | ------------------------------- |
-| `"waiting"` | `"waiting"\|"pending"`          |
-| `"running"` | `"disconnecting"\|"connecting"` |
-| `"success"` | `"pending"\|"succeeded"`        |
-| `"failure"` | `"pending"\|"failed"`           |
+| state       | phase                     |
+| ----------- | ------------------------- |
+| `"waiting"` | `"waiting"\|"pending"`    |
+| `"running"` | `"closing"\|"connecting"` |
+| `"success"` | `"pending"\|"succeeded"`  |
+| `"failure"` | `"pending"\|"failed"`     |
 
 `.enable(): void`
 :   再接続機能を有効化します。このメソッドを呼び出すことで、再接続が行われるようになります。デフォルトで有効になっています。
@@ -120,7 +120,7 @@ try {
   // 長時間に渡って実行される様々な処理
 
 } finally {
-  await db.disconnect();
+  await db.close();
 }
 ```
 

@@ -309,13 +309,13 @@ await db.connect("http://localhost:8000");
 await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 1 error(s)
 ```
 
-## Disconnected
+## Closed
 
 継承元: `SurrealError`
 
 これは接続が強制的に終了されたことを示すエラーです。
 
-`.name: "Disconnected"`
+`.name: "Closed"`
 :   エラー名です。
 
 例えば次のような場合にこのエラーを得ます:
@@ -326,7 +326,7 @@ const db = new Surreal();
 db.on("<event_name>", ({ signal }) => {
   return new Promise((resolve, reject) => {
     signal.addEventListener("abort", function() {
-      console.error(this.reason); // Disconnected
+      console.error(this.reason); // Closed
       reject();
     })
 
@@ -334,7 +334,7 @@ db.on("<event_name>", ({ signal }) => {
   });
 });
 
-await db.disconnect({ force: true });
+await db.close({ force: true });
 ```
 
 ## EngineError

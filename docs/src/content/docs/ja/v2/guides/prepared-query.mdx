@@ -20,7 +20,7 @@ await db.use("example", "example");
 const results = await db.query(CreateUserQuery);
 //    ^? const results: [{ id: Thing<"user">, age: number }]
 
-await db.disconnect();
+await db.close();
 ```
 
 クエリーを事前に準備すると型推論が有効になります。しかし推論される型は手動で設定する必要があります。
@@ -53,7 +53,7 @@ await db.use("example", "example");
 const results = await db.query(CreateUserQuery);
 //    ^? const results: [{ id: Thing<"user">, age: number }]
 
-await db.disconnect();
+await db.close();
 ```
 
 zod に依存いてるわけではないので、valibot や汎用的な関数でレスポンスを検証することができます。
@@ -80,7 +80,7 @@ await db.use("example", "example");
 const results = await db.query(CreateUserQuery);
 //    ^? const results: [{ id: Thing<"user">, age: number }]
 
-await db.disconnect();
+await db.close();
 ```
 
 上記の例で送信される RPC リクエストのパラメーターは次のとおりです:
@@ -126,7 +126,7 @@ const results = await db.query(CreateUserQuery, {
   id: new Thing("user", "tai-kun"),
 });
 
-await db.disconnect();
+await db.close();
 ```
 
 スロットには必ず変数名が必要です。`.type()` メソッドで変数に型レベルで制約を設けることができます。`.returns()` と同様に、`.type()` の引数に値を検証する関数を渡すことができます。上記の例では、変数名 `id` のスロットはテーブル名が `"user"` のレコード ID でなければなりません。
@@ -156,7 +156,7 @@ const results = await db.query(CreateUserQuery, {
   // id: new Thing("user", "tai-kun"),
 });
 
-await db.disconnect();
+await db.close();
 ```
 
 `npx tsc --noEmit`:

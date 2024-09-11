@@ -1,6 +1,6 @@
 {
   "packages": {
-    "surrealdb": {
+    ".": {
       "release-as": "2.0.0-alpha.3",
       "prerelease": true,
       "release-type": "node",

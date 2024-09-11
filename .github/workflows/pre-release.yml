@@ -71,12 +71,12 @@ jobs:
       - name: バージョン確認
         run: |
           RELEASE_VERSION="${{ steps.params.outputs.ver }}"
-          PACKAGE_VERSION="v$(jq -r .version < package.json)"
+          PACKAGE_VERSION="$(jq -r .version < package.json)"
 
           if [[ "$RELEASE_VERSION" != "$PACKAGE_VERSION" ]]; then
             echo "Error: Release version ($RELEASE_VERSION) does not match package.json version ($PACKAGE_VERSION)"
             exit 1
-          else
+          fi
 
       - name: Node.js ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4

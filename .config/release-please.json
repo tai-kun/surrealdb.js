@@ -1,8 +1,6 @@
 {
-  "last-release-sha": "8aa5775276dd38a24766619f8d16226e49db03c7",
   "packages": {
     ".": {
-      "release-as": "2.0.0-alpha.3",
       "versioning": "prerelease",
       "prerelease": true,
       "prerelease-type": "alpha",

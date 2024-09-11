@@ -1,2 +1,2 @@
-export type * from "./src/formatter";
-export { default } from "./src/formatter";
+export type * from "./formatter";
+export { default } from "./formatter";

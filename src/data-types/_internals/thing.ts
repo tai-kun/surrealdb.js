@@ -42,6 +42,6 @@ export function toString(
   },
 ): string {
   // SurrealDB では String を escape_rid でエスケープしている:
-  // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/src/sql/thing.rs#L97
+  // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/sql/thing.rs#L97
   return escapeRid(thing.tb) + ":" + escapeId(thing.id);
 }

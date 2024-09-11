@@ -12,7 +12,7 @@ export {
   CborUndefinedMemoryBlockError,
   CborUnsafeMapKeyError,
   CborWellFormednessError,
-} from "./src/cbor";
+} from "./cbor";
 
 export {
   CircularEngineReferenceError,
@@ -24,7 +24,7 @@ export {
   NamespaceConflictError,
   QueryFailedError,
   RpcResponseError,
-} from "./src/client";
+} from "./client";
 
 export {
   ConnectionUnavailableError,
@@ -35,7 +35,7 @@ export {
   StateTransitionError,
   WebSocketEngineError,
   type WebSocketEngineStatusCode,
-} from "./src/engine";
+} from "./engine";
 
 export {
   CircularReferenceError,
@@ -49,7 +49,7 @@ export {
   unreachable,
   UnreachableError,
   UnsupportedRuntimeError,
-} from "./src/general";
+} from "./general";
 
-export type * from "./src/get-type-name";
-export { default as getTypeName } from "./src/get-type-name";
+export type * from "./get-type-name";
+export { default as getTypeName } from "./get-type-name";

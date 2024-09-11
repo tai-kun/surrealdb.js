@@ -1,5 +1,5 @@
-export type * from "./src/client";
-export { default } from "./src/client";
+export type * from "./client";
+export { default } from "./client";
 
-export type * from "./src/jwt";
-export { default as Jwt } from "./src/jwt";
+export type * from "./jwt";
+export { default as Jwt } from "./jwt";

@@ -1,2 +1,2 @@
-export type * from "./src/client";
-export { default } from "./src/client";
+export type * from "./client";
+export { default } from "./client";

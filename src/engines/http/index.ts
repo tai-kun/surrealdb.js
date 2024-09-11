@@ -1,2 +1,2 @@
-export type * from "./src/engine";
-export { default } from "./src/engine";
+export type * from "./engine";
+export { default } from "./engine";

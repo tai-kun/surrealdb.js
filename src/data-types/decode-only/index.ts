@@ -1,60 +1,60 @@
-export type * from "./src/datetime";
-export { default as Datetime } from "./src/datetime";
+export type * from "./datetime";
+export { default as Datetime } from "./datetime";
 
-export type * from "./src/decimal";
-export { default as Decimal } from "./src/decimal";
+export type * from "./decimal";
+export { default as Decimal } from "./decimal";
 
-export type * from "./src/duration";
-export { default as Duration } from "./src/duration";
+export type * from "./duration";
+export { default as Duration } from "./duration";
 
 export {
   GeometryCollection,
   GeometryCollectionBase,
   type GeometryCollectionSource,
   type GeometryCollectionTypes,
-} from "./src/geometry-collection";
+} from "./geometry-collection";
 export {
   GeometryLine,
   GeometryLineBase,
   type GeometryLineSource,
   type GeometryLineTypes,
-} from "./src/geometry-line";
+} from "./geometry-line";
 export {
   GeometryMultiLine,
   GeometryMultiLineBase,
   type GeometryMultiLineSource,
   type GeometryMultiLineTypes,
-} from "./src/geometry-multiline";
+} from "./geometry-multiline";
 export {
   GeometryMultiPoint,
   GeometryMultiPointBase,
   type GeometryMultiPointSource,
   type GeometryMultiPointTypes,
-} from "./src/geometry-multipoint";
+} from "./geometry-multipoint";
 export {
   GeometryMultiPolygon,
   GeometryMultiPolygonBase,
   type GeometryMultiPolygonSource,
   type GeometryMultiPolygonTypes,
-} from "./src/geometry-multipolygon";
+} from "./geometry-multipolygon";
 export {
   GeometryPoint,
   GeometryPointBase,
   type GeometryPointSource,
   type GeometryPointTypes,
-} from "./src/geometry-point";
+} from "./geometry-point";
 export {
   GeometryPolygon,
   GeometryPolygonBase,
   type GeometryPolygonSource,
   type GeometryPolygonTypes,
-} from "./src/geometry-polygon";
+} from "./geometry-polygon";
 
-export type * from "./src/table";
-export { default as Table } from "./src/table";
+export type * from "./table";
+export { default as Table } from "./table";
 
-export type * from "./src/thing";
-export { default as Thing } from "./src/thing";
+export type * from "./thing";
+export { default as Thing } from "./thing";
 
-export type * from "./src/uuid";
-export { default as Uuid } from "./src/uuid";
+export type * from "./uuid";
+export { default as Uuid } from "./uuid";

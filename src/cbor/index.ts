@@ -1,8 +1,8 @@
-export type * from "./src/decode-stream";
-export { default as decodeStream } from "./src/decode-stream";
+export type * from "./decode-stream";
+export { default as decodeStream } from "./decode-stream";
 
-export type * from "./src/decode";
-export { default as decode } from "./src/decode";
+export type * from "./decode";
+export { default as decode } from "./decode";
 
 export {
   CONTINUE,
@@ -12,10 +12,10 @@ export {
   type ReviverObject,
   type SimpleItemReviver,
   type TaggedItemReviver,
-} from "./src/decoder";
+} from "./decoder";
 
-export type * from "./src/encode";
-export { default as encode } from "./src/encode";
+export type * from "./encode";
+export { default as encode } from "./encode";
 
 export {
   type AdditionalInfo,
@@ -46,13 +46,13 @@ export {
   MT_UNSIGNED_INTEGER,
   MT_UTF8_STRING,
   Simple,
-} from "./src/spec";
+} from "./spec";
 
-export type * from "./src/tagged";
-export { default as Tagged } from "./src/tagged";
+export type * from "./tagged";
+export { default as Tagged } from "./tagged";
 
-export type { ToCBOR } from "./src/traits";
-export { canToCBOR } from "./src/traits";
+export type { ToCBOR } from "./traits";
+export { canToCBOR } from "./traits";
 
 export {
   type Replacer,
@@ -66,6 +66,6 @@ export {
   writeNumber,
   writePayload,
   writeUtf8String,
-} from "./src/write-utils";
+} from "./write-utils";
 
-export type * from "./src/writer";
+export type * from "./writer"; // `Writer` も型だけでよし

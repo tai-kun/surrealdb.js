@@ -1,8 +1,8 @@
-export type * from "./src/auth";
-export type * from "./src/live-query";
-export type * from "./src/misc";
-export type * from "./src/patch";
-export type * from "./src/query-result";
-export type * from "./src/rpc-request";
-export type * from "./src/rpc-response";
-export type * from "./src/surql";
+export type * from "./auth";
+export type * from "./live-query";
+export type * from "./misc";
+export type * from "./patch";
+export type * from "./query-result";
+export type * from "./rpc-request";
+export type * from "./rpc-response";
+export type * from "./surql";

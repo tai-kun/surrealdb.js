@@ -48,6 +48,16 @@ jobs:
     needs:
       - test
     steps:
+      - name: バージョン確認
+        run: |
+          REF_NAME="${{ github.ref_name }}"
+          PACKAGE_VERSION="v$(jq -r .version < package.json)"
+
+          if [[ "$REF_NAME" != "$PACKAGE_VERSION" ]]; then
+            echo "Error: GitHub ref_name ($REF_NAME) does not match package.json version ($PACKAGE_VERSION)"
+            exit 1
+          else
+
       - name: パラメーター
         run: |
           ref="${{ github.ref_name }}"
@@ -78,9 +88,6 @@ jobs:
 
       - name: ビルド
         run: npm run build
-
-      - name: バージョン設定
-        run: npm --no-git-tag-version version "${{ github.ref_name }}"
 
       - name: 公開
         uses: JS-DevTools/npm-publish@v3

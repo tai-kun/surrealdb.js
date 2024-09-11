@@ -71,6 +71,7 @@ function check() {
 }
 
 match '^ci: .'
+match '^chore\(main\): v[0-9]+\.[0-9]+\.[0-9]+-[a-z]+\.[0-9]+$'
 match '^chore\(deps\): .'
 match '^chore\(deps-dev\): .'
 

@@ -3,11 +3,12 @@
 import { formatWithOptions } from "node-inspect-extracted";
 import { expect } from "vitest";
 
+let currentError = null;
 const ORIGINAL_MESSAGE = Symbol();
 
 expect.addSnapshotSerializer({
   test(value) {
-    return value instanceof globalThis.Error;
+    return value instanceof globalThis.Error && value !== currentError;
   },
   serialize(error, ...args) {
     const [, , , , print] = args;
@@ -46,8 +47,8 @@ class Error extends globalThis.Error {
   constructor(...args) {
     super(...args);
 
-    if (typeof this.constructor.captureStackTrace === "function") {
-      this.constructor.captureStackTrace(this, this.constructor);
+    if (typeof globalThis.Error.captureStackTrace === "function") {
+      globalThis.Error.captureStackTrace(this, Error);
     }
 
     let formatted = null;
@@ -67,7 +68,11 @@ class Error extends globalThis.Error {
         }
 
         formatting = true;
-        formatted = formatWithOptions({ depth: null }, this)
+        formatted = formatWithOptions({
+          depth: null,
+          sorted: true,
+          colors: true,
+        }, this)
           .replace(/^[^:]*: */, "");
         formatting = false;
 

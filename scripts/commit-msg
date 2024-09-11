@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-KIND='chore|docs|feat|fix|perf|refactor|release|revert|style'
+KIND='change|chore|docs|feat|fix|perf|refactor|style'
 EXCLUDES=(
     'cache' '.cache'
     'temp' '.temp' 'tmp' '.tmp'

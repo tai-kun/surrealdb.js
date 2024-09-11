@@ -2,7 +2,9 @@
   "packages": {
     ".": {
       "release-as": "2.0.0-alpha.3",
+      "last-release-sha": "da111604d73bf2f8fba02e7f5ac9de56a55485a7",
       "prerelease": true,
+      "prerelease-type": "alpfa",
       "release-type": "node",
       "changelog-sections": [
         { "type": "change", "section": "Changes" },

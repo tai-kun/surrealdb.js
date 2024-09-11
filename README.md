@@ -52,7 +52,7 @@ try {
   const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
   console.log(results); // [ 42 ]
 } finally {
-  await db.disconnect();
+  await db.close();
 }
 ```
 

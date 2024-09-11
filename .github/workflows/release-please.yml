@@ -3,7 +3,7 @@ name: Release Please
 on:
   push:
     branches:
-      - main
+      - ci
 
 permissions:
   contents: write
@@ -24,35 +24,35 @@ jobs:
           target-branch: ${{ github.ref_name }}
         id: release
 
-      - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
+      # - uses: actions/checkout@v4
+      #   if: ${{ steps.release.outputs.release_created }}
 
-      - name: Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: "https://registry.npmjs.org"
-        if: ${{ steps.release.outputs.release_created }}
+      # - name: Node.js ${{ env.NODE_VERSION }}
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: ${{ env.NODE_VERSION }}
+      #     registry-url: "https://registry.npmjs.org"
+      #   if: ${{ steps.release.outputs.release_created }}
 
-      - name: 依存関係をインストール
-        run: npm ci
-        if: ${{ steps.release.outputs.release_created }}
+      # - name: 依存関係をインストール
+      #   run: npm ci
+      #   if: ${{ steps.release.outputs.release_created }}
 
-      - name: ビルド
-        run: npm run build
-        if: ${{ steps.release.outputs.release_created }}
+      # - name: ビルド
+      #   run: npm run build
+      #   if: ${{ steps.release.outputs.release_created }}
 
-      - name: 公開
-        run: |
-          ver="$(jq -r .version <package.json)"
-          suf="${ver#*-}"
+      # - name: 公開
+      #   run: |
+      #     ver="$(jq -r .version <package.json)"
+      #     suf="${ver#*-}"
 
-          if [[ "$suf" == "$ver" ]]; then
-            npm publish --access=public
-          else
-            tag="${suf%%.*}"
-            npm publish --access=public --tag="$tag"
-          fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        if: ${{ steps.release.outputs.release_created }}
+      #     if [[ "$suf" == "$ver" ]]; then
+      #       npm publish --access=public
+      #     else
+      #       tag="${suf%%.*}"
+      #       npm publish --access=public --tag="$tag"
+      #     fi
+      #   env:
+      #     NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      #   if: ${{ steps.release.outputs.release_created }}

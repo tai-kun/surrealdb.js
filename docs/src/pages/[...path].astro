@@ -125,33 +125,61 @@ const {
         var latest: number;
       }
     </script>
-    <script is:inline define:vars={{ route, langs, latest }}>
-document.addEventListener("DOMContentLoaded", function() {
-  function redirect(lang) {
-    const pathname =
-      route === "both"
-    ? window.location.pathname.replace(
-      /^\/surrealdb\.js(\/)?/, `/surrealdb.js/${lang}/v${latest}/`)
-    : route === "lang"
-    ? window.location.pathname.replace(
-      /^\/surrealdb\.js(\/)?/, `/surrealdb.js/${lang}/`)
-    : window.location.pathname.replace(
-      /^\/surrealdb\.js\/([^\/]+)(\/)?/, `/surrealdb.js/$1/v${latest}/`);
-    window.location.pathname = window.location.pathname === pathname
-      ? "/404"
-      : pathname;
-  }
 
-  for (const lang of langs) {
-    if (navigator.language.startsWith(lang)) {
-      redirect(lang);
-      return;
-    }
-  }
 
-  redirect(langs.includes("en") ? "en" : langs[0]);
-});
-    </script>
+    {route !== "both" ? null : <script is:inline define:vars={{ langs, latest }}>
+function redirect(lang) {
+  const pathname = window.location.pathname.replace(
+    /^\/surrealdb\.js(\/)?/, `/surrealdb.js/${lang}/v${latest}/`);
+  window.location.pathname = window.location.pathname === pathname
+    ? "/404"
+    : pathname;
+}
+
+for (const lang of langs) {
+  if (navigator.language.startsWith(lang)) {
+    redirect(lang);
+    return;
+  }
+}
+
+redirect(langs.includes("en") ? "en" : langs[0]);
+</script>}
+
+
+    {route !== "lang" ? null : <script is:inline define:vars={{ langs }}>
+function redirect(lang) {
+  const pathname = window.location.pathname.replace(
+    /^\/surrealdb\.js(\/)?/, `/surrealdb.js/${lang}/`);
+  window.location.pathname = window.location.pathname === pathname
+    ? "/404"
+    : pathname;
+}
+
+for (const lang of langs) {
+  if (navigator.language.startsWith(lang)) {
+    redirect(lang);
+    return;
+  }
+}
+
+redirect(langs.includes("en") ? "en" : langs[0]);
+</script>}
+
+
+    {route !== "version" ? null : <script is:inline define:vars={{ langs, latest }}>
+function redirect() {
+  const pathname = window.location.pathname.replace(
+    /^\/surrealdb\.js\/([^\/]+)(\/)?/, `/surrealdb.js/$1/v${latest}/`);
+  window.location.pathname = window.location.pathname === pathname
+    ? "/404"
+    : pathname;
+}
+
+redirect();
+</script>}
+
+
   </head>
   <body>
     <p>Redirecting based on your browser language...</p>

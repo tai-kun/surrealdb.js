@@ -93,7 +93,7 @@ await Promise.all([
 SurrealDB との接続を切ります。まだ接続していないか、すでに切断されていてもエラーを投げることはありません。このメソッドは非同期で実行されますが、同じインスタンス内であれば `.connect()` や他の `.close()` と重複して実行されることはありません。
 
 ```ts
-close(options?: ClientDisconnectOptions): Promise<void>
+close(options?: ClientCloseOptions): Promise<void>
 ```
 
 #### 引数

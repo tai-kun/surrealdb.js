@@ -26,7 +26,7 @@ When called with `new`, `Surreal` returns its instance.
 
 ### `.connect()` <Badge variant="instance" /><Badge variant="method" />
 
-Connects to the SurrealDB endpoint. This method runs asynchronously, but it will not be executed concurrently with other `.connect()` or `.close()` calls within the same instance.
+Connects to a SurrealDB endpoint. This method executes asynchronously and prevents overlapping execution with other `.connect()` or `.close()` calls within the same instance.
 
 ```ts
 connect(
@@ -39,14 +39,14 @@ connect(
 
 ##### `endpoint`
 
-Specifies the SurrealDB endpoint URL. If the URL path does not end with `/rpc`, it will be added automatically. Therefore, passing `http://localhost:8000` as an argument will connect to `http://localhost:8000/rpc`.
+Specifies the URL of the SurrealDB endpoint. If the URL path does not end with `/rpc`, it will be added automatically. Therefore, passing `http://localhost:8000` as an argument will connect to `http://localhost:8000/rpc`.
 
 ##### `options`
 
-Options for connection.
+Options for the connection.
 
 `signal?: AbortSignal`
-:   An AbortSignal to abort the connection attempt. By default, an AbortSignal that times out after 15 seconds is set.
+:   An AbortSignal to abort the connection. By default, an AbortSignal that times out after 15 seconds is set.
 
 #### Return Value
 
@@ -64,7 +64,7 @@ const db = new Surreal();
 await db.connect("ws://localhost:8000");
 ```
 
-You cannot connect to a different endpoint without disconnecting from the previous endpoint using `.close()`. Note that the connection to the endpoint that was established first will be maintained:
+You cannot connect to a different endpoint without disconnecting from the currently connected endpoint using `.close()`. Note that the connection to the endpoint that was established first will be maintained:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -75,7 +75,7 @@ await db.connect("ws://localhost:8000");
 await db.connect("ws://localhost:1129"); // throws ConnectionConflictError: Connection conflict between ws://localhost:8000/rpc and ws://localhost:1129/rpc.
 ```
 
-Since `.connect()` will not be executed concurrently in an asynchronous context, the following example will also fail to connect. The error message may differ each time because it is generally unknown which endpoint will establish the connection first:
+Since `.connect()` does not execute concurrently in an asynchronous context, the following example will also fail to connect. The error message may differ each time because it is generally unknown which endpoint will establish the connection first:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -90,23 +90,23 @@ await Promise.all([
 
 ### `.close()` <Badge variant="instance" /><Badge variant="method" />
 
-Disconnects from the SurrealDB endpoint. It will not throw an error if it is not yet connected or already disconnected. This method runs asynchronously, but it will not be executed concurrently with `.connect()` or other `.close()` calls within the same instance.
+Disconnects from the SurrealDB instance. It will not throw an error if it is not yet connected or already disconnected. This method executes asynchronously and prevents overlapping execution with `.connect()` or other `.close()` calls within the same instance.
 
 ```ts
-close(options?: ClientDisconnectOptions): Promise<void>
+close(options?: ClientCloseOptions): Promise<void>
 ```
 
 #### Arguments
 
 ##### `options`
 
-Options for disconnection.
+Options for disconnecting.
 
 `force?: boolean`
-:   If `true`, sends an abort signal to the AbortSignal passed to the `Surreal` object's event listeners. Event listeners are expected to abort immediately, even if processing is incomplete.
+:   If set to `true`, an AbortSignal is sent to the AbortSignal passed to the `Surreal` object's event listener. The event listener is expected to be aborted immediately, even if processing is incomplete.
 
 `signal?: AbortSignal`
-:   An AbortSignal to abort the disconnection attempt. By default, an AbortSignal that times out after 15 seconds is set.
+:   An AbortSignal to abort the disconnection process. By default, an AbortSignal that times out after 15 seconds is set.
 
 #### Return Value
 
@@ -114,7 +114,7 @@ Returns a `Promise` object that resolves with `undefined`.
 
 #### Example
 
-The following example connects to SurrealDB using the WebSocket protocol and then closes the connection:
+The following example connects to SurrealDB using the WebSocket protocol and then disconnects:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -127,7 +127,7 @@ await db.close();
 
 ### `.getConnectionInfo()` <Badge variant="instance" /><Badge variant="method" />
 
-Retrieves the connection information. The connection information always has a copied value of the internal information. Therefore, although the connection information contains a `URL` object, directly modifying it does not change the endpoint information held internally by the `Surreal` object. It is `undefined` if a connection has not yet been requested.
+Retrieves the connection information. The connection information always holds a copy of the internal information. Therefore, although the connection information includes a `URL` object, directly modifying it will not change the endpoint information held internally by the `Surreal` object. It returns `undefined` if a connection has not yet been requested.
 
 ```ts
 getConnectionInfo(): ConnectionInfo | undefined;
@@ -139,10 +139,10 @@ None.
 
 #### Return Value
 
-Returns the connection information if the connection is established. Otherwise, it returns `undefined`. The connection information includes the following items:
+Returns the connection information if the connection is established, otherwise `undefined`. The connection information includes the following items:
 
 `state: "connecting" | "open" | "closing" | "closed"`
-:   A string indicating the current connection state. Each value indicates the following meaning:
+:   A string indicating the current connection state. Each value has the following meaning:
 
 `endpoint: URL | null`
 :   The endpoint to connect to. It is `null` only in the disconnected state.
@@ -156,7 +156,7 @@ Returns the connection information if the connection is established. Otherwise, 
 `token: string | null`
 :   The currently authenticated token. It is `null` if not signed up or signed in.
 
-The possible values of the connection information in each connection state are shown in the following table:
+The following table shows the possible values of the connection information for each connection state:
 
 | state          | endpoint | namespace      | database       | token          |
 | -------------- | -------- | -------------- | -------------- | -------------- |
@@ -179,7 +179,7 @@ See also: [`.getConnectionInfo()`](#getconnectioninfo)
 
 ### `.endpoint` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
-The endpoint to connect to. It is `null` only in the disconnected state. It is `undefined` if the connection has not been established.
+The endpoint to connect to. It is `null` only in the disconnected state. It is `undefined` if a connection has not yet been established.
 
 ```ts
 endpoint: string | null | undefined
@@ -189,7 +189,7 @@ See also: [`.getConnectionInfo()`](#getconnectioninfo)
 
 ### `.namespace` <Badge variant="instance" /><Badge variant="property" />
 
-The currently selected namespace. It is `null` if no namespace is selected. It is `undefined` if the connection has not been established.
+The currently selected namespace. It is `null` if no namespace is selected. It is `undefined` if a connection has not yet been established.
 
 ```ts
 namespace: string | null | undefined
@@ -199,7 +199,7 @@ See also: [`.getConnectionInfo()`](#getconnectioninfo)
 
 ### `.database` <Badge variant="instance" /><Badge variant="property" />
 
-The currently selected database name. It is `null` if no database is selected. It is `undefined` if the connection has not been established.
+The currently selected database name. It is `null` if no database is selected. It is `undefined` if a connection has not yet been established.
 
 ```ts
 database: string | null | undefined
@@ -209,7 +209,7 @@ See also: [`.getConnectionInfo()`](#getconnectioninfo)
 
 ### `.token` <Badge variant="instance" /><Badge variant="property" />
 
-The currently authenticated token. It is `null` if not signed up or signed in. It is `undefined` if the connection has not been established.
+The currently authenticated token. It is `null` if not signed up or signed in. It is `undefined` if a connection has not yet been established.
 
 ```ts
 token: string | null | undefined
@@ -236,23 +236,23 @@ on(
 
 ##### `event`
 
-The event name to listen for.
+The name of the event to listen for.
 
 `"connecting" | "open" | "closing" | "closed"`
-:   Events that occur when the connection information transitions or fails to transition.
+:   The event that occurs when the connection information transitions or fails to transition.
 
 `rpc_${RpcMethod}_${number}`
-:   An event that occurs when an RPC response occurs in bidirectional communication. Currently only used for the WebSocket protocol, this event is not used for the HTTP protocol. `RpcMethod` is the RPC method name, such as `ping` or `use`. `number` is an identifier for associating requests/responses in bidirectional communication, and is an integer from 1 to 2^53-1.
+:   The event that occurs when an RPC response occurs in bidirectional communication. Currently, it is only used in the WebSocket protocol and not in the HTTP protocol. `RpcMethod` is the PRC method name, such as `ping` or `use`. `number` is an identifier for associating requests/responses in bidirectional communication, and is an integer from 1 to 2^53-1.
 
 `live_${string}`
-:   An event that occurs when a live query event is received. Currently only used for the WebSocket protocol, this event is not used for the HTTP protocol. `string` is the UUID of the live query.
+:   The event that occurs when a live query event is received. Currently, it is only used in the WebSocket protocol and not in the HTTP protocol. `string` is the UUID of the live query.
 
 `error`
-:   An error event. Currently only used for the WebSocket protocol, this event is not used for the HTTP protocol.
+:   The error event. Currently, it is only used in the WebSocket protocol and not in the HTTP protocol.
 
 ##### `listener`
 
-A function to be executed when the event is fired. See also [Task Emitter](/en/reference/utils/task-emitter#on). The value passed to `eventArgs` varies depending on the event.
+The function to execute when the event is fired. See also [Task Emitter](/en/reference/utils/task-emitter#on). The value passed to `eventArgs` varies depending on the event.
 
 `"connecting" | "open" | "closing" | "closed"`
 :   One of the following:
@@ -265,9 +265,9 @@ A function to be executed when the event is fired. See also [Task Emitter](/en/r
     - `{ id: string, error: { code: number, message: string } }`
 
 `live_${string}`
-:   Normal live query:
+:   For live queries in normal mode:
 :   - `{ action: "CREATE" | "UPDATE" | "DELETE", result: object }`
-:   Live query in diff mode:
+:   For live queries in diff mode:
 :   - `{ action: "CREATE" | "UPDATE", result: object[] }`
     - `{ action: "DELETE", result: object }`
 
@@ -282,7 +282,7 @@ None.
 
 ### `.once()` <Badge variant="instance" /><Badge variant="method" />
 
-Similar to `.on()`, but only captures the event once.
+Similar to `.on()`, but captures the event only once.
 
 ```ts
 once(
@@ -303,11 +303,11 @@ Same as `event` in `.on()`.
 
 ##### `options`
 
-Task listener options. See [Task Emitter](/en/reference/utils/task-emitter#once).
+Options for the task listener. See [Task Emitter](/en/reference/utils/task-emitter#once).
 
 #### Return Value
 
-Returns a `StatefulPromise` that resolves with `eventArgs` of the task listener in `.on()`.
+Returns a `StatefulPromise` that resolves with the `eventArgs` of the task listener in `.on()`.
 
 ### `.off()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -328,7 +328,7 @@ off(
 
 ##### `event`
 
-The name of the event to unregister the event listener for.
+The name of the event to unregister the listener for.
 
 ##### `listener`
 

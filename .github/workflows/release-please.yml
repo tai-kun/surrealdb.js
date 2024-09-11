@@ -43,7 +43,16 @@ jobs:
         if: ${{ steps.release.outputs.release_created }}
 
       - name: 公開
-        run: npm publish --access=public
+        run: |
+          ver="$(jq -r .version <package.json)"
+          suf="${ver#*-}"
+
+          if [[ "$suf" == "$ver" ]]; then
+            npm publish --access=public
+          else
+            tag="${suf%%.*}"
+            npm publish --access=public --tag="$tag"
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         if: ${{ steps.release.outputs.release_created }}

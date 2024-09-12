@@ -92,12 +92,295 @@ export function writeByteString(
 export function writeUtf8String(w: Writer, value: string): void {
   let l = value.length;
 
+  if (l <= 0) {
+    w.claim(1);
+    w.data[w.offset++] = 96; // 120 - 1 - 23
+
+    return;
+  }
+
+  switch (l) {
+    case 2:
+      switch (value) {
+        case "ns":
+          w.claim(3);
+          w.data[w.offset++] = 98; // 96 + 2
+          w.data.set([0x6E, 0x73], w.offset);
+          w.offset += 2;
+          return;
+
+        case "db":
+          w.claim(3);
+          w.data[w.offset++] = 98; // 96 + 2
+          w.data.set([0x64, 0x62], w.offset);
+          w.offset += 2;
+          return;
+
+        case "ac":
+          w.claim(3);
+          w.data[w.offset++] = 98; // 96 + 2
+          w.data.set([0x61, 0x63], w.offset);
+          w.offset += 2;
+          return;
+      }
+
+      break;
+
+    case 3:
+      switch (value) {
+        case "use":
+          w.claim(4);
+          w.data[w.offset++] = 99; // 96 + 3
+          w.data.set([0x75, 0x73, 0x65], w.offset);
+          w.offset += 3;
+          return;
+
+        case "let":
+          w.claim(4);
+          w.data[w.offset++] = 99; // 96 + 3
+          w.data.set([0x6C, 0x65, 0x74], w.offset);
+          w.offset += 3;
+          return;
+
+        case "run":
+          w.claim(4);
+          w.data[w.offset++] = 99; // 96 + 3
+          w.data.set([0x72, 0x75, 0x6E], w.offset);
+          w.offset += 3;
+          return;
+      }
+
+      break;
+
+    case 4:
+      switch (value) {
+        case "user":
+          w.claim(5);
+          w.data[w.offset++] = 100; // 96 + 4
+          w.data.set([0x75, 0x73, 0x65, 0x72], w.offset);
+          w.offset += 4;
+          return;
+
+        case "pass":
+          w.claim(5);
+          w.data[w.offset++] = 100; // 96 + 4
+          w.data.set([0x70, 0x61, 0x73, 0x73], w.offset);
+          w.offset += 4;
+          return;
+
+        case "ping":
+          w.claim(5);
+          w.data[w.offset++] = 100; // 96 + 4
+          w.data.set([0x70, 0x69, 0x6E, 0x67], w.offset);
+          w.offset += 4;
+          return;
+
+        case "info":
+          w.claim(5);
+          w.data[w.offset++] = 100; // 96 + 4
+          w.data.set([0x69, 0x6E, 0x66, 0x6F], w.offset);
+          w.offset += 4;
+          return;
+
+        case "live":
+          w.claim(5);
+          w.data[w.offset++] = 100; // 96 + 4
+          w.data.set([0x6C, 0x69, 0x76, 0x65], w.offset);
+          w.offset += 4;
+          return;
+
+        case "kill":
+          w.claim(5);
+          w.data[w.offset++] = 100; // 96 + 4
+          w.data.set([0x6B, 0x69, 0x6C, 0x6C], w.offset);
+          w.offset += 4;
+          return;
+      }
+
+      break;
+
+    case 5:
+      switch (value) {
+        case "unset":
+          w.claim(6);
+          w.data[w.offset++] = 101; // 96 + 5
+          w.data.set([0x75, 0x6E, 0x73, 0x65, 0x74], w.offset);
+          w.offset += 5;
+          return;
+
+        case "query":
+          w.claim(6);
+          w.data[w.offset++] = 101; // 96 + 5
+          w.data.set([0x71, 0x75, 0x65, 0x72, 0x79], w.offset);
+          w.offset += 5;
+          return;
+
+        case "merge":
+          w.claim(6);
+          w.data[w.offset++] = 101; // 96 + 5
+          w.data.set([0x6D, 0x65, 0x72, 0x67, 0x65], w.offset);
+          w.offset += 5;
+          return;
+
+        case "patch":
+          w.claim(6);
+          w.data[w.offset++] = 101; // 96 + 5
+          w.data.set([0x70, 0x61, 0x74, 0x63, 0x68], w.offset);
+          w.offset += 5;
+          return;
+      }
+
+      break;
+
+    case 6:
+      switch (value) {
+        case "method":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x6D, 0x65, 0x74, 0x68, 0x6F, 0x64], w.offset);
+          w.offset += 6;
+          return;
+
+        case "params":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x70, 0x61, 0x72, 0x61, 0x6D, 0x73], w.offset);
+          w.offset += 6;
+          return;
+
+        case "signup":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x73, 0x69, 0x67, 0x6E, 0x75, 0x70], w.offset);
+          w.offset += 6;
+          return;
+
+        case "signin":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x73, 0x69, 0x67, 0x6E, 0x69, 0x6E], w.offset);
+          w.offset += 6;
+          return;
+
+        case "select":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x73, 0x65, 0x6C, 0x65, 0x63, 0x74], w.offset);
+          w.offset += 6;
+          return;
+
+        case "create":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x63, 0x72, 0x65, 0x61, 0x74, 0x65], w.offset);
+          w.offset += 6;
+          return;
+
+        case "insert":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x69, 0x6E, 0x73, 0x65, 0x72, 0x74], w.offset);
+          w.offset += 6;
+          return;
+
+        case "update":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x75, 0x70, 0x64, 0x61, 0x74, 0x65], w.offset);
+          w.offset += 6;
+          return;
+
+        case "upsert":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x75, 0x70, 0x73, 0x65, 0x72, 0x74], w.offset);
+          w.offset += 6;
+          return;
+
+        case "delete":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x64, 0x65, 0x6C, 0x65, 0x74, 0x65], w.offset);
+          w.offset += 6;
+          return;
+
+        case "relate":
+          w.claim(7);
+          w.data[w.offset++] = 102; // 96 + 6
+          w.data.set([0x72, 0x65, 0x6C, 0x61, 0x74, 0x65], w.offset);
+          w.offset += 6;
+          return;
+      }
+
+      break;
+
+    case 7:
+      switch (value) {
+        case "version":
+          w.claim(8);
+          w.data[w.offset++] = 103; // 96 + 7
+          w.data.set([0x76, 0x65, 0x72, 0x73, 0x69, 0x6F, 0x6E], w.offset);
+          w.offset += 7;
+          return;
+      }
+
+      break;
+
+    case 10:
+      switch (value) {
+        case "invalidate":
+          w.claim(11);
+          w.data[w.offset++] = 106; // 96 + 10
+          w.data.set([
+            0x69,
+            0x6E,
+            0x76,
+            0x61,
+            0x6C,
+            0x69,
+            0x64,
+            0x61,
+            0x74,
+            0x65,
+          ], w.offset);
+          w.offset += 10;
+          return;
+      }
+
+      break;
+
+    case 12:
+      switch (value) {
+        case "authenticate":
+          w.claim(13);
+          w.data[w.offset++] = 108; // 96 + 12
+          w.data.set([
+            0x61,
+            0x75,
+            0x74,
+            0x68,
+            0x65,
+            0x6E,
+            0x74,
+            0x69,
+            0x63,
+            0x61,
+            0x74,
+            0x65,
+          ], w.offset);
+          w.offset += 12;
+          return;
+      }
+
+      break;
+  }
+
   // パフォーマンスのために `.encodeInto` を使ってバッファーに直接書き込む。
   // 文字列を UTF-8 でエンコードするとき、必要なバッファーのサイズは `.length` バイト以上
   // `.length * 3` バイト以下である [^1]。さらに CBOR のヘッダーを書き込むために最大 5 バイトの
   // 空き容量が追加で必要となる。つまりメモリーの空き容量が `.length * 3 + 5` バイト以上であれば
   // `.encodeInto` を使うことができる。
-  // [^1]: https://developer.mozilla.org/ja/docs/Web/API/TextEncoder/encodeInto#%E3%83%90%E3%83%83%E3%83%95%E3%82%A1%E3%83%BC%E3%81%AE%E5%A4%A7%E3%81%8D%E3%81%95
+  // [^1]: https://developer.mozilla.org/docs/Web/API/TextEncoder/encodeInto
   if ((w.data.length - w.offset) >= (5 + l + l + l)) {
     const r = utf8.encodeInto(value, w.data.subarray(w.offset + 5));
 
@@ -138,38 +421,45 @@ export function writeEncodedUtf8String(
   w: Writer,
   value: Uint8ArrayLike,
 ): void {
-  const length = value.length;
+  const l = value.length;
+
+  if (l <= 0) {
+    w.claim(1);
+    w.data[w.offset++] = 96; // 120 - 1 - 23
+
+    return;
+  }
 
   w.claim(9); // 1 (header) + 8 (64-bit payload)
 
-  if (length < AI_ONE_BYTE) {
-    w.data[w.offset++] = 96 + length; // (120 - 1 - 23) + length
-  } else if (length <= 0xff) {
+  if (l < AI_ONE_BYTE) {
+    w.data[w.offset++] = 96 + l; // (120 - 1 - 23) + l
+  } else if (l <= 0xff) {
     w.data[w.offset++] = 120; // (MT_UTF8_STRING << 5) | AI_ONE_BYTE
-    w.data[w.offset++] = length;
-  } else if (length <= 0xffff) {
+    w.data[w.offset++] = l;
+  } else if (l <= 0xffff) {
     w.data[w.offset++] = 121; // (MT_UTF8_STRING << 5) | AI_TWO_BYTES
-    w.view.setUint16(w.offset, length);
+    w.view.setUint16(w.offset, l);
     w.offset += 2;
-  } else if (length <= 0xffffffff) {
+  } else if (l <= 0xffffffff) {
     w.data[w.offset++] = 122; // (MT_UTF8_STRING << 5) | AI_FOUR_BYTES
-    w.view.setUint32(w.offset, length);
+    w.view.setUint32(w.offset, l);
     w.offset += 4;
-  } else if (length <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
+  } else if (l <= JS_MAX_SAFE_UNSIGNED_INTEGER) {
     w.data[w.offset++] = 123; // (MT_UTF8_STRING << 5) | AI_EIGHT_BYTES
-    w.view.setBigUint64(w.offset, BigInt(length));
+    w.view.setBigUint64(w.offset, BigInt(l));
     w.offset += 8;
   } else {
-    throw new NumberRangeError([0, JS_MAX_SAFE_UNSIGNED_INTEGER], length);
+    throw new NumberRangeError([0, JS_MAX_SAFE_UNSIGNED_INTEGER], l);
   }
   // エンコードした文字列が JavaScript 以外でデコードされる可能性を考えると、JavaScript の制約に
   // したがった文字列長の検証をする必要はないかもしれない。
-  // } else if (length <= 6442450941) { // (2^31-1)*3
+  // } else if (l <= 6442450941) { // (2^31-1)*3
   //   w.data[w.offset++] = 123; // (MT_UTF8_STRING << 5) | AI_EIGHT_BYTES
-  //   w.view.setBigUint64(w.offset, BigInt(length));
+  //   w.view.setBigUint64(w.offset, BigInt(l));
   //   w.offset += 8;
   // } else {
-  //   throw new NumberRangeError([0, 6442450941], length);
+  //   throw new NumberRangeError([0, 6442450941], l);
   // }
 
   w.writeBytes(value);

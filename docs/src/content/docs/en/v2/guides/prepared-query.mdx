@@ -10,7 +10,7 @@ Here's a basic example of how to use prepared queries:
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
 const CreateUserQuery = surql`CREATE ONLY user:foo CONTENT { age: 42 };`
-  .returns<[{ id: Thing<"user">, age: number }]>();
+  .as<[{ id: Thing<"user">, age: number }]>();
 
 const db = new Surreal();
 await db.connect(`ws://localhost:8000`);
@@ -23,11 +23,11 @@ const results = await db.query(CreateUserQuery);
 await db.close();
 ```
 
-Preparing queries enables type inference. However, the inferred type needs to be set manually.
+Preparing a query enables type inference. However, the inferred types need to be set manually.
 
 ## Validating Query Results
 
-You can make your queries more robust by passing a validator for the query result to the `.returns` method. The following example uses zod to validate that the query result matches the expected structure:
+You can make your queries safer by passing a validator for the query results as an argument to `.as`. In the following example, we use zod to validate whether the query results are the intended values:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -43,7 +43,7 @@ const CreatedUserSchema = z.tuple([
 ]);
 
 const CreateUserQuery = surql`CREATE ONLY user:bar CONTENT { age: 42 };`
-  .returns(CreatedUserSchema.parse.bind(CreatedUserSchema));
+  .as(CreatedUserSchema.parse.bind(CreatedUserSchema));
 
 const db = new Surreal();
 await db.connect(`ws://localhost:8000`);
@@ -56,11 +56,11 @@ const results = await db.query(CreateUserQuery);
 await db.close();
 ```
 
-You are not limited to zod; you can use valibot, or any general-purpose function to validate the response.
+It doesn't have to be zod; you can use valibot or a generic function to validate the response.
 
 ## Embedding Variables in Queries
 
-`surql` allows you to write queries using template literals, which lets you visually embed values:
+`surql` allows you to write queries using template literals, making it visually clear where values are embedded:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -70,7 +70,7 @@ const USER_AGE = 42;
 
 const CreateUserQuery = surql`
   CREATE ONLY type::thing('user', ${USERNAME}) CONTENT { age: ${USER_AGE} };`
-  .returns<[{ id: Thing<"user">; age: number }]>();
+  .as<[{ id: Thing<"user">; age: number }]>();
 
 const db = new Surreal();
 await db.connect(`ws://localhost:8000`);
@@ -83,7 +83,7 @@ const results = await db.query(CreateUserQuery);
 await db.close();
 ```
 
-The parameters of the RPC request sent in the above example are as follows:
+The RPC request parameters sent in the above example are:
 
 ```text
 CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
@@ -96,9 +96,9 @@ CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
 }
 ```
 
-## Defining Arguments in Queries
+## Defining Arguments for Queries
 
-Use `surql.slot` to define arguments for a predefined query:
+Use `surql.slot` to define arguments for your prepared queries:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -109,13 +109,13 @@ const isUserTable = (id: Thing): id is Thing<"user"> => id.tb === "user";
 const UserIdSchema = z.instanceof(Thing).refine(isUserTable);
 
 const UserIdSlot = surql.slot("id")
-  .type(UserIdSchema.parse.bind(UserIdSchema));
+  .as(UserIdSchema.parse.bind(UserIdSchema));
 
 const UserAgeSlot = surql.slot("age", 42);
 
 const CreateUserQuery = surql`
   CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };`
-  .returns<[{ id: Thing<"user">; age: number }]>();
+  .as<[{ id: Thing<"user">; age: number }]>();
 
 const db = new Surreal();
 await db.connect(`ws://localhost:8000`);
@@ -129,25 +129,24 @@ const results = await db.query(CreateUserQuery, {
 await db.close();
 ```
 
-Each slot must have a variable name. You can use the `.type()` method to constrain the variable type. Similar to `.returns()`, you can pass a function to `.type()` to validate the value. In the example above, the slot with the variable name `id` must be a record ID with a table name of `"user"`.
+Each slot requires a variable name. You can use the `.as()` method to constrain the variable to a type level. As with `.as()`, you can pass a function to validate the value to the argument of `.as()`. In the example above, the slot with the variable name `id` must be a record ID with the table name `"user"`.
 
-You can set a default value for a slot by following the variable name with the value. If the slot's variable name is omitted at runtime, this default value will be used. In the example above, the slot with the variable name `age` has a default value of `42`.
+You can set a default value for the slot argument after the variable name. If the slot's variable name is omitted at runtime, this default value is used. In the example above, the slot with the variable name `age` has a default value of `42`.
 
-In addition to `.type()`, slots also support `.rename()`, `.default()`, `.optional()`, and `.required()`.
+In addition to `.as()`, slots can also use `.rename()`, `.default()`, `.optional()`, and `.required()`.
 
-If a predefined query includes a slot where the variable is required at runtime, the query will be rejected with `SurrealTypeError` if it is not specified. If type inference is set up correctly in TypeScript, an error will be displayed at compile time without having to run the code. For example, if you omit a required variable as follows and run type checking with `tsc`, you will get an error:
+If a predefined query includes a slot that requires a variable to be specified at runtime, the query will be rejected with a `SurrealTypeError` at runtime if it is not specified. If type inference is correctly set up in TypeScript, an error will be displayed at the type level without having to run the query. For example, typechecking with `tsc` by omitting a required variable as follows will result in an error:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
-const UserIdSlot = surql.slot("id")
-  .type<Thing<"user">>();
+const UserIdSlot = surql.slot("id").as<Thing<"user">>();
 
 const UserAgeSlot = surql.slot("age", 42);
 
 const CreateUserQuery = surql`
   CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };`
-  .returns<[{ id: Thing<"user">, age: number }]>()
+  .as<[{ id: Thing<"user">, age: number }]>()
 
 const db = new Surreal();
 await db.connect("ws://localhost:8000");

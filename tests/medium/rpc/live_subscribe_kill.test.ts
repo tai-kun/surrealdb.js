@@ -1,4 +1,4 @@
-import { isUuid, type LiveResult, Thing } from "@tai-kun/surrealdb";
+import { isUuid, Thing } from "@tai-kun/surrealdb";
 import { RpcResponseError } from "@tai-kun/surrealdb/errors";
 import { describe, expect, test, vi } from "vitest";
 import surreal from "../surreal.js";
@@ -15,12 +15,9 @@ for (const { suite, eng, fmt, url, Surreal } of surreal) {
   });
 
   describe.runIf(eng === "websocket" && fmt === "cbor")(suite, () => {
-    // const UUID_REGEX =
-    //   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-
-    // このテストはパスされるべきだけど、DELETE イベントだけ来ない。
-    test.fails("テーブルの変更をライブクエリーで監視する", async () => {
+    test("テーブルの変更をライブクエリーで監視する", async () => {
       const NUM_EVENTS = 3;
+      const listener = vi.fn();
 
       await using db = new Surreal();
       await db.connect(url());
@@ -29,22 +26,24 @@ for (const { suite, eng, fmt, url, Surreal } of surreal) {
 
       const queryUuid = await db.live("person");
 
-      expect(isUuid(queryUuid)).toBe(true);
+      expect.soft(isUuid(queryUuid)).toBe(true);
 
-      const listener = vi.fn();
       db.subscribe(queryUuid, listener);
 
-      await db.create(new Thing("person", 1), {
-        firstname: "John",
-        lastname: "Doe",
-      });
-      await db.update(new Thing("person", 1), {
-        firstname: "Jane",
-        lastname: "Doe",
-      });
-      await db.delete(new Thing("person", 1));
+      // Dispatch events
+      {
+        await db.create(new Thing("person", 1), {
+          firstname: "John",
+          lastname: "Doe",
+        });
+        await db.update(new Thing("person", 1), {
+          firstname: "Jane",
+          lastname: "Doe",
+        });
+        await db.delete(new Thing("person", 1));
+      }
 
-      await vi.waitFor(() => listener.mock.calls.length === NUM_EVENTS);
+      await vi.waitUntil(() => listener.mock.calls.length === NUM_EVENTS);
 
       expect(listener.mock.calls).toStrictEqual([
         [expect.anything(), {
@@ -74,9 +73,9 @@ for (const { suite, eng, fmt, url, Surreal } of surreal) {
       ]);
     });
 
-    // このテストはパスされるべきだけど、すべてのイベントが来ない。
-    test.fails("テーブルの変更を JSON パッチで受け取る", async () => {
+    test("テーブルの変更を JSON パッチで受け取る", async () => {
       const NUM_EVENTS = 3;
+      const listener = vi.fn();
 
       await using db = new Surreal();
       await db.connect(url());
@@ -85,26 +84,26 @@ for (const { suite, eng, fmt, url, Surreal } of surreal) {
 
       const queryUuid = await db.live("person", { diff: true });
 
-      expect(isUuid(queryUuid)).toBe(true);
+      expect.soft(isUuid(queryUuid)).toBe(true);
 
-      const events: Omit<LiveResult, "id">[] = [];
-
-      const listener = vi.fn();
       db.subscribe(queryUuid, listener);
 
-      await db.create(new Thing("person", 1), {
-        firstname: "John",
-        lastname: "Doe",
-      });
-      await db.update(new Thing("person", 1), {
-        firstname: "Jane",
-        lastname: "Doe",
-      });
-      await db.delete(new Thing("person", 1));
+      // Dispatch events
+      {
+        await db.create(new Thing("person", 1), {
+          firstname: "John",
+          lastname: "Doe",
+        });
+        await db.update(new Thing("person", 1), {
+          firstname: "Jane",
+          lastname: "Doe",
+        });
+        await db.delete(new Thing("person", 1));
+      }
 
-      await vi.waitFor(() => listener.mock.calls.length === NUM_EVENTS);
+      await vi.waitUntil(() => listener.mock.calls.length === NUM_EVENTS);
 
-      expect(events).toStrictEqual([
+      expect(listener.mock.calls).toStrictEqual([
         [expect.anything(), {
           action: "CREATE",
           result: [

@@ -32,11 +32,13 @@ Alpha release:
 npm i @tai-kun/surrealdb@alpha
 ```
 
+<!--
 Canary release:
 
 ```sh
 npm i @tai-kun/surrealdb@next
 ```
+-->
 
 ## Quick Start
 

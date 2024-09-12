@@ -31,14 +31,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           npm i -D playwright@${{ env.PLAYWRIGHT_VERSION }}
           npx playwright install --with-deps chromium
           bash scripts/pretest/setup_surrealdb.sh ${{ env.SURREALDB_VERSION }}
 
-      - name: カバレッジ
+      - name: "カバレッジ"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -52,6 +52,6 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()

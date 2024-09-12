@@ -33,18 +33,18 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: npm ci
 
-      - name: 型確認
+      - name: "型確認"
         run: npx tsc --noEmit
         if: always()
 
-      - name: 体裁確認
+      - name: "体裁確認"
         run: npx dprint check
         if: always()
 
-      - name: サイズ確認
+      - name: "サイズ確認"
         run: npm run test:size
         if: always()
 
@@ -67,10 +67,10 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: npm ci
 
-      - name: テスト
+      - name: "テスト"
         run: npx vitest tests/small/
         env:
           VITEST_MODE: node.js
@@ -101,12 +101,12 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
-      - name: テスト
+      - name: "テスト"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -115,7 +115,7 @@ jobs:
         env:
           VITEST_MODE: node.js
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()
 
@@ -144,12 +144,12 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
-      - name: テスト
+      - name: "テスト"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -158,6 +158,6 @@ jobs:
         env:
           VITEST_MODE: node.js
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()

@@ -27,12 +27,12 @@ jobs:
         with:
           node-version: ${{ matrix.nodejs-version }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
-      - name: テスト
+      - name: "テスト"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -41,7 +41,7 @@ jobs:
         env:
           VITEST_MODE: node.js
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()
 
@@ -67,14 +67,14 @@ jobs:
         with:
           node-version: 20.x
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           npm i -D playwright@${{ matrix.playwright-version }}
           npx playwright install --with-deps chromium
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
-      - name: テスト
+      - name: "テスト"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -83,6 +83,6 @@ jobs:
         env:
           VITEST_MODE: chromium
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()

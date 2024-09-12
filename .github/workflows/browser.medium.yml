@@ -30,14 +30,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           npm i -D playwright@${{ inputs.playwright-version }}
           npx playwright install --with-deps ${{ inputs.browser-name }}
           bash scripts/pretest/setup_surrealdb.sh ${{ inputs.surrealdb-version }}
 
-      - name: テスト
+      - name: "テスト"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -46,6 +46,6 @@ jobs:
         env:
           VITEST_MODE: ${{ inputs.browser-name }}
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()

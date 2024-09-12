@@ -33,12 +33,12 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           bash scripts/pretest/setup_surrealdb.sh ${{ env.SURREALDB_VERSION }}
 
-      - name: テスト
+      - name: "テスト"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -47,7 +47,7 @@ jobs:
         env:
           VITEST_MODE: node.js
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()
 
@@ -62,11 +62,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          registry-url: "https://registry.npmjs.org"
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: npm ci
 
-      - name: ビルド
+      - name: "ビルド"
         run: npm run build
 
       - name: バージョン設定
@@ -74,9 +75,7 @@ jobs:
           npm --no-git-tag-version version ${{ env.BUMP_PACKAGE_VERSION }}
           npm --no-git-tag-version version "$(npm pkg get version | jq -r)-next.$(date --utc +'%Y%m%dT%H%M%S')"
 
-      - name: 公開
-        uses: JS-DevTools/npm-publish@v3
-        with:
-          token: ${{ secrets.NPM_TOKEN }}
-          access: public
-          tag: ${{ env.PRERELEASE_PACKAGE_TAG }}
+      - name: "公開"
+        run: npm publish --access=public --tag=${{ env.PRERELEASE_PACKAGE_TAG }}
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

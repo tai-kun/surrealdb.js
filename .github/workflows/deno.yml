@@ -37,10 +37,10 @@ jobs:
         with:
           deno-version: ${{ matrix.deno-version }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: npm ci
 
-      - name: テスト
+      - name: "テスト"
         run: deno -A npm:vitest tests/small/
         env:
           VITEST_MODE: deno
@@ -72,12 +72,12 @@ jobs:
         with:
           deno-version: ${{ matrix.deno-version }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
-      - name: テスト
+      - name: "テスト"
         run: |
           touch /tmp/logs
           bun run scripts/pretest/serve.js &>>/tmp/logs &
@@ -86,6 +86,6 @@ jobs:
         env:
           VITEST_MODE: deno
 
-      - name: SurrealDB のログ
+      - name: "SurrealDB のログ"
         run: cat /tmp/logs
         if: always()

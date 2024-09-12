@@ -25,13 +25,13 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: 依存関係をインストール
+      - name: "依存関係をインストール"
         run: |
           npm ci
           npm i -D playwright@${{ inputs.playwright-version }}
           npx playwright install --with-deps ${{ inputs.browser-name }}
 
-      - name: テスト
+      - name: "テスト"
         run: npx vitest tests/small/
         env:
           VITEST_MODE: ${{ inputs.browser-name }}

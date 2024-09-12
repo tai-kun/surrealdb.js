@@ -12,7 +12,7 @@ export interface PreparedQueryOptions<
   U = any,
 > {
   readonly parse?: ((results: unknown[]) => T) | undefined;
-  readonly transform?: ((results: T) => U) | undefined;
+  readonly trans?: ((results: T) => U) | undefined;
 }
 
 export default class PreparedQuery<
@@ -33,32 +33,30 @@ export default class PreparedQuery<
     options: PreparedQueryOptions<T, U> = {},
   ) {
     this._parse = options.parse || passthrough;
-    this._trans = options.transform || passthrough;
+    this._trans = options.trans || passthrough;
   }
 
-  returns<T extends unknown[] = unknown[]>(): PreparedQuery<S, T, U>;
+  as<T extends unknown[] = unknown[]>(): PreparedQuery<S, T, U>;
 
-  returns<T extends unknown[] = unknown[]>(
-    parse: (results: unknown[]) => T,
+  as<T extends unknown[] = unknown[]>(
+    parser: (results: unknown[]) => T,
   ): PreparedQuery<S, T, U>;
 
-  returns(
-    parse: (results: unknown[]) => T = this._parse,
-  ): PreparedQuery<S, T, U> {
+  as(parser: (results: unknown[]) => T = this._parse): PreparedQuery<S, T, U> {
     const This = this.constructor as typeof PreparedQuery;
 
     return new This(this.text, this.vars, this.slots, {
-      parse: parse,
-      transform: this._trans,
+      parse: parser,
+      trans: this._trans,
     });
   }
 
-  transform<U>(operation: (results: T) => U): PreparedQuery<S, T, U> {
+  to<U>(transformer: (results: T) => U): PreparedQuery<S, T, U> {
     const This = this.constructor as typeof PreparedQuery;
 
     return new This(this.text, this.vars, this.slots, {
       parse: this._parse,
-      transform: operation,
+      trans: transformer,
     });
   }
 }

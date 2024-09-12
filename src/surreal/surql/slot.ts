@@ -49,18 +49,18 @@ export default class Slot<
     return options;
   }
 
-  type<TBind extends V>(): Slot<N, true, TBind>;
+  as<TBind extends V>(): Slot<N, true, TBind>;
 
-  type<TBind extends V>(parse: (value: unknown) => TBind): Slot<N, true, TBind>;
+  as<TBind extends V>(parser: (value: unknown) => TBind): Slot<N, true, TBind>;
 
-  type(parse: (value: unknown) => unknown = v => v): Slot<N, true> {
+  as(parser: (value: unknown) => unknown = v => v): Slot<N, true> {
     const This = this.constructor as typeof Slot;
-    const options: Writable<SlotOptions> = { parse };
+    const options: Writable<SlotOptions> = { parse: parser };
 
     if ("defaultValue" in this) {
       options.defaultValue = this.defaultValue;
       // TODO(tai-kun): ここでパースする必要あるか検討 (高コストだけどコンストラクター内でやる？)
-      // options.defaultValue = parse(this.defaultValue);
+      // options.defaultValue = parser(this.defaultValue);
     }
 
     return new This(this.name, true, options);
@@ -82,7 +82,7 @@ export default class Slot<
       formatter: this.fmt,
       defaultValue: this.fmt?.toEncoded?.(defaultValue) || defaultValue,
       // TODO(tai-kun): ここでパースする必要あるか検討 (高コストだけどコンストラクター内でやる？)
-      // defaultValue: this.parse(defaultValue),
+      // defaultValue: this._parse(defaultValue),
     });
   }
 

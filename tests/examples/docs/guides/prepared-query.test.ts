@@ -9,7 +9,7 @@ test("基本的な使い方", async () => {
   }
 
   const CreateUserQuery = surql`CREATE ONLY user:foo CONTENT { age: 42 };`
-    .returns<[{ id: Thing<"user">; age: number }]>();
+    .as<[{ id: Thing<"user">; age: number }]>();
 
   await using db = new Surreal();
   await db.connect(`ws://${host()}`);
@@ -47,7 +47,7 @@ test("クエリーの結果を検証する", async () => {
   ]);
 
   const CreateUserQuery = surql`CREATE ONLY user:bar CONTENT { age: 42 };`
-    .returns(CreatedUserSchema.parse.bind(CreatedUserSchema));
+    .as(CreatedUserSchema.parse.bind(CreatedUserSchema));
 
   await using db = new Surreal();
   await db.connect(`ws://${host()}`);
@@ -80,7 +80,7 @@ test("クエリーに変数を埋め込む", async () => {
 
   const CreateUserQuery = surql`
     CREATE ONLY type::thing('user', ${USERNAME}) CONTENT { age: ${USER_AGE} };`
-    .returns<[{ id: Thing<"user">; age: number }]>();
+    .as<[{ id: Thing<"user">; age: number }]>();
 
   await using db = new Surreal();
   await db.connect(`ws://${host()}`);
@@ -112,14 +112,13 @@ test("クエリーに引数を定義する", async () => {
 
   const UserIdSchema = z.instanceof(Thing).refine(isUserTable);
 
-  const UserIdSlot = surql.slot("id")
-    .type(UserIdSchema.parse.bind(UserIdSchema));
+  const UserIdSlot = surql.slot("id").as(UserIdSchema.parse.bind(UserIdSchema));
 
   const UserAgeSlot = surql.slot("age", 42);
 
   const CreateUserQuery = surql`
     CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };`
-    .returns<[{ id: Thing<"user">; age: number }]>();
+    .as<[{ id: Thing<"user">; age: number }]>();
 
   await using db = new Surreal();
   await db.connect(`ws://${host()}`);

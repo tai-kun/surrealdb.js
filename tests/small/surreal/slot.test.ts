@@ -69,7 +69,7 @@ test("デフォルト値を設定するとオプショナルになる", () => {
 });
 
 test("型を変更する", () => {
-  const slot = surql.slot("foo").type<number>();
+  const slot = surql.slot("foo").as<number>();
   type TSlot = typeof slot;
 
   expectTypeOf<TSlot["name"]>().toEqualTypeOf<"foo">();
@@ -87,7 +87,7 @@ test("型を変更する", () => {
 });
 
 test("バリデーターで型を変更する", () => {
-  const slot = surql.slot("foo").type((v): number => {
+  const slot = surql.slot("foo").as((v): number => {
     if (typeof v === "number") {
       return v;
     }
@@ -112,7 +112,7 @@ test("バリデーターで型を変更する", () => {
 });
 
 test("変数名を変える", () => {
-  const slot1 = surql.slot("foo").type<number>();
+  const slot1 = surql.slot("foo").as<number>();
 
   expectTypeOf<(typeof slot1)["name"]>().toEqualTypeOf<"foo">();
   expect(slot1.name).toBe("foo");
@@ -124,7 +124,7 @@ test("変数名を変える", () => {
 });
 
 test("変数名変更後は必須フラグとデフォルト値が引き継がれる", () => {
-  const slot1 = surql.slot("foo").type<number>().default(42);
+  const slot1 = surql.slot("foo").as<number>().default(42);
 
   expectTypeOf<(typeof slot1)["name"]>().toEqualTypeOf<"foo">();
   expectTypeOf<(typeof slot1)["isRequired"]>().toEqualTypeOf<false>();

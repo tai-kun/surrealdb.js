@@ -31,7 +31,7 @@ test("事前に定義されたクエリー", async () => {
 
   const ValueSlot = surql.slot("value");
 
-  const ReturnValueQuery = surql`RETURN ${ValueSlot}`.returns<[unknown]>();
+  const ReturnValueQuery = surql`RETURN ${ValueSlot}`.as<[unknown]>();
 
   const promise = query(`http://${host()}`, ReturnValueQuery, {
     value: undefined,

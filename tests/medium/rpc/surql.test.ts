@@ -11,14 +11,14 @@ for (const { suite, fmt, url, Surreal, surql } of surreal) {
       await db.signin({ user: "root", pass: "root" });
       await db.use(suite, "slot");
 
-      const UserIdSlot = surql.slot("id").type<Thing<"user">>();
+      const UserIdSlot = surql.slot("id").as<Thing<"user">>();
       const UserAgeSlot = surql.slot("age", 42);
 
       const CreateUserQuery = surql`
         CREATE ONLY ${UserIdSlot} CONTENT {
           age: ${UserAgeSlot},
         };
-      `.returns<[{ id: Thing<"user">; age: number }]>();
+      `.as<[{ id: Thing<"user">; age: number }]>();
 
       const results = await db.query(CreateUserQuery, {
         id: new Thing("user", "tai-kun"),
@@ -38,14 +38,14 @@ for (const { suite, fmt, url, Surreal, surql } of surreal) {
       await db.signin({ user: "root", pass: "root" });
       await db.use(suite, "slot");
 
-      const UserIdSlot = surql.slot("id").type<Thing<"user">>();
+      const UserIdSlot = surql.slot("id").as<Thing<"user">>();
       const UserAgeSlot = surql.slot("age", 42);
 
       const CreateUserQuery = surql`
         CREATE ONLY ${UserIdSlot} CONTENT {
           age: ${UserAgeSlot},
         };
-      `.returns<[{ id: Thing<"user">; age: number }]>();
+      `.as<[{ id: Thing<"user">; age: number }]>();
 
       const query = async () => {
         // @ts-expect-error エラーが期待される。
@@ -60,9 +60,11 @@ for (const { suite, fmt, url, Surreal, surql } of surreal) {
       await db.signin({ user: "root", pass: "root" });
       await db.use(suite, "transform");
 
+      const toSingleRecord = <T>(results: [[T]]): T => results[0][0];
+
       const CreateUserQuery = surql`CREATE usr:foo;`
-        .returns<[[{ id: Thing<"usr"> }]]>()
-        .transform(results => results[0][0]);
+        .as<[[{ id: Thing<"usr"> }]]>()
+        .to(toSingleRecord);
 
       const result = await db.query(CreateUserQuery, {
         id: new Thing("usr", "foo"),

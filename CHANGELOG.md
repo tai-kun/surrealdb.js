@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0-alpha.4](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2024-09-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* **surreal/surql:** メソッド名に統一感出す
+
+### Changes
+
+* **surreal/surql:** メソッド名に統一感出す ([0750def](https://github.com/tai-kun/surrealdb.js/commit/0750def28a9baa79a3a3d4147823ef8cd8b5b41b))
+
 ## [2.0.0-alpha.3](https://github.com/tai-kun/surrealdb.js/compare/v1.4.2...v2.0.0-alpha.3) (2024-09-11)
 
 

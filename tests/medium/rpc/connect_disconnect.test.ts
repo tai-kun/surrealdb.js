@@ -1,3 +1,4 @@
+import { ConnectionConflictError } from "src/errors/client";
 import { describe, expect, test, vi } from "vitest";
 import surreal from "../surreal";
 
@@ -23,18 +24,16 @@ for (const { suite, Surreal, url } of surreal) {
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
     });
 
-    test("接続中に異なるエンドポイントに接続するとエラー", async () => {
+    test(`接続中に異なるエンドポイントに接続するとエラー (${suite})`, async () => {
       await using db = new Surreal();
       await db.connect(url());
+      const err = await db.connect(`${url()}/other`).catch(e => e);
 
-      await expect(async () => await db.connect(`${url()}/other`))
-        .rejects
-        .toThrowErrorMatchingInlineSnapshot(`{
-  "endpoint1": "${url()}/rpc",
-  "endpoint2": "${url()}/other/rpc",
-  "message": "Connection conflict between ${url()}/rpc and ${url()}/other/rpc.",
-  "name": "ConnectionConflictError",
-}`);
+      expect(err).toBeInstanceOf(ConnectionConflictError);
+      expect(err).toMatchObject({
+        endpoint1: `${url()}/rpc`,
+        endpoint2: `${url()}/other/rpc`,
+      });
       expect(db.state).toBe("open");
       expect(db.endpoint?.toString()).toBe(`${url()}/rpc`);
     });

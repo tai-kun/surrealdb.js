@@ -14,7 +14,6 @@ A modular SurrealDB client working in major JavaScript runtimes.
 
 [![Latest Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb?style=flat&logo=npm)](https://www.npmjs.com/package/@tai-kun/surrealdb)
 ![Alpha Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb/alpha?style=flat&logo=npm)
-![Next Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb/next?style=flat&logo=npm)
 
 > [!NOTE]
 > The main branch is currently under development for SurrealDB v2.
@@ -31,14 +30,6 @@ Alpha release:
 ```sh
 npm i @tai-kun/surrealdb@alpha
 ```
-
-<!--
-Canary release:
-
-```sh
-npm i @tai-kun/surrealdb@next
-```
--->
 
 ## Quick Start
 

@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.0.0-alpha.5](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2024-09-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **formatter:** Sec-Websocket-Protocol ヘッダーを必ず指定する
+* **clients/standard:** Jwt の `.getTimeUntilExpiration` を `.getSecondsUntilExpiration` に変更
+
+### Changes
+
+* **clients/standard:** Jwt の `.getTimeUntilExpiration` を `.getSecondsUntilExpiration` に変更 ([c4bd5da](https://github.com/tai-kun/surrealdb.js/commit/c4bd5da9308ee4f7825687b535b47153ee3a5b9d))
+
+
+### Features
+
+* **clients/standard:** Jwt に `.getMillisecondsUntilExpiration` を追加 ([70645a9](https://github.com/tai-kun/surrealdb.js/commit/70645a9d90d91e1e23559d3c3a0d5ca1998b7033))
+
+
+### Bug Fixes
+
+* **engines/websocket:** ライブクエリの結果をすべて受け取る ([95f6c42](https://github.com/tai-kun/surrealdb.js/commit/95f6c4252b5b7d48fe7bcc2b7b0ff5bddcd6e713))
+* **formatter:** Sec-Websocket-Protocol ヘッダーを必ず指定する ([5ba5757](https://github.com/tai-kun/surrealdb.js/commit/5ba5757fd050e7d36be2b7001c6919d2b0ab78b7))
+
 ## [2.0.0-alpha.4](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2024-09-12)
 
 

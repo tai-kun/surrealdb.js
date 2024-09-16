@@ -213,19 +213,19 @@ export default class Client extends Base {
     await this.rpc("invalidate", [], options);
   }
 
-  async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
+  async live<T extends DataType.Uuid | string = DataType.Uuid | string>(
     table: DataType.Table | string,
     options: ClientRpcOptions & { readonly diff: true },
   ): Promise<T & { __diff: true }>;
 
-  async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
+  async live<T extends DataType.Uuid | string = DataType.Uuid | string>(
     table: DataType.Table | string,
     options?:
       | (ClientRpcOptions & { readonly diff?: false | undefined })
       | undefined,
   ): Promise<T & { __diff: false }>;
 
-  async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
+  async live<T extends DataType.Uuid | string = DataType.Uuid | string>(
     table: DataType.Table | string,
     options?: LiveOptions | undefined,
   ): Promise<T & { __diff: boolean }>;

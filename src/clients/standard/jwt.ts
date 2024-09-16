@@ -128,7 +128,7 @@ export default class Jwt implements Encodable {
     return this.#payload.jti;
   }
 
-  getTimeUntilExpiration(): number {
+  getSecondsUntilExpiration(): number {
     return this.expiresAt - Math.floor(Date.now() / 1000);
   }
 

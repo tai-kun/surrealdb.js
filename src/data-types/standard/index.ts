@@ -22,7 +22,7 @@ export {
   type GeometryLineTypes,
 } from "./geometry-line";
 export {
-  type GeoJsonMultiLine,
+  type GeoJsonMultiLineString,
   GeometryMultiLine,
   GeometryMultiLineBase,
   type GeometryMultiLineSource,

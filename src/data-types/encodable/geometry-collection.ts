@@ -12,7 +12,7 @@ import {
   type GeometryLineTypes,
 } from "./geometry-line";
 import {
-  type GeoJsonMultiLine,
+  type GeoJsonMultiLineString,
   GeometryMultiLine,
   type GeometryMultiLineBase,
   type GeometryMultiLineTypes,
@@ -89,7 +89,7 @@ export type GeoJsonCollection = {
     | GeoJsonPoint
     | GeoJsonMultiPoint
     | GeoJsonLineString
-    | GeoJsonMultiLine
+    | GeoJsonMultiLineString
     | GeoJsonPolygon
     | GeoJsonMultiPolygon
   )[];

@@ -1,5 +1,5 @@
 import {
-  type GeoJsonMultiLine,
+  type GeoJsonMultiLineString,
   GeometryMultiLineBase as Base,
   type GeometryMultiLineSource as GeometryMultiLineSourceBase,
   type GeometryMultiLineTypes as GeometryMultiLineTypesBase,
@@ -27,7 +27,7 @@ export type GeometryMultiLineSource<
   T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
 > = GeometryMultiLineSourceBase<T>;
 
-export type { GeoJsonMultiLine };
+export type { GeoJsonMultiLineString };
 
 export class GeometryMultiLineBase<
   T extends GeometryMultiLineTypes = GeometryMultiLineTypes,

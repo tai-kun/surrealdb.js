@@ -29,7 +29,7 @@ export type GeometryMultiLineSource<
   T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
 > = GeometryMultiLineSourceBase<T>;
 
-export type GeoJsonMultiLine = {
+export type GeoJsonMultiLineString = {
   type: "MultiLineString";
   // https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.5
   // For type "MultiLineString", the "coordinates" member is an array of LineString coordinate arrays.
@@ -47,7 +47,7 @@ export class GeometryMultiLineBase<
     return [CBOR_TAG_GEOMETRY_MULTILINE, this.lines];
   }
 
-  toJSON(): GeoJsonMultiLine {
+  toJSON(): GeoJsonMultiLineString {
     return {
       type: this.type,
       coordinates: map(this.lines, p => p.toJSON().coordinates),

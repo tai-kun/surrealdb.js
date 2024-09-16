@@ -13,9 +13,6 @@ export { default as rpc } from "./inline/rpc";
 export type * from "./surql/create-surql";
 export { default as createSurql } from "./surql/create-surql";
 
-export type * from "./surql/init-surreal";
-export { default as initSurreal } from "./surql/init-surreal";
-
 export type * from "./surql/prepared-query";
 export { default as PreparedQuery } from "./surql/prepared-query";
 
@@ -66,3 +63,6 @@ export {
 } from "./default";
 
 export type * from "@tai-kun/surrealdb/types";
+
+export type * from "./init-surreal";
+export { default as initSurreal } from "./init-surreal";

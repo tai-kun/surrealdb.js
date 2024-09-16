@@ -20,7 +20,7 @@ import WebSocketEngine, {
 } from "@tai-kun/surrealdb/engines/websocket";
 import Formatter from "@tai-kun/surrealdb/formatters/cbor";
 import { WebSocket } from "isows";
-import initSurreal from "./surql/init-surreal";
+import initSurreal from "./init-surreal";
 
 const {
   surql,

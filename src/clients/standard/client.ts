@@ -214,25 +214,25 @@ export default class Client extends Base {
   }
 
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
-    table: string | object,
+    table: DataType.Table | string,
     options: ClientRpcOptions & { readonly diff: true },
   ): Promise<T & { __diff: true }>;
 
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
-    table: string | object,
+    table: DataType.Table | string,
     options?:
       | (ClientRpcOptions & { readonly diff?: false | undefined })
       | undefined,
   ): Promise<T & { __diff: false }>;
 
   async live<T extends RpcResultMapping["live"] = RpcResultMapping["live"]>(
-    table: string | object,
+    table: DataType.Table | string,
     options?: LiveOptions | undefined,
   ): Promise<T & { __diff: boolean }>;
 
   // TODO(tai-kun): バッファリングオプションを追加
   async live(
-    table: string | object,
+    table: DataType.Table | string,
     options: LiveOptions | undefined = {},
   ) {
     const { diff, ...rest } = options;
@@ -242,24 +242,24 @@ export default class Client extends Base {
   }
 
   subscribe<
-    I extends string | object,
-    T extends InferLiveResult<I, any, any> = InferLiveResult<I>,
+    T extends InferLiveResult<DataType.Uuid | string, any, any> =
+      InferLiveResult<DataType.Uuid | string>,
   >(
-    queryUuid: I,
+    queryUuid: DataType.Uuid | string,
     callback: LiveHandler<T>,
   ): void {
     this.ee.on(`live_${queryUuid}`, callback as LiveHandler<any>);
   }
 
   unsubscribe(
-    queryUuid: string | object,
+    queryUuid: DataType.Uuid | string,
     callback: LiveHandler<any>,
   ): void {
     this.ee.off(`live_${queryUuid}`, callback);
   }
 
   async kill(
-    queryUuid: string | object | readonly (string | object)[],
+    queryUuid: DataType.Uuid | string | readonly (DataType.Uuid | string)[],
     options?: ClientRpcOptions | undefined,
   ): Promise<void> {
     if (Array.isArray(queryUuid)) {
@@ -619,9 +619,9 @@ export default class Client extends Base {
     T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
     U extends { readonly [p: string]: unknown } = T,
   >(
-    from: string | object | readonly object[],
+    from: DataType.Thing | string | readonly (DataType.Thing | string)[],
     thing: string,
-    to: string | object | readonly object[],
+    to: DataType.Thing | string | readonly (DataType.Thing | string)[],
     data?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T[]>;
@@ -630,17 +630,17 @@ export default class Client extends Base {
     T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
     U extends { readonly [p: string]: unknown } = T,
   >(
-    from: string | object | readonly object[],
-    thing: object,
-    to: string | object | readonly object[],
+    from: DataType.Thing | string | readonly (DataType.Thing | string)[],
+    thing: DataType.Thing,
+    to: DataType.Thing | string | readonly (DataType.Thing | string)[],
     data?: U | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<T>;
 
   async relate(
-    from: string | object | readonly object[],
-    thing: string | object,
-    to: string | object | readonly object[],
+    from: DataType.Thing | string | readonly (DataType.Thing | string)[],
+    thing: DataType.Thing | string,
+    to: DataType.Thing | string | readonly (DataType.Thing | string)[],
     data?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
   ) {

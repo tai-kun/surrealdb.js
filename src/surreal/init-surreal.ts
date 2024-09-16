@@ -3,26 +3,32 @@ import type { ClientConfig } from "@tai-kun/surrealdb/clients/basic";
 import createSurql, {
   type CreateSurqlConfig,
   type Surql,
-} from "./create-surql";
+} from "./surql/create-surql";
 
-type CC = new(config: ClientConfig) => ClientBase;
+type ClientConstructor = new(config: ClientConfig) => ClientBase;
 
-export interface SurrealInit<C extends CC>
+export interface SurrealInit<C extends ClientConstructor>
   extends ClientConfig, Omit<CreateSurqlConfig, "formatter">
 {
   readonly Client: C;
 }
 
-export interface Surreal<C extends CC> {
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/)
+ */
+export interface Surreal<C extends ClientConstructor> {
+  /**
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#constructor)
+   */
   new(): InstanceType<C> & AsyncDisposable;
 }
 
-export interface InitializedSurreal<C extends CC> {
+export interface InitializedSurreal<C extends ClientConstructor> {
   Surreal: Surreal<C>;
   surql: Surql;
 }
 
-export default function initSurreal<C extends CC>(
+export default function initSurreal<C extends ClientConstructor>(
   init: SurrealInit<C>,
 ): InitializedSurreal<C> {
   const {
@@ -32,14 +38,8 @@ export default function initSurreal<C extends CC>(
     ...others
   } = init;
 
-  /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/)
-   */
   // @ts-expect-error
   class Surreal extends Client {
-    /**
-     * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#constructor)
-     */
     constructor() {
       super({
         formatter,

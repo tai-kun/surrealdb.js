@@ -236,9 +236,7 @@ export default class BasicClient {
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#close)
    */
   @mutex
-  close(
-    options: ClientCloseOptions | undefined = {},
-  ): Promise<void> {
+  close(options: ClientCloseOptions | undefined = {}): Promise<void> {
     if (!this.eng) {
       return Promise.resolve();
     }

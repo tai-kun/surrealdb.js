@@ -50,7 +50,7 @@ type WebSocket = WsWebSocket | NativeWebSocket; // isows の型定義はこれ�
 
 export type CreateWebSocket = (
   address: URL,
-  protocol: string | undefined,
+  protocols: string[],
 ) => Promisable<WebSocket>;
 
 export interface WebSocketEngineConfig extends EngineAbcConfig {
@@ -97,7 +97,7 @@ export default class WebSocketEngine extends EngineAbc {
       },
       () => "closed",
     );
-    const ws = await this.newWs(new URL(endpoint), this.fmt.wsFormat);
+    const ws = await this.newWs(new URL(endpoint), this.fmt.wsProtocols);
     ws.addEventListener("error", evt => {
       if (__DEV__) {
         channel.publish("websocket:ws:error", evt);

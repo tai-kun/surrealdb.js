@@ -11,7 +11,6 @@ import {
   MissingNamespaceError,
   ResponseError,
   SurrealTypeError,
-  SurrealValueError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import { cloneSync } from "@tai-kun/surrealdb/formatter";
@@ -182,10 +181,6 @@ export default class HttpEngine extends EngineAbc {
       throw new MissingNamespaceError(conn.database);
     }
 
-    if (!this.fmt.mimeType) {
-      throw new SurrealValueError("non-empty string", this.fmt.mimeType);
-    }
-
     const body: unknown = this.fmt.encodeSync(request);
 
     if (typeof body !== "string" && !(body instanceof Uint8Array)) {
@@ -193,8 +188,8 @@ export default class HttpEngine extends EngineAbc {
     }
 
     const headers: HttpFetcherRequestInit["headers"] = {
-      Accept: this.fmt.mimeType,
-      "Content-Type": this.fmt.mimeType,
+      Accept: this.fmt.contentType,
+      "Content-Type": this.fmt.contentType,
     };
 
     if (conn.namespace != null) {

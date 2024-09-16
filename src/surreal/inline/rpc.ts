@@ -10,7 +10,6 @@ import {
   ResponseError,
   RpcResponseError,
   SurrealTypeError,
-  SurrealValueError,
 } from "@tai-kun/surrealdb/errors";
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
@@ -97,10 +96,6 @@ async function rpc(
     throw new MissingNamespaceError(db);
   }
 
-  if (!fmt.mimeType) {
-    throw new SurrealValueError("non-empty string", fmt.mimeType);
-  }
-
   if (method === "query") {
     params = processQueryRequest({ method, params }).params as [
       text: string,
@@ -115,8 +110,8 @@ async function rpc(
   }
 
   const headers: HttpFetcherRequestInit["headers"] = {
-    Accept: fmt.mimeType,
-    "Content-Type": fmt.mimeType,
+    Accept: fmt.contentType,
+    "Content-Type": fmt.contentType,
   };
 
   if (ns != null) {

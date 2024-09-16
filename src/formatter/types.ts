@@ -22,8 +22,8 @@ export interface Formatter {
   //  config  //
   //////////////
 
-  readonly mimeType?: string | undefined;
-  readonly wsFormat?: string | undefined;
+  readonly contentType: string;
+  readonly wsProtocols: string[];
 
   //////////////
   // encoding //

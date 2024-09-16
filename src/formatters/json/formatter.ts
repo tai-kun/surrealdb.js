@@ -18,7 +18,8 @@ const CONSTRUCTOR_REGEX =
 
 // TODO(tai-kun): isSafeMapKey, isSafeObjectKey をオプションに追加
 export default class JsonFormatter implements Formatter {
-  mimeType = "application/json";
+  contentType = "application/json";
+  wsProtocols = ["json"];
 
   encodeSync(data: unknown): string {
     return JSON.stringify(data);

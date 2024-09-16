@@ -85,8 +85,8 @@ export default class CborFormatter implements Formatter {
   protected encodeOptions: EncodeOptions;
   protected decodeOptions: DecodeOptions;
 
-  mimeType = "application/cbor";
-  wsFormat = "cbor";
+  contentType = "application/cbor";
+  wsProtocols = ["cbor"];
 
   constructor(options: CborFormatterOptions) {
     const {

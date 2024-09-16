@@ -251,9 +251,9 @@ export default class WebSocketEngine extends EngineAbc {
             });
           }
 
-          const { id, action, result } = rpcResp.result;
+          const { id, ...response } = rpcResp.result;
 
-          this.ee.emit(`live_${String(id)}`, { action, result });
+          this.ee.emit(`live_${String(id)}`, response);
         } else {
           throw new RpcResponseError(rpcResp, {
             cause: {

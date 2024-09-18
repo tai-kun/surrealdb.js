@@ -12,7 +12,7 @@ import type {
   SlotLike,
 } from "@tai-kun/surrealdb/types";
 import type { TaskListener } from "@tai-kun/surrealdb/utils";
-import type { IsLiteral, Simplify, UnionToIntersection } from "type-fest";
+import type { Simplify, UnionToIntersection } from "type-fest";
 import type { DataType } from "../../surreal/data-types";
 import Jwt from "./jwt";
 
@@ -50,9 +50,7 @@ export type InferLivePayload<
 export type ActionResult<
   T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
 > = [Extract<keyof T, "id">] extends [never]
-  ? IsLiteral<keyof T> extends true
-    ? Simplify<{ id: string | DataType.Thing } & T>
-  : ({ id: string | DataType.Thing } & T)
+  ? ({ id: string | DataType.Thing } & T)
   : T;
 
 export interface PatchOptions extends ClientRpcOptions {

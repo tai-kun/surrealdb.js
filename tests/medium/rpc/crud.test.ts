@@ -39,8 +39,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         });
 
         expectTypeOf<typeof record>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
           }
         >();
@@ -62,8 +61,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         });
 
         expectTypeOf<typeof record>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
           }
         >();
@@ -88,8 +86,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         );
 
         expectTypeOf<typeof record>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
           }
         >();
@@ -119,10 +116,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         });
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -147,10 +143,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         ]);
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -179,8 +174,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expectTypeOf<typeof record>().toEqualTypeOf<
           // @ts-expect-error オブジェクトが返ってくるはない
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
           }
         >();
@@ -213,10 +207,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -242,10 +235,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -270,8 +262,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         const record = await db.select<{ name: string }>(new Thing("user", 1));
 
         expectTypeOf<typeof record>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
           }
         >();
@@ -306,10 +297,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -337,10 +327,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             age: number;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -394,10 +383,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         });
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -416,10 +404,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         });
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -439,8 +426,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         });
 
         expectTypeOf<typeof record>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
           }
         >();
@@ -478,11 +464,10 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
             age: number;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -515,11 +500,10 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
             age: number;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -551,8 +535,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         });
 
         expectTypeOf<typeof record>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
             age: number;
           }
@@ -594,9 +577,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          ({
-            id: string | DataType.Thing;
-          } & {
+          ({ id: string | DataType.Thing } & {
             age: number;
             [p: string]: unknown;
           })[]
@@ -634,9 +615,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         records.sort((a, b) => a.id.toString().localeCompare(b.id.toString()));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          ({
-            id: string | DataType.Thing;
-          } & {
+          ({ id: string | DataType.Thing } & {
             age: number;
             [p: string]: unknown;
           })[]
@@ -700,10 +679,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         const records = await db.delete<{ name: string }>("user");
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -731,10 +709,9 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         const records = await db.delete<{ name: string }>(new Table("user"));
 
         expectTypeOf<typeof records>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          ({ id: string | DataType.Thing } & {
             name: string;
-          }[]
+          })[]
         >();
 
         expect(records).toStrictEqual([
@@ -762,8 +739,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         const record = await db.delete<{ name: string }>(new Thing("user", 1));
 
         expectTypeOf<typeof record>().toEqualTypeOf<
-          {
-            id: string | DataType.Thing;
+          { id: string | DataType.Thing } & {
             name: string;
           }
         >();

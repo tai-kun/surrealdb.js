@@ -75,7 +75,7 @@ test("再接続", { timeout: 60_000 }, async () => {
 
     // 初期状態
     {
-      expect(ar.enabled);
+      expect(ar.enabled).toBe(true);
       expect(ar.getReconnectionInfo()).toStrictEqual({
         state: "waiting",
         phase: "waiting",

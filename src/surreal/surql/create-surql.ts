@@ -88,17 +88,15 @@ export default function createSurql(config: CreateSurqlConfig): Surql {
       } else {
         text += "$" + varPrefix + j;
 
-        if (j === i) {
+        if (!((varPrefix + j) in vars)) {
           vars[varPrefix + j] = formatter.toEncoded?.(v) || v;
         }
       }
     }
 
-    return new PreparedQuery(
-      formatter.toEncoded?.(text) || text,
-      vars,
-      slots,
-    );
+    return new PreparedQuery(text, vars, slots, {
+      encodedText: formatter.toEncoded?.(text),
+    });
   }
 
   function raw(value: RawValue): Raw {

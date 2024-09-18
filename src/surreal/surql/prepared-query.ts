@@ -13,6 +13,11 @@ export interface PreparedQueryOptions<
 > {
   readonly parse?: ((results: unknown[]) => TResults) | undefined;
   readonly trans?: ((results: TResults) => TTransformed) | undefined;
+  readonly encodedText?:
+    | string
+    | EncodedJSON<string>
+    | EncodedCBOR<string>
+    | undefined;
 }
 
 export default class PreparedQuery<
@@ -20,6 +25,9 @@ export default class PreparedQuery<
   TResults extends unknown[] = unknown[],
   TTransformed = None,
 > implements PreparedQueryLike {
+  readonly text: string | EncodedJSON<string> | EncodedCBOR<string>;
+  readonly originalText: string;
+
   /** @deprecated */
   // @ts-expect-error 型だけ
   readonly __type: TTransformed extends None ? TResults : TTransformed;
@@ -27,11 +35,13 @@ export default class PreparedQuery<
   readonly _trans: (results: TResults) => TTransformed;
 
   constructor(
-    readonly text: string | EncodedJSON<string> | EncodedCBOR<string>,
+    text: string,
     readonly vars: { readonly [p: string]: unknown },
     readonly slots: readonly TSlot[],
     options: PreparedQueryOptions<TResults, TTransformed> = {},
   ) {
+    this.text = options.encodedText || text;
+    this.originalText = text;
     this._parse = options.parse || passthrough;
     this._trans = options.trans || passthrough;
   }
@@ -51,9 +61,10 @@ export default class PreparedQuery<
   ): PreparedQuery<TSlot, TResults, TTransformed> {
     const This = this.constructor as typeof PreparedQuery;
 
-    return new This(this.text, this.vars, this.slots, {
+    return new This(this.originalText, this.vars, this.slots, {
       parse: parser,
       trans: this._trans,
+      encodedText: this.text,
     });
   }
 
@@ -62,9 +73,10 @@ export default class PreparedQuery<
   ): PreparedQuery<TSlot, TResults, TTransformed> {
     const This = this.constructor as typeof PreparedQuery;
 
-    return new This(this.text, this.vars, this.slots, {
+    return new This(this.originalText, this.vars, this.slots, {
       parse: this._parse,
       trans: transformer,
+      encodedText: this.text,
     });
   }
 }

@@ -32,7 +32,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         null: null,
         number: 123,
         string: "文字列",
-        // undefined: undefined,
+        undefined: undefined,
       };
       const expected = {
         bigint: 9007199254740992n,
@@ -41,7 +41,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         null: null,
         number: 123,
         string: "文字列",
-        // undefined: undefined,
+        undefined: undefined,
       };
 
       {
@@ -57,29 +57,6 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         const [output] = await db.query(/*surql*/ `
           RETURN ${toSurql(input)};
         `);
-
-        expect(output).toStrictEqual(expected);
-      }
-    });
-
-    test.fails("undefined を null で返すおそらく SurrealDB 側のバグ", async () => {
-      await using db = new Surreal();
-      await db.connect(url());
-      await db.signin({ user: "root", pass: "root" });
-
-      const input = {
-        undefined: undefined,
-      };
-      const expected = {
-        undefined: undefined,
-      };
-
-      {
-        const [output] = await db.query(
-          /*surql*/ `
-            RETURN $input;`,
-          { input },
-        );
 
         expect(output).toStrictEqual(expected);
       }

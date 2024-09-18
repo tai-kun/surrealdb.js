@@ -465,6 +465,18 @@ export function writeEncodedUtf8String(
   w.writeBytes(value);
 }
 
+function writeUndefined(w: Writer): void {
+  // 仕様では HEADER_UNDEFINED を書き込むほうが正しいと思われるが、SurrealDB は undefined と
+  //  NONE が同値でもタグ付きデータアイテムで NONE を表現する必要がある。
+  // w.writeUint8(HEADER_UNDEFINED);
+
+  // https://github.com/surrealdb/surrealdb/blob/v2.0.1/core/src/rpc/format/cbor/convert.rs#L30
+  // より、NONE のタグは 6
+  w.claim(2); // 1 (header) + 1 (`null` payload)
+  w.data[w.offset++] = 198; // 192 + 6 = 198
+  w.data[w.offset++] = HEADER_UNDEFINED;
+}
+
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writenullable)
  */
@@ -472,7 +484,7 @@ export function writeNullable(w: Writer, value: null | undefined): void {
   if (value === null) {
     w.writeUint8(HEADER_NULL);
   } else {
-    w.writeUint8(HEADER_UNDEFINED);
+    writeUndefined(w);
   }
 }
 
@@ -832,7 +844,7 @@ export function write(
     if (value === null) {
       w.writeUint8(HEADER_NULL);
     } else if (value === undefined) {
-      w.writeUint8(HEADER_UNDEFINED);
+      writeUndefined(w);
     } else if (value === true) {
       w.writeUint8(HEADER_TRUE);
     } else if (value === false) {

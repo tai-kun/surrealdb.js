@@ -2,9 +2,7 @@ import Base, { type ClientRpcOptions } from "@tai-kun/surrealdb/clients/basic";
 import { QueryFailedError } from "@tai-kun/surrealdb/errors";
 import type {
   Auth,
-  LiveData,
-  LiveDiff,
-  LiveResult,
+  LivePayload,
   Patch,
   PreparedQueryLike,
   QueryResult,
@@ -38,16 +36,16 @@ export interface LiveOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
 }
 
-export type LiveHandler<T extends LiveResult<any, any> = LiveResult> =
-  TaskListener<[response: T]>;
+export type LiveHandler<T extends LivePayload<any, any> = LivePayload> =
+  TaskListener<[payload: T]>;
 
-export type InferLiveResult<
-  I extends string | object,
+export type InferLivePayload<
+  I,
   T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
   P extends Patch[] = Patch[],
-> = I extends { __diff: true } ? LiveDiff<T, P>
-  : I extends { __diff: false } ? LiveData<T>
-  : LiveResult<T, P>;
+> = I extends { __diff: false } ? LivePayload.Data<T, string | DataType.Thing>
+  : I extends { __diff: true } ? LivePayload.Diff<T, P, string | DataType.Thing>
+  : LivePayload<T, P>;
 
 export type ActionResult<
   T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
@@ -242,10 +240,10 @@ export default class Client extends Base {
   }
 
   subscribe<
-    T extends InferLiveResult<DataType.Uuid | string, any, any> =
-      InferLiveResult<DataType.Uuid | string>,
+    I,
+    T extends LivePayload<any, any> = InferLivePayload<I>,
   >(
-    queryUuid: DataType.Uuid | string,
+    queryUuid: I,
     callback: LiveHandler<T>,
   ): void {
     this.ee.on(`live_${queryUuid}`, callback as LiveHandler<any>);

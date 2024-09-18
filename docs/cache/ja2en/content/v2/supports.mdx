@@ -6,7 +6,7 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## JavaScript
 
-This SDK uses `bigint`, so it requires ES2020 or later as the JavaScript language specification. In addition, considering the features that this SDK requires at runtime, it is expected to work with the following runtimes:
+This SDK utilizes `bigint` and therefore requires ES2020 or later as the JavaScript language specification. Given the features required by this SDK at runtime, it is expected to function in the following runtimes:
 
 | Runtime | Version |
 | --- | --- |
@@ -20,7 +20,7 @@ This SDK uses `bigint`, so it requires ES2020 or later as the JavaScript languag
 
 ## Testing
 
-We use Vitest and Playwright for testing. We are testing with the minimum runtime versions that these tools work with, so it may actually work with older runtime versions than those listed below.
+We utilize Vitest and Playwright for testing. While we test against the minimum runtime versions required for these tools to function, it's possible that the SDK might work with older versions than those listed below.
 
 ### Server
 
@@ -31,10 +31,9 @@ We use Vitest and Playwright for testing. We are testing with the minimum runtim
 | Deno      | `1.x` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surrealdb.js/actions/workflows/deno.yml) |
 | Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
 
-- Requires SurrealDB v2 or later. Please note that v2 is currently in beta.
-- If using Node.js v22, please be aware that it is not yet LTS.
-- We recommend always using the latest version of Deno.
-- We recommend always using the latest version of Bun.
+- Please note that Node.js v22 is not yet LTS. 
+- It is recommended to always use the latest version of Deno.
+- It is recommended to always use the latest version of Bun. 
 
 ### Browser
 
@@ -44,4 +43,4 @@ We use Vitest and Playwright for testing. We are testing with the minimum runtim
 | Firefox | `>=100` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=main&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml) |
 | WebKit  | `>=15.4` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/webkit.yml?branch=main&style=flat&logo=safari&label=WebKit)](https://github.com/tai-kun/surrealdb.js/actions/workflows/webkit.yml) |
 
-- Supported browsers (engines) correspond to the minimum versions on which Playwright runs in our CI environment.  Therefore, it may work with versions lower than those listed above, but they are not tested. 
+- Supported browsers (engines) align with the minimum versions on which Playwright runs in our CI. Therefore, while it may function with versions older than those listed above, these have not been tested. 

@@ -40,7 +40,7 @@
   "src/content/docs/ja/v2/reference/utils/stateful-promise.mdx": "26248ea62db64f66e58741dbde874513c967b3a95724f1d4282351ebfc323652",
   "src/content/docs/ja/v2/reference/utils/serial.mdx": "ea72eaf9f7f64539f5a44cb5a4c698143c1642f0c8a69d85e419af3e561429bb",
   "src/content/docs/ja/v2/reference/utils/mutex.mdx": "c227370b5626c65be5e191f5c0d465771e1064ff0523e02a5d75b4a2cc19f7d7",
-  "src/content/docs/ja/v2/supports.mdx": "71b962b6122a715a7fabc44be39f256483aaa6c1885daf4e71f248b89a62c7bc",
+  "src/content/docs/ja/v2/supports.mdx": "53a53c722593de3844c3b1961d3792bb7e19aee94f35c9628c6996a7c083a979",
   "src/content/docs/ja/v2/index.mdx": "4572e3405c16c478f9459de50315d53330541f7aaf6214359c953b27c038e0a4",
   "src/content/docs/ja/v2/getting-started.mdx": "48c19450b7cec72f873669e2c0eaab9a7525d88eb1f1472e11c28ea70fab986b",
   "src/content/docs/ja/v2/reference/cbor/tagged.mdx": "c3b5419f0c61cdfa88897fac130f72b8f19311564502ef5523ddc1c2ab724b6b",

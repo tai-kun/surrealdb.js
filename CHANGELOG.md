@@ -1,5 +1,28 @@
 # Changelog
 
+## [2.0.0-alpha.6](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.5...v2.0.0-alpha.6) (2024-09-18)
+
+
+### Changes
+
+* **surreal/surql:** 事前準備されたクエリーがエンコード前のクエリーを保持するようにする ([a0af5e5](https://github.com/tai-kun/surrealdb.js/commit/a0af5e59fa393880254b4b9b0fd9bced35f6e146))
+
+
+### Features
+
+* **data-types:** 実験的な `Future` を実装 ([0ebdadd](https://github.com/tai-kun/surrealdb.js/commit/0ebdadd507bf060bb30e406201452d9d04eaa32a))
+* **data-types:** 実験的な `Range` を実装 ([0874743](https://github.com/tai-kun/surrealdb.js/commit/08747437eafd0bd768254c1bde2c65c947a2c3ce))
+* ライブクエリーに `record` プロパティを追加 ([94ca01c](https://github.com/tai-kun/surrealdb.js/commit/94ca01c8bf9b21cc116f034ca4094a1ea7728641))
+
+
+### Bug Fixes
+
+* **cbor:** `undefined` のエンコードを SurrealDB 式に合わせる ([e9f46a3](https://github.com/tai-kun/surrealdb.js/commit/e9f46a3768bc5727ad352349443976ed88999ab6))
+* **cbor:** SurrealDB との互換性を向上させる ([b7f7ea4](https://github.com/tai-kun/surrealdb.js/commit/b7f7ea4950f15c1cf50b6f832ff1ef32337e322c))
+* **clients/standard:** 型を修正 ([56b138f](https://github.com/tai-kun/surrealdb.js/commit/56b138fdce5cc69d21f244cdf802413d9e9f7a45))
+* **data-types:** multiline -&gt; multilinestring ([d5a21fb](https://github.com/tai-kun/surrealdb.js/commit/d5a21fbd7e75d042fdf93c2d5b17a0219172e74b))
+* **utils:** isLiveResult で record プロパティーの存在を確認する ([553e325](https://github.com/tai-kun/surrealdb.js/commit/553e32587c2875e33c8afd3991e44e0eac78c27e))
+
 ## [2.0.0-alpha.5](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2024-09-16)
 
 

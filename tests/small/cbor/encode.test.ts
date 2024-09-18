@@ -112,7 +112,10 @@ describe("replacer", () => {
 
     expect(encoded).toStrictEqual(
       new Uint8Array([
-        0b111_10111, // mt: 7, ai: 23
+        // 0b111_10111, // mt: 7, ai: 23
+        // SurrealDB では undefined を tagged(tag: 6, value: null) で表現する
+        0b110_00110, // mt: 6, ai: 6
+        0xf6, // null
       ]),
     );
   });

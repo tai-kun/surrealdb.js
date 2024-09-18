@@ -474,7 +474,7 @@ function writeUndefined(w: Writer): void {
   // より、NONE のタグは 6
   w.claim(2); // 1 (header) + 1 (`null` payload)
   w.data[w.offset++] = 198; // 192 + 6 = 198
-  w.data[w.offset++] = HEADER_UNDEFINED;
+  w.data[w.offset++] = HEADER_NULL;
 }
 
 /**

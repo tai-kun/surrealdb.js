@@ -222,7 +222,7 @@ export class _Decoder {
     this.mapType = mapType;
     this.maxDepth = maxDepth;
     this.revivers = toRevivers(reviver);
-    this.revivers.tagged.push(ianaReviver);
+    this.revivers.tagged.push(compatReviver, ianaReviver);
     this.isSafeMapKey = isSafeMapKey;
     this.isSafeObjectKey = isSafeObjectKey;
 
@@ -996,4 +996,15 @@ function toRevivers(reviver: DecoderOptions["reviver"]): {
     tagged: reviver.tagged ? [reviver.tagged] : [],
     simple: reviver.simple ? [reviver.simple] : [],
   };
+}
+
+function compatReviver(t: Tagged) {
+  // https://github.com/surrealdb/surrealdb/blob/v2.0.1/core/src/rpc/format/cbor/convert.rs#L30
+  // https://github.com/surrealdb/surrealdb/blob/v2.0.1/core/src/rpc/format/cbor/convert.rs#L324
+  // より、NONE のタグは 6 で、その値は null
+  if (t.tag === 6 && t.value === null) {
+    return; // undefined
+  }
+
+  return CONTINUE;
 }

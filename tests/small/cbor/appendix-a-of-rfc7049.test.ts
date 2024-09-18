@@ -263,7 +263,9 @@ for (
       encode: true,
     },
     {
-      hex: "f7",
+      // hex: "f7",
+      // SurrealDB では undefined を tagged(tag: 6, value: null) で表現する
+      hex: "c6f6",
       value: undefined,
       decode: true,
       encode: true,

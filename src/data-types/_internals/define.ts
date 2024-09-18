@@ -26,17 +26,17 @@ export function defineAsDuration(o: object): void {
   defineAsValue(o, "duration");
 }
 
-// export function defineAsFuture(o: object): void {
-//   defineAsValue(o, "future");
-// }
+export function defineAsFuture(o: object): void {
+  defineAsValue(o, "future");
+}
 
 export function defineAsUuid(o: object): void {
   defineAsValue(o, "uuid");
 }
 
-export function defineAsRange(o: object): void {
-  defineAsValue(o, "range");
-}
+// export function defineAsRange(o: object): void {
+//   defineAsValue(o, "range");
+// }
 
 // export function defineAsBoundIncluded(o: object): void {
 //   defineAsValue(o, "boundincluded");

@@ -7,6 +7,9 @@ export { default as Decimal } from "./decimal";
 export type * from "./duration";
 export { default as Duration } from "./duration";
 
+export type * from "./future";
+export { default as Future } from "./future";
+
 export {
   GeometryCollection,
   GeometryCollectionBase,

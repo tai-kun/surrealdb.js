@@ -2,6 +2,7 @@ import type {
   Datetime as DecodeOnlyDatetime,
   Decimal as DecodeOnlyDecimal,
   Duration as DecodeOnlyDuration,
+  Future as DecodeOnlyFuture,
   GeometryCollection as DecodeOnlyGeometryCollection,
   GeometryLine as DecodeOnlyGeometryLine,
   GeometryMultiLine as DecodeOnlyGeometryMultiLine,
@@ -12,7 +13,6 @@ import type {
   Table as DecodeOnlyTable,
   Thing as DecodeOnlyThing,
   Uuid as DecodeOnlyUuid,
-  // Future as DecodeOnlyFuture,
   // Range as DecodeOnlyRange,
   // BoundIncluded as DecodeOnlyBoundIncluded,
   // BoundExcluded as DecodeOnlyBoundExcluded,
@@ -21,6 +21,7 @@ import type {
   Datetime as EncodableDatetime,
   Decimal as EncodableDecimal,
   Duration as EncodableDuration,
+  Future as EncodableFuture,
   GeometryCollection as EncodableGeometryCollection,
   GeometryLine as EncodableGeometryLine,
   GeometryMultiLine as EncodableGeometryMultiLine,
@@ -31,7 +32,6 @@ import type {
   Table as EncodableTable,
   Thing as EncodableThing,
   Uuid as EncodableUuid,
-  // Future as EncodableFuture,
   // Range as EncodableRange,
   // BoundIncluded as EncodableBoundIncluded,
   // BoundExcluded as EncodableBoundExcluded,
@@ -40,6 +40,7 @@ import type {
   Datetime as StandardDatetime,
   Decimal as StandardDecimal,
   Duration as StandardDuration,
+  Future as StandardFuture,
   GeometryCollection as StandardGeometryCollection,
   GeometryLine as StandardGeometryLine,
   GeometryMultiLine as StandardGeometryMultiLine,
@@ -50,7 +51,6 @@ import type {
   Table as StandardTable,
   Thing as StandardThing,
   Uuid as StandardUuid,
-  // Future as StandardFuture,
   // Range as StandardRange,
   // BoundIncluded as StandardBoundIncluded,
   // BoundExcluded as StandardBoundExcluded,
@@ -82,10 +82,10 @@ export namespace DataType {
     | EncodableDuration
     | StandardDuration;
 
-  // export type Future =
-  //   | DecodeOnlyFuture
-  //   | EncodableFuture
-  //   | StandardFuture;
+  export type Future =
+    | DecodeOnlyFuture
+    | EncodableFuture
+    | StandardFuture;
 
   export type Uuid =
     | DecodeOnlyUuid
@@ -149,7 +149,7 @@ export type DataType =
   | DataType.Decimal
   | DataType.Datetime
   | DataType.Duration
-  // | DataType.Future
+  | DataType.Future
   | DataType.Uuid
   // | DataType.Range
   // | DataType.BoundIncluded
@@ -189,9 +189,9 @@ export function isDuration<T = DataType.Duration>(o: unknown): o is T {
   return isValue(o, "duration");
 }
 
-// export function isFuture<T = DataType.Future>(o: unknown): o is T {
-//   return isValue(o, "future");
-// }
+export function isFuture<T = DataType.Future>(o: unknown): o is T {
+  return isValue(o, "future");
+}
 
 export function isUuid<T = DataType.Uuid>(o: unknown): o is T {
   return isValue(o, "uuid");

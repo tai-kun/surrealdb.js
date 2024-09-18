@@ -7,6 +7,9 @@ export { default as Decimal } from "./decimal";
 export type * from "./duration";
 export { default as Duration } from "./duration";
 
+export type * from "./future";
+export { default as Future } from "./future";
+
 export {
   type GeoJsonCollection,
   GeometryCollection,
@@ -70,6 +73,7 @@ export {
   CBOR_TAG_DATETIME,
   CBOR_TAG_DECIMAL,
   CBOR_TAG_DURATION,
+  CBOR_TAG_FUTURE,
   CBOR_TAG_GEOMETRY_COLLECTION,
   CBOR_TAG_GEOMETRY_LINE,
   CBOR_TAG_GEOMETRY_MULTILINE,
@@ -81,7 +85,6 @@ export {
   CBOR_TAG_RECORDID,
   CBOR_TAG_TABLE,
   CBOR_TAG_UUID,
-  // CBOR_TAG_FUTURE,
   // CBOR_TAG_RANGE,
   // CBOR_TAG_BOUND_INCLUDED,
   // CBOR_TAG_BOUND_EXCLUDED,

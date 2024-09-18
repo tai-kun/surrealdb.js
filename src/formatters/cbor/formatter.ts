@@ -11,6 +11,7 @@ import type {
   DatetimeSource,
   DecimalSource,
   DurationSource,
+  FutureSource,
   GeometryLineSource,
   GeometryMultiLineSource,
   GeometryMultiPointSource,
@@ -25,6 +26,7 @@ import {
   CBOR_TAG_DATETIME,
   CBOR_TAG_DECIMAL,
   CBOR_TAG_DURATION,
+  CBOR_TAG_FUTURE,
   CBOR_TAG_GEOMETRY_COLLECTION,
   CBOR_TAG_GEOMETRY_LINE,
   CBOR_TAG_GEOMETRY_MULTILINE,
@@ -56,6 +58,7 @@ export interface CborDataTypes {
   readonly Uuid: new(source: UuidSource) => any;
   readonly Table: new(source: TableSource) => any;
   readonly Thing: new(source: ThingSource) => any;
+  readonly Future: new(source: FutureSource) => any;
   readonly Decimal: new(source: DecimalSource) => any;
   readonly Datetime: new(source: DatetimeSource) => any;
   readonly Duration: new(source: DurationSource) => any;
@@ -94,6 +97,7 @@ export default class CborFormatter implements Formatter {
       Uuid,
       Table,
       Thing,
+      Future,
       Decimal,
       Datetime,
       Duration,
@@ -109,6 +113,7 @@ export default class CborFormatter implements Formatter {
       Uuid,
       Table,
       Thing,
+      Future,
       Decimal,
       Datetime,
       Duration,
@@ -143,8 +148,8 @@ export default class CborFormatter implements Formatter {
             case CBOR_TAG_DURATION:
               return new Duration(t.value);
 
-            // case CBOR_TAG_FUTURE:
-            //   return new Future(t.value);
+            case CBOR_TAG_FUTURE:
+              return new Future(t.value);
 
             case CBOR_TAG_UUID:
               return new Uuid(t.value);

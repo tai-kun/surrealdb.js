@@ -2,6 +2,7 @@ import {
   Datetime,
   Decimal,
   Duration,
+  Future,
   GeometryCollection,
   GeometryLine,
   GeometryMultiLine,
@@ -135,6 +136,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         ]),
         decimal: new Decimal("3.1415926"),
         duration: new Duration("1y2w3d4h5m6s7ms8us9ns"),
+        future: new Future("string::concat('Hello', ' ', 'World')"),
         geometryPoint,
         geometryLine,
         geometryPolygon,
@@ -163,6 +165,10 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         uuidv4: new Uuid("e1edeaeb-6413-469a-8e5f-cfbc085a5584"),
         uuidv7: new Uuid("019025ed-803c-7b9a-b0b0-cd884d7bb4fb"),
       };
+      const expected = {
+        ...input,
+        future: "Hello World",
+      };
 
       {
         const [output] = await db.query(
@@ -171,7 +177,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
           { input },
         );
 
-        expect(input).toStrictEqual(output);
+        expect(output).toStrictEqual(expected);
       }
       {
         // おそらく SurrealDB のクエリーパーサーのバグで失敗する。
@@ -180,12 +186,6 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         `);
 
         await expect(promise).rejects.toThrowError();
-
-        // const [output] = await db.query(/*surql*/ `
-        //   RETURN ${toSurql(input)};
-        // `);
-
-        // expect(input).toStrictEqual(output);
       }
     });
   });

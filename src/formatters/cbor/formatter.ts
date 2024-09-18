@@ -8,6 +8,8 @@ import {
   Tagged,
 } from "@tai-kun/surrealdb/cbor";
 import type {
+  BoundExcludedSource,
+  BoundIncludedSource,
   DatetimeSource,
   DecimalSource,
   DurationSource,
@@ -18,11 +20,14 @@ import type {
   GeometryMultiPolygonSource,
   GeometryPointSource,
   GeometryPolygonSource,
+  // RangeSource,
   TableSource,
   ThingSource,
   UuidSource,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import {
+  CBOR_TAG_BOUND_EXCLUDED,
+  CBOR_TAG_BOUND_INCLUDED,
   CBOR_TAG_DATETIME,
   CBOR_TAG_DECIMAL,
   CBOR_TAG_DURATION,
@@ -35,6 +40,7 @@ import {
   CBOR_TAG_GEOMETRY_POINT,
   CBOR_TAG_GEOMETRY_POLYGON,
   CBOR_TAG_NONE,
+  CBOR_TAG_RANGE,
   CBOR_TAG_RECORDID,
   CBOR_TAG_TABLE,
   CBOR_TAG_UUID,
@@ -56,6 +62,7 @@ const hasBuffer = typeof Buffer !== "undefined";
 
 export interface CborDataTypes {
   readonly Uuid: new(source: UuidSource) => any;
+  readonly Range: new(source: readonly [any, any]) => any;
   readonly Table: new(source: TableSource) => any;
   readonly Thing: new(source: ThingSource) => any;
   readonly Future: new(source: FutureSource) => any;
@@ -63,11 +70,13 @@ export interface CborDataTypes {
   readonly Datetime: new(source: DatetimeSource) => any;
   readonly Duration: new(source: DurationSource) => any;
   readonly GeometryLine: new(source: GeometryLineSource) => any;
+  readonly BoundIncluded: new(source: BoundIncludedSource) => any;
+  readonly BoundExcluded: new(source: BoundExcludedSource) => any;
   readonly GeometryPoint: new(source: GeometryPointSource) => any;
   readonly GeometryPolygon: new(source: GeometryPolygonSource) => any;
   readonly GeometryMultiLine: new(source: GeometryMultiLineSource) => any;
   readonly GeometryMultiPoint: new(source: GeometryMultiPointSource) => any;
-  readonly GeometryCollection: new(source: any) => any;
+  readonly GeometryCollection: new(source: readonly any[]) => any;
   readonly GeometryMultiPolygon: new(source: GeometryMultiPolygonSource) => any;
 }
 
@@ -95,6 +104,7 @@ export default class CborFormatter implements Formatter {
       encode = {},
       decode = {},
       Uuid,
+      Range,
       Table,
       Thing,
       Future,
@@ -102,6 +112,8 @@ export default class CborFormatter implements Formatter {
       Datetime,
       Duration,
       GeometryLine,
+      BoundIncluded,
+      BoundExcluded,
       GeometryPoint,
       GeometryPolygon,
       GeometryMultiLine,
@@ -111,6 +123,7 @@ export default class CborFormatter implements Formatter {
     } = options;
     this.dataTypes = {
       Uuid,
+      Range,
       Table,
       Thing,
       Future,
@@ -118,6 +131,8 @@ export default class CborFormatter implements Formatter {
       Datetime,
       Duration,
       GeometryLine,
+      BoundIncluded,
+      BoundExcluded,
       GeometryPoint,
       GeometryPolygon,
       GeometryMultiLine,
@@ -154,14 +169,14 @@ export default class CborFormatter implements Formatter {
             case CBOR_TAG_UUID:
               return new Uuid(t.value);
 
-            // case CBOR_TAG_RANGE:
-            //   return new Range(t.value);
+            case CBOR_TAG_RANGE:
+              return new Range(t.value);
 
-            // case CBOR_TAG_BOUND_INCLUDED:
-            //   return new BoundIncluded(t.value);
+            case CBOR_TAG_BOUND_INCLUDED:
+              return new BoundIncluded(t.value);
 
-            // case CBOR_TAG_BOUND_EXCLUDED:
-            //   return new BoundExcluded(t.value);
+            case CBOR_TAG_BOUND_EXCLUDED:
+              return new BoundExcluded(t.value);
 
             case CBOR_TAG_GEOMETRY_POINT:
               return new GeometryPoint(t.value);

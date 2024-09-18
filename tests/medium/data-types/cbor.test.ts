@@ -1,4 +1,6 @@
 import {
+  BoundExcluded,
+  BoundIncluded,
   Datetime,
   Decimal,
   Duration,
@@ -10,6 +12,7 @@ import {
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
+  Range,
   Table,
   Thing,
   Uuid,
@@ -164,6 +167,101 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         await expect(promise).rejects.toThrowError();
       }
+    });
+
+    describe("Range", () => {
+      test("なんでかパスする", async () => {
+        await using db = new Surreal();
+        await db.connect(url());
+        await db.signin({ user: "root", pass: "root" });
+
+        await expect(
+          db.query(/* surql */ `
+            RETURN 1..3;
+            RETURN 1..;
+            RETURN ..3;
+            RETURN ..;
+          `),
+        )
+          .resolves
+          .toStrictEqual([
+            [new BoundIncluded(1), new BoundExcluded(3)],
+            [new BoundIncluded(1), null],
+            [null, new BoundExcluded(3)],
+            [null, null],
+          ]);
+      });
+
+      test.fails("SurrealDB 側のバグ？", async () => {
+        await using db = new Surreal();
+        await db.connect(url());
+        await db.signin({ user: "root", pass: "root" });
+
+        await expect(
+          db.query(/* surql */ `
+            RETURN 1..3;
+            RETURN 1..;
+            RETURN ..3;
+            RETURN ..;
+          `),
+        )
+          .resolves
+          .toStrictEqual([
+            new Range([new BoundIncluded(1), new BoundExcluded(3)]),
+            new Range([new BoundIncluded(1), null]),
+            new Range([null, new BoundExcluded(3)]),
+            new Range([null, null]),
+          ]);
+      });
+    });
+
+    describe("IdRange", () => {
+      test("なんでかパスする", async () => {
+        await using db = new Surreal();
+        await db.connect(url());
+        await db.signin({ user: "root", pass: "root" });
+
+        await expect(
+          db.query(/* surql */ `
+            RETURN foo:1..3;
+            RETURN foo:1..;
+            RETURN foo:..3;
+            RETURN foo:..;
+          `),
+        )
+          .resolves
+          .toStrictEqual([
+            new Thing("foo", [new BoundIncluded(1), new BoundExcluded(3)]),
+            new Thing("foo", [new BoundIncluded(1), null]),
+            new Thing("foo", [null, new BoundExcluded(3)]),
+            new Thing("foo", [null, null]),
+          ]);
+      });
+
+      test.fails("SurrealDB 側のバグ？", async () => {
+        await using db = new Surreal();
+        await db.connect(url());
+        await db.signin({ user: "root", pass: "root" });
+
+        await expect(
+          db.query(/* surql */ `
+            RETURN foo:1..3;
+            RETURN foo:1..;
+            RETURN foo:..3;
+            RETURN foo:..;
+          `),
+        )
+          .resolves
+          .toStrictEqual([
+            new Thing(
+              "foo",
+              new Range([new BoundIncluded(1), new BoundExcluded(3)]),
+            ),
+            new Thing("foo", new Range([new BoundIncluded(1), null])),
+            new Thing("foo", new Range([null, new BoundExcluded(3)])),
+            new Thing("foo", new Range([null, null])),
+          ]);
+      });
     });
   });
 }

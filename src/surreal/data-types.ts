@@ -1,4 +1,6 @@
 import type {
+  BoundExcluded as DecodeOnlyBoundExcluded,
+  BoundIncluded as DecodeOnlyBoundIncluded,
   Datetime as DecodeOnlyDatetime,
   Decimal as DecodeOnlyDecimal,
   Duration as DecodeOnlyDuration,
@@ -10,14 +12,14 @@ import type {
   GeometryMultiPolygon as DecodeOnlyGeometryMultiPolygon,
   GeometryPoint as DecodeOnlyGeometryPoint,
   GeometryPolygon as DecodeOnlyGeometryPolygon,
+  Range as DecodeOnlyRange,
   Table as DecodeOnlyTable,
   Thing as DecodeOnlyThing,
   Uuid as DecodeOnlyUuid,
-  // Range as DecodeOnlyRange,
-  // BoundIncluded as DecodeOnlyBoundIncluded,
-  // BoundExcluded as DecodeOnlyBoundExcluded,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import type {
+  BoundExcluded as EncodableBoundExcluded,
+  BoundIncluded as EncodableBoundIncluded,
   Datetime as EncodableDatetime,
   Decimal as EncodableDecimal,
   Duration as EncodableDuration,
@@ -29,14 +31,14 @@ import type {
   GeometryMultiPolygon as EncodableGeometryMultiPolygon,
   GeometryPoint as EncodableGeometryPoint,
   GeometryPolygon as EncodableGeometryPolygon,
+  Range as EncodableRange,
   Table as EncodableTable,
   Thing as EncodableThing,
   Uuid as EncodableUuid,
-  // Range as EncodableRange,
-  // BoundIncluded as EncodableBoundIncluded,
-  // BoundExcluded as EncodableBoundExcluded,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import type {
+  BoundExcluded as StandardBoundExcluded,
+  BoundIncluded as StandardBoundIncluded,
   Datetime as StandardDatetime,
   Decimal as StandardDecimal,
   Duration as StandardDuration,
@@ -48,12 +50,10 @@ import type {
   GeometryMultiPolygon as StandardGeometryMultiPolygon,
   GeometryPoint as StandardGeometryPoint,
   GeometryPolygon as StandardGeometryPolygon,
+  Range as StandardRange,
   Table as StandardTable,
   Thing as StandardThing,
   Uuid as StandardUuid,
-  // Range as StandardRange,
-  // BoundIncluded as StandardBoundIncluded,
-  // BoundExcluded as StandardBoundExcluded,
 } from "@tai-kun/surrealdb/data-types/standard";
 
 export namespace DataType {
@@ -92,20 +92,20 @@ export namespace DataType {
     | EncodableUuid
     | StandardUuid;
 
-  // export type Range =
-  //   | DecodeOnlyRange
-  //   | EncodableRange
-  //   | StandardRange;
+  export type Range =
+    | DecodeOnlyRange
+    | EncodableRange
+    | StandardRange;
 
-  // export type BoundIncluded =
-  //   | DecodeOnlyBoundIncluded
-  //   | EncodableBoundIncluded
-  //   | StandardBoundIncluded;
+  export type BoundIncluded =
+    | DecodeOnlyBoundIncluded
+    | EncodableBoundIncluded
+    | StandardBoundIncluded;
 
-  // export type BoundExcluded =
-  //   | DecodeOnlyBoundExcluded
-  //   | EncodableBoundExcluded
-  //   | StandardBoundExcluded;
+  export type BoundExcluded =
+    | DecodeOnlyBoundExcluded
+    | EncodableBoundExcluded
+    | StandardBoundExcluded;
 
   export type GeometryPoint =
     | DecodeOnlyGeometryPoint
@@ -151,9 +151,9 @@ export type DataType =
   | DataType.Duration
   | DataType.Future
   | DataType.Uuid
-  // | DataType.Range
-  // | DataType.BoundIncluded
-  // | DataType.BoundExcluded
+  | DataType.Range
+  | DataType.BoundIncluded
+  | DataType.BoundExcluded
   | DataType.GeometryPoint
   | DataType.GeometryLine
   | DataType.GeometryPolygon
@@ -197,21 +197,21 @@ export function isUuid<T = DataType.Uuid>(o: unknown): o is T {
   return isValue(o, "uuid");
 }
 
-// export function isRange<T = DataType.Range>(o: unknown): o is T {
-//   return isValue(o, "range");
-// }
+export function isRange<T = DataType.Range>(o: unknown): o is T {
+  return isValue(o, "range");
+}
 
-// export function isBoundIncluded<T = DataType.BoundIncluded>(
-//   o: unknown,
-// ): o is T {
-//   return isValue(o, "boundincluded");
-// }
+export function isBoundIncluded<T = DataType.BoundIncluded>(
+  o: unknown,
+): o is T {
+  return isValue(o, "boundincluded");
+}
 
-// export function isBoundExcluded<T = DataType.BoundExcluded>(
-//   o: unknown,
-// ): o is T {
-//   return isValue(o, "boundexcluded");
-// }
+export function isBoundExcluded<T = DataType.BoundExcluded>(
+  o: unknown,
+): o is T {
+  return isValue(o, "boundexcluded");
+}
 
 export function isGeometryPoint<T = DataType.GeometryPoint>(
   o: unknown,

@@ -1,3 +1,9 @@
+export type * from "./bound-excluded";
+export { default as BoundExcluded } from "./bound-excluded";
+
+export type * from "./bound-included";
+export { default as BoundIncluded } from "./bound-included";
+
 export type * from "./datetime";
 export { default as Datetime } from "./datetime";
 
@@ -60,6 +66,8 @@ export {
   type GeometryPolygonTypes,
 } from "./geometry-polygon";
 
+export { Range, RangeBase, type RangeSource, type RangeTypes } from "./range";
+
 export type * from "./table";
 export { default as Table } from "./table";
 
@@ -70,6 +78,8 @@ export type * from "./uuid";
 export { default as Uuid } from "./uuid";
 
 export {
+  CBOR_TAG_BOUND_EXCLUDED,
+  CBOR_TAG_BOUND_INCLUDED,
   CBOR_TAG_DATETIME,
   CBOR_TAG_DECIMAL,
   CBOR_TAG_DURATION,
@@ -82,11 +92,9 @@ export {
   CBOR_TAG_GEOMETRY_POINT,
   CBOR_TAG_GEOMETRY_POLYGON,
   CBOR_TAG_NONE,
+  CBOR_TAG_RANGE,
   CBOR_TAG_RECORDID,
   CBOR_TAG_TABLE,
   CBOR_TAG_UUID,
-  // CBOR_TAG_RANGE,
-  // CBOR_TAG_BOUND_INCLUDED,
-  // CBOR_TAG_BOUND_EXCLUDED,
   type Encodable,
 } from "./spec";

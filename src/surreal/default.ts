@@ -1,5 +1,7 @@
 import Client from "@tai-kun/surrealdb/clients/standard";
 import {
+  BoundExcluded,
+  BoundIncluded,
   Datetime,
   Decimal,
   Duration,
@@ -11,6 +13,7 @@ import {
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
+  Range,
   Table,
   Thing,
   Uuid,
@@ -49,6 +52,7 @@ const {
   },
   formatter: /* @__PURE__ */ new Formatter({
     Uuid,
+    Range,
     Table,
     Thing,
     Future,
@@ -56,6 +60,8 @@ const {
     Datetime,
     Duration,
     GeometryLine,
+    BoundExcluded,
+    BoundIncluded,
     GeometryPoint,
     GeometryPolygon,
     GeometryMultiLine,
@@ -66,6 +72,8 @@ const {
 });
 
 export {
+  BoundExcluded,
+  BoundIncluded,
   Datetime,
   Decimal,
   Duration,
@@ -77,6 +85,7 @@ export {
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
+  Range,
   surql,
   Surreal,
   Table,

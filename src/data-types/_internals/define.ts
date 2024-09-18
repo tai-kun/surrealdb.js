@@ -34,17 +34,17 @@ export function defineAsUuid(o: object): void {
   defineAsValue(o, "uuid");
 }
 
-// export function defineAsRange(o: object): void {
-//   defineAsValue(o, "range");
-// }
+export function defineAsRange(o: object): void {
+  defineAsValue(o, "range");
+}
 
-// export function defineAsBoundIncluded(o: object): void {
-//   defineAsValue(o, "boundincluded");
-// }
+export function defineAsBoundIncluded(o: object): void {
+  defineAsValue(o, "boundincluded");
+}
 
-// export function defineAsBoundExcluded(o: object): void {
-//   defineAsValue(o, "boundexcluded");
-// }
+export function defineAsBoundExcluded(o: object): void {
+  defineAsValue(o, "boundexcluded");
+}
 
 export function defineAsGeometryPoint(o: object): void {
   defineAsValue(o, "geometrypoint");

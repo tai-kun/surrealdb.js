@@ -1,3 +1,9 @@
+export type * from "./bound-excluded";
+export { default as BoundExcluded } from "./bound-excluded";
+
+export type * from "./bound-included";
+export { default as BoundIncluded } from "./bound-included";
+
 export type * from "./datetime";
 export { default as Datetime } from "./datetime";
 
@@ -52,6 +58,8 @@ export {
   type GeometryPolygonSource,
   type GeometryPolygonTypes,
 } from "./geometry-polygon";
+
+export { Range, RangeBase, type RangeSource, type RangeTypes } from "./range";
 
 export type * from "./table";
 export { default as Table } from "./table";

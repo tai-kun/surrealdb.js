@@ -29,6 +29,8 @@ export type * from "./utils/types";
 
 export {
   type DataType,
+  isBoundExcluded,
+  isBoundIncluded,
   isDatetime,
   isDecimal,
   isDuration,
@@ -40,12 +42,15 @@ export {
   isGeometryMultiPolygon,
   isGeometryPoint,
   isGeometryPolygon,
+  isRange,
   isTable,
   isThing,
   isUuid,
 } from "./data-types";
 
 export {
+  BoundExcluded,
+  BoundIncluded,
   Datetime,
   Decimal,
   Duration,
@@ -57,6 +62,7 @@ export {
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
+  Range,
   surql,
   Surreal,
   Table,

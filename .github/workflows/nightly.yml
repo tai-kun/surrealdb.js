@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         nodejs-version:
-          - "20.x"
           - "22.x"
         surrealdb-version:
           - "nightly"
@@ -53,7 +52,6 @@ jobs:
       fail-fast: false
       matrix:
         playwright-version:
-          - "1.23" # Chromium 104
           - "latest"
         surrealdb-version:
           - "nightly"

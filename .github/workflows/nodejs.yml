@@ -86,11 +86,10 @@ jobs:
           # TODO(tai-kun): v18 だけなんか失敗する。要調査。
           # - "18.x"
           - "20.x"
-          - "^22.5.1"
+          - "22.x"
         surrealdb-version:
-          - "beta"
-          # - "v2.0.0"
-          # - "latest"
+          - "v2.0.0"
+          - "latest"
     steps:
       - uses: actions/checkout@v4
 
@@ -131,9 +130,8 @@ jobs:
           # - "18.x"
           - "20.x"
         surrealdb-version:
-          - "beta"
-          # - "v2.0.0"
-          # - "latest"
+          - "v2.0.0"
+          - "latest"
     steps:
       - uses: actions/checkout@v4
 

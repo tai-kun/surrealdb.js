@@ -45,47 +45,46 @@ jobs:
         env:
           VITEST_MODE: deno
 
-  # medium:
-  #   name: medium (deno@${{ matrix.deno-version }}, surrealdb@${{ matrix.surrealdb-version }})
-  #   runs-on: ubuntu-latest
-  #   timeout-minutes: 30
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       deno-version:
-  #         - "1.x"
-  #       surrealdb-version:
-  #         - "beta"
-  #         # - "v2.0.0"
-  #         # - "latest"
-  #   steps:
-  #     - uses: actions/checkout@v4
+  medium:
+    name: medium (deno@${{ matrix.deno-version }}, surrealdb@${{ matrix.surrealdb-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        deno-version:
+          - "1.x"
+        surrealdb-version:
+          - "v2.0.0"
+          - "latest"
+    steps:
+      - uses: actions/checkout@v4
 
-  #     - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@v2
 
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: "20.x"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
 
-  #     - name: Deno ${{ matrix.deno-version }}
-  #       uses: denoland/setup-deno@v1
-  #       with:
-  #         deno-version: ${{ matrix.deno-version }}
+      - name: Deno ${{ matrix.deno-version }}
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: ${{ matrix.deno-version }}
 
-  #     - name: "依存関係をインストール"
-  #       run: |
-  #         npm ci
-  #         bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
+      - name: "依存関係をインストール"
+        run: |
+          npm ci
+          bash scripts/pretest/setup_surrealdb.sh ${{ matrix.surrealdb-version }}
 
-  #     - name: "テスト"
-  #       run: |
-  #         touch /tmp/logs
-  #         bun run scripts/pretest/serve.js &>>/tmp/logs &
+      - name: "テスト"
+        run: |
+          touch /tmp/logs
+          bun run scripts/pretest/serve.js &>>/tmp/logs &
 
-  #         deno -A npm:vitest tests/medium/
-  #       env:
-  #         VITEST_MODE: deno
+          deno -A npm:vitest tests/medium/
+        env:
+          VITEST_MODE: deno
 
-  #     - name: "SurrealDB のログ"
-  #       run: cat /tmp/logs
-  #       if: always()
+      - name: "SurrealDB のログ"
+        run: cat /tmp/logs
+        if: always()

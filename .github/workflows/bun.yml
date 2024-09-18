@@ -52,9 +52,8 @@ jobs:
           - "1.1.13"
           - "latest"
         surrealdb-version:
-          - "beta"
-          # - "v2.0.0"
-          # - "latest"
+          - "v2.0.0"
+          - "latest"
     steps:
       - uses: actions/checkout@v4
 

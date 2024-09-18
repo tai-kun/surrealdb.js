@@ -14,7 +14,7 @@ on:
 
 env:
   NODE_VERSION: 20.x
-  SURREALDB_VERSION: beta
+  SURREALDB_VERSION: latest
   PLAYWRIGHT_VERSION: latest
 
 jobs:

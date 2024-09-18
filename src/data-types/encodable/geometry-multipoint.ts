@@ -17,12 +17,12 @@ type PointBase = new(
   source: any,
 ) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type GeometryMultiPointTypes<P extends PointBase = PointBase> =
-  GeometryMultiPointTypesBase<P>;
+export type GeometryMultiPointTypes<TPoint extends PointBase = PointBase> =
+  GeometryMultiPointTypesBase<TPoint>;
 
 export type GeometryMultiPointSource<
-  T extends GeometryMultiPointTypes = GeometryMultiPointTypes,
-> = GeometryMultiPointSourceBase<T>;
+  TTypes extends GeometryMultiPointTypes = GeometryMultiPointTypes,
+> = GeometryMultiPointSourceBase<TTypes>;
 
 export type GeoJsonMultiPoint = {
   type: "MultiPoint";
@@ -31,11 +31,11 @@ export type GeoJsonMultiPoint = {
   coordinates: GeoJsonPoint["coordinates"][];
 };
 
-export class GeometryMultiPointBase<T extends GeometryMultiPointTypes>
-  extends Base<T>
+export class GeometryMultiPointBase<TTypes extends GeometryMultiPointTypes>
+  extends Base<TTypes>
   implements Encodable
 {
-  get coordinates(): InstanceType<T["Point"]>["coordinates"][] {
+  get coordinates(): InstanceType<TTypes["Point"]>["coordinates"][] {
     return map(this.points, p => p.coordinates);
   }
 

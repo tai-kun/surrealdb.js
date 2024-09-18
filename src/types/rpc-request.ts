@@ -187,7 +187,7 @@ export type RpcRequest =
 
 export type RpcMethod = RpcRequest["method"];
 
-export type RpcParams<M extends RpcMethod = RpcMethod> = Extract<
+export type RpcParams<TMethod extends RpcMethod = RpcMethod> = Extract<
   RpcRequest,
-  { method: M }
+  { method: TMethod }
 >["params"];

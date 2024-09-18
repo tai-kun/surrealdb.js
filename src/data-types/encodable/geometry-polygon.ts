@@ -22,12 +22,12 @@ type LineBase = new(
   source: any,
 ) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export type GeometryPolygonTypes<L extends LineBase = LineBase> =
-  GeometryPolygonTypesBase<L>;
+export type GeometryPolygonTypes<TLine extends LineBase = LineBase> =
+  GeometryPolygonTypesBase<TLine>;
 
 export type GeometryPolygonSource<
-  T extends GeometryPolygonTypes = GeometryPolygonTypes,
-> = GeometryPolygonSourceBase<T>;
+  TTypes extends GeometryPolygonTypes = GeometryPolygonTypes,
+> = GeometryPolygonSourceBase<TTypes>;
 
 export type GeoJsonPolygon = {
   type: "Polygon";
@@ -39,11 +39,11 @@ export type GeoJsonPolygon = {
 };
 
 export class GeometryPolygonBase<
-  T extends GeometryPolygonTypes = GeometryPolygonTypes,
-> extends Base<T> implements Encodable {
+  TTypes extends GeometryPolygonTypes = GeometryPolygonTypes,
+> extends Base<TTypes> implements Encodable {
   get coordinates(): [
-    InstanceType<T["Line"]>["coordinates"],
-    ...InstanceType<T["Line"]>["coordinates"][],
+    InstanceType<TTypes["Line"]>["coordinates"],
+    ...InstanceType<TTypes["Line"]>["coordinates"][],
   ] {
     return map(this.polygon, l => l.coordinates);
   }

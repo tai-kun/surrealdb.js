@@ -1,7 +1,7 @@
-export type QueryResultOk<T = unknown> = {
+export type QueryResultOk<TResult = unknown> = {
   status: "OK";
   time: string;
-  result: T;
+  result: TResult;
 };
 
 export type QueryResultErr = {
@@ -10,4 +10,6 @@ export type QueryResultErr = {
   result: string;
 };
 
-export type QueryResult<T = unknown> = QueryResultOk<T> | QueryResultErr;
+export type QueryResult<TResult = unknown> =
+  | QueryResultOk<TResult>
+  | QueryResultErr;

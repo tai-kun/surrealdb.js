@@ -16,20 +16,20 @@ export type CreateInlineRpcOptions = Omit<InlineRpcOptions, "signal"> & {
   readonly timeout?: number | undefined;
 };
 
-interface RpcWithRequiredParams<M extends InlineRpcMethod> {
-  <T extends RpcResultMapping[M]>(
-    method: M,
-    options: InlineRpcOptions & { readonly params: RpcParams<M> },
-  ): Promise<T>;
+interface RpcWithRequiredParams<TMethod extends InlineRpcMethod> {
+  <TResult extends RpcResultMapping[TMethod]>(
+    method: TMethod,
+    options: InlineRpcOptions & { readonly params: RpcParams<TMethod> },
+  ): Promise<TResult>;
 }
 
-interface RpcWithOptionalParams<M extends InlineRpcMethod> {
-  <T extends RpcResultMapping[M]>(
-    method: M,
+interface RpcWithOptionalParams<TMethod extends InlineRpcMethod> {
+  <TResult extends RpcResultMapping[TMethod]>(
+    method: TMethod,
     options?:
-      | (InlineRpcOptions & { readonly params?: RpcParams<M> })
+      | (InlineRpcOptions & { readonly params?: RpcParams<TMethod> })
       | undefined,
-  ): Promise<T>;
+  ): Promise<TResult>;
 }
 
 /**
@@ -41,9 +41,9 @@ export default function createRpc(
 ): UnionToIntersection<
   ValueOf<
     {
-      [M in InlineRpcMethod]: undefined extends RpcParams<M>
-        ? RpcWithOptionalParams<M>
-        : RpcWithRequiredParams<M>;
+      [TMethod in InlineRpcMethod]: undefined extends RpcParams<TMethod>
+        ? RpcWithOptionalParams<TMethod>
+        : RpcWithRequiredParams<TMethod>;
     }
   >
 > {

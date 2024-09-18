@@ -15,32 +15,32 @@ type PointBase = new(
   source: any,
 ) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type GeometryMultiPointTypes<P extends PointBase = PointBase> =
-  GeometryMultiPointTypesBase<P>;
+export type GeometryMultiPointTypes<TPoint extends PointBase = PointBase> =
+  GeometryMultiPointTypesBase<TPoint>;
 
 export type GeometryMultiPointSource<
-  T extends GeometryMultiPointTypes = GeometryMultiPointTypes,
-> = GeometryMultiPointSourceBase<T>;
+  TTypes extends GeometryMultiPointTypes = GeometryMultiPointTypes,
+> = GeometryMultiPointSourceBase<TTypes>;
 
 export type { GeoJsonMultiPoint };
 
-export class GeometryMultiPointBase<T extends GeometryMultiPointTypes>
-  extends Base<T>
+export class GeometryMultiPointBase<TTypes extends GeometryMultiPointTypes>
+  extends Base<TTypes>
 {
   // @ts-expect-error readonly を外すだけ。
-  override points: InstanceType<T["Point"]>[];
+  override points: InstanceType<TTypes["Point"]>[];
 
-  override get coordinates(): InstanceType<T["Point"]>["coordinates"][] {
+  override get coordinates(): InstanceType<TTypes["Point"]>["coordinates"][] {
     return this.points.map(p => p.coordinates);
   }
 
-  override set coordinates(source: GeometryMultiPointSource<T>) {
+  override set coordinates(source: GeometryMultiPointSource<TTypes>) {
     this.points = map(
       source,
       (p: any) =>
         (p instanceof this.types.Point
           ? p
-          : new this.types.Point(p)) as InstanceType<T["Point"]>,
+          : new this.types.Point(p)) as InstanceType<TTypes["Point"]>,
     );
   }
 

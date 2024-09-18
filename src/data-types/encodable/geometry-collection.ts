@@ -68,17 +68,24 @@ type MultiPolygonBase = new(
 ) => GeometryMultiPolygonBase<GeometryMultiPolygonTypes<PolygonBase>>;
 
 export type GeometryCollectionTypes<
-  Pt extends PointBase = PointBase,
-  MPt extends MultiPointBase = MultiPointBase,
-  Li extends LineBase = LineBase,
-  MLi extends MultiLineBase = MultiLineBase,
-  Pg extends PolygonBase = PolygonBase,
-  MPg extends MultiPolygonBase = MultiPolygonBase,
-> = GeometryCollectionTypesBase<Pt, MPt, Li, MLi, Pg, MPg>;
+  TPoint extends PointBase = PointBase,
+  TMultiPoint extends MultiPointBase = MultiPointBase,
+  TLine extends LineBase = LineBase,
+  TMultiLine extends MultiLineBase = MultiLineBase,
+  TPolygon extends PolygonBase = PolygonBase,
+  TMultiPolygon extends MultiPolygonBase = MultiPolygonBase,
+> = GeometryCollectionTypesBase<
+  TPoint,
+  TMultiPoint,
+  TLine,
+  TMultiLine,
+  TPolygon,
+  TMultiPolygon
+>;
 
 export type GeometryCollectionSource<
-  T extends GeometryCollectionTypes = GeometryCollectionTypes,
-> = GeometryCollectionSourceBase<T>;
+  TTypes extends GeometryCollectionTypes = GeometryCollectionTypes,
+> = GeometryCollectionSourceBase<TTypes>;
 
 export type GeoJsonCollection = {
   type: "GeometryCollection";
@@ -96,8 +103,8 @@ export type GeoJsonCollection = {
 };
 
 export class GeometryCollectionBase<
-  T extends GeometryCollectionTypes = GeometryCollectionTypes,
-> extends Base<T> implements Encodable {
+  TTypes extends GeometryCollectionTypes = GeometryCollectionTypes,
+> extends Base<TTypes> implements Encodable {
   get geometries(): GeoJsonCollection["geometries"] {
     return this.collection.map(p => p.toJSON());
   }

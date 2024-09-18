@@ -11,38 +11,38 @@ export type InlineQueryOptions = InlineRpcOptions;
 /**
  * @experimental
  */
-function query<T extends readonly unknown[] = unknown[]>(
+function query<TResults extends readonly unknown[] = unknown[]>(
   endpoint: string | URL,
   surql: string,
   vars?: { readonly [p: string]: unknown } | undefined,
   options?: InlineQueryOptions | undefined,
-): Promise<T>;
+): Promise<TResults>;
 
 /**
  * @experimental
  */
-function query<T>(
+function query<TType>(
   endpoint: string | URL,
   surql: Override<PreparedQueryLike, {
     readonly slots: readonly (never | SlotLike<string, false>)[];
-    readonly __type: T;
+    readonly __type: TType;
   }>,
   vars?: { readonly [p: string]: unknown } | undefined,
   options?: InlineQueryOptions | undefined,
-): Promise<T>;
+): Promise<TType>;
 
 /**
  * @experimental
  */
-function query<S extends SlotLike, T>(
+function query<TSlot extends SlotLike, TType>(
   endpoint: string | URL,
   surql: Override<PreparedQueryLike, {
-    readonly slots: readonly S[];
-    readonly __type: T;
+    readonly slots: readonly TSlot[];
+    readonly __type: TType;
   }>,
-  vars: Simplify<InferSlotVars<S> & { readonly [p: string]: unknown }>,
+  vars: Simplify<InferSlotVars<TSlot> & { readonly [p: string]: unknown }>,
   options?: InlineQueryOptions | undefined,
-): Promise<T>;
+): Promise<TType>;
 
 async function query(
   endpoint: string | URL,

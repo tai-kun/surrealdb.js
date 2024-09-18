@@ -8,28 +8,28 @@ import {
   map,
 } from "../_internals/geometry";
 
-export type GeometryPointTypes<C extends Coord = Coord> = {
-  readonly Coord: C;
+export type GeometryPointTypes<TCoord extends Coord = Coord> = {
+  readonly Coord: TCoord;
 };
 
 export type GeometryPointSource<
-  T extends GeometryPointTypes = GeometryPointTypes,
+  TTypes extends GeometryPointTypes = GeometryPointTypes,
 > = readonly [
-  x: CoordArg<T["Coord"]> | CoordValue<T["Coord"]>,
-  y: CoordArg<T["Coord"]> | CoordValue<T["Coord"]>,
+  x: CoordArg<TTypes["Coord"]> | CoordValue<TTypes["Coord"]>,
+  y: CoordArg<TTypes["Coord"]> | CoordValue<TTypes["Coord"]>,
 ];
 
-export class GeometryPointBase<T extends GeometryPointTypes>
+export class GeometryPointBase<TTypes extends GeometryPointTypes>
   implements Geometry
 {
   readonly type = "Point" as const;
 
   readonly point: readonly [
-    x: CoordValue<T["Coord"]>,
-    y: CoordValue<T["Coord"]>,
+    x: CoordValue<TTypes["Coord"]>,
+    y: CoordValue<TTypes["Coord"]>,
   ];
 
-  constructor(source: GeometryPointSource<T>, readonly types: T) {
+  constructor(source: GeometryPointSource<TTypes>, readonly types: TTypes) {
     this.point = map(source, arg => coord(types.Coord, arg));
     defineAsGeometryPoint(this);
   }

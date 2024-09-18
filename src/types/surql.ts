@@ -1,12 +1,12 @@
 export type SlotLike<
-  N extends string = string,
-  R extends boolean = boolean,
-  V = unknown,
+  TName extends string = string,
+  TRequired extends boolean = boolean,
+  TValue = unknown,
 > = {
-  readonly name: N;
-  readonly isRequired: R;
-  readonly defaultValue?: V;
-  readonly _parse: (value: unknown) => V;
+  readonly name: TName;
+  readonly isRequired: TRequired;
+  readonly defaultValue?: TValue;
+  readonly _parse: (value: unknown) => TValue;
 };
 
 export type PreparedQueryLike = {

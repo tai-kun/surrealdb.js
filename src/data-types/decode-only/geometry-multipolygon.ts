@@ -20,31 +20,36 @@ type PolygonBase = new(
   source: any,
 ) => GeometryPolygonBase<GeometryPolygonTypes<LineBase>>;
 
-export type GeometryMultiPolygonTypes<P extends PolygonBase = PolygonBase> = {
-  readonly Polygon: P;
+export type GeometryMultiPolygonTypes<
+  TPolygon extends PolygonBase = PolygonBase,
+> = {
+  readonly Polygon: TPolygon;
 };
 
 export type GeometryMultiPolygonSource<
-  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+  TTypes extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
 > = readonly (
-  | ConstructorParameters<T["Polygon"]>[0]
-  | InstanceType<T["Polygon"]>
+  | ConstructorParameters<TTypes["Polygon"]>[0]
+  | InstanceType<TTypes["Polygon"]>
 )[];
 
 export class GeometryMultiPolygonBase<
-  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+  TTypes extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
 > implements Geometry {
   readonly type = "MultiPolygon" as const;
 
-  readonly polygons: readonly InstanceType<T["Polygon"]>[];
+  readonly polygons: readonly InstanceType<TTypes["Polygon"]>[];
 
-  constructor(source: GeometryMultiPolygonSource<T>, readonly types: T) {
+  constructor(
+    source: GeometryMultiPolygonSource<TTypes>,
+    readonly types: TTypes,
+  ) {
     this.polygons = map(
       source,
       (p: any) =>
         (p instanceof types.Polygon
           ? p
-          : new types.Polygon(p)) as InstanceType<T["Polygon"]>,
+          : new types.Polygon(p)) as InstanceType<TTypes["Polygon"]>,
     );
     defineAsGeometryMultiPolygon(this);
   }

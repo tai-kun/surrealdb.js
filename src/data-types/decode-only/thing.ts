@@ -10,21 +10,21 @@ export type ThingIdSource =
   | object; // DataItem.Array, DataItem.Map, DataItem.Map, Uuid, Range
 
 export type ThingSource<
-  T extends ThingTbSource = ThingTbSource,
-  I extends ThingIdSource = ThingIdSource,
+  TTb extends ThingTbSource = ThingTbSource,
+  TId extends ThingIdSource = ThingIdSource,
 > = readonly [
-  tb: T,
-  id: I,
+  tb: TTb,
+  id: TId,
 ];
 
 export default class Thing<
-  T extends ThingTbSource = ThingTbSource,
-  I extends ThingIdSource = ThingIdSource,
+  TTb extends ThingTbSource = ThingTbSource,
+  TId extends ThingIdSource = ThingIdSource,
 > {
-  readonly tb: T;
-  readonly id: I;
+  readonly tb: TTb;
+  readonly id: TId;
 
-  constructor(source: ThingSource<T, I>) {
+  constructor(source: ThingSource<TTb, TId>) {
     [this.tb, this.id] = source;
     defineAsThing(this);
   }

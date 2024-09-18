@@ -58,7 +58,7 @@ export default class JsonFormatter implements Formatter {
     }
   }
 
-  toEncoded<T>(data: T): EncodedJSON<T> {
+  toEncoded<TData>(data: TData): EncodedJSON<TData> {
     if (data instanceof EncodedJSON) {
       return data;
     }

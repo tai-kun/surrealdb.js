@@ -3,10 +3,10 @@ import { defineAsTable } from "../_internals/define";
 
 export type TableSource = DataItem.Utf8String.FixedLength["value"];
 
-export default class Table<T extends TableSource = TableSource> {
-  readonly name: T;
+export default class Table<TName extends TableSource = TableSource> {
+  readonly name: TName;
 
-  constructor(value: T) {
+  constructor(value: TName) {
     this.name = value;
     defineAsTable(this);
   }

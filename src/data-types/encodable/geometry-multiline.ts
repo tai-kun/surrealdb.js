@@ -22,12 +22,12 @@ type LineBase = new(
   source: any,
 ) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export type GeometryMultiLineTypes<L extends LineBase = LineBase> =
-  GeometryMultiLineTypesBase<L>;
+export type GeometryMultiLineTypes<TLine extends LineBase = LineBase> =
+  GeometryMultiLineTypesBase<TLine>;
 
 export type GeometryMultiLineSource<
-  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
-> = GeometryMultiLineSourceBase<T>;
+  TTypes extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> = GeometryMultiLineSourceBase<TTypes>;
 
 export type GeoJsonMultiLineString = {
   type: "MultiLineString";
@@ -37,9 +37,9 @@ export type GeoJsonMultiLineString = {
 };
 
 export class GeometryMultiLineBase<
-  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
-> extends Base<T> implements Encodable {
-  get coordinates(): InstanceType<T["Line"]>["coordinates"][] {
+  TTypes extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> extends Base<TTypes> implements Encodable {
+  get coordinates(): InstanceType<TTypes["Line"]>["coordinates"][] {
     return map(this.lines, p => p.coordinates);
   }
 

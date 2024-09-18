@@ -20,51 +20,54 @@ type LineBase = new(
   source: any,
 ) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export type GeometryPolygonTypes<L extends LineBase = LineBase> =
-  GeometryPolygonTypesBase<L>;
+export type GeometryPolygonTypes<TLine extends LineBase = LineBase> =
+  GeometryPolygonTypesBase<TLine>;
 
 export type GeometryPolygonSource<
-  T extends GeometryPolygonTypes = GeometryPolygonTypes,
-> = GeometryPolygonSourceBase<T>;
+  TTypes extends GeometryPolygonTypes = GeometryPolygonTypes,
+> = GeometryPolygonSourceBase<TTypes>;
 
 export type { GeoJsonPolygon };
 
 export class GeometryPolygonBase<
-  T extends GeometryPolygonTypes = GeometryPolygonTypes,
-> extends Base<T> {
+  TTypes extends GeometryPolygonTypes = GeometryPolygonTypes,
+> extends Base<TTypes> {
   // @ts-expect-error readonly を外すだけ。
-  override polygon: [InstanceType<T["Line"]>, ...InstanceType<T["Line"]>[]];
+  override polygon: [
+    InstanceType<TTypes["Line"]>,
+    ...InstanceType<TTypes["Line"]>[],
+  ];
 
   override get coordinates(): [
-    InstanceType<T["Line"]>["coordinates"],
-    ...InstanceType<T["Line"]>["coordinates"][],
+    InstanceType<TTypes["Line"]>["coordinates"],
+    ...InstanceType<TTypes["Line"]>["coordinates"][],
   ] {
     return map(this.polygon, l => l.coordinates);
   }
 
-  override set coordinates(source: GeometryPolygonSource<T>) {
+  override set coordinates(source: GeometryPolygonSource<TTypes>) {
     this.polygon = map(
       source,
       (l: any) =>
         (l instanceof this.types.Line
           ? l
-          : new this.types.Line(l)) as InstanceType<T["Line"]>,
+          : new this.types.Line(l)) as InstanceType<TTypes["Line"]>,
     );
   }
 
-  get exteriorRing(): InstanceType<T["Line"]> {
+  get exteriorRing(): InstanceType<TTypes["Line"]> {
     return this.polygon[0];
   }
 
-  set exteriorRing(v: InstanceType<T["Line"]>) {
+  set exteriorRing(v: InstanceType<TTypes["Line"]>) {
     this.polygon = [v, ...this.interiorRings];
   }
 
-  get interiorRings(): InstanceType<T["Line"]>[] {
+  get interiorRings(): InstanceType<TTypes["Line"]>[] {
     return this.polygon.slice(1);
   }
 
-  set interiorRings(v: InstanceType<T["Line"]>[]) {
+  set interiorRings(v: InstanceType<TTypes["Line"]>[]) {
     this.polygon = [this.exteriorRing, ...v];
   }
 

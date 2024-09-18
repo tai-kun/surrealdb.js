@@ -158,9 +158,9 @@ export default class BasicClient {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#on)
    */
-  on<K extends keyof EngineEventMap>(
-    event: K,
-    listener: TaskListener<EngineEventMap[K]>,
+  on<TEvent extends keyof EngineEventMap>(
+    event: TEvent,
+    listener: TaskListener<EngineEventMap[TEvent]>,
   ): void {
     this.ee.on(event, listener);
   }
@@ -168,9 +168,9 @@ export default class BasicClient {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#off)
    */
-  off<K extends keyof EngineEventMap>(
-    event: K,
-    listener: TaskListener<EngineEventMap[K]>,
+  off<TEvent extends keyof EngineEventMap>(
+    event: TEvent,
+    listener: TaskListener<EngineEventMap[TEvent]>,
   ): void {
     // 誤ってすべてのイベントリスナーを解除してしまわないようにするため、
     // listener が無い場合はエラーを投げる。
@@ -184,10 +184,10 @@ export default class BasicClient {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#once)
    */
-  once<K extends keyof EngineEventMap>(
-    event: K,
+  once<TEvent extends keyof EngineEventMap>(
+    event: TEvent,
     options?: TaskListenerOptions | undefined,
-  ): StatefulPromise<EngineEventMap[K]> {
+  ): StatefulPromise<EngineEventMap[TEvent]> {
     return this.ee.once(event, options);
   }
 
@@ -263,11 +263,11 @@ export default class BasicClient {
     }
   }
 
-  async rpc<M extends RpcMethod, T extends RpcResult<M>>(
-    method: M,
-    params: RpcParams<M>,
+  async rpc<TMethod extends RpcMethod, TResult extends RpcResult<TMethod>>(
+    method: TMethod,
+    params: RpcParams<TMethod>,
     options: ClientRpcOptions | undefined = {},
-  ): Promise<T> {
+  ): Promise<TResult> {
     const { signal = getTimeoutSignal(5_000) } = options;
 
     if (this.eng?.state !== "open") {
@@ -287,14 +287,17 @@ export default class BasicClient {
   }
 }
 
-async function rpc<M extends RpcMethod, T extends RpcResult<M>>(
+async function rpc<
+  TMethod extends RpcMethod,
+  TResult extends RpcResult<TMethod>,
+>(
   args: {
     readonly engine: EngineAbc;
     readonly signal: AbortSignal;
-    readonly method: M;
-    readonly params: RpcParams<M>;
+    readonly method: TMethod;
+    readonly params: RpcParams<TMethod>;
   },
-): Promise<T> {
+): Promise<TResult> {
   const resp: RpcResponse<any> = await args.engine.rpc({
     signal: args.signal,
     // @ts-expect-error

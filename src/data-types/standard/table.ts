@@ -5,17 +5,17 @@ import {
 
 export type * from "../encodable/table";
 
-export interface TableLike<T extends TableSource = TableSource> {
-  readonly name: T;
+export interface TableLike<TName extends TableSource = TableSource> {
+  readonly name: TName;
 }
 
-export default class Table<T extends TableSource = TableSource>
-  extends Base<T>
+export default class Table<TName extends TableSource = TableSource>
+  extends Base<TName>
 {
   // @ts-expect-error readonly を外すだけ。
-  name: T;
+  name: TName;
 
-  constructor(value: T | TableLike<T>) {
+  constructor(value: TName | TableLike<TName>) {
     super(typeof value === "string" ? value : value.name);
   }
 

@@ -10,34 +10,39 @@ type PointBase = new(
   source: any,
 ) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type GeometryLineTypes<P extends PointBase = PointBase> = {
-  readonly Point: P;
+export type GeometryLineTypes<TPoint extends PointBase = PointBase> = {
+  readonly Point: TPoint;
 };
 
 export type GeometryLineSource<
-  T extends GeometryLineTypes = GeometryLineTypes,
+  TTypes extends GeometryLineTypes = GeometryLineTypes,
 > = readonly [
-  (ConstructorParameters<T["Point"]>[0] | InstanceType<T["Point"]>),
-  (ConstructorParameters<T["Point"]>[0] | InstanceType<T["Point"]>),
-  ...(ConstructorParameters<T["Point"]>[0] | InstanceType<T["Point"]>)[],
+  (ConstructorParameters<TTypes["Point"]>[0] | InstanceType<TTypes["Point"]>),
+  (ConstructorParameters<TTypes["Point"]>[0] | InstanceType<TTypes["Point"]>),
+  ...(
+    | ConstructorParameters<TTypes["Point"]>[0]
+    | InstanceType<TTypes["Point"]>
+  )[],
 ];
 
-export class GeometryLineBase<T extends GeometryLineTypes> implements Geometry {
+export class GeometryLineBase<TTypes extends GeometryLineTypes>
+  implements Geometry
+{
   readonly type = "LineString" as const;
 
   readonly line: readonly [
-    InstanceType<T["Point"]>,
-    InstanceType<T["Point"]>,
-    ...InstanceType<T["Point"]>[],
+    InstanceType<TTypes["Point"]>,
+    InstanceType<TTypes["Point"]>,
+    ...InstanceType<TTypes["Point"]>[],
   ];
 
-  constructor(source: GeometryLineSource<T>, readonly types: T) {
+  constructor(source: GeometryLineSource<TTypes>, readonly types: TTypes) {
     this.line = map(
       source,
       (p: any) =>
         (p instanceof types.Point
           ? p
-          : new types.Point(p)) as InstanceType<T["Point"]>,
+          : new types.Point(p)) as InstanceType<TTypes["Point"]>,
     );
     defineAsGeometryLine(this);
   }

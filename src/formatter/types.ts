@@ -29,7 +29,9 @@ export interface Formatter {
   // encoding //
   //////////////
 
-  readonly toEncoded?: <T>(data: T) => EncodedCBOR<T> | EncodedJSON<T>;
+  readonly toEncoded?: <TData>(
+    data: TData,
+  ) => EncodedCBOR<TData> | EncodedJSON<TData>;
   readonly encodeSync: (data: unknown) => EncodedData;
   // readonly encodeStream?: () => PromiseLike<unknown>;
 

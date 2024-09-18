@@ -17,12 +17,12 @@ type PointBase = new(
   source: any,
 ) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type GeometryLineTypes<P extends PointBase = PointBase> =
-  GeometryLineTypesBase<P>;
+export type GeometryLineTypes<TPoint extends PointBase = PointBase> =
+  GeometryLineTypesBase<TPoint>;
 
 export type GeometryLineSource<
-  T extends GeometryLineTypes = GeometryLineTypes,
-> = GeometryLineSourceBase<T>;
+  TTypes extends GeometryLineTypes = GeometryLineTypes,
+> = GeometryLineSourceBase<TTypes>;
 
 export type GeoJsonLineString = {
   type: "LineString";
@@ -36,13 +36,14 @@ export type GeoJsonLineString = {
   ];
 };
 
-export class GeometryLineBase<T extends GeometryLineTypes> extends Base<T>
+export class GeometryLineBase<TTypes extends GeometryLineTypes>
+  extends Base<TTypes>
   implements Encodable
 {
   get coordinates(): [
-    InstanceType<T["Point"]>["coordinates"],
-    InstanceType<T["Point"]>["coordinates"],
-    ...InstanceType<T["Point"]>["coordinates"][],
+    InstanceType<TTypes["Point"]>["coordinates"],
+    InstanceType<TTypes["Point"]>["coordinates"],
+    ...InstanceType<TTypes["Point"]>["coordinates"][],
   ] {
     return map(this.line, p => p.coordinates);
   }

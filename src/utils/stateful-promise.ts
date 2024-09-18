@@ -6,44 +6,44 @@ export type StatefulPromiseState = "pending" | "fulfilled" | "rejected";
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#constructor)
  */
-export type StatefulPromiseExecutor<T> = (
-  resolve: (value: T | PromiseLike<T>) => void,
+export type StatefulPromiseExecutor<TValue> = (
+  resolve: (value: TValue | PromiseLike<TValue>) => void,
   reject: (reason: unknown) => void,
 ) => void;
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/)
  */
-export default class StatefulPromise<T> implements PromiseLike<T> {
+export default class StatefulPromise<TValue> implements PromiseLike<TValue> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#resolve)
    */
-  static resolve<T = void>(value?: T | PromiseLike<T>) {
+  static resolve<TValue = void>(value?: TValue | PromiseLike<TValue>) {
     if (value && typeof value === "object" && value.constructor === this) {
       return value as never;
     }
 
-    return new this<T>(resolve => resolve(value!));
+    return new this<TValue>(resolve => resolve(value!));
   }
 
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#reject)
    */
-  static reject<T = never>(reason?: unknown): StatefulPromise<T> {
-    return new this<T>((_, reject) => reject(reason));
+  static reject<TValue = never>(reason?: unknown): StatefulPromise<TValue> {
+    return new this<TValue>((_, reject) => reject(reason));
   }
 
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#withresolvers)
    */
-  static withResolvers<T>(): {
-    promise: StatefulPromise<T>;
-    resolve: (value: T | PromiseLike<T>) => void;
+  static withResolvers<TValue>(): {
+    promise: StatefulPromise<TValue>;
+    resolve: (value: TValue | PromiseLike<TValue>) => void;
     reject: (reason: unknown) => void;
   } {
-    let resolve: (value: T | PromiseLike<T>) => void;
+    let resolve: (value: TValue | PromiseLike<TValue>) => void;
     let reject: (reason: unknown) => void;
-    const promise = new this<T>((res, rej) => {
+    const promise = new this<TValue>((res, rej) => {
       resolve = res;
       reject = rej;
     });
@@ -58,11 +58,11 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#try)
    */
-  static try<T, A extends readonly unknown[]>(
-    func: (...args: A) => T | PromiseLike<T>,
-    ...args: A
-  ): StatefulPromise<T> {
-    return new this<T>((resolve, reject) => {
+  static try<TValue, TArgs extends readonly unknown[]>(
+    func: (...args: TArgs) => TValue | PromiseLike<TValue>,
+    ...args: TArgs
+  ): StatefulPromise<TValue> {
+    return new this<TValue>((resolve, reject) => {
       try {
         resolve(func(...args));
       } catch (e) {
@@ -79,9 +79,9 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#allrejected)
    */
-  static allRejected<T>(
-    promises: Iterable<T>,
-    extract: (item: T) => unknown,
+  static allRejected<TItem>(
+    promises: Iterable<TItem>,
+    extract: (item: TItem) => unknown,
   ): StatefulPromise<unknown[]>;
 
   static allRejected(
@@ -119,8 +119,8 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#constructor)
    */
-  constructor(executor: StatefulPromiseExecutor<T>) {
-    this._promise = new Promise<T>(executor).then(
+  constructor(executor: StatefulPromiseExecutor<TValue>) {
+    this._promise = new Promise<TValue>(executor).then(
       value => {
         this._value = value;
         this._state = "fulfilled";
@@ -142,11 +142,19 @@ export default class StatefulPromise<T> implements PromiseLike<T> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#then)
    */
-  then<R1 = T, R2 = never>(
-    onFulfilled?: ((value: T) => R1 | PromiseLike<R1>) | undefined | null,
-    onRejected?: ((reason: unknown) => R2 | PromiseLike<R2>) | undefined | null,
-  ): StatefulPromise<R1 | R2> {
-    const This = this.constructor as typeof StatefulPromise<R1 | R2>;
+  then<TFulfilledValue = TValue, TRejectedValue = never>(
+    onFulfilled?:
+      | ((value: TValue) => TFulfilledValue | PromiseLike<TFulfilledValue>)
+      | undefined
+      | null,
+    onRejected?:
+      | ((reason: unknown) => TRejectedValue | PromiseLike<TRejectedValue>)
+      | undefined
+      | null,
+  ): StatefulPromise<TFulfilledValue | TRejectedValue> {
+    const This = this.constructor as typeof StatefulPromise<
+      TFulfilledValue | TRejectedValue
+    >;
 
     return new This((resolve, reject) => {
       (this._promise || Promise.resolve())

@@ -31,12 +31,18 @@ export type ConnectionState =
   | "closed";
 
 export namespace ConnectionInfo {
-  type Info<S extends ConnectionState, E, N, D, T> = {
-    state: S;
-    endpoint: E;
-    namespace: N;
-    database: D;
-    token: T;
+  type Info<
+    TState extends ConnectionState,
+    TEndpoint,
+    TNamespace,
+    TDatabase,
+    TToken,
+  > = {
+    state: TState;
+    endpoint: TEndpoint;
+    namespace: TNamespace;
+    database: TDatabase;
+    token: TToken;
   };
 
   export type Connecting = Info<"connecting", URL, null, null, null>;
@@ -69,15 +75,15 @@ export type ConnectionInfo =
 /**
  * {@link TransitionArgs}
  */
-type _TransitionArgs<S, T> =
-  | OptionalOnNull<T>
+type _TransitionArgs<TState, TConnInfo> =
+  | OptionalOnNull<TConnInfo>
   // state のみ必須なら、その値だけを受け入れられるようにする。
-  | (NonNullKeysOf<T> extends "state" ? S : never);
+  | (NonNullKeysOf<TConnInfo> extends "state" ? TState : never);
 
 export type TransitionArgs = {
-  [S in ConnectionState]: _TransitionArgs<
-    S,
-    Extract<ConnectionInfo, { state: S }>
+  [TState in ConnectionState]: _TransitionArgs<
+    TState,
+    Extract<ConnectionInfo, { state: TState }>
   >;
 }[ConnectionState];
 
@@ -104,12 +110,12 @@ function transArgsToConnInfo(args: TransitionArgs): ConnectionInfo {
 export type EngineEventMap =
   & {
     // 状態遷移に関するイベント。
-    [S in ConnectionState]: [
+    [TState in ConnectionState]: [
       result:
         // 状態遷移に成功した場合。
-        | { state: S; error?: never }
+        | { state: TState; error?: never }
         // 状態遷移に失敗した場合。
-        | { state: S; error: unknown },
+        | { state: TState; error: unknown },
     ];
   }
   & {

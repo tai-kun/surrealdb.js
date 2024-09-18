@@ -10,31 +10,34 @@ type PointBase = new(
   source: any,
 ) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type GeometryMultiPointTypes<P extends PointBase = PointBase> = {
-  readonly Point: P;
+export type GeometryMultiPointTypes<TPoint extends PointBase = PointBase> = {
+  readonly Point: TPoint;
 };
 
 export type GeometryMultiPointSource<
-  T extends GeometryMultiPointTypes = GeometryMultiPointTypes,
+  TTypes extends GeometryMultiPointTypes = GeometryMultiPointTypes,
 > = readonly (
-  | ConstructorParameters<T["Point"]>[0]
-  | InstanceType<T["Point"]>
+  | ConstructorParameters<TTypes["Point"]>[0]
+  | InstanceType<TTypes["Point"]>
 )[];
 
-export class GeometryMultiPointBase<T extends GeometryMultiPointTypes>
+export class GeometryMultiPointBase<TTypes extends GeometryMultiPointTypes>
   implements Geometry
 {
   readonly type = "MultiPoint" as const;
 
-  readonly points: readonly InstanceType<T["Point"]>[];
+  readonly points: readonly InstanceType<TTypes["Point"]>[];
 
-  constructor(source: GeometryMultiPointSource<T>, readonly types: T) {
+  constructor(
+    source: GeometryMultiPointSource<TTypes>,
+    readonly types: TTypes,
+  ) {
     this.points = map(
       source,
       (p: any) =>
         (p instanceof types.Point
           ? p
-          : new types.Point(p)) as InstanceType<T["Point"]>,
+          : new types.Point(p)) as InstanceType<TTypes["Point"]>,
     );
     defineAsGeometryMultiPoint(this);
   }

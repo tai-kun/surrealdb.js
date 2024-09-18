@@ -4,17 +4,17 @@ import TaskQueue, { type TaskOptions, type TaskRunnerArgs } from "./task-queue";
 interface TypedMap<T> {
   clear(): void;
   delete(key: keyof T): boolean;
-  get<K extends keyof T>(key: K): T[K] | undefined;
-  set<K extends keyof T>(key: K, value: T[K]): this;
+  get<TEvent extends keyof T>(key: TEvent): T[TEvent] | undefined;
+  set<TEvent extends keyof T>(key: TEvent, value: T[TEvent]): this;
   keys(): IterableIterator<keyof T>;
 }
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/)
  */
-export type TaskListener<A extends unknown[]> = (
+export type TaskListener<TArgs extends unknown[]> = (
   runnerArgs: TaskRunnerArgs,
-  ...args: A
+  ...args: TArgs
 ) => void | PromiseLike<void>;
 
 /**
@@ -25,13 +25,15 @@ export interface TaskListenerOptions extends TaskOptions {}
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/)
  */
-export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
+export default class TaskEmitter<
+  TEventMap extends Record<string | number, unknown[]>,
+> {
   protected readonly _queue = new TaskQueue();
   protected readonly _listeners = new Map() as TypedMap<
     {
-      [P in keyof T]: {
-        original: TaskListener<T[P]>;
-        dispatch: (args: T[P]) => StatefulPromise<unknown>;
+      [P in keyof TEventMap]: {
+        original: TaskListener<TEventMap[P]>;
+        dispatch: (args: TEventMap[P]) => StatefulPromise<unknown>;
       }[];
     }
   >;
@@ -39,10 +41,10 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#on)
    */
-  on<K extends keyof T>(
+  on<TEvent extends keyof TEventMap>(
     this: this,
-    event: K,
-    listener: TaskListener<T[K]>,
+    event: TEvent,
+    listener: TaskListener<TEventMap[TEvent]>,
   ): void {
     let listeners = this._listeners.get(event);
 
@@ -62,7 +64,10 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#off)
    */
-  off<K extends keyof T>(event: K, listener?: TaskListener<T[K]>): void {
+  off<TEvent extends keyof TEventMap>(
+    event: TEvent,
+    listener?: TaskListener<TEventMap[TEvent]>,
+  ): void {
     const listeners = this._listeners.get(event);
 
     if (listeners) {
@@ -85,58 +90,65 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#once)
    */
-  once<K extends keyof T>(
-    event: K,
+  once<TEvent extends keyof TEventMap>(
+    event: TEvent,
     options: TaskListenerOptions | undefined = {},
-  ): StatefulPromise<T[K]> & {
+  ): StatefulPromise<TEventMap[TEvent]> & {
     readonly cancel: () => StatefulPromise<void>;
   } {
     let cancelFn: () => StatefulPromise<void>;
-    const promise = new StatefulPromise<T[K]>((resolve, reject) => {
-      const { signal } = options;
+    const promise = new StatefulPromise<TEventMap[TEvent]>(
+      (resolve, reject) => {
+        const { signal } = options;
 
-      if (signal?.aborted) {
-        reject(signal.reason);
-        return;
-      }
-
-      const removeAllListeners = () => {
-        signal?.removeEventListener("abort", abortHandler);
-        this.off(event, taskListener);
-      };
-      const taskListener: TaskListener<T[K]> = (_, ...args) => {
-        removeAllListeners();
-        resolve(args);
-      };
-      const abortHandler = () => {
-        this.off(event, taskListener);
-        reject(signal!.reason);
-      };
-      cancelFn = function cancel(this: StatefulPromise<T[K]>) {
-        removeAllListeners();
-
-        if (this.state === "pending") {
-          reject("canceled");
+        if (signal?.aborted) {
+          reject(signal.reason);
+          return;
         }
 
-        return this.then(() => {}, () => {});
-      };
-
-      try {
-        this.on(event, taskListener);
-        signal?.addEventListener("abort", abortHandler, { once: true });
-      } catch (e) {
-        try {
+        const removeAllListeners = () => {
           signal?.removeEventListener("abort", abortHandler);
-        } catch {}
+          this.off(event, taskListener);
+        };
+        const taskListener: TaskListener<TEventMap[TEvent]> = (
+          _,
+          ...args
+        ) => {
+          removeAllListeners();
+          resolve(args);
+        };
+        const abortHandler = () => {
+          this.off(event, taskListener);
+          reject(signal!.reason);
+        };
+        cancelFn = function cancel(
+          this: StatefulPromise<TEventMap[TEvent]>,
+        ) {
+          removeAllListeners();
+
+          if (this.state === "pending") {
+            reject("canceled");
+          }
+
+          return this.then(() => {}, () => {});
+        };
 
         try {
-          this.off(event, taskListener);
-        } catch {}
+          this.on(event, taskListener);
+          signal?.addEventListener("abort", abortHandler, { once: true });
+        } catch (e) {
+          try {
+            signal?.removeEventListener("abort", abortHandler);
+          } catch {}
 
-        reject(e);
-      }
-    });
+          try {
+            this.off(event, taskListener);
+          } catch {}
+
+          reject(e);
+        }
+      },
+    );
 
     return Object.assign(promise, {
       cancel: cancelFn!.bind(promise),
@@ -146,9 +158,9 @@ export default class TaskEmitter<T extends Record<string | number, unknown[]>> {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#emit)
    */
-  emit<K extends keyof T>(
-    event: K,
-    ...args: T[K]
+  emit<TEvent extends keyof TEventMap>(
+    event: TEvent,
+    ...args: TEventMap[TEvent]
   ): undefined | StatefulPromise<unknown>[] {
     const listeners = this._listeners.get(event);
 

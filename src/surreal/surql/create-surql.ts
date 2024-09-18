@@ -5,16 +5,21 @@ import Raw, { type RawValue } from "./raw";
 import Slot from "./slot";
 
 export interface Surql {
-  <V extends unknown[] = unknown[]>(
+  <TValue extends unknown[] = unknown[]>(
     texts: readonly string[] | TemplateStringsArray,
-    ...values: V
-  ): PreparedQuery<Extract<V[number], Slot>>;
+    ...values: TValue
+  ): PreparedQuery<Extract<TValue[number], Slot>>;
   raw: {
     (value: RawValue): Raw;
   };
   slot: {
-    <const N extends string, T>(name: N): Slot<N, true, T | undefined>;
-    <const N extends string, T>(name: N, defaultValue: T): Slot<N, false, T>;
+    <const TName extends string, TValue>(
+      name: TName,
+    ): Slot<TName, true, TValue | undefined>;
+    <const TName extends string, TValue>(
+      name: TName,
+      defaultValue: TValue,
+    ): Slot<TName, false, TValue>;
   };
 }
 

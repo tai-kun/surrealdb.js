@@ -1,15 +1,16 @@
 import type { ToCBOR } from "@tai-kun/surrealdb/cbor";
 import Encoded from "./encoded";
 
-export default class EncodedCBOR<T = unknown, B = unknown> extends Encoded<T>
+export default class EncodedCBOR<TData = unknown, TBind = unknown>
+  extends Encoded<TData>
   implements ToCBOR
 {
   readonly toCBOR: ToCBOR["toCBOR"];
 
   constructor(
-    bindings: B,
+    bindings: TBind,
     toCBOR: (
-      this: B,
+      this: TBind,
       ...args: Parameters<ToCBOR["toCBOR"]>
     ) => ReturnType<ToCBOR["toCBOR"]>,
   ) {

@@ -11,9 +11,9 @@ import { CBOR_TAG_RECORDID, type Encodable } from "./spec";
 export type { ThingIdSource, ThingSource, ThingTbSource };
 
 export default class Thing<
-  T extends ThingTbSource = ThingTbSource,
-  I extends ThingIdSource = ThingIdSource,
-> extends Base<T, I> implements Encodable {
+  TTb extends ThingTbSource = ThingTbSource,
+  TId extends ThingIdSource = ThingIdSource,
+> extends Base<TTb, TId> implements Encodable {
   override valueOf(): string {
     return this.toString();
   }

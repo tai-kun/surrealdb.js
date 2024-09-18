@@ -8,41 +8,47 @@ type None = typeof NONE;
 const passthrough = (v: unknown): any => v;
 
 export interface PreparedQueryOptions<
-  T extends readonly unknown[] = any[],
-  U = any,
+  TResults extends readonly unknown[] = any[],
+  TTransformed = any,
 > {
-  readonly parse?: ((results: unknown[]) => T) | undefined;
-  readonly trans?: ((results: T) => U) | undefined;
+  readonly parse?: ((results: unknown[]) => TResults) | undefined;
+  readonly trans?: ((results: TResults) => TTransformed) | undefined;
 }
 
 export default class PreparedQuery<
-  S extends SlotLike,
-  T extends unknown[] = unknown[],
-  U = None,
+  TSlot extends SlotLike,
+  TResults extends unknown[] = unknown[],
+  TTransformed = None,
 > implements PreparedQueryLike {
   /** @deprecated */
   // @ts-expect-error 型だけ
-  readonly __type: U extends None ? T : U;
-  readonly _parse: (results: unknown[]) => T;
-  readonly _trans: (results: T) => U;
+  readonly __type: TTransformed extends None ? TResults : TTransformed;
+  readonly _parse: (results: unknown[]) => TResults;
+  readonly _trans: (results: TResults) => TTransformed;
 
   constructor(
     readonly text: string | EncodedJSON<string> | EncodedCBOR<string>,
     readonly vars: { readonly [p: string]: unknown },
-    readonly slots: readonly S[],
-    options: PreparedQueryOptions<T, U> = {},
+    readonly slots: readonly TSlot[],
+    options: PreparedQueryOptions<TResults, TTransformed> = {},
   ) {
     this._parse = options.parse || passthrough;
     this._trans = options.trans || passthrough;
   }
 
-  as<T extends unknown[] = unknown[]>(): PreparedQuery<S, T, U>;
+  as<TResults extends unknown[] = unknown[]>(): PreparedQuery<
+    TSlot,
+    TResults,
+    TTransformed
+  >;
 
-  as<T extends unknown[] = unknown[]>(
-    parser: (results: unknown[]) => T,
-  ): PreparedQuery<S, T, U>;
+  as<TResults extends unknown[] = unknown[]>(
+    parser: (results: unknown[]) => TResults,
+  ): PreparedQuery<TSlot, TResults, TTransformed>;
 
-  as(parser: (results: unknown[]) => T = this._parse): PreparedQuery<S, T, U> {
+  as(
+    parser: (results: unknown[]) => TResults = this._parse,
+  ): PreparedQuery<TSlot, TResults, TTransformed> {
     const This = this.constructor as typeof PreparedQuery;
 
     return new This(this.text, this.vars, this.slots, {
@@ -51,7 +57,9 @@ export default class PreparedQuery<
     });
   }
 
-  to<U>(transformer: (results: T) => U): PreparedQuery<S, T, U> {
+  to<TTransformed>(
+    transformer: (results: TResults) => TTransformed,
+  ): PreparedQuery<TSlot, TResults, TTransformed> {
     const This = this.constructor as typeof PreparedQuery;
 
     return new This(this.text, this.vars, this.slots, {

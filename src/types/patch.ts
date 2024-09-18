@@ -1,69 +1,69 @@
 // https://github.com/surrealdb/surrealdb/blob/v2.0.0-alpha.7/core/src/sql/operation.rs
 
-export type AddPatch<T = unknown, P extends string = string> = {
+export type AddPatch<TValue = unknown, TPath extends string = string> = {
   op: "add";
-  path: P;
-  value: T;
+  path: TPath;
+  value: TValue;
 };
 
-export type RemovePatch<P extends string = string> = {
+export type RemovePatch<TPath extends string = string> = {
   op: "remove";
-  path: P;
+  path: TPath;
 };
 
-export type ReplacePatch<T = unknown, P extends string = string> = {
+export type ReplacePatch<TValue = unknown, TPath extends string = string> = {
   op: "replace";
-  path: P;
-  value: T;
+  path: TPath;
+  value: TValue;
 };
 
 export type ChangePatch<
-  T extends string = string,
-  P extends string = string,
+  TValue extends string = string,
+  TPath extends string = string,
 > = {
   op: "change";
-  path: P;
-  value: T;
+  path: TPath;
+  value: TValue;
 };
 
 export type CopyPatch<
   F extends string = string,
-  P extends string = string,
+  TPath extends string = string,
 > = {
   op: "copy";
-  path: P;
+  path: TPath;
   from: F;
 };
 
 export type MovePatch<
   F extends string = string,
-  P extends string = string,
+  TPath extends string = string,
 > = {
   op: "move";
-  path: P;
+  path: TPath;
   from: F;
 };
 
-export type TestPatch<T = unknown, P extends string = string> = {
+export type TestPatch<TValue = unknown, TPath extends string = string> = {
   op: "test";
-  path: P;
-  value: T;
+  path: TPath;
+  value: TValue;
 };
 
-export type Patch<T = unknown> =
-  | AddPatch<T>
+export type Patch<TValue = unknown> =
+  | AddPatch<TValue>
   | RemovePatch
-  | ReplacePatch<T>
+  | ReplacePatch<TValue>
   | ChangePatch
   | MovePatch
   | CopyPatch
-  | TestPatch<T>;
+  | TestPatch<TValue>;
 
-export type ReadonlyPatch<T = unknown> =
-  | Readonly<AddPatch<T>>
+export type ReadonlyPatch<TValue = unknown> =
+  | Readonly<AddPatch<TValue>>
   | Readonly<RemovePatch>
-  | Readonly<ReplacePatch<T>>
+  | Readonly<ReplacePatch<TValue>>
   | Readonly<ChangePatch>
   | Readonly<MovePatch>
   | Readonly<CopyPatch>
-  | Readonly<TestPatch<T>>;
+  | Readonly<TestPatch<TValue>>;

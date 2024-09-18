@@ -179,7 +179,7 @@ export default class CborFormatter implements Formatter {
     }, decode);
   }
 
-  toEncoded<T = unknown>(data: T): EncodedCBOR<T> {
+  toEncoded<TData = unknown>(data: TData): EncodedCBOR<TData> {
     if (data instanceof EncodedCBOR) {
       return data;
     }

@@ -5,13 +5,15 @@ const MUTEX_QUEUE = /* @__PURE__ */ Symbol();
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/mutex/)
  */
-export default function mutex<T extends (...args: any) => PromiseLike<any>>(
-  target: T,
+export default function mutex<
+  TMethod extends (...args: any) => PromiseLike<any>,
+>(
+  method: TMethod,
   context: ClassMethodDecoratorContext,
 ): (
   this: any,
-  ...args: Parameters<T>
-) => Promise<Awaited<ReturnType<T>>> {
+  ...args: Parameters<TMethod>
+) => Promise<Awaited<ReturnType<TMethod>>> {
   if (
     context
     && typeof context === "object"
@@ -46,7 +48,7 @@ export default function mutex<T extends (...args: any) => PromiseLike<any>>(
     }
 
     return promise
-      .then(() => target.apply(this, args))
+      .then(() => method.apply(this, args))
       .finally(dequeue);
   };
 }

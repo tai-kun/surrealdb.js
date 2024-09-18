@@ -7,20 +7,21 @@ import { CBOR_TAG_TABLE, type Encodable } from "./spec";
 
 export type * from "../decode-only/table";
 
-export default class Table<T extends TableSource = TableSource> extends Base<T>
+export default class Table<TName extends TableSource = TableSource>
+  extends Base<TName>
   implements Encodable
 {
-  override valueOf(): T {
+  override valueOf(): TName {
     return this.name;
   }
 
-  override toString(): T {
+  override toString(): TName {
     return this.name;
   }
 
-  [Symbol.toPrimitive](hint: "default" | "string"): T;
-  [Symbol.toPrimitive](hint: string): T;
-  [Symbol.toPrimitive](hint: string): T {
+  [Symbol.toPrimitive](hint: "default" | "string"): TName;
+  [Symbol.toPrimitive](hint: string): TName;
+  [Symbol.toPrimitive](hint: string): TName {
     switch (hint) {
       case "string":
       case "default":
@@ -31,11 +32,11 @@ export default class Table<T extends TableSource = TableSource> extends Base<T>
     }
   }
 
-  toCBOR(): [tag: typeof CBOR_TAG_TABLE, value: T] {
+  toCBOR(): [tag: typeof CBOR_TAG_TABLE, value: TName] {
     return [CBOR_TAG_TABLE, this.name];
   }
 
-  toJSON(): T {
+  toJSON(): TName {
     return this.name;
   }
 

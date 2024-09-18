@@ -22,7 +22,7 @@ export type TypeName =
   | "Buffer"
   | (string & {});
 
-export default function getTypeName(x: unknown): string {
+export default function getTypeName(x: unknown): TypeName {
   switch (typeof x) {
     case "object":
       return x === null

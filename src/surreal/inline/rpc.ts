@@ -189,40 +189,40 @@ async function rpc(
   throw new RpcResponseError(rpcResp, { cause });
 }
 
-interface RpcWithRequiredParams<M extends InlineRpcMethod> {
+interface RpcWithRequiredParams<TMethod extends InlineRpcMethod> {
   // 配列とオブジェクトが引数の同じ場所にあると補完に難あり。
-  // <T extends RpcResultMapping[M]>(
+  // <T extends RpcResultMapping[TMethod]>(
   //   endpoint: string | URL,
-  //   method: M,
-  //   params: RpcParams<M>,
+  //   method: TMethod,
+  //   params: RpcParams<TMethod>,
   //   options?: InlineRpcOptions | undefined,
   // ): Promise<T>;
   /**
    * @experimental
    */
-  <T extends RpcResultMapping[M]>(
+  <T extends RpcResultMapping[TMethod]>(
     endpoint: string | URL,
-    method: M,
-    options: InlineRpcOptions & { readonly params: RpcParams<M> },
+    method: TMethod,
+    options: InlineRpcOptions & { readonly params: RpcParams<TMethod> },
   ): Promise<T>;
 }
 
-interface RpcWithOptionalParams<M extends InlineRpcMethod> {
+interface RpcWithOptionalParams<TMethod extends InlineRpcMethod> {
   // 配列とオブジェクトが引数の同じ場所にあると補完に難あり。
-  // <T extends RpcResultMapping[M]>(
+  // <T extends RpcResultMapping[TMethod]>(
   //   endpoint: string | URL,
-  //   method: M,
-  //   params?: RpcParams<M>,
+  //   method: TMethod,
+  //   params?: RpcParams<TMethod>,
   //   options?: InlineRpcOptions | undefined,
   // ): Promise<T>;
   /**
    * @experimental
    */
-  <T extends RpcResultMapping[M]>(
+  <T extends RpcResultMapping[TMethod]>(
     endpoint: string | URL,
-    method: M,
+    method: TMethod,
     options?:
-      | (InlineRpcOptions & { readonly params?: RpcParams<M> })
+      | (InlineRpcOptions & { readonly params?: RpcParams<TMethod> })
       | undefined,
   ): Promise<T>;
 }
@@ -230,9 +230,9 @@ interface RpcWithOptionalParams<M extends InlineRpcMethod> {
 export default rpc as UnionToIntersection<
   ValueOf<
     {
-      [M in InlineRpcMethod]: undefined extends RpcParams<M>
-        ? RpcWithOptionalParams<M>
-        : RpcWithRequiredParams<M>;
+      [TMethod in InlineRpcMethod]: undefined extends RpcParams<TMethod>
+        ? RpcWithOptionalParams<TMethod>
+        : RpcWithRequiredParams<TMethod>;
     }
   >
 >;

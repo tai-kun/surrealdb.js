@@ -21,37 +21,39 @@ export type * from "@tai-kun/surrealdb/clients/basic";
 
 type Override<T, U> = Simplify<Omit<T, keyof U> & U>;
 
-export type InferSlotVars<T extends SlotLike> = UnionToIntersection<
+export type InferSlotVars<TSlot extends SlotLike> = UnionToIntersection<
   // dprint-ignore
   {
-    [N in T["name"]]: T extends SlotLike<N, infer R, infer V>
-      ? R extends false
-      ? { readonly [_ in N]?: V }
-      : { readonly [_ in N]:  V } // boolean の場合も必須で。
+    [TName in TSlot["name"]]: TSlot extends SlotLike<TName, infer TRequired, infer TValue>
+      ? TRequired extends false
+      ? { readonly [_ in TName]?: TValue }
+      : { readonly [_ in TName]:  TValue } // boolean の場合も必須で。
       : never;
-  }[T["name"]]
+  }[TSlot["name"]]
 >;
 
 export interface LiveOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
 }
 
-export type LiveHandler<T extends LivePayload<any, any> = LivePayload> =
-  TaskListener<[payload: T]>;
+export type LiveHandler<TPayload extends LivePayload<any, any> = LivePayload> =
+  TaskListener<[payload: TPayload]>;
 
 export type InferLivePayload<
-  I,
-  T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-  P extends Patch[] = Patch[],
-> = I extends { __diff: false } ? LivePayload.Data<T, string | DataType.Thing>
-  : I extends { __diff: true } ? LivePayload.Diff<T, P, string | DataType.Thing>
-  : LivePayload<T, P>;
+  IUuid,
+  TRecord extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+  TPatch extends Patch[] = Patch[],
+> = IUuid extends { __diff: false }
+  ? LivePayload.Data<TRecord, string | DataType.Thing>
+  : IUuid extends { __diff: true }
+    ? LivePayload.Diff<TRecord, TPatch, string | DataType.Thing>
+  : LivePayload<TRecord, TPatch>;
 
 export type ActionResult<
-  T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-> = [Extract<keyof T, "id">] extends [never]
-  ? ({ id: string | DataType.Thing } & T)
-  : T;
+  TRecord extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+> = [Extract<keyof TRecord, "id">] extends [never]
+  ? ({ id: string | DataType.Thing } & TRecord)
+  : TRecord;
 
 export interface PatchOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
@@ -238,11 +240,11 @@ export default class Client extends Base {
   }
 
   subscribe<
-    I,
-    T extends LivePayload<any, any> = InferLivePayload<I>,
+    IUuid,
+    TPayload extends LivePayload<any, any> = InferLivePayload<IUuid>,
   >(
-    queryUuid: I,
-    callback: LiveHandler<T>,
+    queryUuid: IUuid,
+    callback: LiveHandler<TPayload>,
   ): void {
     this.ee.on(`live_${queryUuid}`, callback as LiveHandler<any>);
   }
@@ -271,52 +273,52 @@ export default class Client extends Base {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#queryraw)
    */
-  async queryRaw<T extends readonly QueryResult[] = QueryResult[]>(
+  async queryRaw<TResults extends readonly QueryResult[] = QueryResult[]>(
     surql: string | PreparedQueryLike,
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T> {
+  ): Promise<TResults> {
     const results: readonly QueryResult[] = await this.rpc(
       "query",
       [surql, vars],
       options,
     );
 
-    return results as T;
+    return results as TResults;
   }
 
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
    */
-  async query<T extends readonly unknown[] = unknown[]>(
+  async query<TReturns extends readonly unknown[] = unknown[]>(
     surql: string,
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T>;
+  ): Promise<TReturns>;
 
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
    */
-  async query<T>(
+  async query<TResult>(
     surql: Override<PreparedQueryLike, {
       readonly slots: readonly (never | SlotLike<string, false>)[];
-      readonly __type: T;
+      readonly __type: TResult;
     }>,
     vars?: { readonly [p: string]: unknown } | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T>;
+  ): Promise<TResult>;
 
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
    */
-  async query<S extends SlotLike, T>(
+  async query<TSlot extends SlotLike, TResult>(
     surql: Override<PreparedQueryLike, {
-      readonly slots: readonly S[];
-      readonly __type: T;
+      readonly slots: readonly TSlot[];
+      readonly __type: TResult;
     }>,
-    vars: Simplify<InferSlotVars<S> & { readonly [p: string]: unknown }>,
+    vars: Simplify<InferSlotVars<TSlot> & { readonly [p: string]: unknown }>,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T>;
+  ): Promise<TResult>;
 
   async query(
     surql: string | PreparedQueryLike,
@@ -362,18 +364,22 @@ export default class Client extends Base {
   }
 
   async select<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
   >(
     table: DataType.Table | string,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<TRecord>[]>;
 
   async select<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
   >(
     thing: DataType.Thing,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async select(
     target:
@@ -385,22 +391,26 @@ export default class Client extends Base {
   }
 
   async create<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TContent extends { readonly [p: string]: unknown } = TRecord,
   >(
     table: DataType.Table | string,
-    content?: U | undefined,
+    content?: TContent | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async create<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TContent extends { readonly [p: string]: unknown } = TRecord,
   >(
     thing: DataType.Thing,
-    content?: U | undefined,
+    content?: TContent | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async create(
     target:
@@ -413,13 +423,15 @@ export default class Client extends Base {
   }
 
   async insert<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TData extends { readonly [p: string]: unknown } = TRecord,
   >(
     table: DataType.Table | string,
-    data?: U | readonly U[] | undefined,
+    data?: TData | readonly TData[] | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<TRecord>[]>;
 
   async insert(
     target: DataType.Table | string,
@@ -433,22 +445,26 @@ export default class Client extends Base {
   }
 
   async update<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TContent extends { readonly [p: string]: unknown } = TRecord,
   >(
     table: DataType.Table | string,
-    content?: U | undefined,
+    content?: TContent | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<TRecord>[]>;
 
   async update<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TContent extends { readonly [p: string]: unknown } = TRecord,
   >(
     thing: DataType.Thing,
-    content?: U | undefined,
+    content?: TContent | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async update(
     target:
@@ -461,22 +477,26 @@ export default class Client extends Base {
   }
 
   async upsert<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TContent extends { readonly [p: string]: unknown } = TRecord,
   >(
     table: DataType.Table | string,
-    content?: U | undefined,
+    content?: TContent | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<TRecord>[]>;
 
   async upsert<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TContent extends { readonly [p: string]: unknown } = TRecord,
   >(
     thing: DataType.Thing,
-    content?: U | undefined,
+    content?: TContent | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async upsert(
     target:
@@ -489,22 +509,26 @@ export default class Client extends Base {
   }
 
   async merge<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TData extends { readonly [p: string]: unknown } = TRecord,
   >(
     table: DataType.Table | string,
-    data: U,
+    data: TData,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<TRecord>[]>;
 
   async merge<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TData extends { readonly [p: string]: unknown } = TRecord,
   >(
     thing: DataType.Thing,
-    data: U,
+    data: TData,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async merge(
     target:
@@ -517,24 +541,28 @@ export default class Client extends Base {
   }
 
   async patch<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
   >(
     table: DataType.Table | string,
     patches: readonly ReadonlyPatch[],
     options?:
       | (ClientRpcOptions & { readonly diff?: false | undefined })
       | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<TRecord>[]>;
 
   async patch<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
   >(
     thing: DataType.Thing,
     patches: readonly ReadonlyPatch[],
     options?:
       | (ClientRpcOptions & { readonly diff?: false | undefined })
       | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async patch(
     table: DataType.Table | string,
@@ -561,18 +589,22 @@ export default class Client extends Base {
   }
 
   async delete<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
   >(
     table: DataType.Table | string,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>[]>;
+  ): Promise<ActionResult<TRecord>[]>;
 
   async delete<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
   >(
     thing: DataType.Thing,
     options?: ClientRpcOptions | undefined,
-  ): Promise<ActionResult<T>>;
+  ): Promise<ActionResult<TRecord>>;
 
   async delete(
     target:
@@ -612,26 +644,30 @@ export default class Client extends Base {
   }
 
   async relate<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TData extends { readonly [p: string]: unknown } = TRecord,
   >(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],
     thing: string,
     to: DataType.Thing | string | readonly (DataType.Thing | string)[],
-    data?: U | undefined,
+    data?: TData | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T[]>;
+  ): Promise<TRecord[]>;
 
   async relate<
-    T extends { readonly [p: string]: unknown } = { [p: string]: unknown },
-    U extends { readonly [p: string]: unknown } = T,
+    TRecord extends { readonly [p: string]: unknown } = {
+      [p: string]: unknown;
+    },
+    TData extends { readonly [p: string]: unknown } = TRecord,
   >(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],
     thing: DataType.Thing,
     to: DataType.Thing | string | readonly (DataType.Thing | string)[],
-    data?: U | undefined,
+    data?: TData | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<T>;
+  ): Promise<TRecord>;
 
   async relate(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],

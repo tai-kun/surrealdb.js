@@ -1,13 +1,15 @@
 import Encoded from "./encoded";
 
-export default class EncodedJSON<T = unknown, B = unknown> extends Encoded<T> {
+export default class EncodedJSON<TData = unknown, TBind = unknown>
+  extends Encoded<TData>
+{
   readonly toJSON: () => unknown; // toRawJSON に対応していない場合に備える
   readonly toRawJSON?: () => string;
 
   constructor(
-    bindings: B,
-    toJSON: (this: B) => unknown, // toRawJSON に対応していない場合に備える
-    toRawJSON?: ((this: B) => string) | undefined,
+    bindings: TBind,
+    toJSON: (this: TBind) => unknown, // toRawJSON に対応していない場合に備える
+    toRawJSON?: ((this: TBind) => string) | undefined,
   ) {
     super();
     this.toJSON = toJSON.bind(bindings);

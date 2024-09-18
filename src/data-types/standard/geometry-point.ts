@@ -20,37 +20,39 @@ function clone<T>(v: T): T {
 
 export type { GeoJsonPoint, GeometryPointSource, GeometryPointTypes };
 
-export class GeometryPointBase<T extends GeometryPointTypes> extends Base<T> {
+export class GeometryPointBase<TTypes extends GeometryPointTypes>
+  extends Base<TTypes>
+{
   // @ts-expect-error readonly を外すだけ。
   override point: [
-    x: CoordValue<T["Coord"]>,
-    y: CoordValue<T["Coord"]>,
+    x: CoordValue<TTypes["Coord"]>,
+    y: CoordValue<TTypes["Coord"]>,
   ];
 
-  override get x(): CoordValue<T["Coord"]> {
+  override get x(): CoordValue<TTypes["Coord"]> {
     return this.point[0];
   }
 
-  override set x(v: CoordValue<T["Coord"]>) {
+  override set x(v: CoordValue<TTypes["Coord"]>) {
     this.point[0] = v;
   }
 
-  override get y(): CoordValue<T["Coord"]> {
+  override get y(): CoordValue<TTypes["Coord"]> {
     return this.point[1];
   }
 
-  override set y(v: CoordValue<T["Coord"]>) {
+  override set y(v: CoordValue<TTypes["Coord"]>) {
     this.point[1] = v;
   }
 
   override get coordinates(): [
-    x: CoordValue<T["Coord"]>,
-    y: CoordValue<T["Coord"]>,
+    x: CoordValue<TTypes["Coord"]>,
+    y: CoordValue<TTypes["Coord"]>,
   ] {
     return this.point;
   }
 
-  override set coordinates(source: GeometryPointSource<T>) {
+  override set coordinates(source: GeometryPointSource<TTypes>) {
     this.point = map(source, arg => coord(this.types.Coord, arg));
   }
 

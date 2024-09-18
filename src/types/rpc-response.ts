@@ -2,7 +2,7 @@ import type { Patch } from "./patch";
 import type { QueryResult } from "./query-result";
 import type { RpcMethod } from "./rpc-request";
 
-type Arrayable<T> = T | T[];
+type Arrayable<TResult> = TResult | TResult[];
 
 type TableRecord = {
   id: string | object;
@@ -35,11 +35,12 @@ export type RpcResultMapping = {
   relate: Arrayable<TableRecord>;
 };
 
-export type RpcResult<M extends RpcMethod = RpcMethod> = RpcResultMapping[M];
+export type RpcResult<TMethod extends RpcMethod = RpcMethod> =
+  RpcResultMapping[TMethod];
 
-export type BidirectionalRpcResponseOk<T = unknown> = {
+export type BidirectionalRpcResponseOk<TResult = unknown> = {
   id: `${RpcMethod}_${number}`;
-  result: T;
+  result: TResult;
   error?: never;
 };
 
@@ -52,21 +53,21 @@ export type BidirectionalRpcResponseErr = {
   };
 };
 
-export type BidirectionalRpcResponse<T = unknown> =
-  | BidirectionalRpcResponseOk<T>
+export type BidirectionalRpcResponse<TResult = unknown> =
+  | BidirectionalRpcResponseOk<TResult>
   | BidirectionalRpcResponseErr;
 
-export type IdLessRpcResponseOk<T = unknown> = Omit<
-  BidirectionalRpcResponseOk<T>,
+export type IdLessRpcResponseOk<TResult = unknown> = Omit<
+  BidirectionalRpcResponseOk<TResult>,
   "id"
 >;
 
 export type IdLessRpcResponseErr = Omit<BidirectionalRpcResponseErr, "id">;
 
-export type IdLessRpcResponse<T = unknown> =
-  | IdLessRpcResponseOk<T>
+export type IdLessRpcResponse<TResult = unknown> =
+  | IdLessRpcResponseOk<TResult>
   | IdLessRpcResponseErr;
 
-export type RpcResponse<T = unknown> =
-  | BidirectionalRpcResponse<T>
-  | IdLessRpcResponse<T>;
+export type RpcResponse<TResult = unknown> =
+  | BidirectionalRpcResponse<TResult>
+  | IdLessRpcResponse<TResult>;

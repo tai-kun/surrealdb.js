@@ -4,13 +4,16 @@ import type { ToCBOR } from "./traits";
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/tagged/)
  */
-export default class Tagged<T = unknown> implements ToCBOR {
+export default class Tagged<
+  TValue = unknown,
+  TTag extends DataItem.Tag["value"] = DataItem.Tag["value"],
+> implements ToCBOR {
   constructor(
-    public tag: DataItem.Tag["value"],
-    public value: T,
+    public tag: TTag,
+    public value: TValue,
   ) {}
 
-  toCBOR(): [tag: DataItem.Tag["value"], value: T] {
+  toCBOR(): [tag: TTag, value: TValue] {
     return [this.tag, this.value];
   }
 }

@@ -29,32 +29,33 @@ type PolygonBase = new(
   source: any,
 ) => GeometryPolygonBase<GeometryPolygonTypes<LineBase>>;
 
-export type GeometryMultiPolygonTypes<P extends PolygonBase = PolygonBase> =
-  GeometryMultiPolygonTypesBase<P>;
+export type GeometryMultiPolygonTypes<
+  TPolygon extends PolygonBase = PolygonBase,
+> = GeometryMultiPolygonTypesBase<TPolygon>;
 
 export type GeometryMultiPolygonSource<
-  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
-> = GeometryMultiPolygonSourceBase<T>;
+  TTypes extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> = GeometryMultiPolygonSourceBase<TTypes>;
 
 export type { GeoJsonMultiPolygon };
 
 export class GeometryMultiPolygonBase<
-  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
-> extends Base<T> {
+  TTypes extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> extends Base<TTypes> {
   // @ts-expect-error readonly を外すだけ。
-  override polygons: InstanceType<T["Polygon"]>[];
+  override polygons: InstanceType<TTypes["Polygon"]>[];
 
-  override get coordinates(): InstanceType<T["Polygon"]>["coordinates"][] {
+  override get coordinates(): InstanceType<TTypes["Polygon"]>["coordinates"][] {
     return this.polygons.map(p => p.coordinates);
   }
 
-  override set coordinates(source: GeometryMultiPolygonSource<T>) {
+  override set coordinates(source: GeometryMultiPolygonSource<TTypes>) {
     this.polygons = map(
       source,
       (p: any) =>
         (p instanceof this.types.Polygon
           ? p
-          : new this.types.Polygon(p)) as InstanceType<T["Polygon"]>,
+          : new this.types.Polygon(p)) as InstanceType<TTypes["Polygon"]>,
     );
   }
 

@@ -56,47 +56,50 @@ type MultiPolygonBase = new(
 ) => GeometryMultiPolygonBase<GeometryMultiPolygonTypes<PolygonBase>>;
 
 export type GeometryCollectionTypes<
-  Pt extends PointBase = PointBase,
-  MPt extends MultiPointBase = MultiPointBase,
-  Li extends LineBase = LineBase,
-  MLi extends MultiLineBase = MultiLineBase,
-  Pg extends PolygonBase = PolygonBase,
-  MPg extends MultiPolygonBase = MultiPolygonBase,
+  TPoint extends PointBase = PointBase,
+  TMultiPoint extends MultiPointBase = MultiPointBase,
+  TLine extends LineBase = LineBase,
+  TMultiLine extends MultiLineBase = MultiLineBase,
+  TPolygon extends PolygonBase = PolygonBase,
+  TMultiPolygon extends MultiPolygonBase = MultiPolygonBase,
 > = {
-  readonly Point: Pt;
-  readonly MultiPoint: MPt;
-  readonly Line: Li;
-  readonly MultiLine: MLi;
-  readonly Polygon: Pg;
-  readonly MultiPolygon: MPg;
+  readonly Point: TPoint;
+  readonly MultiPoint: TMultiPoint;
+  readonly Line: TLine;
+  readonly MultiLine: TMultiLine;
+  readonly Polygon: TPolygon;
+  readonly MultiPolygon: TMultiPolygon;
 };
 
 export type GeometryCollectionSource<
-  T extends GeometryCollectionTypes = GeometryCollectionTypes,
+  TTypes extends GeometryCollectionTypes = GeometryCollectionTypes,
 > = readonly (
-  | InstanceType<T["Point"]>
-  | InstanceType<T["MultiPoint"]>
-  | InstanceType<T["Line"]>
-  | InstanceType<T["MultiLine"]>
-  | InstanceType<T["Polygon"]>
-  | InstanceType<T["MultiPolygon"]>
+  | InstanceType<TTypes["Point"]>
+  | InstanceType<TTypes["MultiPoint"]>
+  | InstanceType<TTypes["Line"]>
+  | InstanceType<TTypes["MultiLine"]>
+  | InstanceType<TTypes["Polygon"]>
+  | InstanceType<TTypes["MultiPolygon"]>
 )[];
 
-export class GeometryCollectionBase<T extends GeometryCollectionTypes>
+export class GeometryCollectionBase<TTypes extends GeometryCollectionTypes>
   implements Geometry
 {
   readonly type = "GeometryCollection" as const;
 
   readonly collection: readonly (
-    | InstanceType<T["Point"]>
-    | InstanceType<T["MultiPoint"]>
-    | InstanceType<T["Line"]>
-    | InstanceType<T["MultiLine"]>
-    | InstanceType<T["Polygon"]>
-    | InstanceType<T["MultiPolygon"]>
+    | InstanceType<TTypes["Point"]>
+    | InstanceType<TTypes["MultiPoint"]>
+    | InstanceType<TTypes["Line"]>
+    | InstanceType<TTypes["MultiLine"]>
+    | InstanceType<TTypes["Polygon"]>
+    | InstanceType<TTypes["MultiPolygon"]>
   )[];
 
-  constructor(collection: GeometryCollectionSource<T>, readonly types: T) {
+  constructor(
+    collection: GeometryCollectionSource<TTypes>,
+    readonly types: TTypes,
+  ) {
     this.collection = collection.slice();
     defineAsGeometryCollection(this);
   }

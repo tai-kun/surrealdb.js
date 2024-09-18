@@ -15,31 +15,31 @@ type LineBase = new(
   source: any,
 ) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export type GeometryMultiLineTypes<L extends LineBase = LineBase> = {
-  readonly Line: L;
+export type GeometryMultiLineTypes<TLine extends LineBase = LineBase> = {
+  readonly Line: TLine;
 };
 
 export type GeometryMultiLineSource<
-  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+  TTypes extends GeometryMultiLineTypes = GeometryMultiLineTypes,
 > = readonly (
-  | ConstructorParameters<T["Line"]>[0]
-  | InstanceType<T["Line"]>
+  | ConstructorParameters<TTypes["Line"]>[0]
+  | InstanceType<TTypes["Line"]>
 )[];
 
 export class GeometryMultiLineBase<
-  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+  TTypes extends GeometryMultiLineTypes = GeometryMultiLineTypes,
 > implements Geometry {
   readonly type = "MultiLineString" as const;
 
-  readonly lines: readonly InstanceType<T["Line"]>[];
+  readonly lines: readonly InstanceType<TTypes["Line"]>[];
 
-  constructor(source: GeometryMultiLineSource<T>, readonly types: T) {
+  constructor(source: GeometryMultiLineSource<TTypes>, readonly types: TTypes) {
     this.lines = map(
       source,
       (l: any) =>
         (l instanceof types.Line
           ? l
-          : new types.Line(l)) as InstanceType<T["Line"]>,
+          : new types.Line(l)) as InstanceType<TTypes["Line"]>,
     );
     defineAsGeometryMultiLine(this);
   }

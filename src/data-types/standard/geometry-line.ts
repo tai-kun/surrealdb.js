@@ -15,38 +15,40 @@ type PointBase = new(
   source: any,
 ) => GeometryPointBase<GeometryPointTypes<Coord>>;
 
-export type GeometryLineTypes<P extends PointBase = PointBase> =
-  GeometryLineTypesBase<P>;
+export type GeometryLineTypes<TPoint extends PointBase = PointBase> =
+  GeometryLineTypesBase<TPoint>;
 
 export type GeometryLineSource<
-  T extends GeometryLineTypes = GeometryLineTypes,
-> = GeometryLineSourceBase<T>;
+  TTypes extends GeometryLineTypes = GeometryLineTypes,
+> = GeometryLineSourceBase<TTypes>;
 
 export type { GeoJsonLineString };
 
-export class GeometryLineBase<T extends GeometryLineTypes> extends Base<T> {
+export class GeometryLineBase<TTypes extends GeometryLineTypes>
+  extends Base<TTypes>
+{
   // @ts-expect-error readonly を外すだけ。
   override line: [
-    InstanceType<T["Point"]>,
-    InstanceType<T["Point"]>,
-    ...InstanceType<T["Point"]>[],
+    InstanceType<TTypes["Point"]>,
+    InstanceType<TTypes["Point"]>,
+    ...InstanceType<TTypes["Point"]>[],
   ];
 
   override get coordinates(): [
-    InstanceType<T["Point"]>["coordinates"],
-    InstanceType<T["Point"]>["coordinates"],
-    ...InstanceType<T["Point"]>["coordinates"][],
+    InstanceType<TTypes["Point"]>["coordinates"],
+    InstanceType<TTypes["Point"]>["coordinates"],
+    ...InstanceType<TTypes["Point"]>["coordinates"][],
   ] {
     return map(this.line, p => p.coordinates);
   }
 
-  override set coordinates(source: GeometryLineSource<T>) {
+  override set coordinates(source: GeometryLineSource<TTypes>) {
     this.line = map(
       source,
       p =>
         (p instanceof this.types.Point
           ? p
-          : new this.types.Point(p)) as InstanceType<T["Point"]>,
+          : new this.types.Point(p)) as InstanceType<TTypes["Point"]>,
     );
   }
 

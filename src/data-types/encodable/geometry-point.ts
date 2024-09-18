@@ -16,20 +16,21 @@ export type GeoJsonPoint = {
   coordinates: [x: number, y: number];
 };
 
-export class GeometryPointBase<T extends GeometryPointTypes> extends Base<T>
+export class GeometryPointBase<TTypes extends GeometryPointTypes>
+  extends Base<TTypes>
   implements Encodable
 {
-  get x(): CoordValue<T["Coord"]> {
+  get x(): CoordValue<TTypes["Coord"]> {
     return this.point[0];
   }
 
-  get y(): CoordValue<T["Coord"]> {
+  get y(): CoordValue<TTypes["Coord"]> {
     return this.point[1];
   }
 
   get coordinates(): readonly [
-    x: CoordValue<T["Coord"]>,
-    y: CoordValue<T["Coord"]>,
+    x: CoordValue<TTypes["Coord"]>,
+    y: CoordValue<TTypes["Coord"]>,
   ] {
     return this.point;
   }

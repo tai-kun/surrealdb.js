@@ -20,32 +20,32 @@ type LineBase = new(
   source: any,
 ) => GeometryLineBase<GeometryLineTypes<PointBase>>;
 
-export type GeometryMultiLineTypes<L extends LineBase = LineBase> =
-  GeometryMultiLineTypesBase<L>;
+export type GeometryMultiLineTypes<TLine extends LineBase = LineBase> =
+  GeometryMultiLineTypesBase<TLine>;
 
 export type GeometryMultiLineSource<
-  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
-> = GeometryMultiLineSourceBase<T>;
+  TTypes extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> = GeometryMultiLineSourceBase<TTypes>;
 
 export type { GeoJsonMultiLineString };
 
 export class GeometryMultiLineBase<
-  T extends GeometryMultiLineTypes = GeometryMultiLineTypes,
-> extends Base<T> {
+  TTypes extends GeometryMultiLineTypes = GeometryMultiLineTypes,
+> extends Base<TTypes> {
   // @ts-expect-error readonly を外すだけ。
-  override lines: InstanceType<T["Line"]>[];
+  override lines: InstanceType<TTypes["Line"]>[];
 
-  override get coordinates(): InstanceType<T["Line"]>["coordinates"][] {
+  override get coordinates(): InstanceType<TTypes["Line"]>["coordinates"][] {
     return this.lines.map(l => l.coordinates);
   }
 
-  override set coordinates(source: GeometryMultiLineSource<T>) {
+  override set coordinates(source: GeometryMultiLineSource<TTypes>) {
     this.lines = map(
       source,
       (l: any) =>
         (l instanceof this.types.Line
           ? l
-          : new this.types.Line(l)) as InstanceType<T["Line"]>,
+          : new this.types.Line(l)) as InstanceType<TTypes["Line"]>,
     );
   }
 

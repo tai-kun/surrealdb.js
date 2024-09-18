@@ -31,8 +31,8 @@ export type GeometryMultiPolygonTypes<P extends PolygonBase = PolygonBase> =
   GeometryMultiPolygonTypesBase<P>;
 
 export type GeometryMultiPolygonSource<
-  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
-> = GeometryMultiPolygonSourceBase<T>;
+  TTypes extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> = GeometryMultiPolygonSourceBase<TTypes>;
 
 export type GeoJsonMultiPolygon = {
   type: "MultiPolygon";
@@ -42,9 +42,9 @@ export type GeoJsonMultiPolygon = {
 };
 
 export class GeometryMultiPolygonBase<
-  T extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
-> extends Base<T> implements Encodable {
-  get coordinates(): InstanceType<T["Polygon"]>["coordinates"][] {
+  TTypes extends GeometryMultiPolygonTypes = GeometryMultiPolygonTypes,
+> extends Base<TTypes> implements Encodable {
+  get coordinates(): InstanceType<TTypes["Polygon"]>["coordinates"][] {
     return map(this.polygons, p => p.coordinates);
   }
 

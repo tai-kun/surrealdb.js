@@ -4,26 +4,26 @@ import type { Writable } from "type-fest";
 
 const passthrough = (v: unknown): any => v;
 
-export interface SlotOptions<V = any> {
-  readonly parse?: ((value: unknown) => V) | undefined;
+export interface SlotOptions<TValue = any> {
+  readonly parse?: ((value: unknown) => TValue) | undefined;
   readonly formatter?: Formatter | undefined;
-  readonly defaultValue?: V | Encoded<V>;
+  readonly defaultValue?: TValue | Encoded<TValue>;
 }
 
 export default class Slot<
-  N extends string = any,
-  R extends boolean = any,
-  V = any,
+  TName extends string = any,
+  TRequired extends boolean = any,
+  TValue = any,
 > implements SlotLike {
   protected readonly fmt?: Formatter;
 
-  readonly _parse: (value: unknown) => V;
-  readonly defaultValue?: V | Encoded<V>;
+  readonly _parse: (value: unknown) => TValue;
+  readonly defaultValue?: TValue | Encoded<TValue>;
 
   constructor(
-    readonly name: N,
-    readonly isRequired: R,
-    options: SlotOptions<V> = {},
+    readonly name: TName,
+    readonly isRequired: TRequired,
+    options: SlotOptions<TValue> = {},
   ) {
     this._parse = options.parse || passthrough;
 
@@ -36,7 +36,7 @@ export default class Slot<
     }
   }
 
-  protected toOptions(): SlotOptions<V> {
+  protected toOptions(): SlotOptions<TValue> {
     const options: Writable<SlotOptions> = {
       parse: this._parse,
       formatter: this.fmt,
@@ -49,11 +49,13 @@ export default class Slot<
     return options;
   }
 
-  as<TBind extends V>(): Slot<N, true, TBind>;
+  as<TBind extends TValue>(): Slot<TName, true, TBind>;
 
-  as<TBind extends V>(parser: (value: unknown) => TBind): Slot<N, true, TBind>;
+  as<TBind extends TValue>(
+    parser: (value: unknown) => TBind,
+  ): Slot<TName, true, TBind>;
 
-  as(parser: (value: unknown) => unknown = v => v): Slot<N, true> {
+  as(parser: (value: unknown) => unknown = v => v): Slot<TName, true> {
     const This = this.constructor as typeof Slot;
     const options: Writable<SlotOptions> = { parse: parser };
 
@@ -66,15 +68,15 @@ export default class Slot<
     return new This(this.name, true, options);
   }
 
-  rename<const N extends string>(
-    name: N,
-  ): Slot<N, R, V> {
+  rename<const TName extends string>(
+    name: TName,
+  ): Slot<TName, TRequired, TValue> {
     const This = this.constructor as typeof Slot;
 
     return new This(name, this.isRequired, this.toOptions());
   }
 
-  default(defaultValue: V): Slot<N, false, V> {
+  default(defaultValue: TValue): Slot<TName, false, TValue> {
     const This = this.constructor as typeof Slot;
 
     return new This(this.name, false, {
@@ -86,7 +88,7 @@ export default class Slot<
     });
   }
 
-  optional(): Slot<N, false, V> {
+  optional(): Slot<TName, false, TValue> {
     const This = this.constructor as typeof Slot;
 
     return new This(this.name, false, {
@@ -95,7 +97,7 @@ export default class Slot<
     });
   }
 
-  required(): Slot<N, true, V> {
+  required(): Slot<TName, true, TValue> {
     const This = this.constructor as typeof Slot;
 
     return new This(this.name, true, {

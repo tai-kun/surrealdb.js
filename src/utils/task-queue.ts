@@ -1,8 +1,8 @@
 import makeAbortApi from "./make-abort-api";
 import StatefulPromise from "./stateful-promise";
 
-interface Task<T = unknown> {
-  readonly promise: StatefulPromise<T>;
+interface Task<TValue = unknown> {
+  readonly promise: StatefulPromise<TValue>;
   readonly abort: (reason?: unknown) => void;
 }
 
@@ -51,10 +51,10 @@ export default class TaskQueue {
   /**
    * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/#add)
    */
-  add<T>(
-    runner: (args: TaskRunnerArgs) => T | PromiseLike<T>,
+  add<TValue>(
+    runner: (args: TaskRunnerArgs) => TValue | PromiseLike<TValue>,
     options: TaskOptions | undefined = {},
-  ): StatefulPromise<T> {
+  ): StatefulPromise<TValue> {
     let signal: AbortSignal, abort: (reason?: unknown) => void;
 
     try {
@@ -63,10 +63,10 @@ export default class TaskQueue {
       return StatefulPromise.reject(e);
     }
 
-    const task = {} as { -readonly [P in keyof Task<T>]: Task<T>[P] };
+    const task = {} as { -readonly [P in keyof Task<TValue>]: Task<TValue>[P] };
     task.abort = abort;
     task.promise = StatefulPromise.try(runner, { signal }).then(
-      (x): T => {
+      (x): TValue => {
         this.rm(task);
         return x;
       },

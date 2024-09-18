@@ -9,24 +9,24 @@ import type { TableLike } from "./table";
 export type { ThingIdSource, ThingSource, ThingTbSource };
 
 export default class Thing<
-  T extends ThingTbSource = ThingTbSource,
-  I extends ThingIdSource = ThingIdSource,
-> extends Base<T, I> {
+  TTb extends ThingTbSource = ThingTbSource,
+  TId extends ThingIdSource = ThingIdSource,
+> extends Base<TTb, TId> {
   // @ts-expect-error readonly を外すだけ。
-  tb: T;
+  tb: TTb;
   // @ts-expect-error readonly を外すだけ。
-  id: I;
+  id: TId;
 
-  constructor(source: ThingSource<T, I>);
+  constructor(source: ThingSource<TTb, TId>);
 
-  constructor(tb: T | TableLike<T>, id: I);
+  constructor(tb: TTb | TableLike<TTb>, id: TId);
 
   constructor(
     ...args:
-      | [ThingSource<T, I>]
-      | [tb: T | TableLike<T>, id: I]
+      | [ThingSource<TTb, TId>]
+      | [tb: TTb | TableLike<TTb>, id: TId]
   ) {
-    const source: readonly [T, I] = args.length === 2
+    const source: readonly [TTb, TId] = args.length === 2
       ? [typeof args[0] === "string" ? args[0] : args[0].name, args[1]]
       : args[0];
     super(source);

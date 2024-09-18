@@ -6,19 +6,26 @@ export default function isLiveResult(res: unknown): res is LiveResult {
     return false;
   }
 
-  return !!res
-    && typeof res === "object"
+  return typeof res === "object" // Object | Map
+    && res !== null
+    // id
     && "id" in res
+    && isStringOrInstanceLike(res.id) // string | Uuid
+    // action
     && "action" in res
-    && "result" in res
     && (res.action === "CREATE"
       || res.action === "UPDATE"
-      || res.action === "DELETE");
-  // && (
-  //   ((res.action === "CREATE" || res.action === "UPDATE")
-  //     && Array.isArray(res.result))
-  //   || (res.action === "DELETE"
-  //     && !!res.result
-  //     && typeof res.result === "object")
-  // );
+      || res.action === "DELETE")
+    // record
+    && "record" in res
+    && isStringOrInstanceLike(res.record) // string | Thing
+    // result
+    && "result" in res
+    && typeof res.result === "object" // Object | Map | Array | Set
+    && res.result !== null;
+}
+
+function isStringOrInstanceLike(thing: unknown): thing is string | object {
+  return (typeof thing === "object" && thing !== null)
+    || typeof thing === "string";
 }

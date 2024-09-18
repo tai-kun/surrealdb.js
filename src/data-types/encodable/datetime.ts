@@ -1,7 +1,7 @@
 import { Datetime as Base } from "@tai-kun/surrealdb/data-types/decode-only";
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 import { toISOString } from "../_internals/datetime";
-import { CBOR_TAG_CUSTOM_DATETIME, type Encodable } from "./spec";
+import { CBOR_TAG_DATETIME, type Encodable } from "./spec";
 
 export type * from "../decode-only/datetime";
 
@@ -34,11 +34,11 @@ export default class Datetime extends Base implements Encodable {
   }
 
   toCBOR(): [
-    tag: typeof CBOR_TAG_CUSTOM_DATETIME,
+    tag: typeof CBOR_TAG_DATETIME,
     value: [seconds: number, nanoseconds: number],
   ] {
     return [
-      CBOR_TAG_CUSTOM_DATETIME,
+      CBOR_TAG_DATETIME,
       [this.seconds, this.nanoseconds],
     ];
   }

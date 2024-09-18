@@ -1,6 +1,6 @@
 import { isDuration } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
-import { CBOR_TAG_CUSTOM_DURATION } from "@tai-kun/surrealdb/data-types/encodable";
+import { CBOR_TAG_DURATION } from "@tai-kun/surrealdb/data-types/encodable";
 import { Duration } from "@tai-kun/surrealdb/data-types/standard";
 import { describe, expect, test } from "vitest";
 
@@ -292,7 +292,7 @@ for (const [i, t] of valid) {
         reviver: {
           tagged(t) {
             switch (t.tag) {
-              case CBOR_TAG_CUSTOM_DURATION:
+              case CBOR_TAG_DURATION:
                 return new Duration(t.value as any);
 
               default:

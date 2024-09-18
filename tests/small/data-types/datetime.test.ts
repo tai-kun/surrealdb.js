@@ -1,7 +1,7 @@
 import { isDatetime } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
-  CBOR_TAG_CUSTOM_DATETIME,
+  CBOR_TAG_DATETIME,
   Datetime as EncodableDatetime,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
@@ -181,7 +181,7 @@ describe("decode-only/encodable", () => {
           reviver: {
             tagged(t) {
               switch (t.tag) {
-                case CBOR_TAG_CUSTOM_DATETIME:
+                case CBOR_TAG_DATETIME:
                   return new EncodableDatetime(t.value as any);
 
                 default:
@@ -469,7 +469,7 @@ describe("standard", () => {
           reviver: {
             tagged(t) {
               switch (t.tag) {
-                case CBOR_TAG_CUSTOM_DATETIME:
+                case CBOR_TAG_DATETIME:
                   return new Datetime(t.value as any);
 
                 default:

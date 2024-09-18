@@ -1,6 +1,6 @@
 import { Uuid as Base } from "@tai-kun/surrealdb/data-types/decode-only";
 import { quoteStr } from "@tai-kun/surrealdb/utils";
-import { CBOR_TAG_SPEC_UUID, type Encodable } from "./spec";
+import { CBOR_TAG_UUID, type Encodable } from "./spec";
 
 export type * from "../decode-only/uuid";
 
@@ -55,8 +55,8 @@ export default class Uuid extends Base implements Encodable {
     return unsafe_toString36(this.bytes);
   }
 
-  toCBOR(): [tag: typeof CBOR_TAG_SPEC_UUID, value: Uint8Array] {
-    return [CBOR_TAG_SPEC_UUID, this.bytes];
+  toCBOR(): [tag: typeof CBOR_TAG_UUID, value: Uint8Array] {
+    return [CBOR_TAG_UUID, this.bytes];
   }
 
   toJSON(): string {

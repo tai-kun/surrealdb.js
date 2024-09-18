@@ -12,6 +12,10 @@ import type {
   Table as DecodeOnlyTable,
   Thing as DecodeOnlyThing,
   Uuid as DecodeOnlyUuid,
+  // Future as DecodeOnlyFuture,
+  // Range as DecodeOnlyRange,
+  // BoundIncluded as DecodeOnlyBoundIncluded,
+  // BoundExcluded as DecodeOnlyBoundExcluded,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import type {
   Datetime as EncodableDatetime,
@@ -27,6 +31,10 @@ import type {
   Table as EncodableTable,
   Thing as EncodableThing,
   Uuid as EncodableUuid,
+  // Future as EncodableFuture,
+  // Range as EncodableRange,
+  // BoundIncluded as EncodableBoundIncluded,
+  // BoundExcluded as EncodableBoundExcluded,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import type {
   Datetime as StandardDatetime,
@@ -42,24 +50,13 @@ import type {
   Table as StandardTable,
   Thing as StandardThing,
   Uuid as StandardUuid,
+  // Future as StandardFuture,
+  // Range as StandardRange,
+  // BoundIncluded as StandardBoundIncluded,
+  // BoundExcluded as StandardBoundExcluded,
 } from "@tai-kun/surrealdb/data-types/standard";
 
 export namespace DataType {
-  export type Datetime =
-    | DecodeOnlyDatetime
-    | EncodableDatetime
-    | StandardDatetime;
-
-  export type Decimal =
-    | DecodeOnlyDecimal
-    | EncodableDecimal
-    | StandardDecimal;
-
-  export type Duration =
-    | DecodeOnlyDuration
-    | EncodableDuration
-    | StandardDuration;
-
   export type Table =
     | DecodeOnlyTable
     | EncodableTable
@@ -70,61 +67,100 @@ export namespace DataType {
     | EncodableThing
     | StandardThing;
 
+  export type Decimal =
+    | DecodeOnlyDecimal
+    | EncodableDecimal
+    | StandardDecimal;
+
+  export type Datetime =
+    | DecodeOnlyDatetime
+    | EncodableDatetime
+    | StandardDatetime;
+
+  export type Duration =
+    | DecodeOnlyDuration
+    | EncodableDuration
+    | StandardDuration;
+
+  // export type Future =
+  //   | DecodeOnlyFuture
+  //   | EncodableFuture
+  //   | StandardFuture;
+
   export type Uuid =
     | DecodeOnlyUuid
     | EncodableUuid
     | StandardUuid;
 
-  export type GeometryCollection =
-    | DecodeOnlyGeometryCollection
-    | EncodableGeometryCollection
-    | StandardGeometryCollection;
+  // export type Range =
+  //   | DecodeOnlyRange
+  //   | EncodableRange
+  //   | StandardRange;
 
-  export type GeometryLine =
-    | DecodeOnlyGeometryLine
-    | EncodableGeometryLine
-    | StandardGeometryLine;
+  // export type BoundIncluded =
+  //   | DecodeOnlyBoundIncluded
+  //   | EncodableBoundIncluded
+  //   | StandardBoundIncluded;
 
-  export type GeometryMultiLine =
-    | DecodeOnlyGeometryMultiLine
-    | EncodableGeometryMultiLine
-    | StandardGeometryMultiLine;
-
-  export type GeometryMultiPoint =
-    | DecodeOnlyGeometryMultiPoint
-    | EncodableGeometryMultiPoint
-    | StandardGeometryMultiPoint;
-
-  export type GeometryMultiPolygon =
-    | DecodeOnlyGeometryMultiPolygon
-    | EncodableGeometryMultiPolygon
-    | StandardGeometryMultiPolygon;
+  // export type BoundExcluded =
+  //   | DecodeOnlyBoundExcluded
+  //   | EncodableBoundExcluded
+  //   | StandardBoundExcluded;
 
   export type GeometryPoint =
     | DecodeOnlyGeometryPoint
     | EncodableGeometryPoint
     | StandardGeometryPoint;
 
+  export type GeometryLine =
+    | DecodeOnlyGeometryLine
+    | EncodableGeometryLine
+    | StandardGeometryLine;
+
   export type GeometryPolygon =
     | DecodeOnlyGeometryPolygon
     | EncodableGeometryPolygon
     | StandardGeometryPolygon;
+
+  export type GeometryMultiPoint =
+    | DecodeOnlyGeometryMultiPoint
+    | EncodableGeometryMultiPoint
+    | StandardGeometryMultiPoint;
+
+  export type GeometryMultiLine =
+    | DecodeOnlyGeometryMultiLine
+    | EncodableGeometryMultiLine
+    | StandardGeometryMultiLine;
+
+  export type GeometryMultiPolygon =
+    | DecodeOnlyGeometryMultiPolygon
+    | EncodableGeometryMultiPolygon
+    | StandardGeometryMultiPolygon;
+
+  export type GeometryCollection =
+    | DecodeOnlyGeometryCollection
+    | EncodableGeometryCollection
+    | StandardGeometryCollection;
 }
 
 export type DataType =
-  | DataType.Datetime
-  | DataType.Decimal
-  | DataType.Duration
   | DataType.Table
   | DataType.Thing
+  | DataType.Decimal
+  | DataType.Datetime
+  | DataType.Duration
+  // | DataType.Future
   | DataType.Uuid
-  | DataType.GeometryCollection
-  | DataType.GeometryLine
-  | DataType.GeometryMultiLine
-  | DataType.GeometryMultiPoint
-  | DataType.GeometryMultiPolygon
+  // | DataType.Range
+  // | DataType.BoundIncluded
+  // | DataType.BoundExcluded
   | DataType.GeometryPoint
-  | DataType.GeometryPolygon;
+  | DataType.GeometryLine
+  | DataType.GeometryPolygon
+  | DataType.GeometryMultiPoint
+  | DataType.GeometryMultiLine
+  | DataType.GeometryMultiPolygon
+  | DataType.GeometryCollection;
 
 function isValue(o: unknown, id: string): boolean {
   return !!o
@@ -133,58 +169,64 @@ function isValue(o: unknown, id: string): boolean {
     && o["$$datatype"] === Symbol.for("@tai-kun/surrealdb/data-types/" + id);
 }
 
-export function isDatetime<T = DataType.Datetime>(
-  o: unknown,
-): o is T {
-  return isValue(o, "datetime");
-}
-
-export function isDecimal<T = DataType.Decimal>(
-  o: unknown,
-): o is T {
-  return isValue(o, "decimal");
-}
-
-export function isDuration<T = DataType.Duration>(
-  o: unknown,
-): o is T {
-  return isValue(o, "duration");
-}
-
-export function isTable<T = DataType.Table>(
-  o: unknown,
-): o is T {
+export function isTable<T = DataType.Table>(o: unknown): o is T {
   return isValue(o, "table");
 }
 
-export function isThing<T = DataType.Thing>(
-  o: unknown,
-): o is T {
+export function isThing<T = DataType.Thing>(o: unknown): o is T {
   return isValue(o, "thing");
 }
 
-export function isUuid<T = DataType.Uuid>(
-  o: unknown,
-): o is T {
+export function isDecimal<T = DataType.Decimal>(o: unknown): o is T {
+  return isValue(o, "decimal");
+}
+
+export function isDatetime<T = DataType.Datetime>(o: unknown): o is T {
+  return isValue(o, "datetime");
+}
+
+export function isDuration<T = DataType.Duration>(o: unknown): o is T {
+  return isValue(o, "duration");
+}
+
+// export function isFuture<T = DataType.Future>(o: unknown): o is T {
+//   return isValue(o, "future");
+// }
+
+export function isUuid<T = DataType.Uuid>(o: unknown): o is T {
   return isValue(o, "uuid");
 }
 
-export function isGeometryCollection<T = DataType.GeometryCollection>(
+// export function isRange<T = DataType.Range>(o: unknown): o is T {
+//   return isValue(o, "range");
+// }
+
+// export function isBoundIncluded<T = DataType.BoundIncluded>(
+//   o: unknown,
+// ): o is T {
+//   return isValue(o, "boundincluded");
+// }
+
+// export function isBoundExcluded<T = DataType.BoundExcluded>(
+//   o: unknown,
+// ): o is T {
+//   return isValue(o, "boundexcluded");
+// }
+
+export function isGeometryPoint<T = DataType.GeometryPoint>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrycollection");
+  return isValue(o, "geometrypoint");
 }
 
-export function isGeometryLine<T = DataType.GeometryLine>(
-  o: unknown,
-): o is T {
+export function isGeometryLine<T = DataType.GeometryLine>(o: unknown): o is T {
   return isValue(o, "geometryline");
 }
 
-export function isGeometryMultiLine<T = DataType.GeometryMultiLine>(
+export function isGeometryPolygon<T = DataType.GeometryPolygon>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrymultiline");
+  return isValue(o, "geometrypolygon");
 }
 
 export function isGeometryMultiPoint<T = DataType.GeometryMultiPoint>(
@@ -193,20 +235,20 @@ export function isGeometryMultiPoint<T = DataType.GeometryMultiPoint>(
   return isValue(o, "geometrymultipoint");
 }
 
+export function isGeometryMultiLine<T = DataType.GeometryMultiLine>(
+  o: unknown,
+): o is T {
+  return isValue(o, "geometrymultiline");
+}
+
 export function isGeometryMultiPolygon<T = DataType.GeometryMultiPolygon>(
   o: unknown,
 ): o is T {
   return isValue(o, "geometrymultipolygon");
 }
 
-export function isGeometryPoint<T = DataType.GeometryPoint>(
+export function isGeometryCollection<T = DataType.GeometryCollection>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrypoint");
-}
-
-export function isGeometryPolygon<T = DataType.GeometryPolygon>(
-  o: unknown,
-): o is T {
-  return isValue(o, "geometrypolygon");
+  return isValue(o, "geometrycollection");
 }

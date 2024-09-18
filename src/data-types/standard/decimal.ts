@@ -1,5 +1,5 @@
 import {
-  CBOR_TAG_STRING_DECIMAL,
+  CBOR_TAG_DECIMAL,
   type Encodable,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { Big as Decimal, type BigSource } from "big.js";
@@ -14,7 +14,7 @@ interface StandardExtension extends Omit<Encodable, "toJSON"> {
     (hint: string): string | number;
   };
   toCBOR(): [
-    tag: typeof CBOR_TAG_STRING_DECIMAL,
+    tag: typeof CBOR_TAG_DECIMAL,
     value: string,
   ];
   toPlainObject(): {
@@ -47,11 +47,11 @@ Object.assign<any, StandardExtension>(Decimal.prototype, {
     }
   },
   toCBOR(this: Decimal): [
-    tag: typeof CBOR_TAG_STRING_DECIMAL,
+    tag: typeof CBOR_TAG_DECIMAL,
     value: string,
   ] {
     return [
-      CBOR_TAG_STRING_DECIMAL,
+      CBOR_TAG_DECIMAL,
       this.toString(),
     ];
   },

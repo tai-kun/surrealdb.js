@@ -4,6 +4,7 @@ import Tagged from "./tagged";
 
 const CONTINUE = Symbol.for("@tai-kun/surrealdb/cbor/continue"); // decorder.ts と同じ
 
+// See: https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml
 const TAG_DATETIME = 0;
 
 export function ianaReplacer(value: unknown): unknown {

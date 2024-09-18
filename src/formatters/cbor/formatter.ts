@@ -22,8 +22,9 @@ import type {
   UuidSource,
 } from "@tai-kun/surrealdb/data-types/decode-only";
 import {
-  CBOR_TAG_CUSTOM_DATETIME,
-  CBOR_TAG_CUSTOM_DURATION,
+  CBOR_TAG_DATETIME,
+  CBOR_TAG_DECIMAL,
+  CBOR_TAG_DURATION,
   CBOR_TAG_GEOMETRY_COLLECTION,
   CBOR_TAG_GEOMETRY_LINE,
   CBOR_TAG_GEOMETRY_MULTILINE,
@@ -33,10 +34,8 @@ import {
   CBOR_TAG_GEOMETRY_POLYGON,
   CBOR_TAG_NONE,
   CBOR_TAG_RECORDID,
-  CBOR_TAG_SPEC_UUID,
-  CBOR_TAG_STRING_DECIMAL,
-  CBOR_TAG_STRING_DURATION,
   CBOR_TAG_TABLE,
+  CBOR_TAG_UUID,
 } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import {
@@ -135,20 +134,29 @@ export default class CborFormatter implements Formatter {
             case CBOR_TAG_RECORDID:
               return new Thing(t.value);
 
-            case CBOR_TAG_SPEC_UUID:
-              return new Uuid(t.value);
-
-            case CBOR_TAG_STRING_DECIMAL:
+            case CBOR_TAG_DECIMAL:
               return new Decimal(t.value);
 
-            case CBOR_TAG_CUSTOM_DATETIME:
+            case CBOR_TAG_DATETIME:
               return new Datetime(t.value);
 
-            case CBOR_TAG_STRING_DURATION:
+            case CBOR_TAG_DURATION:
               return new Duration(t.value);
 
-            case CBOR_TAG_CUSTOM_DURATION:
-              return new Duration(t.value);
+            // case CBOR_TAG_FUTURE:
+            //   return new Future(t.value);
+
+            case CBOR_TAG_UUID:
+              return new Uuid(t.value);
+
+            // case CBOR_TAG_RANGE:
+            //   return new Range(t.value);
+
+            // case CBOR_TAG_BOUND_INCLUDED:
+            //   return new BoundIncluded(t.value);
+
+            // case CBOR_TAG_BOUND_EXCLUDED:
+            //   return new BoundExcluded(t.value);
 
             case CBOR_TAG_GEOMETRY_POINT:
               return new GeometryPoint(t.value);

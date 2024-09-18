@@ -1,5 +1,5 @@
 import {
-  CBOR_TAG_CUSTOM_DATETIME,
+  CBOR_TAG_DATETIME,
   type DatetimeSource,
   type Encodable,
 } from "@tai-kun/surrealdb/data-types/encodable";
@@ -315,11 +315,11 @@ export default class Datetime extends Date implements Encodable {
   }
 
   toCBOR(): [
-    tag: typeof CBOR_TAG_CUSTOM_DATETIME,
+    tag: typeof CBOR_TAG_DATETIME,
     value: [seconds: number, nanoseconds: number],
   ] {
     return [
-      CBOR_TAG_CUSTOM_DATETIME,
+      CBOR_TAG_DATETIME,
       [this.seconds, this.nanoseconds],
     ];
   }

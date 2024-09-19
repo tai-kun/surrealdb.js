@@ -1,15 +1,15 @@
 import starlight from "@astrojs/starlight";
 import { defineConfig } from "astro/config";
 import remarkDefList, { defListHastHandlers } from "remark-definition-list";
+import { visit } from "unist-util-visit";
+import pkg from "../package.json";
+
+const { username, repository } = getParams();
 
 // https://astro.build/config
 export default defineConfig({
   integrations: [
     starlight({
-      title: "surrealdb.js",
-      social: {
-        github: "https://github.com/tai-kun/surrealdb.js",
-      },
       defaultLocale: "ja",
       locales: {
         en: {
@@ -108,32 +108,29 @@ export default defineConfig({
           ],
         },
         {
-          label: "Reference",
-          translations: {
-            ja: "リファレンス",
-          },
+          label: "API",
           items: [
             {
               label: "cbor",
               items: [
                 {
-                  slug: "v2/reference/cbor/encode",
+                  slug: "v2/api/cbor/encode",
                   label: "encode",
                 },
                 {
-                  slug: "v2/reference/cbor/decode",
+                  slug: "v2/api/cbor/decode",
                   label: "decode",
                 },
                 {
-                  slug: "v2/reference/cbor/tagged",
+                  slug: "v2/api/cbor/tagged",
                   label: "Tagged",
                 },
                 {
-                  slug: "v2/reference/cbor/simple",
+                  slug: "v2/api/cbor/simple",
                   label: "Simple",
                 },
                 {
-                  slug: "v2/reference/cbor/others",
+                  slug: "v2/api/cbor/others",
                   label: "Other tools",
                   translations: {
                     ja: "その他のツール",
@@ -146,62 +143,62 @@ export default defineConfig({
               label: "utils",
               items: [
                 {
-                  slug: "v2/reference/utils/escape",
+                  slug: "v2/api/utils/escape",
                   label: "escape",
                 },
                 {
-                  slug: "v2/reference/utils/get-timeout-signal",
+                  slug: "v2/api/utils/get-timeout-signal",
                   label: "getTimeoutSignal",
                 },
                 {
-                  slug: "v2/reference/utils/is-array-buffer",
+                  slug: "v2/api/utils/is-array-buffer",
                   label: "isArrayBuffer",
                 },
                 {
-                  slug: "v2/reference/utils/is-browser",
+                  slug: "v2/api/utils/is-browser",
                   label: "isBrowser",
                 },
                 {
-                  slug: "v2/reference/utils/is-safe-number",
+                  slug: "v2/api/utils/is-safe-number",
                   label: "isSafeNumber",
                 },
                 {
-                  slug: "v2/reference/utils/make-abort-api",
+                  slug: "v2/api/utils/make-abort-api",
                   label: "makeAbortApi",
                 },
                 {
-                  slug: "v2/reference/utils/mutex",
+                  slug: "v2/api/utils/mutex",
                   label: "mutex",
                 },
                 {
-                  slug: "v2/reference/utils/serial",
+                  slug: "v2/api/utils/serial",
                   label: "Serial",
                 },
                 {
-                  slug: "v2/reference/utils/stateful-promise",
+                  slug: "v2/api/utils/stateful-promise",
                   label: "StatefulPromise",
                 },
                 {
-                  slug: "v2/reference/utils/task-queue",
+                  slug: "v2/api/utils/task-queue",
                   label: "TaskQueue",
                 },
                 {
-                  slug: "v2/reference/utils/task-emitter",
+                  slug: "v2/api/utils/task-emitter",
                   label: "TaskEmitter",
                 },
                 {
-                  slug: "v2/reference/utils/throw-if-aborted",
+                  slug: "v2/api/utils/throw-if-aborted",
                   label: "throwIfAborted",
                 },
                 {
-                  slug: "v2/reference/utils/to-surql",
+                  slug: "v2/api/utils/to-surql",
                   label: "toSurql",
                 },
               ],
               collapsed: false,
             },
             {
-              slug: "v2/reference/errors",
+              slug: "v2/api/errors",
               label: "Errors",
               translations: {
                 ja: "エラー",
@@ -210,11 +207,26 @@ export default defineConfig({
           ],
         },
       ],
+      title: "surrealdb.js",
+      social: {
+        github: `https://github.com/${username}/${repository}`,
+      },
     }),
   ],
+  site: `https://${username}.github.io`,
+  base: "/" + repository,
   markdown: {
     remarkPlugins: [
       remarkDefList,
+      function remarkAddPrefixToLinks() {
+        return tree => {
+          visit(tree, "link", node => {
+            if (/^\/v\d+\//.test(node.url)) {
+              node.url = "/" + repository + node.url;
+            }
+          });
+        };
+      },
     ],
     remarkRehype: {
       handlers: {
@@ -225,6 +237,26 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
   },
-  site: "https://tai-kun.github.io",
-  base: "/surrealdb.js",
 });
+
+function getParams() {
+  const { hostname, pathname } = new URL(pkg.repository.url);
+  const [_, username, repository] = pathname.split("/");
+
+  if (hostname !== "github.com") {
+    throw new Error(`"${hostname}" must to be github.com`);
+  }
+
+  if (!username) {
+    throw new Error("username not found");
+  }
+
+  if (!repository) {
+    throw new Error("repository not found");
+  }
+
+  return {
+    username,
+    repository,
+  };
+}

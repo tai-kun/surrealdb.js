@@ -246,7 +246,7 @@ export default class Duration extends Base {
     this.seconds += BigInt(years) * SECONDS_PER_YEAR;
   }
 
-  setYears(years: number): void {
+  subYears(years: number): void {
     this.seconds -= BigInt(years) * SECONDS_PER_YEAR;
   }
 
@@ -258,7 +258,7 @@ export default class Duration extends Base {
     this.seconds += BigInt(weeks) * SECONDS_PER_WEEK;
   }
 
-  setWeeks(weeks: number): void {
+  subWeeks(weeks: number): void {
     this.seconds -= BigInt(weeks) * SECONDS_PER_WEEK;
   }
 
@@ -270,7 +270,7 @@ export default class Duration extends Base {
     this.seconds += BigInt(days) * SECONDS_PER_DAY;
   }
 
-  setDays(days: number): void {
+  subDays(days: number): void {
     this.seconds -= BigInt(days) * SECONDS_PER_DAY;
   }
 
@@ -282,7 +282,7 @@ export default class Duration extends Base {
     this.seconds += BigInt(hours) * SECONDS_PER_HOUR;
   }
 
-  setHours(hours: number): void {
+  subHours(hours: number): void {
     this.seconds -= BigInt(hours) * SECONDS_PER_HOUR;
   }
 
@@ -294,7 +294,7 @@ export default class Duration extends Base {
     this.seconds += BigInt(minutes) * SECONDS_PER_MINUTE;
   }
 
-  setMinutes(minutes: number): void {
+  subMinutes(minutes: number): void {
     this.seconds -= BigInt(minutes) * SECONDS_PER_MINUTE;
   }
 
@@ -306,7 +306,7 @@ export default class Duration extends Base {
     this.seconds += BigInt(seconds);
   }
 
-  setSeconds(seconds: number): void {
+  subSeconds(seconds: number): void {
     this.seconds -= BigInt(seconds);
   }
 
@@ -318,7 +318,7 @@ export default class Duration extends Base {
     this.nanoseconds += milliseconds * 1e6;
   }
 
-  setMilliseconds(milliseconds: number): void {
+  subMilliseconds(milliseconds: number): void {
     this.nanoseconds -= milliseconds * 1e6;
   }
 
@@ -330,7 +330,7 @@ export default class Duration extends Base {
     this.nanoseconds += microseconds * 1e3;
   }
 
-  setMicroseconds(microseconds: number): void {
+  subMicroseconds(microseconds: number): void {
     this.nanoseconds -= microseconds * 1e3;
   }
 
@@ -342,7 +342,7 @@ export default class Duration extends Base {
     this.nanoseconds += nanoseconds;
   }
 
-  setNanoseconds(nanoseconds: number): void {
+  subNanoseconds(nanoseconds: number): void {
     this.nanoseconds -= nanoseconds;
   }
 

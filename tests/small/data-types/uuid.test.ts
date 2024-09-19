@@ -160,7 +160,7 @@ test("UUID v6 の文字列を解析できる", () => {
 //   expect(uuid.timestamp).toBe(1_717_200_000_000);
 // });
 
-test("v3 と v6 のタイムスタンプを比較できる", () => {
+test("v1 と v6 のタイムスタンプを比較できる", () => {
   {
     const uuidv1String = uuids.v1({
       msecs: new Date("2024-06-01").getTime(),
@@ -200,4 +200,24 @@ test("v3 と v6 のタイムスタンプを比較できる", () => {
 
     expect.soft(uuidv1.compareTo(uuidv6)).toBe(0);
   }
+});
+
+test(".sort() で正しく並び替えられる", () => {
+  const uuidv1 = new Uuid("0e004000-2073-11ef-8451-eb2a011f8691");
+  const uuidv6 = new Uuid("1ef1fa9e-3968-6000-a77e-683eb1a35ebe");
+
+  const uuidList = [
+    uuidv1,
+    uuidv6,
+  ];
+  uuidList.sort((a, b) => a.compareTo(b));
+
+  expect.soft(new Date(uuidv1.timestamp!).toISOString())
+    .toBe("2024-06-02T00:00:00.000Z");
+  expect.soft(new Date(uuidv6.timestamp!).toISOString())
+    .toBe("2024-06-01T00:00:00.000Z");
+  expect(uuidList).toStrictEqual([
+    uuidv6,
+    uuidv1,
+  ]);
 });

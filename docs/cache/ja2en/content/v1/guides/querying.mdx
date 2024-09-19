@@ -1,5 +1,5 @@
 ---
-title: Query
+title: Queries
 ---
 
 import Badge from "~/components/en/Badge.astro";
@@ -16,29 +16,29 @@ query(
 ): Promise<unknown[]>;
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `surql`
 
-A string of SurrealQL or a pre-prepared query.
+A string or a prepared query with SurrealQL.
 
 ##### `vars`
 
-Variables to pass during the execution of SurrealQL. Note that variable names must not begin with `$`.
+Variables to be passed during the execution of SurrealQL. Note that variable names should not start with `surql`.
 
 ##### `options`
 
 Options for the PRC request.
 
-#### Return Value
+#### Returns
 
-Returns a `Promise` object that resolves with an array of SurrealQL execution results. If one or more statements fail, it rejects with a `QueryFailedError` containing the error messages.
+Returns a `Promise` object that resolves with an array of results from the execution of SurrealQL. If any statements failed, it will reject with a `QueryFailedError` containing those error messages.
 
-This method does not provide a way to obtain execution results upon rejection. If you need to handle errors manually, you can use [`.queryRaw()`](#queryraw).
+There is no way to obtain the result if this method rejects. For manual error handling, you can use [`.queryRaw()`](#queryraw).
 
-#### Example
+#### Examples
 
-The following example demonstrates a successful query execution:
+This example shows a successful query execution:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -58,7 +58,7 @@ console.log(results);
 await db.disconnect();
 ```
 
-The following example results in a `QueryFailedError` because one of the statements fails:
+This example shows a query that will reject with a `QueryFailedError` because one of the statements fails:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -72,7 +72,7 @@ const results = await db.query(`
 `); // throws QueryFailedError: Query failed with 1 error(s)
 ```
 
-This example shows how to execute a pre-prepared query:
+This example shows the execution of a prepared query:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -102,23 +102,23 @@ queryRaw(
 ): Promise<QueryResult[]>;
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `surql`
 
-A string of SurrealQL or a pre-prepared query.
+A string or a prepared query with SurrealQL.
 
 ##### `vars`
 
-Variables to pass during the execution of SurrealQL. Note that variable names must not begin with `$`.
+Variables to be passed during the execution of SurrealQL. Note that variable names should not start with `surql`.
 
 ##### `options`
 
 Options for the PRC request.
 
-#### Return Value
+#### Returns
 
-Returns a `Promise` object that resolves with an array of SurrealQL execution results.
+Returns a `Promise` object that resolves with an array of results from the execution of SurrealQL.
 
 ```ts
 type QueryResult = {

@@ -22,7 +22,7 @@ new Tagged<T>(tag: number | BigInt, value: T);
 
 ##### `tag`
 
-An integer value from 0 to 2^64-1 that identifies the tagged data item. Note that in JavaScript, you must use BigInt for numbers greater than 2^53-1.
+An integer value from 0 to 2^64-1 to identify the tagged data item. In JavaScript, use BigInt for values exceeding 2^53-1.
 
 ##### `value`
 
@@ -30,11 +30,11 @@ The value of the tagged data item.
 
 #### Return Value
 
-When called with `new`, `Tagged` returns the instance itself.
+When called through `new`, `Tagged` returns its instance.
 
 ### `.tag` <Badge variant="instance" /><Badge variant="property" />
 
-`.tag` is a property that holds the integer value from 0 to 2^64-1 identifying the tagged data item.
+`.tag` is a property that holds an integer value from 0 to 2^64-1 to identify the tagged data item.
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
@@ -42,7 +42,7 @@ When called with `new`, `Tagged` returns the instance itself.
 
 ### `.toCBOR()` <Badge variant="instance" /><Badge variant="method" />
 
-`.toCBOR()` is a function that returns information for encoding to CBOR.
+`.toCBOR` is a function that returns information for encoding into CBOR.
 
 ```ts
 toCBOR(): [tag: number | bigint, value: unknown];
@@ -54,9 +54,9 @@ None.
 
 #### Return Value
 
-Returns the information for encoding to CBOR.
+Returns information for encoding into CBOR.
 
-### Remarks
+### Notes
 
 See also:
 

@@ -4,38 +4,38 @@ title: Authentication
 
 import Badge from "~/components/en/Badge.astro";
 
-There are two authentication methods. The first uses a username and password. This requires the username and password defined using the [`DEFINE USER`](https://surrealdb.com/docs/surrealql/statements/define/user) statement. The second uses custom authentication defined in a [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement. For the sake of clarity, this document will refer to the former as "user authentication" and the latter as "access authentication".
+There are two methods of authentication. One is authenticating with username and password. This requires a username and password defined using the [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) statement. The other is custom authentication defined using the [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement. We refer to the former as "User Authentication" and the latter as "Access Authentication".
 
 ### `.signin()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs in to SurrealDB using either user authentication or access authentication.
+Signs you in to SurrealDB using User Authentication or Access Authentication.
 
 ```ts
 signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `auth`
 
-Authentication information required for user authentication or access authentication. The required parameters for each authentication type are as follows:
+The information required for User Authentication or Access Authentication. The required parameters for each authentication type are as follows:
 
-| Authentication type | Parameters |
+| Authentication Type | Parameters |
 | --- | ---|
-| Root user | `{ user: string, pass: string }` |
-| Namespace user | `{ user: string, pass: string, ns: string }` |
-| Database user | `{ user: string, pass: string, ns: string, db: string }` |
+| Root User | `{ user: string, pass: string }` |
+| Namespace User | `{ user: string, pass: string, ns: string }` |
+| Database User | `{ user: string, pass: string, ns: string, db: string }` |
 | Access | `{ ac: string, ns: string, db: string, [param: string]: unknown }` |
 
-Access authentication typically requires additional parameters depending on the defined access (`ac`).
+Usually, Access Authentication requires additional parameters based on the defined access (`ac`).
 
 ##### `options`
 
-Options for the PRC request.
+Options for the RPC request.
 
-#### Returns
+#### Return Value
 
-A `Promise` object that resolves to a `Jwt`.
+Returns a `Promise` object that resolves to a `Jwt`.
 
 #### Examples
 
@@ -110,7 +110,7 @@ console.log(jwt.user);      // 'db_user'
 await db.close();
 ```
 
-The following example signs in to SurrealDB with record access. The record ID is set in `.user`:
+The following example signs in to SurrealDB using record access. `.user` is set to the record ID:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -135,27 +135,27 @@ await db.close();
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs up to SurrealDB using access authentication.
+Signs up to SurrealDB using Access Authentication.
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `auth`
 
-Authentication information required for access authentication.
+The information required for Access Authentication.
 
 ##### `options`
 
 Options for the PRC request.
 
-#### Returns
+#### Return Value
 
-A `Promise` object that resolves to a `Jwt`.
+Returns a `Promise` object that resolves to a `Jwt`.
 
-#### Example
+#### Examples
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -186,19 +186,19 @@ Authenticates the current connection using a JWT.
 authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `token`
 
-The JWT to authenticate.
+The JWT to authenticate with.
 
 ##### `options`
 
 Options for the RPC request.
 
-#### Returns
+#### Return Value
 
-A `Promise` object that resolves to `undefined`.
+Returns a `Promise` object that resolves to `undefined`.
 
 ### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -208,18 +208,18 @@ Invalidates the authentication of the current connection.
 invalidate(options?: ClientRpcOptions): Promise<void>
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `options`
 
 Options for the RPC request.
 
-#### Returns
+#### Return Value
 
-A `Promise` object that resolves to `undefined`.
+Returns a `Promise` object that resolves to `undefined`.
 
 {/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
 
-#### Parameters
+#### Arguments
 
-#### Returns */}
+#### Return Value */}

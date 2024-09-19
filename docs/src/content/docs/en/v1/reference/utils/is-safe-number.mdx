@@ -20,15 +20,12 @@ function isSafeNumber(value: number): boolean;
 
 ##### `value`
 
-The number to check.
+The number to be validated.
 
-#### Returns
+#### Return Value
 
-Returns `false` if `value` is any of the following:
+Returns `false` if `value` is:
 
 - `NaN`
 - Infinity
-- Greater than or equal to 2^53-1
-- Less than or equal to -2^53-1
-
-Otherwise, returns `true`. 
+- Outside the range of ±2^53-1

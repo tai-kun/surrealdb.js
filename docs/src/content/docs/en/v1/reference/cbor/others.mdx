@@ -12,7 +12,7 @@ import { write } from "@tai-kun/surrealdb/cbor";
 
 ### Syntax
 
-`write` is a helper function that writes any encodable JavaScript value to a `Writer` in CBOR format.
+`write` is a helper function that writes any JavaScript value that can be encoded into CBOR format to a `Writer`.
 
 ```ts
 write(writer: Writer, value: unknown, options?: WriteOptions): void;
@@ -22,11 +22,11 @@ write(writer: Writer, value: unknown, options?: WriteOptions): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
-A JavaScript value to encode into a CBOR-formatted `Uint8Array`. The following JavaScript values can be passed to `value`:
+A JavaScript value to be encoded to a CBOR formatted `Uint8Array`. The following JavaScript values can be passed to `value`:
 
 - Primitive values
   - `number`
@@ -35,29 +35,29 @@ A JavaScript value to encode into a CBOR-formatted `Uint8Array`. The following J
   - `boolean`
   - `null`
   - `undefined`
-- Objects with a `.toCBOR()` method
-- Arrays or `Set`
-- Plain objects or `Map`
-- `Uint8Array`
-- `Simple` objects
-- Values that can be replaced with the optional `replacer`
+- Objects with `.toCBOR()` method.
+- Array or `Set`.
+- Plain object or `Map`.
+- `Uint8Array`.
+- `Simple` object.
+- A value that can be replaced by an optional `replacer`.
 
-If `toCBOR` property is a function, it will be called preferentially rather than treating it as a primitive value.
+If the value is not a primitive value and has a `toCBOR` property that is a function, it will be called preferentially.
 
 ##### `options`
 
-Write options.
+Writing options.
 
 `replacer?: Replacer | Replacer[]`
-:   The encoder encodes most values to CBOR by default, but you can replace special values that do not apply to encodable values. This option allows you to implement replacement processing by specifying a function or an array of functions. If the function returns the `CONTINUE` symbol obtained with `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, the subsequent function is called. If nothing can be replaced, `SurrealTypeError` is thrown.
+:   The encoder encodes most values to CBOR by default, but special values that do not fit may be replaced with encodable values. This option can be used to implement the replacement process by specifying a function or an array of functions. If the function returns the `CONTINUE` symbol obtained by `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, subsequent functions will be called. If the value cannot be replaced, `SurrealTypeError` will be thrown.
 
 `isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
-:   This option is a function that validates whether the key of a `Map` object is safe. The function takes two arguments: `key` and `map`. `key` is the value of the key, and `map` is the `Map` object being validated. If this function returns `false`, `CborUnsafeMapKeyError` is thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that specifying this option completely overrides the default validation. If you want to add your own validation to the default validation, you should also determine that `"__proto__"` or `"constructor"` are unsafe keys.
+:   This option is a function that verifies that the keys of a `Map` object are safe. The function takes two arguments, `key` and `map`. `key` is the value of the key, and `map` is the `Map` object being verified. If this function returns `false`, `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` is considered an unsafe key. Note that specifying this option will completely overwrite the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
 
 `isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
-:   This option is a function that validates whether the key of a plain object is safe. The function takes two arguments: `key` and `obj`. `key` is the value of the key, and `obj` is the plain object being validated. If this function returns `false`, `CborUnsafeMapKeyError` is thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that specifying this option completely overrides the default validation. If you want to add your own validation to the default validation, you should also determine that `"__proto__"` or `"constructor"` are unsafe keys.
+:   This option is a function that verifies that the keys of a plain object are safe. The function takes two arguments, `key` and `obj`. `key` is the value of the key, and `obj` is the plain object being verified. If this function returns `false`, `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` is considered an unsafe key. Note that specifying this option will completely overwrite the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -81,13 +81,13 @@ writeNumber(writer: Writer, value: number): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
-A number. For integers, values from -2^53-1 to 2^53-1 are valid. In JavaScript, there is no way to determine that `.0` is a floating point number, so in that case it is encoded as an integer value in CBOR. For example, `-1.0` is `-1`, which is an integer.
+A number. For integers, values from -2^53-1 to 2^53-1 are valid. In JavaScript, there is no way to determine `.0` as a floating point number, so it will be encoded as an integer value to CBOR. For example, `-1.0` is `-1` and is an integer.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -111,13 +111,13 @@ writeBigInt(writer: Writer, value: bigint): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
 A `bigint`. Values from -2^64 to 2^64-1 are valid.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -141,13 +141,13 @@ writeByteString(writer: Writer, value: Uint8Array): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
 A `Uint8Array`.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -171,13 +171,13 @@ writeUtf8String(writer: Writer, value: string): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
 A UTF-8 string.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -201,13 +201,13 @@ writeEncodedUtf8String(writer: Writer, value: Uint8Array): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
 A UTF-8 encoded string (`Uint8Array`).
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -231,13 +231,13 @@ writeBoolean(writer: Writer, value: boolean): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
 A boolean value.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -251,7 +251,7 @@ import { writeNullable } from "@tai-kun/surrealdb/cbor";
 
 ### Syntax
 
-`writeNullable` is a helper function that writes a `null` or `undefined` value to a `Writer`.
+`writeNullable` is a helper function that writes `null` or `undefined` to a `Writer`.
 
 ```ts
 writeNullable(writer: Writer, value: null | undefined): void;
@@ -261,13 +261,13 @@ writeNullable(writer: Writer, value: null | undefined): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
-A `null` or `undefined` value.
+`null` or `undefined`.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -291,17 +291,17 @@ writeHeader(writer: Writer, mt: MajorType, length: number | bigint): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `mt`
 
-The major type of CBOR. Must be an integer value from 0 to 7.
+CBOR Major Type. This should be an integer value between 0 and 7.
 
 ##### `length`
 
 The data itself or the length of the data in bytes.
 
-#### Return Value
+#### Return value
 
 None.
 
@@ -325,12 +325,12 @@ writePayload(writer: Writer, value: Uint8Array): void;
 
 ##### `writer`
 
-A `Writer` to write the value to a `Uint8Array`.
+A `Writer` to write the value to as a `Uint8Array`.
 
 ##### `value`
 
 The payload of the CBOR data item.
 
-#### Return Value
+#### Return value
 
 None.

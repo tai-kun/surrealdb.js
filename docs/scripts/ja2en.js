@@ -16,35 +16,46 @@ if (!API_KEY) {
   throw new Error("API_KEY not found");
 }
 
+const FROM_LANG = "ja";
+const TO_LANG = "en";
 const PROMPT = `
-あなたにはこれから日本語で書かれたドキュメントを自然な英語にしてもらいます。
+あなたは日本語と英語、JavaScript、TypeScriptの精通しているプログラマです。あなたにはこれから日本語で書かれたドキュメントを自然な英語にしてもらいます。
+そのドキュメントには主に、TypeScriptコードで書かれたSurreaDBのSDKの使用方法に関する内容が、MDX形式で記されています。
+ただし、次の指示に従って、<content>タグ内のドキュメントを自然な英語にしてください。
 
-以下の指示に従ってください。
-- 日本語ドキュメントには主に、TypeScriptコードで書かれた、SurreaDBのSDKの使用方法に関する内容が記されています。
-- 公にするドキュメントとして適切な文体になるように配慮してください。ただし、技術的なニュアンスを保ってください。
+- 英語に翻訳した後も有効なMDX形式になるようにしてください。
+- 公にするドキュメントとして適切な文体になるように配慮してください。
+- 常に技術的なニュアンスを保ってください。
 - ファイルパスやURLは絶対に変更しないでください。
+- 最初に、<thinking>タグ内であなたに与えられた指示に対する解釈を述べてください。
+- 次に、<output>タグ内にドキュメントを回答してください。
 
-それでは、以下の日本語で書かれた MDX 形式のドキュメントを自然な英語にして、その結果だけを示してください。
+<content>
+$1
+</content>
 `.trim();
+// - 回答途中で誤りに気が付いた場合は<reflection>タグ内で修正点を列挙してください。
+// - 誤りがある場合は<output>タグ内のドキュメントを修正したドキュメントを<fixed>タグ内に提供してください。
 
 /**
  * @type {Record<string, string>}
  */
 let cache = {};
+const cacheDir = `cache/${FROM_LANG}2${TO_LANG}`;
 
 try {
-  await fs.access("cache/ja2en/meta.json");
-  const json = await fs.readFile("cache/ja2en/meta.json", "utf-8");
+  await fs.access(cacheDir + "/meta.json");
+  const json = await fs.readFile(cacheDir + "/meta.json", "utf-8");
   cache = JSON.parse(json);
 } catch {}
 
 const ai = new GoogleGenerativeAI(API_KEY);
 const model = ai.getGenerativeModel({
-  // model: "gemini-1.5-flash",
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
+  // model: "gemini-1.5-pro",
 });
 
-const files = await glob("src/content/docs/ja/**/*.mdx");
+const files = await glob(`src/content/docs/${FROM_LANG}/**/*.mdx`);
 
 try {
   for (const file of files) {
@@ -53,10 +64,10 @@ try {
         .toString(10)
         .padStart(files.length.toString(10).length, "0")
     }/${files.length}] `;
-    const distFile = file.replace("/ja/", "/en/");
+    const distFile = file.replace(`/${FROM_LANG}/`, `/${TO_LANG}/`);
     const cacheFile = path.join(
-      "cache/ja2en/content",
-      file.slice(file.indexOf("/ja/") + 4),
+      cacheDir + "/content",
+      file.slice(file.indexOf(`/${FROM_LANG}/`) + `/${FROM_LANG}/`.length),
     );
     const content = await fs.readFile(file, "utf-8");
     const hash = crypto.createHash("sha256").update(content).digest("hex");
@@ -76,37 +87,64 @@ try {
     let result;
 
     while (true) {
-      try {
-        result = await model.generateContent(`${PROMPT}\n${content}`);
-        break;
-      } catch (e) {
-        if (e instanceof GoogleGenerativeAIFetchError) {
-          console.error(e.message);
-        } else {
-          console.error(e);
-        }
+      while (true) {
+        try {
+          result = await model.generateContent(PROMPT.replace("$1", content));
+          break;
+        } catch (e) {
+          if (e instanceof GoogleGenerativeAIFetchError) {
+            console.error(e.message);
+          } else {
+            console.error(e);
+          }
 
-        console.log(" ".repeat(progress.length) + "3 分間待ってやります。");
-        await setTimeout(3 * 60e3);
+          console.log(
+            " ".repeat(progress.length) + "過剰リクエストに付き 3 分間待機",
+          );
+          await setTimeout(3 * 60e3);
+
+          continue;
+        }
+      }
+
+      const answer = result.response.text();
+      const thinking = answer.match(/<thinking>([\s\S]*)<\/thinking>/);
+      const output = answer.match(/<output>([\s\S]*)<\/output>/);
+
+      if (!thinking || !output) {
+        console.error("出力を得られませんでした。再試行します。");
+
+        if (thinking) {
+          console.debug("指示に対する Gemini の解釈:");
+          console.debug(thinking[1].trim());
+        }
 
         continue;
       }
+
+      const text = output[1]
+        .trim()
+        .replace(new RegExp(`/${FROM_LANG}/`, "g"), `/${TO_LANG}/`)
+        .replace(
+          new RegExp(`/components/(?!${TO_LANG}/)`, "g"),
+          `/components/${TO_LANG}/`,
+        )
+        + "\n";
+
+      await fs.mkdir(path.dirname(distFile), { recursive: true });
+      await fs.writeFile(distFile, text, "utf-8");
+
+      await fs.mkdir(path.dirname(cacheFile), { recursive: true });
+      await fs.writeFile(cacheFile, text, "utf-8");
+
+      cache[file] = hash;
+
+      break;
     }
-
-    const text = result.response.text()
-      .replace(/\/ja\//g, "/en/")
-      .replace(/\/components\/(?!en\/)/g, "/components/en/");
-
-    await fs.mkdir(path.dirname(distFile), { recursive: true });
-    await fs.writeFile(distFile, text, "utf-8");
-
-    await fs.mkdir(path.dirname(cacheFile), { recursive: true });
-    await fs.writeFile(cacheFile, text, "utf-8");
-
-    cache[file] = hash;
   }
 } finally {
+  cache = Object.fromEntries(Object.keys(cache).sort().map(k => [k, cache[k]]));
   const json = JSON.stringify(cache, null, 2);
-  await fs.mkdir("cache/ja2en", { recursive: true });
-  await fs.writeFile("cache/ja2en/meta.json", json, "utf-8");
+  await fs.mkdir(cacheDir, { recursive: true });
+  await fs.writeFile(cacheDir + "/meta.json", json, "utf-8");
 }

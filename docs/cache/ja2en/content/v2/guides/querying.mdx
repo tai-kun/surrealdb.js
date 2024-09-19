@@ -1,12 +1,12 @@
 ---
-title: Query
+title: Queries
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
 ### `.query()` <Badge variant="instance" /><Badge variant="method" />
 
-Executes custom SurrealQL queries.
+Executes custom SurrealQL.
 
 ```ts
 query(
@@ -16,29 +16,29 @@ query(
 ): Promise<unknown[]>;
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `surql`
 
-A string containing the SurrealQL query or a pre-prepared query object.
+A SurrealQL string or a pre-prepared query.
 
 ##### `vars`
 
-Variables to pass to the SurrealQL query at execution time. Note that variable names should not start with `$`.
+Variables to pass when executing the SurrealQL. Be careful not to start variable names with `:`.
 
 ##### `options`
 
 Options for the PRC request.
 
-#### Return Value
+#### Returns
 
-Returns a `Promise` object that resolves with an array of results from the SurrealQL query execution. If one or more statements fail, it rejects with a `QueryFailedError` containing the error messages.
+Returns a `Promise` object that resolves with an array of the results of the SurrealQL execution. It will reject with a `QueryFailedError` if any of the statements failed, including the error message for those statements.
 
-Note that there is no way to retrieve the execution results if this method rejects. If you need to handle errors manually, you can use [`.queryRaw()`](#queryraw).
+There is no way to get the results if this method rejects. If you want to handle error handling manually, you can use [`.queryRaw()`](#queryraw).
 
-#### Examples
+#### Example
 
-The following example shows a successful query execution:
+The following example executes a query successfully:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -58,7 +58,7 @@ console.log(results);
 await db.close();
 ```
 
-The following example throws a `QueryFailedError` because one of the statements fails:
+The following example will have one statement that fails, causing the query to be rejected with a `QueryFailedError`:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -92,7 +92,7 @@ await db.close();
 
 ### `.queryRaw()` <Badge variant="instance" /><Badge variant="method" />
 
-Executes custom SurrealQL queries.
+Executes custom SurrealQL.
 
 ```ts
 queryRaw(
@@ -102,23 +102,23 @@ queryRaw(
 ): Promise<QueryResult[]>;
 ```
 
-#### Parameters
+#### Arguments
 
 ##### `surql`
 
-A string containing the SurrealQL query or a pre-prepared query object.
+A SurrealQL string or a pre-prepared query.
 
 ##### `vars`
 
-Variables to pass to the SurrealQL query at execution time. Note that variable names should not start with `$`.
+Variables to pass when executing the SurrealQL. Be careful not to start variable names with `:`.
 
 ##### `options`
 
 Options for the PRC request.
 
-#### Return Value
+#### Returns
 
-Returns a `Promise` object that resolves with an array of results from the SurrealQL query execution.
+Returns a `Promise` object that resolves with an array of the results of the SurrealQL execution.
 
 ```ts
 type QueryResult = {

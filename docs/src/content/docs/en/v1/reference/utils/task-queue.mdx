@@ -5,7 +5,7 @@ title: TaskQueue
 import { Aside } from "@astrojs/starlight/components";
 import Badge from "~/components/en/Badge.astro";
 
-`TaskQueue` is a class for managing asynchronous tasks. It does not provide any means to control concurrency, as all task runners are executed asynchronously. 
+The `TaskQueue` class manages asynchronous tasks. It does not provide a way to control concurrency; all task runners execute asynchronously.
 
 ### Import
 
@@ -23,9 +23,9 @@ new TaskQueue();
 
 None.
 
-#### Returns
+#### Return Value
 
-When called with `new`, `TaskQueue` returns its instance.
+When called via `new`, `TaskQueue` returns its instance.
 
 ### `.count` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
@@ -33,7 +33,7 @@ Represents the number of task runners currently added to the queue.
 
 ### `.add()` <Badge variant="instance" /><Badge variant="method" />
 
-`.add()` adds a task runner to the queue.
+`.add` adds a task runner to the queue.
 
 ```ts
 add<T>(
@@ -43,20 +43,20 @@ add<T>(
 ```
 
 <Aside type="caution">
-  If the task runner is expected to have a long execution time, it is recommended to immediately interrupt the task when the abort signal passed to the task runner receives an abort event. 
+  If a task runner may take a long time to execute, it is recommended that the task runner immediately terminate when the cancellation signal passed to the task runner receives a cancellation event.
 </Aside>
 
 #### Arguments
 
 ##### `runner`
 
-The task runner. The task runner will receive `TaskRunnerArgs` as its argument, which includes an abort signal `signal`.
+The task runner. The task runner's arguments will be passed `TaskRunnerArgs`, which includes the cancellation signal `signal`.
 
 ##### `options`
 
-Options for the task runner. You can pass an abort signal for this task runner.
+Options for the task runner. The cancellation signal for this task runner can be passed.
 
-#### Returns
+#### Return Value
 
 Returns a `StatefulPromise` that resolves with the return value of the task runner.
 
@@ -77,27 +77,27 @@ console.log(text);
 
 ### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
-`.idle()` is a function that waits until the queue becomes empty. Task runners are removed from the queue immediately after they are completed, regardless of whether they are resolved or rejected. Therefore, an empty queue means that all task runners have finished executing.
+`.idle` is a function for waiting until the queue is empty. Task runners are removed from the queue immediately after they complete, regardless of whether they resolve or reject. Therefore, an empty queue signifies that all task runners have finished executing.
 
 ```ts
 idle(): StatefulPromise<void>;
 ```
 
 <Aside type="caution">
-  `.idle` will not catch errors thrown by the task runners added with the `.add` method. Since the task runners are executed within a `StatefulPromise`, you will not be able to notice any errors in the task runners without error handling.
+  `.idle` does not catch errors thrown by task runners added with the `.add` method. As task runners are executed within a `StatefulPromise`, you cannot be aware of task runner errors without error handling.
 </Aside>
 
 #### Arguments
 
 None.
 
-#### Returns
+#### Return Value
 
 Returns a `StatefulPromise` that resolves with `void`.
 
 #### Example
 
-The following example waits for the task runners added to the queue to finish, regardless of whether they are resolved or rejected:
+The following example waits until the task runners added to the queue finish, regardless of whether they resolve or reject:
 
 ```ts
 import { TaskQueue } from "@tai-kun/surrealdb/utils";
@@ -127,11 +127,11 @@ Output:
 [ 'Hello' ]
 ```
 
-In the example above, `throw null` is not caught anywhere, and the script will finish successfully. To notice errors in task runners, you need to handle them individually.
+In the above example, `throw null` is not caught anywhere and the script exits gracefully. To be aware of task runner errors, you need to handle them individually.
 
 ### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 
-`.abort()` is a function that dispatches an abort event to the `signal` of all task runners. 
+`.abort` is a function that sends a cancellation event to the `signal` of all task runners.
 
 ```ts
 abort(reason?: unknown): void;
@@ -141,8 +141,8 @@ abort(reason?: unknown): void;
 
 ##### `reason`
 
-The reason for aborting.
+The reason for cancellation.
 
-#### Returns
+#### Return Value
 
 None.

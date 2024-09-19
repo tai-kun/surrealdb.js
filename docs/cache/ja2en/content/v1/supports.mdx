@@ -6,7 +6,7 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## JavaScript
 
-This SDK utilizes `bigint`, requiring ES2020 or later as the JavaScript language specification. It is expected to work with the following browsers:
+This SDK uses `bigint`, so it requires ES2020 or later as the JavaScript language specification. It is expected to work in the following browsers:
 
 | Browser | Version |
 | --- | --- |
@@ -23,12 +23,12 @@ This SDK utilizes `bigint`, requiring ES2020 or later as the JavaScript language
 | --- | --- | --- |
 | SurrealDB | `^1.5.4` | [GitHub](https://github.com/surrealdb/surrealdb) |
 | Node.js   | `18.x`,<br/>`20.x`,<br/>`^22.5.1` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=v1&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml) |
-| Deno      | `^1.44.3` | Not tested |
+| Deno      | `^1.44.3` | Untested |
 | Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=v1&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
 
-- Please note that Node.js v22 is not yet LTS.
-- Deno has not been tested but is expected to work. However, versions v1.44.3 and above are recommended. Versions prior to this have a bug that falsely detects `AbortSignal.timeout()` as a resource leak.
-- It is recommended to always use the latest version of Bun.
+- Note that Node.js v22 is not yet LTS.
+- Deno has not been tested, but it should likely work. However, versions 1.44.3 or later are recommended. Versions prior to this have a bug where `AbortSignal.timeout()` is incorrectly detected as a resource leak.
+- It's recommended to always use the latest version of Bun.
 
 ### Browser
 
@@ -38,4 +38,4 @@ This SDK utilizes `bigint`, requiring ES2020 or later as the JavaScript language
 | Firefox | `>=100` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=v1&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml) |
 | WebKit  | `>=15.4` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/webkit.yml?branch=v1&style=flat&logo=safari&label=WebKit)](https://github.com/tai-kun/surrealdb.js/actions/workflows/webkit.yml) |
 
-- Supported browsers (engines) correspond to the minimum versions Playwright runs on in CI. Therefore, it may work with versions older than those listed above, but they have not been tested. 
+- The supported browsers (engines) correspond to the minimum versions that Playwright works on in CI. Therefore, it may work in versions below the above, but we have not tested it.

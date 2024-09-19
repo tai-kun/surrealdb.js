@@ -4,7 +4,7 @@ title: Tagged
 
 import Badge from "~/components/en/Badge.astro";
 
-`Tagged` is a custom value identified by an integer value from 0 to 2^64-1.
+`Tagged` is a custom value identified by an integer value between 0 and 2^64-1.
 
 ### Import
 
@@ -22,7 +22,7 @@ new Tagged<T>(tag: number | BigInt, value: T);
 
 ##### `tag`
 
-An integer value from 0 to 2^64-1 that identifies the tagged data item. Note that in JavaScript, you must use BigInt for numbers greater than 2^53-1.
+An integer value between 0 and 2^64-1 used to identify the tagged data item. Note that in JavaScript, use BigInt if you want to use a number greater than 2^53-1.
 
 ##### `value`
 
@@ -30,19 +30,19 @@ The value of the tagged data item.
 
 #### Return Value
 
-When called with `new`, `Tagged` returns the instance itself.
+When called through `new`, `Tagged` returns its instance.
 
 ### `.tag` <Badge variant="instance" /><Badge variant="property" />
 
-`.tag` is a property that holds the integer value from 0 to 2^64-1 identifying the tagged data item.
+`.tag` is a property holding an integer value between 0 and 2^64-1 used to identify the tagged data item.
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-`.value` is a property that stores the value of the tagged data item.
+`.value` is a property holding the value of the tagged data item.
 
 ### `.toCBOR()` <Badge variant="instance" /><Badge variant="method" />
 
-`.toCBOR()` is a function that returns information for encoding to CBOR.
+`.toCBOR` is a function that returns information for encoding to CBOR.
 
 ```ts
 toCBOR(): [tag: number | bigint, value: unknown];
@@ -54,9 +54,9 @@ None.
 
 #### Return Value
 
-Returns the information for encoding to CBOR.
+Returns information for encoding to CBOR.
 
-### Remarks
+### Notes
 
 See also:
 

@@ -1,0 +1,39 @@
+---
+title: BoundExcluded
+banner:
+  content: これは実験的な機能です。
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+[`Range`](/v2/api/data/range) を参照してください。
+
+### インポート
+
+```ts
+import { BoundExcluded } from "@tai-kun/surrealdb/data-types/decode-only";
+import { BoundExcluded } from "@tai-kun/surrealdb/data-types/encodable";
+import { BoundExcluded } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+新しい `BoundExcluded` オブジェクトを作成します。
+
+```ts
+new BoundExcluded(source: unknown);
+```
+
+#### 引数
+
+##### `source`
+
+調査中。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`BoundExcluded` はそのインスタンスを返します。
+
+### `.value` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+調査中。

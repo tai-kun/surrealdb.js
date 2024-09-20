@@ -46,6 +46,9 @@ function unsafe_toString36(bytes: Uint8Array): string {
   );
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/uuid)
+ */
 export default class Uuid extends Base implements Encodable {
   override valueOf(): string {
     return unsafe_toString36(this.bytes);

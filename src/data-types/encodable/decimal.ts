@@ -3,6 +3,9 @@ import { CBOR_TAG_DECIMAL, type Encodable } from "./spec";
 
 export type * from "../decode-only/decimal";
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/decimal)
+ */
 export default class Decimal extends Base implements Encodable {
   [Symbol.toPrimitive](hint: "default" | "string"): string;
   [Symbol.toPrimitive](hint: "number"): number;

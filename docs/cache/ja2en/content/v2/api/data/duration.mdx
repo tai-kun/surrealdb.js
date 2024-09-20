@@ -1,0 +1,863 @@
+---
+title: Duration
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+`Duration` is a class that represents a period of time.
+
+### Import
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+Creates a new `Duration` object.
+
+```ts
+new Duration(
+  source:
+    | [seconds?: number | bigint, nanoseconds?: undefined]
+    | [seconds: number | bigint, nanoseconds?: number | undefined],
+); // decode-only, encodable
+new Duration(
+  source:
+    | [seconds?: number | bigint, nanoseconds?: undefined]
+    | [seconds: number | bigint, nanoseconds?: number | undefined]
+    | number
+    | bigint
+    | string
+    | Duration,
+); // standard
+```
+
+#### Arguments
+
+##### `source`
+
+A pair of seconds and nanoseconds. If the preset is standard, more values can be converted to a `Duration` object.
+
+Inputs of type `number` are calculated in milliseconds. This is intended for use cases where the difference between two `Date` objects is converted to a `Duration` object:
+
+```ts
+const begin = new Date("2024-06-01T12:00:00.000Z");
+const end = new Date("2024-06-01T21:00:00.000Z");
+new Duration(end - begin);
+```
+
+Inputs of type `bigint` are calculated in nanoseconds. This is intended for use cases where, for example, high-precision times like those returned by [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint) are converted to a `Duration` object:
+
+```ts
+const begin = process.hrtime.bigint();
+await run();
+const end = process.hrtime.bigint();
+new Duration(end - begin);
+```
+
+Inputs of type `string` must be a string representation of the duration. The string representation of the duration is a format in which a set of numbers and units are concatenated. For example, `1h4h30m20s1350ms` represents "1 day, 4 hours, 30 minutes, 21 seconds, 350 milliseconds". The available units are as follows:
+
+| Unit | Description | Conversion |
+| --- | --- | --- |
+| `ns` | Nanoseconds |  |
+| `us` | Microseconds | `1us` -> `1000ns` |
+| `ms` | Milliseconds | `1ms` -> `1000us` |
+| `s`  | Seconds | `1s` -> `1000ms` |
+| `m`  | Minutes | `1m` -> `60s` |
+| `h`  | Hours | `1h` -> `60m` |
+| `d`  | Days | `1d` -> `24h` |
+| `w`  | Weeks | `1w` -> `7d` |
+| `y`  | Years | `1y` -> `365d` |
+
+`us` (`0x75`, `0x73`) can also be `µs` (`0xc2`, `0xb5`, `0x73`) or `μs` (`0xce`, `0xbc`, `0x73`) (the hexadecimal numbers in parentheses are the results of UTF-8 encoding of the unit string).
+
+#### Return Value
+
+When called through `new`, `Duration` returns its instance.
+
+### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+The seconds part of the duration. Read-only in presets below standard. The value is an integer from 0 to 2<sup>64</sup>-1.
+
+```ts
+.seconds: bigint;
+```
+
+### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+The nanoseconds part of the duration. Read-only in presets below standard. The value is an integer from 0 to 999999999.
+
+```ts
+.nanoseconds: number;
+```
+
+### `.parse()` <Badge variant="instance" /><Badge variant="property" /><Badge variant="encodable" />
+
+Maps the duration to each unit. The value of each unit is greater than or equal to 0 and less than the maximum value of that unit. Note that if the duration is 0, an object with only the `nanoseconds` property set to `0` is returned.
+
+```ts
+.parse(): {
+  years?: number;
+  weeks?: number;
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
+  microseconds?: number;
+  nanoseconds?: number;
+};
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns the result of mapping the duration to each unit. If the value of a unit is 0, the property is omitted. However, if the duration is 0, an object with only `nanoseconds` set to `0` is returned.
+
+#### Example
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(0);
+console.log(duration.parse());
+//-> { nanoseconds: 0 }
+```
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.parse());
+//-> { milliseconds: 12, microseconds: 345 }
+```
+
+### `.valueOf()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Gets the duration in nanoseconds.
+
+```ts
+.valueOf(): bigint;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns the duration in nanoseconds.
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.valueOf());
+//-> 12345000n
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Gets the string representation of the duration.
+
+`.toJSON()` and `.toSurql()` return the same result as this method.
+
+```ts
+.toString(): string;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns the millisecond-precision time string representation.
+
+#### Example
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.toString());
+//-> 12ms345µs
+```
+
+### `.toISOString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Gets the duration string in ISO format.
+
+```ts
+.toISOString(): string;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns the duration string in ISO format.
+
+#### Example
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration("2m3s456ms");
+console.log(duration.toISOString());
+//-> P2M3S
+```
+
+### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the pair of seconds and nanoseconds.
+
+```ts
+.getCompact(): [seconds: bigint, nanoseconds: number];
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns the pair of seconds and nanoseconds.
+
+### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Sets the date and time with a pair of seconds and nanoseconds.
+
+```ts
+.setCompact(compact: [seconds: bigint, nanoseconds: number]): void;
+```
+
+#### Arguments
+
+##### `compact`
+
+A pair of seconds and nanoseconds.
+
+#### Return Value
+
+None.
+
+### `.getYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the years. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getYears(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the years.
+
+### `.addYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of years to the duration.
+
+```ts
+.addYears(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of years.
+
+#### Return Value
+
+None.
+
+### `.subYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of years from the duration.
+
+```ts
+.subYears(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of years.
+
+#### Return Value
+
+None.
+
+### `.asYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of years.
+
+```ts
+.asYears(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of years.
+
+### `.getWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the weeks. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getWeeks(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the weeks.
+
+### `.addWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of weeks to the duration.
+
+```ts
+.addWeeks(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of weeks.
+
+#### Return Value
+
+None.
+
+### `.subWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of weeks from the duration.
+
+```ts
+.subWeeks(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of weeks.
+
+#### Return Value
+
+None.
+
+### `.asWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of weeks.
+
+```ts
+.asWeeks(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of weeks.
+
+### `.getDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the days. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getDays(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the days.
+
+### `.addDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of days to the duration.
+
+```ts
+.addDays(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of days.
+
+#### Return Value
+
+None.
+
+### `.subDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of days from the duration.
+
+```ts
+.subDays(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of days.
+
+#### Return Value
+
+None.
+
+### `.asDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of days.
+
+```ts
+.asDays(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of days.
+
+### `.getHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the hours. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getHours(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the hours.
+
+### `.addHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of hours to the duration.
+
+```ts
+.addHours(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of hours.
+
+#### Return Value
+
+None.
+
+### `.subHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of hours from the duration.
+
+```ts
+.subHours(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of hours.
+
+#### Return Value
+
+None.
+
+### `.asHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of hours.
+
+```ts
+.asHours(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of hours.
+
+### `.getMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the minutes. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getMinutes(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the minutes.
+
+### `.addMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of minutes to the duration.
+
+```ts
+.addMinutes(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of minutes.
+
+#### Return Value
+
+None.
+
+### `.subMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of minutes from the duration.
+
+```ts
+.subMinutes(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of minutes.
+
+#### Return Value
+
+None.
+
+### `.asMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of minutes.
+
+```ts
+.asMinutes(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of minutes.
+
+### `.getSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the seconds. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getSeconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the seconds.
+
+### `.addSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of seconds to the duration.
+
+```ts
+.addSeconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of seconds.
+
+#### Return Value
+
+None.
+
+### `.subSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of seconds from the duration.
+
+```ts
+.subSeconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of seconds.
+
+#### Return Value
+
+None.
+
+### `.asSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of seconds.
+
+```ts
+.asSeconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of seconds.
+
+### `.getMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the milliseconds. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getMilliseconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the milliseconds.
+
+### `.addMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of milliseconds to the duration.
+
+```ts
+.addMilliseconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of milliseconds.
+
+#### Return Value
+
+None.
+
+### `.subMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of milliseconds from the duration.
+
+```ts
+.subMilliseconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of milliseconds.
+
+#### Return Value
+
+None.
+
+### `.asMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of milliseconds.
+
+```ts
+.asMilliseconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of milliseconds.
+
+### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the microseconds. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getMicroseconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the microseconds.
+
+### `.addMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of microseconds to the duration.
+
+```ts
+.addMicroseconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of microseconds.
+
+#### Return Value
+
+None.
+
+### `.subMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of microseconds from the duration.
+
+```ts
+.subMicroseconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of microseconds.
+
+#### Return Value
+
+None.
+
+### `.asMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of microseconds.
+
+```ts
+.asMicroseconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of microseconds.
+
+### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the nanoseconds. If it is not a non-negative integer, 0 is returned.
+
+```ts
+.getNanoseconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a non-negative integer representing the nanoseconds.
+
+### `.addNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Adds the specified number of nanoseconds to the duration.
+
+```ts
+.addNanoseconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of nanoseconds.
+
+#### Return Value
+
+None.
+
+### `.subNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Subtracts the specified number of nanoseconds from the duration.
+
+```ts
+.subNanoseconds(value: number): void;
+```
+
+#### Arguments
+
+##### `value`
+
+The number of nanoseconds.
+
+#### Return Value
+
+None.
+
+### `.asNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Gets the millisecond representation of the number of nanoseconds.
+
+```ts
+.asNanoseconds(): number;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+The millisecond representation of the number of nanoseconds.

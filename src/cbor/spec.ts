@@ -35,7 +35,7 @@ export const HEADER_NULL = 0xf6; // (MT_SIMPLE_FLOAT << 5) | AI_SIMPLE_NULL;
 export const HEADER_UNDEFINED = 0xf7; // (MT_SIMPLE_FLOAT << 5) | AI_SIMPLE_UNDEFINED;
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/simple/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/simple/)
  */
 export class Simple {
   /**

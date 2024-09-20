@@ -28,13 +28,16 @@ const NANOSECONDS_PER_SECOND = 1_000_000_000n;
 
 const MAX_UINT_64 = 18446744073709551615n;
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/duration)
+ */
 export default class Duration {
   protected _seconds: bigint;
 
   protected _nanoseconds: number;
 
-  constructor(value: DurationSource) {
-    let [s = 0n, ns = 0n] = value;
+  constructor(source: DurationSource) {
+    let [s = 0n, ns = 0n] = source;
     this._seconds = BigInt(s) + (ns = BigInt(ns)) / NANOSECONDS_PER_SECOND;
     this._nanoseconds = Number(ns % NANOSECONDS_PER_SECOND);
     defineAsDuration(this);

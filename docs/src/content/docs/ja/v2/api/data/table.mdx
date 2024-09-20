@@ -1,0 +1,147 @@
+---
+title: Table
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+`Table` はレコード ID のテーブル名を放言するクラスです。
+
+### インポート
+
+```ts
+import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+import { Table } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+新しい `Table` オブジェクトを作成します。
+
+```ts
+new Table(source: string); // decode-only, encodable
+new Table(source: string | { name: string }); // standard
+```
+
+#### 引数
+
+##### `source`
+
+テーブル名または `Table` オブジェクトです。プリセットが standard 未満ならテーブル名のみ渡せます。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`Table` はそのインスタンスを返します。
+
+### `.name` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+テーブル名です。このプロパティーを取得する場合、文字列はエスケープされません。
+
+```ts
+.name: string;
+```
+
+#### 例
+
+このプロパティーを取得する場合、文字列はエスケープされません。
+
+```ts
+import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
+
+const table = new Table("foo-bar");
+console.log(table.name);
+//-> foo-bar
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Table` オブジェクトを SurrealQL の変数で利用可能な文字列に変換します。
+
+`.valueOf()` と `.toJSON()` はこのメソッドと同じ結果を返します。
+
+```ts
+.toString(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+テーブル名を返します。
+
+#### 例
+
+```ts
+import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+
+const table = new Table("foo-bar");
+console.log(table.toString());
+//-> foo-bar
+```
+
+### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Table` オブジェクトを SurrealQL に埋め込める文字列に変換します。`.toString()` と似ていますが、テーブル名は SurrealDB の実装と同じようにエスケープされます。
+
+```ts
+.toSurql(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+テーブル名にエスケープされた文字列を返します。
+
+#### 例
+
+```ts
+import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+
+const table = new Table("foo-bar");
+console.log(table.toSurql());
+//-> `foo-bar`
+```
+
+### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+`Table` オブジェクトを複製します。
+
+```ts
+.clone(): this;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+新しい `Table` オブジェクトを返します。`Table` クラスを継承している場合、そのクラスのインスタンスが返されます。
+
+### 発展
+
+#### 型ガード
+
+`Table` のテーブル名を型パラメーターを使って型安全にすることができます:
+
+```ts
+import { Table } from "@tai-kun/surrealdb/data-types/standard";
+
+function isUserTable(table: unknown): table is Table<"user"> {
+  return table instanceof Table
+    && table.name === "user"
+}
+```
+
+#### `Table` オブジェクトの汎用的な判定
+
+プリセットに依存せずに値が `Table` オブジェクトかを判定するには `isTable` 関数を使うことを推奨します。この関数は `instanceof` を使用しないため、検証する値のプリセットが不明な場合に役立ちます。
+
+```ts
+import { isTable } from "@tai-kun/surrealdb";
+```

@@ -1,0 +1,171 @@
+---
+title: Future
+banner:
+  content: This is an experimental feature.
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+`Future` is a class representing SurrealDB's [Futures feature](https://surrealdb.com/docs/surrealql/datamodel/futures).
+
+### Import
+
+```ts
+import { Future } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+Creates a new `Future` object.
+
+```ts
+new Future(source: string);
+```
+
+#### Arguments
+
+##### `source`
+
+The value or expression within the future's block.
+
+#### Return Value
+
+When called via `new`, `Future` returns its instance.
+
+### `.block` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+The value or expression within the future's block.
+
+```ts
+.block: number;
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Converts the `Future` object into a string.
+
+```ts
+.toString(): string;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns the value or expression within the future's block.
+
+#### Example
+
+```ts
+import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+
+const future = new Future(`time::now()`);
+console.log(future.toString());
+//-> time::now()
+```
+
+### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Converts the `Future` object into a string that can be embedded in SurrealQL. Similar to `.toString()`, but the block is enclosed in curly braces (`{}`) and cast with `<future>`.
+
+```ts
+.toSurql(): string;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns the future that can be embedded in SurrealQL.
+
+#### Example
+
+```ts
+import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+
+const future = new Future(`time::now()`);
+console.log(future.toSurql());
+//-> <future>{time::now()}
+```
+
+### `.surql()` <Badge variant="static" /><Badge variant="method" /><Badge variant="standard" />
+
+This method assists with writing SurrealQL. It allows you to write SurrealQL using template literals. Values embedded in template literals are automatically converted to SurrealQL. Also, if you have installed the [SurrealDB official extension](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql) for VSCode, syntax highlighting for template literals will be enabled.
+
+```ts
+.surql(texts: TemplateStringsArray, ...values: unknown[]): string;
+```
+
+#### Arguments
+
+##### `texts`
+
+An array of strings that constitute the template literal.
+
+##### `values`
+
+Values to be embedded between each element of `texts`.
+
+#### Return Value
+
+SurrealQL.
+
+#### Example
+
+```ts
+import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+
+const foo = "foo";
+const rid = new Thing("person", "tai-kun");
+const future = new Future(Future.surql`
+  LET $a = ${foo} + ${Future.raw("'-'")};
+  LET $b = type::string(${rid});
+  string::concat($a, $b)
+`);
+console.log(future.toSurql());
+//-> <future>{
+//->   LET $a = 'foo' + '-';
+//->   LET $b = type::string(r'person:⟨tai-kun⟩');
+//->   string::concat($a, $b)
+//-> }
+```
+
+Without using `.surql()`, the above example would be:
+
+```ts
+import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { toSurql } from "@tai-kun/surrealdb/utils";
+
+const foo = "foo";
+const rid = new Thing("person", "tai-kun");
+const future = new Future(/*surql*/ `
+  LET $a = ${toSurql(foo)} + ${"'-'"};
+  LET $b = type::string(${rid.toSurql()});
+  string::concat($a, $b)
+`);
+console.log(future.toSurql());
+//-> <future>{
+//->   LET $a = 'foo' + '-';
+//->   LET $b = type::string(r'person:⟨tai-kun⟩');
+//->   string::concat($a, $b)
+//-> }
+```
+
+- Strings and objects need to be converted to SurrealQL using the `toSurql` helper function or `.toSurql()` method.
+- You can embed strings into SurrealQL without using `Future.raw`.
+
+### Development
+
+#### General `Future` Object Determination
+
+It's recommended to use the `isFuture` function to determine whether a value is a `Future` object without relying on presets. This function does not use `instanceof`, making it useful when the preset of the value to be checked is unknown.
+
+```ts
+import { isFuture } from "@tai-kun/surrealdb";
+```

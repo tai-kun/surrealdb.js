@@ -1,0 +1,167 @@
+---
+title: Thing
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+`Thing` は[レコード ID](https://surrealdb.com/docs/surrealql/datamodel/ids) を表現するためのクラスです。
+
+### インポート
+
+```ts
+import { Thing } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Thing } from "@tai-kun/surrealdb/data-types/encodable";
+import { Thing } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+新しい `Thing` オブジェクトを作成します。
+
+```ts
+new Thing(source: [tb: string, id: string | number | bigint | object]);
+new Thing(tb: string, id: string | number | bigint | object);
+```
+
+#### 引数
+
+##### `source`
+
+レコード ID のテーブル部と ID 部のペアです。
+
+##### `tb`
+
+レコード ID のテーブル部です。
+
+##### `id`
+
+レコード ID の ID 部です。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`Thing` はそのインスタンスを返します。
+
+### `.tb` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+レコード ID のテーブル部です。このプロパティーを取得する場合、文字列はエスケープされません。
+
+```ts
+.tb: string;
+```
+
+#### 例
+
+このプロパティーを取得する場合、文字列はエスケープされません。
+
+```ts
+import { Thing } from "@tai-kun/surrealdb/data-types/decode-only";
+
+const thing = new Thing("foo-bar", 0);
+console.log(this.id);
+//-> foo-bar
+```
+
+### `.id` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+レコード ID の ID 部です。
+
+```ts
+.id: string | number | bigint | object;
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Thing` オブジェクトを SurrealQL の変数で利用可能な文字列に変換します。テーブル名と ID 部はそれぞれ SurrealDB の実装と同じようにエスケープ、フォーマットされます。またオブジェクトのプロパティーは昇順でソートされます。
+
+`.valueOf()` と `.toJSON()` はこのメソッドと同じ結果を返します。
+
+```ts
+.toString(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+レコード ID にフォーマットされた文字列を返します。
+
+#### 例
+
+```ts
+import { Thing } from "@tai-kun/surrealdb/data-types/encodable";
+
+const thing = new Thing([
+  "foo-bar",
+  new Uuid("018fb2c0-7bb7-7fca-8308-b24d0be065dc"),
+]);
+console.log(thing.toString());
+//-> ⟨foo-bar⟩:u'018fb2c0-7bb7-7fca-8308-b24d0be065dc'
+```
+
+### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Thing` オブジェクトを SurrealQL に埋め込める文字列に変換します。`.toString()` と似ていますが、`r` プレフィクスを追加することで、クエリーパーサーに文字列がレコード ID であることを伝えます。
+
+```ts
+.toSurql(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+レコード ID にフォーマットされた文字列を返します。
+
+#### 例
+
+```ts
+import { Thing } from "@tai-kun/surrealdb/data-types/encodable";
+
+const thing = new Thing("foo", "bar");
+console.log(thing.toSurql());
+//-> r'foo:bar'
+```
+
+### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+`Thing` オブジェクトを複製します。ただし ID 部は複製されずに参照されます。
+
+```ts
+.clone(): this;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+新しい `Thing` オブジェクトを返します。`Thing` クラスを継承している場合、そのクラスのインスタンスが返されます。
+
+### 発展
+
+#### 型ガード
+
+`Thing` のテーブル部と ID 部のそれぞれを型パラメーターを使って型安全にすることができます:
+
+```ts
+import { Thing, Uuid } from "@tai-kun/surrealdb/data-types/standard";
+
+function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
+  return thing instanceof Thing
+    && thing.tb === "user"
+    && thing.id instanceof Uuid
+}
+```
+
+#### `Thing` オブジェクトの汎用的な判定
+
+プリセットに依存せずに値が `Thing` オブジェクトかを判定するには `isThing` 関数を使うことを推奨します。この関数は `instanceof` を使用しないため、検証する値のプリセットが不明な場合に役立ちます。
+
+```ts
+import { isThing } from "@tai-kun/surrealdb";
+```

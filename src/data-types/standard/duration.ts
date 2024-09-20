@@ -31,6 +31,9 @@ const NANOSECONDS_PER_SECOND = 1_000_000_000n;
 
 const MAX_UINT_64 = 18446744073709551615n;
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/duration)
+ */
 export default class Duration extends Base {
   static get MAX() {
     return new this([MAX_UINT_64, 1e9 - 1]);

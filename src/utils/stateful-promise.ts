@@ -1,10 +1,10 @@
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#state)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#state)
  */
 export type StatefulPromiseState = "pending" | "fulfilled" | "rejected";
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#constructor)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#constructor)
  */
 export type StatefulPromiseExecutor<TValue> = (
   resolve: (value: TValue | PromiseLike<TValue>) => void,
@@ -12,11 +12,11 @@ export type StatefulPromiseExecutor<TValue> = (
 ) => void;
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/)
  */
 export default class StatefulPromise<TValue> implements PromiseLike<TValue> {
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#resolve)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#resolve)
    */
   static resolve<TValue = void>(value?: TValue | PromiseLike<TValue>) {
     if (value && typeof value === "object" && value.constructor === this) {
@@ -27,14 +27,14 @@ export default class StatefulPromise<TValue> implements PromiseLike<TValue> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#reject)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#reject)
    */
   static reject<TValue = never>(reason?: unknown): StatefulPromise<TValue> {
     return new this<TValue>((_, reject) => reject(reason));
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#withresolvers)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#withresolvers)
    */
   static withResolvers<TValue>(): {
     promise: StatefulPromise<TValue>;
@@ -56,7 +56,7 @@ export default class StatefulPromise<TValue> implements PromiseLike<TValue> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#try)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#try)
    */
   static try<TValue, TArgs extends readonly unknown[]>(
     func: (...args: TArgs) => TValue | PromiseLike<TValue>,
@@ -72,12 +72,12 @@ export default class StatefulPromise<TValue> implements PromiseLike<TValue> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#allrejected)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#allrejected)
    */
   static allRejected(promises: Iterable<unknown>): StatefulPromise<unknown[]>;
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#allrejected)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#allrejected)
    */
   static allRejected<TItem>(
     promises: Iterable<TItem>,
@@ -117,7 +117,7 @@ export default class StatefulPromise<TValue> implements PromiseLike<TValue> {
   protected _promise: Promise<void> | null;
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#constructor)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#constructor)
    */
   constructor(executor: StatefulPromiseExecutor<TValue>) {
     this._promise = new Promise<TValue>(executor).then(
@@ -133,14 +133,14 @@ export default class StatefulPromise<TValue> implements PromiseLike<TValue> {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#state)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#state)
    */
   get state(): StatefulPromiseState {
     return this._state;
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/stateful-promise/#then)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/stateful-promise/#then)
    */
   then<TFulfilledValue = TValue, TRejectedValue = never>(
     onFulfilled?:

@@ -74,6 +74,9 @@ export class GeometryPolygonBase<
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/geometry-polygon)
+ */
 export class GeometryPolygon
   extends GeometryPolygonBase<GeometryPolygonTypes<typeof GeometryLine>>
 {

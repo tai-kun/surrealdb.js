@@ -1,0 +1,229 @@
+---
+title: Uuid
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+UUID（Universally Unique Identifier）は、特定のエンティティを一意に識別するために使用される 128 ビットの識別子です。`Uuid` はこれを表現するためのクラスです。UUID v1 から v7 までに対応しています。なお UUID を生成するためには別途ライブラリまたはランタイムに組み込み済みの機能 (`node:crypto`　など) を使用する必要があります。
+
+### インポート
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+新しい `Uuid` オブジェクトを作成します。
+
+```ts
+new Uuid(source: Uint8Array); // decode-only, encodable
+new Uuid(source: Uint8Array | string); // standard
+```
+
+#### 引数
+
+##### `source`
+
+UUID のバイト配列表現または standard プリセットであれば文字列です。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`Uuid` はそのインスタンスを返します。
+
+### `.bytes` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+UUID のバイト配列です。
+
+```ts
+.bytes: Uint8Array;
+```
+
+### `.variant` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
+
+UUID のバリアントです。これは、UUID の 13 ビット目の上位ビットで定義され、以下の 3 つの主要なバリアントと、将来のために 1 つの予約済みのバリアントがあります。
+
+1. NCS 互換
+    - `0b0xxx`
+    - UUID が NCS（Network Computing System）互換であることを示しています。
+    - あまり一般的に使用されていません。
+2. RFC 4122 互換
+    - `0b10xx`
+    - RFC 4122（UUID の標準仕様）に基づく UUIDです。
+    - 一般的に使用されている UUID の形式です。v1（時間ベース）や v4（ランダム）などの形式が含まれます。
+3. Microsoft GUID 互換
+    - `0b110x`
+    - Microsoft が使用する GUID（Globally Unique Identifier）の形式です。
+4. 将来のために予約済み
+    - `0b111x`
+
+このプロパティーは上記のバリアントに加えて NIL UUID と MAX UUID も表現します。
+
+```ts
+.variant:
+  | "NIL" // 00000000-0000-0000-0000-000000000000
+  | "MAX" // ffffffff-ffff-ffff-ffff-ffffffffffff
+  | "NCS" // 0xxx (0b0000 ~ 0b0111)
+  | "RFC" // 10xx (0b1000 ~ 0b1011)
+  | "MS" // 110x (0b1100 ~ 0b1101)
+  | "RESERVED"; // 111x (0b1110 ~ 0b1111)
+```
+
+### `.version` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
+
+UUID のバリアントが `"RFC"` なら、UUID バージョン番号です。それ以外なら `null` です。
+
+```ts
+.version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | null;
+```
+
+### `.timestamp` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
+
+UUID のバリアントが `"RFC"` でバージョンが v1、v6、v7 のいずれかであれば、タイムスタンプ部になります。それ以外は `null` です。便宜上、タイムスタンプはすべて UNIX エポックからのミリ秒数に計算されます。
+
+```ts
+.timestamp: number | null;
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Uuid` オブジェクトを SurrealQL の変数で利用可能な文字列に変換します。
+
+`.valueOf()` と `.toJSON()` はこのメソッドと同じ結果を返します。
+
+```ts
+.toString(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+16 進数の UUID 文字列を返します。
+
+#### 例
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+
+const bytes = new Uint8Array([
+  0x26, 0xc8, 0x01, 0x63,
+  0x3b, 0x83,
+  0x48, 0x1b,
+  0x93, 0xda,
+  0xc4, 0x73, 0x94, 0x7c, 0xcc, 0xbc,
+]);
+const uuid = new Uuid(bytes);
+console.log(uuid.toString());
+//-> 26c80163-3b83-481b-93da-c473947cccbc
+```
+
+### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Uuid` オブジェクトを SurrealQL に埋め込める文字列に変換します。`.toString()` と似ていますが、`u` プレフィクスを追加することで、クエリーパーサーに文字列が UUID であることを伝えます。
+
+```ts
+.toSurql(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+`u` プレフィクスが付いた 16 進数の UUID 文字列を返します。
+
+#### 例
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+
+const bytes = new Uint8Array([
+  0x26, 0xc8, 0x01, 0x63,
+  0x3b, 0x83,
+  0x48, 0x1b,
+  0x93, 0xda,
+  0xc4, 0x73, 0x94, 0x7c, 0xcc, 0xbc,
+]);
+const uuid = new Uuid(bytes);
+console.log(uuid.toSurql());
+//-> u'26c80163-3b83-481b-93da-c473947cccbc'
+```
+
+### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+`Uuid` オブジェクトを複製します。
+
+```ts
+.clone(): this;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+新しい `Uuid` オブジェクトを返します。`Uuid` クラスを継承している場合、そのクラスのインスタンスが返されます。
+
+### `.compareTo()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+`Uuid` オブジェクトのタイムスタンプを比較します。
+
+```ts
+.compareTo(other: Uuid): -1 | 0 | 1;
+```
+
+#### 引数
+
+##### `other`
+
+比較対象の UUID
+
+#### 返値
+
+どちらか一方にタイムスタンプ部が無い、またはタイムスタンプが同じであれば `0` を返します。比較対象の UUID のタイムスタンプの方が進んだ時間なら `-1`、遅れた時間なら `1` を返します。
+
+#### 例
+
+次の例では、異なる UUID のバージョンのタイムスタンプを比較して、昇順に並び替えています:
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+
+const uuidv1 = new Uuid("0e004000-2073-11ef-8451-eb2a011f8691");
+const uuidv6 = new Uuid("1ef1fa9e-3968-6000-a77e-683eb1a35ebe");
+
+console.log(new Date(uuidv1.timestamp).toISOString());
+//-> 2024-06-02T00:00:00.000Z
+console.log(new Date(uuidv6.timestamp).toISOString());
+//-> 2024-06-01T00:00:00.000Z
+
+const uuidList = [
+  uuidv1,
+  uuidv6,
+];
+
+uuidList.sort((a, b) => a.compareTo(b));
+
+console.log(uuidList);
+//-> [
+//->   1ef1fa9e-3968-6000-a77e-683eb1a35ebe, (uuidv6)
+//->   0e004000-2073-11ef-8451-eb2a011f8691, (uuidv1)
+//-> ]
+```
+
+### 発展
+
+#### `Uuid` オブジェクトの汎用的な判定
+
+プリセットに依存せずに値が `Uuid` オブジェクトかを判定するには `isUuid` 関数を使うことを推奨します。この関数は `instanceof` を使用しないため、検証する値のプリセットが不明な場合に役立ちます。
+
+```ts
+import { isUuid } from "@tai-kun/surrealdb";
+```

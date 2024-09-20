@@ -17,11 +17,14 @@ function assertNumric(n: string): void {
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/decimal)
+ */
 export default class Decimal {
   protected readonly _value: string;
 
-  constructor(value: DecimalSource) {
-    assertNumric(this._value = value);
+  constructor(source: DecimalSource) {
+    assertNumric(this._value = source);
     defineAsDecimal(this);
   }
 

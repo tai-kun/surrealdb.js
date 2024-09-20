@@ -5,12 +5,12 @@ import { Writer, type WriterOptions } from "./writer";
 let mem: Memory;
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/encode/#options)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/encode/#options)
  */
 export interface EncodeOptions extends WriterOptions, WriteOptions {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/encode/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/encode/)
  */
 export default function encode(
   value: unknown,

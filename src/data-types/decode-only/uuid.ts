@@ -4,21 +4,24 @@ import { isValidBytes } from "../_internals/uuid";
 
 export type UuidSource = Uint8Array;
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/uuid)
+ */
 export default class Uuid {
   protected _bytes: Uint8Array;
 
-  constructor(value: UuidSource) {
+  constructor(source: UuidSource) {
     defineAsUuid(this);
 
-    if (!(value instanceof Uint8Array)) {
-      throw new SurrealTypeError("Uint8Array", value);
+    if (!(source instanceof Uint8Array)) {
+      throw new SurrealTypeError("Uint8Array", source);
     }
 
-    if (!isValidBytes(value)) {
-      throw new SurrealValueError("a valid uuid", Array.from(value));
+    if (!isValidBytes(source)) {
+      throw new SurrealValueError("a valid uuid", Array.from(source));
     }
 
-    this._bytes = value;
+    this._bytes = source;
   }
 
   get bytes(): Uint8Array {

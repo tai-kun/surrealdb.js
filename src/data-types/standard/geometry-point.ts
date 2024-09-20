@@ -70,6 +70,9 @@ export class GeometryPointBase<TTypes extends GeometryPointTypes>
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/geometry-point)
+ */
 export class GeometryPoint
   extends GeometryPointBase<GeometryPointTypes<typeof Number>>
 {

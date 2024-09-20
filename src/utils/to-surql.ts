@@ -9,7 +9,7 @@ import isPlainObject from "./is-plain-object";
 import { canToJSON, canToSurql } from "./traits";
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/to-surql/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/to-surql/)
  */
 export default function toSurql(value: unknown): string {
   function inner(

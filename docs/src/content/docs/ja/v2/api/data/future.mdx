@@ -1,0 +1,171 @@
+---
+title: Future
+banner:
+  content: これは実験的な機能です。
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+`Future` は SurrealDB の [Futures 機能](https://surrealdb.com/docs/surrealql/datamodel/futures) を表現するクラスです。
+
+### インポート
+
+```ts
+import { Future } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+新しい `Future` オブジェクトを作成します。
+
+```ts
+new Future(source: string);
+```
+
+#### 引数
+
+##### `source`
+
+future のブロック内の値や式です。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`Future` はそのインスタンスを返します。
+
+### `.block` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+future のブロック内の値や式です。
+
+```ts
+.block: number;
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Future` オブジェクトの文字列にします。
+
+```ts
+.toString(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+future のブロック内の値や式を返します。
+
+#### 例
+
+```ts
+import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+
+const future = new Future(`time::now()`);
+console.log(future.toString());
+//-> time::now()
+```
+
+### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Future` オブジェクトを SurrealQL に埋め込める文字列に変換します。`.toString()` と似ていますが、ブロックは波括弧 (`{}`) で囲われ、`<future>` でキャストされます。
+
+```ts
+.toSurql(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+SurrealQL に埋め込める future を返します。
+
+#### 例
+
+```ts
+import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+
+const future = new Future(`time::now()`);
+console.log(future.toSurql());
+//-> <future>{time::now()}
+```
+
+### `.surql()` <Badge variant="static" /><Badge variant="method" /><Badge variant="standard" />
+
+このメソッドは SurrealQL の記述を手助けします。テンプレートリテラルを使用して SurrealQL を記述することができます。テンプレートリテラルに埋め込まれた値は自動的に SurrealQL へ変換されます。また VSCode で [SurrealDB 公式の拡張機能](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql) をインストールしている場合、テンプレートリテラルのシンタックスハイライトが有効になります。
+
+```ts
+.surql(texts: TemplateStringsArray, ...values: unknown[]): string;
+```
+
+#### 引数
+
+##### `texts`
+
+テンプレートリテラルを構成する文字列の配列です。
+
+##### `values`
+
+`texts` の各要素の間に埋め込む値です。
+
+#### 返値
+
+SurrealQL です。
+
+#### 例
+
+```ts
+import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+
+const foo = "foo";
+const rid = new Thing("person", "tai-kun");
+const future = new Future(Future.surql`
+  LET $a = ${foo} + ${Future.raw("'-'")};
+  LET $b = type::string(${rid});
+  string::concat($a, $b)
+`);
+console.log(future.toSurql());
+//-> <future>{
+//->   LET $a = 'foo' + '-';
+//->   LET $b = type::string(r'person:⟨tai-kun⟩');
+//->   string::concat($a, $b)
+//-> }
+```
+
+上記の例を `.surql()` を使わないとすると:
+
+```ts
+import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { toSurql } from "@tai-kun/surrealdb/utils";
+
+const foo = "foo";
+const rid = new Thing("person", "tai-kun");
+const future = new Future(/*surql*/ `
+  LET $a = ${toSurql(foo)} + ${"'-'"};
+  LET $b = type::string(${rid.toSurql()});
+  string::concat($a, $b)
+`);
+console.log(future.toSurql());
+//-> <future>{
+//->   LET $a = 'foo' + '-';
+//->   LET $b = type::string(r'person:⟨tai-kun⟩');
+//->   string::concat($a, $b)
+//-> }
+```
+
+- 文字列やオブジェクトを `toSurql` ヘルパー関数や `.toSurql()` メソッドを使って SurrealQL 変換する必要があります。
+- `Future.raw` を使用せずに文字列を SurrealQL に埋め込むことができます。
+
+### 発展
+
+#### `Future` オブジェクトの汎用的な判定
+
+プリセットに依存せずに値が `Future` オブジェクトかを判定するには `isFuture` 関数を使うことを推奨します。この関数は `instanceof` を使用しないため、検証する値のプリセットが不明な場合に役立ちます。
+
+```ts
+import { isFuture } from "@tai-kun/surrealdb";
+```

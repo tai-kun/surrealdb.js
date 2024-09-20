@@ -17,6 +17,9 @@ export type ThingSource<
   id: TId,
 ];
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/thing)
+ */
 export default class Thing<
   TTb extends ThingTbSource = ThingTbSource,
   TId extends ThingIdSource = ThingIdSource,

@@ -169,7 +169,7 @@ export default class Client extends Base {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#signup)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#signup)
    */
   async signup(
     auth: RecordAccessAuth,
@@ -179,7 +179,7 @@ export default class Client extends Base {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#signin)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#signin)
    */
   async signin(
     auth: Auth,
@@ -189,7 +189,7 @@ export default class Client extends Base {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#authenticate)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#authenticate)
    */
   async authenticate(
     token: string | Jwt,
@@ -203,7 +203,7 @@ export default class Client extends Base {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#invalidate)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#invalidate)
    */
   async invalidate(
     options?: ClientRpcOptions | undefined,
@@ -271,7 +271,7 @@ export default class Client extends Base {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#queryraw)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/querying/#queryraw)
    */
   async queryRaw<TResults extends readonly QueryResult[] = QueryResult[]>(
     surql: string | PreparedQueryLike,
@@ -288,7 +288,7 @@ export default class Client extends Base {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/querying/#query)
    */
   async query<TReturns extends readonly unknown[] = unknown[]>(
     surql: string,
@@ -297,7 +297,7 @@ export default class Client extends Base {
   ): Promise<TReturns>;
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/querying/#query)
    */
   async query<TResult>(
     surql: Override<PreparedQueryLike, {
@@ -309,7 +309,7 @@ export default class Client extends Base {
   ): Promise<TResult>;
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/querying/#query)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/querying/#query)
    */
   async query<TSlot extends SlotLike, TResult>(
     surql: Override<PreparedQueryLike, {

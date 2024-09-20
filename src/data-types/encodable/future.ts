@@ -4,6 +4,7 @@ import { CBOR_TAG_FUTURE, type Encodable } from "./spec";
 export type * from "../decode-only/future";
 
 /**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/future)
  * @experimental
  */
 export default class Future extends Base implements Encodable {

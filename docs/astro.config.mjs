@@ -111,7 +111,83 @@ export default defineConfig({
           label: "API",
           items: [
             {
-              label: "cbor",
+              label: "Data Types",
+              translations: {
+                ja: "データ型",
+              },
+              items: [
+                {
+                  slug: "v2/api/data/thing",
+                  label: "Thing",
+                },
+                {
+                  slug: "v2/api/data/table",
+                  label: "Table",
+                },
+                {
+                  slug: "v2/api/data/uuid",
+                  label: "Uuid",
+                },
+                {
+                  slug: "v2/api/data/datetime",
+                  label: "Datetime",
+                },
+                {
+                  slug: "v2/api/data/duration",
+                  label: "Duration",
+                },
+                {
+                  slug: "v2/api/data/decimal",
+                  label: "Decimal",
+                },
+                {
+                  slug: "v2/api/data/future",
+                  label: "Future",
+                },
+                {
+                  slug: "v2/api/data/range",
+                  label: "Range",
+                },
+                {
+                  slug: "v2/api/data/bound-excluded",
+                  label: "BoundExcluded",
+                },
+                {
+                  slug: "v2/api/data/bound-included",
+                  label: "BoundIncluded",
+                },
+                {
+                  slug: "v2/api/data/geometry-point",
+                  label: "GeometryPoint",
+                },
+                {
+                  slug: "v2/api/data/geometry-line",
+                  label: "GeometryLine",
+                },
+                {
+                  slug: "v2/api/data/geometry-polygon",
+                  label: "GeometryPolygon",
+                },
+                {
+                  slug: "v2/api/data/geometry-multi-point",
+                  label: "GeometryMultiPoint",
+                },
+                {
+                  slug: "v2/api/data/geometry-multi-line",
+                  label: "GeometryMultiLine",
+                },
+                {
+                  slug: "v2/api/data/geometry-multi-polygon",
+                  label: "GeometryMultiPolygon",
+                },
+                {
+                  slug: "v2/api/data/geometry-collection",
+                  label: "GeometryCollection",
+                },
+              ],
+            },
+            {
+              label: "CBOR",
               items: [
                 {
                   slug: "v2/api/cbor/encode",
@@ -140,7 +216,10 @@ export default defineConfig({
               collapsed: false,
             },
             {
-              label: "utils",
+              label: "utilities",
+              translations: {
+                ja: "ユーティリティー",
+              },
               items: [
                 {
                   slug: "v2/api/utils/escape",

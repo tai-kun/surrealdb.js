@@ -74,6 +74,9 @@ export class GeometryMultiPolygonBase<
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/geometry-multi-polygon)
+ */
 export class GeometryMultiPolygon extends GeometryMultiPolygonBase<
   GeometryMultiPolygonTypes<typeof GeometryPolygon>
 > {

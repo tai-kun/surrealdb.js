@@ -85,6 +85,9 @@ function parseUuid36(uuid: string): Uint8Array {
   return bytes;
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/uuid)
+ */
 export default class Uuid extends Base {
   protected _variant: UuidVariant | undefined;
   protected _version: UuidVersion | null | undefined;
@@ -106,8 +109,8 @@ export default class Uuid extends Base {
     this._timestamp = undefined;
   }
 
-  constructor(value: UuidSource | string) {
-    super(typeof value === "string" ? parseUuid36(value) : value);
+  constructor(source: UuidSource | string) {
+    super(typeof source === "string" ? parseUuid36(source) : source);
   }
 
   get variant(): UuidVariant {

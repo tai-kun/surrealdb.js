@@ -32,6 +32,9 @@ export interface DatetimeLike {
   readonly nanoseconds: number;
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/datetime)
+ */
 export default class Datetime extends Date implements Encodable {
   protected _nanoseconds: number;
 

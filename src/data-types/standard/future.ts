@@ -6,6 +6,7 @@ import { escapeTb, toString } from "../_internals/thing";
 export type * from "../encodable/future";
 
 /**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/future)
  * @experimental
  */
 export default class Future extends Base {

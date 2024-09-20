@@ -45,6 +45,9 @@ export class GeometryMultiLineBase<
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/geometry-multi-line)
+ */
 export class GeometryMultiLine
   extends GeometryMultiLineBase<GeometryMultiLineTypes<typeof GeometryLine>>
 {

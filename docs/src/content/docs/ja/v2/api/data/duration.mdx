@@ -1,0 +1,863 @@
+---
+title: Duration
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+`Duration` は期間を表現するクラスです。
+
+### インポート
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+新しい `Duration` オブジェクトを作成します。
+
+```ts
+new Duration(
+  source:
+    | [seconds?: number | bigint, nanoseconds?: undefined]
+    | [seconds: number | bigint, nanoseconds?: number | undefined],
+); // decode-only, encodable
+new Duration(
+  source:
+    | [seconds?: number | bigint, nanoseconds?: undefined]
+    | [seconds: number | bigint, nanoseconds?: number | undefined]
+    | number
+    | bigint
+    | string
+    | Duration,
+); // standard
+```
+
+#### 引数
+
+##### `source`
+
+秒数とナノ秒数のペアです。プリセットが standard ならより多くの値を `Duration` オブジェクトにすることができます。
+
+`number` 型の入力はミリ秒単位で計算されます。これは `Date` オブジェクト同士の差分を `Duration` オブジェクトにする用途を想定しています:
+
+```ts
+const begin = new Date("2024-06-01T12:00:00.000Z");
+const end = new Date("2024-06-01T21:00:00.000Z");
+new Duration(end - begin);
+```
+
+`bigint` 型の入力はナノ秒単位で計算されます。これは例えば [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint) で返されるナノ秒のような、高精度な時間を `Duration` オブジェクトにする用途を想定しています:
+
+```ts
+const begin = process.hrtime.bigint();
+await run();
+const end = process.hrtime.bigint();
+new Duration(end - begin);
+```
+
+`string` 型の入力は期間の文字列表現である必要があります。期間の文字列表現は数字と単位を一組として、それが連続に並ぶフォーマットを指します。例えば `1h4h30m20s1350ms` は「1 日と 4 時間 30 分、21 秒 350 ミリ秒」です。利用可能な単位は次のとおりです:
+
+| 単位 | 説明 | 変換 |
+| --- | --- | --- |
+| `ns` | ナノ秒 |
+| `us` | マイクロ秒 | `1us` -> `1000ns` |
+| `ms` | ミリ秒 | `1ms` -> `1000us` |
+| `s`  | 秒 | `1s` -> `1000ms` |
+| `m`  | 分 | `1m` -> `60s` |
+| `h`  | 時 | `1h` -> `60m` |
+| `d`  | 日 | `1d` -> `24h` |
+| `w`  | 週 | `1w` -> `7d` |
+| `y`  | 年 | `1y` -> `365d` |
+
+`us` (`0x75`, `0x73`) は `µs` (`0xc2`, `0xb5`, `0x73`) または `μs` (`0xce`, `0xbc`, `0x73`) とすることもできます (括弧内の 16 進数は単位文字列を UTF-8 でエンコードした結果です)。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`Duration` はそのインスタンスを返します。
+
+### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+期間の秒数部です。standard 未満のプリセットでは読み取り専用です。値は 0 から 2<sup>64</sup>-1 までの整数です。
+
+```ts
+.seconds: bigint;
+```
+
+### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+期間のナノ秒数部です。standard 未満のプリセットでは読み取り専用です。値は 0 から 999999999 までの整数です。
+
+```ts
+.nanoseconds: number;
+```
+
+### `.parse()` <Badge variant="instance" /><Badge variant="property" /><Badge variant="encodable" />
+
+期間を各単位にマッピングします。各単位の値は、0 以上、その単位の最大値未満になります。なお、期間が 0 の場合は 0 ナノ秒、つまり `nanoseconds` プロパティーのみが `0` を持ったオブジェクトが返されます。
+
+```ts
+.parse(): {
+  years?: number;
+  weeks?: number;
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
+  microseconds?: number;
+  nanoseconds?: number;
+};
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+期間を各単位にマッピングした結果を返します。単位の値が 0 の場合はプロパティが省略されますが、期間が 0 の場合は `nanoseconds` のみが `0` を持ったオブジェクトを返します。
+
+#### 例
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(0);
+console.log(duration.parse());
+//-> { nanoseconds: 0 }
+```
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.parse());
+//-> { milliseconds: 12, microseconds: 345 }
+```
+
+### `.valueOf()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+期間をナノ秒単位で取得します。
+
+```ts
+.valueOf(): bigint;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+期間をナノ秒単位で返します。
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.valueOf());
+//-> 12345000n
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+期間の文字列表現を取得します。
+
+`.toJSON()` と `.toSurql()` はこのメソッドと同じ結果を返します。
+
+```ts
+.toString(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+ミリ秒精度の時刻の文字列表現を取得します。
+
+#### 例
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.toString());
+//-> 12ms345µs
+```
+
+### `.toISOString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+期間の文字列を ISO 形式で取得します。
+
+```ts
+.toISOString(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+期間の文字列を ISO 形式で返します。
+
+#### 例
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration("2m3s456ms");
+console.log(duration.toISOString());
+//-> P2M3S
+```
+
+### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+秒数とナノ秒数のペアを取得します。
+
+```ts
+.getCompact(): [seconds: bigint, nanoseconds: number];
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+秒数とナノ秒数のペアを返します。
+
+### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+秒数とナノ秒数のペアで日時を設定します。
+
+```ts
+.setCompact(compact: [seconds: bigint, nanoseconds: number]): void;
+```
+
+#### 引数
+
+##### `compact`
+
+秒数とナノ秒数のペアです。
+
+#### 返値
+
+なし。
+
+### `.getYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+年を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getYears(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+年を表す 0 以上の整数を返します。
+
+### `.addYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から年を指定の数だけ加算します。
+
+```ts
+.addYears(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+年数です。
+
+#### 返値
+
+なし。
+
+### `.subYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から年を指定の数だけ減算します。
+
+```ts
+.subYears(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+年数です。
+
+#### 返値
+
+なし。
+
+### `.asYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+年数のミリ秒表現を取得します。
+
+```ts
+.asYears(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+年数のミリ秒表現です。
+
+### `.getWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+週を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getWeeks(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+週を表す 0 以上の整数を返します。
+
+### `.addWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から週を指定の数だけ加算します。
+
+```ts
+.addWeeks(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+週数です。
+
+#### 返値
+
+なし。
+
+### `.subWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から週を指定の数だけ減算します。
+
+```ts
+.subWeeks(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+週数です。
+
+#### 返値
+
+なし。
+
+### `.asWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+週数のミリ秒表現を取得します。
+
+```ts
+.asWeeks(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+週数のミリ秒表現です。
+
+### `.getDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+日を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getDays(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+日を表す 0 以上の整数を返します。
+
+### `.addDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から日を指定の数だけ加算します。
+
+```ts
+.addDays(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+日数です。
+
+#### 返値
+
+なし。
+
+### `.subDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から日を指定の数だけ減算します。
+
+```ts
+.subDays(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+日数です。
+
+#### 返値
+
+なし。
+
+### `.asDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+日数のミリ秒表現を取得します。
+
+```ts
+.asDays(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+日数のミリ秒表現です。
+
+### `.getHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+時を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getHours(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+時を表す 0 以上の整数を返します。
+
+### `.addHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から時を指定の数だけ加算します。
+
+```ts
+.addHours(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+時数です。
+
+#### 返値
+
+なし。
+
+### `.subHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から時を指定の数だけ減算します。
+
+```ts
+.subHours(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+時数です。
+
+#### 返値
+
+なし。
+
+### `.asHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+時数のミリ秒表現を取得します。
+
+```ts
+.asHours(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+時数のミリ秒表現です。
+
+### `.getMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+分を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getMinutes(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+分を表す 0 以上の整数を返します。
+
+### `.addMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から分を指定の数だけ加算します。
+
+```ts
+.addMinutes(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+分数です。
+
+#### 返値
+
+なし。
+
+### `.subMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から分を指定の数だけ減算します。
+
+```ts
+.subMinutes(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+分数です。
+
+#### 返値
+
+なし。
+
+### `.asMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+分数のミリ秒表現を取得します。
+
+```ts
+.asMinutes(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+分数のミリ秒表現です。
+
+### `.getSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+秒を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getSeconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+秒を表す 0 以上の整数を返します。
+
+### `.addSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から秒を指定の数だけ加算します。
+
+```ts
+.addSeconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+秒数です。
+
+#### 返値
+
+なし。
+
+### `.subSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間から秒を指定の数だけ減算します。
+
+```ts
+.subSeconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+秒数です。
+
+#### 返値
+
+なし。
+
+### `.asSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+秒数のミリ秒表現を取得します。
+
+```ts
+.asSeconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+秒数のミリ秒表現です。
+
+### `.getMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+ミリ秒を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getMilliseconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+ミリ秒を表す 0 以上の整数を返します。
+
+### `.addMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間からミリ秒を指定の数だけ加算します。
+
+```ts
+.addMilliseconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+ミリ秒数です。
+
+#### 返値
+
+なし。
+
+### `.subMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間からミリ秒を指定の数だけ減算します。
+
+```ts
+.subMilliseconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+ミリ秒数です。
+
+#### 返値
+
+なし。
+
+### `.asMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+ミリ秒数のミリ秒表現を取得します。
+
+```ts
+.asMilliseconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+ミリ秒数のミリ秒表現です。
+
+### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+マイクロ秒を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getMicroseconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+マイクロ秒を表す 0 以上の整数を返します。
+
+### `.addMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間からマイクロ秒を指定の数だけ加算します。
+
+```ts
+.addMicroseconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+マイクロ秒数です。
+
+#### 返値
+
+なし。
+
+### `.subMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間からマイクロ秒を指定の数だけ減算します。
+
+```ts
+.subMicroseconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+マイクロ秒数です。
+
+#### 返値
+
+なし。
+
+### `.asMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+マイクロ秒数のミリ秒表現を取得します。
+
+```ts
+.asMicroseconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+マイクロ秒数のミリ秒表現です。
+
+### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+ナノ秒を取得します。0 以上の整数にならない場合は 0 が返されます。
+
+```ts
+.getNanoseconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+ナノ秒を表す 0 以上の整数を返します。
+
+### `.addNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間からナノ秒を指定の数だけ加算します。
+
+```ts
+.addNanoseconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+ナノ秒数です。
+
+#### 返値
+
+なし。
+
+### `.subNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+期間からナノ秒を指定の数だけ減算します。
+
+```ts
+.subNanoseconds(value: number): void;
+```
+
+#### 引数
+
+##### `value`
+
+ナノ秒数です。
+
+#### 返値
+
+なし。
+
+### `.asNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+ナノ秒数のミリ秒表現を取得します。
+
+```ts
+.asNanoseconds(): number;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+ナノ秒数のミリ秒表現です。

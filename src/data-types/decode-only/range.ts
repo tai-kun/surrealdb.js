@@ -35,6 +35,7 @@ export class RangeBase<TTypes extends RangeTypes = RangeTypes> {
 }
 
 /**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/range)
  * @experimental
  */
 export class Range

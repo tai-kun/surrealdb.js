@@ -7,21 +7,21 @@ interface Task<TValue = unknown> {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/#add)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-queue/#add)
  */
 export interface TaskRunnerArgs {
   signal: AbortSignal;
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/#add)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-queue/#add)
  */
 export interface TaskOptions {
   readonly signal?: AbortSignal | undefined;
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-queue/)
  */
 export default class TaskQueue {
   protected readonly _queue: Task[] = [];
@@ -42,14 +42,14 @@ export default class TaskQueue {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/#count)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-queue/#count)
    */
   get count(): number {
     return this._queue.length;
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/#add)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-queue/#add)
    */
   add<TValue>(
     runner: (args: TaskRunnerArgs) => TValue | PromiseLike<TValue>,
@@ -81,7 +81,7 @@ export default class TaskQueue {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/#idle)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-queue/#idle)
    */
   idle(): StatefulPromise<void> {
     if (this._queue.length <= 0) {
@@ -94,7 +94,7 @@ export default class TaskQueue {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-queue/#abort)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-queue/#abort)
    */
   abort(reason?: unknown): void {
     for (const t of this._queue) {

@@ -8,6 +8,9 @@ export type * from "../decode-only/datetime";
 const MILLISECONDS_PER_SECOND = 1e3;
 const NANOSECONDS_PER_MILLISECOND = 1e6;
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/datetime)
+ */
 export default class Datetime extends Base implements Encodable {
   override valueOf(): number {
     return this.seconds * MILLISECONDS_PER_SECOND

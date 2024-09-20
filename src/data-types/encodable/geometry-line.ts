@@ -74,6 +74,9 @@ export class GeometryLineBase<TTypes extends GeometryLineTypes>
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/geometry-line)
+ */
 export class GeometryLine
   extends GeometryLineBase<GeometryLineTypes<typeof GeometryPoint>>
 {

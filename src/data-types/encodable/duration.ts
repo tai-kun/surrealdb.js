@@ -15,6 +15,9 @@ const NANOSECONDS_PER_SECOND = 1_000_000_000n;
 
 const JS_MAX_SAFE_UNSIGNED_INTEGER = 9007199254740991n; // 2^53-1
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/duration)
+ */
 export default class Duration extends Base implements Encodable {
   // dprint-ignore
   parse(): {
@@ -28,7 +31,7 @@ export default class Duration extends Base implements Encodable {
     microseconds?: number;
     nanoseconds?: number;
   } {
-    // https://github.com/surrealdbdb/surrealdbdb/blob/v1.5.2/core/sql/duration.rs#L159-L217
+    // https://github.com/surrealdb/surrealdb/blob/v2.0.1/core/src/sql/duration.rs#L166
 
     let secs = this.seconds;
     let nano = BigInt(this.nanoseconds);

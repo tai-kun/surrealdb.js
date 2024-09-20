@@ -30,6 +30,9 @@ const NANOSECONDS_PER_SECOND = 1e9;
 const MAX_DATE_SECONDS = 8_640_000_000_000;
 const MIN_DATE_SECONDS = -8_640_000_000_000;
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/datetime)
+ */
 export default class Datetime {
   /**
    * -(2^53-1) ~ 2^53-1, NaN
@@ -41,11 +44,11 @@ export default class Datetime {
    */
   readonly nanoseconds: number;
 
-  constructor(value: DatetimeSource) {
+  constructor(source: DatetimeSource) {
     let s: number, ns: number;
 
-    if (typeof value === "string") {
-      const msTime = Date.parse(value);
+    if (typeof source === "string") {
+      const msTime = Date.parse(source);
 
       if (msTime === msTime) {
         s = Math.trunc(msTime / MILLISECONDS_PER_SECOND);
@@ -65,8 +68,8 @@ export default class Datetime {
         s = ns = NaN;
       }
     } else {
-      ns = value[1];
-      s = Number(value[0]) + Math.trunc(ns / NANOSECONDS_PER_SECOND);
+      ns = source[1];
+      s = Number(source[0]) + Math.trunc(ns / NANOSECONDS_PER_SECOND);
 
       if (s >= MIN_DATE_SECONDS && s <= MAX_DATE_SECONDS) {
         ns %= NANOSECONDS_PER_SECOND;

@@ -65,6 +65,9 @@ export class GeometryMultiPointBase<TTypes extends GeometryMultiPointTypes>
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/geometry-multi-point)
+ */
 export class GeometryMultiPoint
   extends GeometryMultiPointBase<GeometryMultiPointTypes<typeof GeometryPoint>>
 {

@@ -1,0 +1,130 @@
+---
+title: Range
+banner:
+  content: This is an experimental feature.
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+## Description
+
+### Import
+
+```ts
+import { Range } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Range } from "@tai-kun/surrealdb/data-types/encodable";
+import { Range } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+Creates a new `Range` object.
+
+```ts
+new Range(
+  source: [
+    begin: BoundIncluded | BoundExcluded | null,
+    end: BoundIncluded | BoundExcluded | null,
+  ],
+);
+```
+
+#### Arguments
+
+##### `source`
+
+A pair of minimum and maximum values for the range. If it is unlimited, it is `null`.
+
+#### Return Value
+
+When called via `new`, `Range` returns its instance.
+
+### `.begin` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+The minimum value of the range. If there is no lower bound, it is `null`.
+
+```ts
+.begin: BoundIncluded | BoundExcluded | null;
+```
+
+### `.end` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+The maximum value of the range. If there is no upper bound, it is `null`.
+
+```ts
+.end: BoundIncluded | BoundExcluded | null;
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Converts the `Range` object to a string that can be used in SurrealQL.
+
+`.toJSON()` and `.toSurql()` return the same result as this method.
+
+```ts
+.toString(): string;
+```
+
+#### Arguments
+
+None.
+
+#### Return Value
+
+Returns a string representation of the range.
+
+#### Example
+
+```ts
+import {
+  Range,
+  BoundIncluded,
+  BoundExcluded,
+} from "@tai-kun/surrealdb/data-types/encodable";
+
+const range = new Range([new BoundIncluded(1), new BoundIncluded(3)]);
+console.log(range.toString());
+// -> 1..=3
+
+const range = new Range([new BoundExcluded(1), new BoundExcluded(3)]);
+console.log(range.toString());
+// -> 1>..3
+
+const range = new Range([new BoundIncluded(1), new BoundExcluded(3)]);
+console.log(range.toString());
+// -> 1..3
+
+const range = new Range([new BoundIncluded(1), null]);
+console.log(range.toString());
+// -> 1..
+
+const range = new Range([null, new BoundExcluded(3)]);
+console.log(range.toString());
+// -> ..3
+
+const range = new Range([new BoundExcluded(1), new BoundIncluded(3)]);
+console.log(range.toString());
+// -> 1>..=3
+
+const range = new Range([new BoundExcluded(1), null]);
+console.log(range.toString());
+// -> 1>..
+
+const range = new Range([null, new BoundIncluded(3)]);
+console.log(range.toString());
+// -> ..=3
+
+const range = new Range([null, null]);
+console.log(range.toString());
+// -> ..
+```
+
+### Development
+
+#### General-Purpose `Range` Object Determination
+
+It is recommended to use the `isRange` function to determine if a value is a `Range` object without relying on presets. This function does not use `instanceof`, so it is useful when the preset of the value being verified is unknown.
+
+```ts
+import { isRange } from "@tai-kun/surrealdb";
+```

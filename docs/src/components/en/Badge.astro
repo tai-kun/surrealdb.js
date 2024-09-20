@@ -10,7 +10,10 @@ type Props = {
     | "property"
     | "method"
     | "readonly"
-    | "deprecated";
+    | "deprecated"
+    | "decodeonly"
+    | "encodable"
+    | "standard";
   size?: "sm" | "md" | "lg";
 };
 
@@ -24,6 +27,9 @@ const {
     method: "method",
     readonly: "readonly",
     deprecated: "deprecated",
+    decodeonly: ">=decode-only",
+    encodable: ">=encodable",
+    standard: "=standard",
   } as const)[variant],
   size = "sm",
 } = Astro.props;
@@ -53,8 +59,8 @@ const {
     --sdb-badge-method-bg: var(--sl-color-orange-low);
     --sdb-badge-method-border: var(--sl-color-orange);
 
-    --sdb-badge-deprecated-bg: var(--sl-color-color-low);
-    --sdb-badge-deprecated-border: var(--sl-color-color);
+    --sdb-badge-deprecated-bg: var(--sl-color-red-low);
+    --sdb-badge-deprecated-border: var(--sl-color-red);
   }
 
   :global([data-theme="light"]:root) {
@@ -63,11 +69,14 @@ const {
     --sdb-badge-static-bg: var(--sl-color-purple-high);
     --sdb-badge-property-bg: var(--sl-color-green-high);
     --sdb-badge-method-bg: var(--sl-color-orange-high);
-    --sdb-badge-deprecated-bg: var(--sl-color-color-high);
+    --sdb-badge-deprecated-bg: var(--sl-color-red-high);
   }
 
   .variant-default,
-  .variant-readonly {
+  .variant-readonly,
+  .variant-decodeonly,
+  .variant-encodable,
+  .variant-standard {
     --sl-color-bg-badge: var(--sdb-badge-default-bg);
     --sl-color-border-badge: var(--sdb-badge-default-border);
   }

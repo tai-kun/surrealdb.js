@@ -1,7 +1,7 @@
 import throwIfAborted from "./throw-if-aborted";
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/make-abort-api/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/make-abort-api/)
  */
 export default function makeAbortApi(signal?: AbortSignal | undefined): [
   signal: AbortSignal,

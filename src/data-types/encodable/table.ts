@@ -7,6 +7,9 @@ import { CBOR_TAG_TABLE, type Encodable } from "./spec";
 
 export type * from "../decode-only/table";
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/table)
+ */
 export default class Table<TName extends TableSource = TableSource>
   extends Base<TName>
   implements Encodable
@@ -42,7 +45,7 @@ export default class Table<TName extends TableSource = TableSource>
 
   toSurql(): string {
     // SurrealDB では String を escape_ident でエスケープしている:
-    // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/sql/table.rs#L78
+    // https://github.com/surrealdb/surrealdb/blob/v2.0.1/core/src/sql/table.rs#L78
     return escapeIdent(this.name);
   }
 

@@ -1,0 +1,104 @@
+---
+title: Decimal
+---
+
+import Badge from "~/components/ja/Badge.astro";
+
+`Decimal` は任意精度の実数を表現するためのクラスです。プリセットが standard の場合は [`big.js`](https://github.com/MikeMcl/big.js) を継承したクラスになります。これにより `.toString()` メソッドなどの結果がプリセット間で一致しないことがあります。
+
+### インポート
+
+```ts
+import { Decimal } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Decimal } from "@tai-kun/surrealdb/data-types/encodable";
+import { Decimal } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+新しい `Decimal` オブジェクトを作成します。
+
+```ts
+new Decimal(source: string); // decode-only, encodable
+new Decimal(source: string | number | Decimal); // standard
+```
+
+#### 引数
+
+##### `source`
+
+文字列で表された実数です。プリセットが standard なら数値も渡せます。
+
+#### 返値
+
+`new` を通じて呼び出された場合、`Decimal` はそのインスタンスを返します。
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="decodeonly" />
+
+実数を文字列で取得します。
+
+#### 引数
+
+なし。
+
+#### 返値
+
+実数の文字列表現を返します。
+
+### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+`Decimal` オブジェクトを SurrealQL に埋め込める文字列に変換します。`.toString()` と似ていますが、`dec` サフィックスを追加することで、クエリーパーサーに文字列が `decimal` 型であることを伝えます。
+
+```ts
+.toSurql(): string;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+`dec` サフィックスが付いた実数を返します。
+
+#### 例
+
+```ts
+import { Decimal } from "@tai-kun/surrealdb/data-types/encodable";
+
+const decimal = new Decimal("3.14");
+console.log(decimal.toSurql());
+//-> 3.14dec
+```
+
+### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+`Decimal` オブジェクトを複製します。
+
+```ts
+.clone(): this;
+```
+
+#### 引数
+
+なし。
+
+#### 返値
+
+新しい `Decimal` オブジェクトを返します。`Decimal` クラスを継承している場合、そのクラスのインスタンスが返されます。
+
+### その他のメソッド
+
+standard プリセットを仕様している場合、`Decimal` クラスは `big.js` の `Big` クラスを継承するため、インスタンスメソッドやプロパティーは `big.js` のドキュメントを参照してください:
+
+[`big.js` のドキュメント](https://mikemcl.github.io/big.js/#prototype-methods)
+
+### 発展
+
+#### `Decimal` オブジェクトの汎用的な判定
+
+プリセットに依存せずに値が `Decimal` オブジェクトかを判定するには `isDecimal` 関数を使うことを推奨します。この関数は `instanceof` を使用しないため、検証する値のプリセットが不明な場合に役立ちます。
+
+```ts
+import { isDecimal } from "@tai-kun/surrealdb";
+```

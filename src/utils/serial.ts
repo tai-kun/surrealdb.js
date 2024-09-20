@@ -3,14 +3,14 @@ import { NumberRangeError } from "@tai-kun/surrealdb/errors";
 const MAX_SAFE_INTEGER = 9007199254740991;
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/serial/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/serial/)
  */
 export default class Serial {
   protected _id = 0;
   protected _max: number;
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/serial/#constructor)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/serial/#constructor)
    */
   constructor(max: number | undefined = MAX_SAFE_INTEGER) {
     if (Number.isSafeInteger(max) && max > 0) {
@@ -23,14 +23,14 @@ export default class Serial {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/serial/#next)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/serial/#next)
    */
   next(): number {
     return (this._id = this._id % this._max + 1);
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/serial/#reset)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/serial/#reset)
    */
   reset(): void {
     this._id = 0;

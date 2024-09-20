@@ -2,7 +2,7 @@ import type { DataItem } from "./spec";
 import type { ToCBOR } from "./traits";
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/tagged/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/tagged/)
  */
 export default class Tagged<
   TValue = unknown,

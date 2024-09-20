@@ -31,7 +31,7 @@ import { canToCBOR, type ToCBOR } from "./traits";
 import type { Writer } from "./writer";
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeheader)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writeheader)
  */
 export function writeHeader(
   w: Writer,
@@ -65,7 +65,7 @@ export function writeHeader(
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writepayload)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writepayload)
  */
 export function writePayload(
   w: Writer,
@@ -75,7 +75,7 @@ export function writePayload(
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writebytestring)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writebytestring)
  */
 export function writeByteString(
   w: Writer,
@@ -86,7 +86,7 @@ export function writeByteString(
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeutf8string)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writeutf8string)
  */
 export function writeUtf8String(w: Writer, value: string): void {
   let l = value.length;
@@ -414,7 +414,7 @@ export function writeUtf8String(w: Writer, value: string): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeencodedutf8string)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writeencodedutf8string)
  */
 export function writeEncodedUtf8String(
   w: Writer,
@@ -477,7 +477,7 @@ function writeUndefined(w: Writer): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writenullable)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writenullable)
  */
 export function writeNullable(w: Writer, value: null | undefined): void {
   if (value === null) {
@@ -488,7 +488,7 @@ export function writeNullable(w: Writer, value: null | undefined): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writeboolean)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writeboolean)
  */
 export function writeBoolean(w: Writer, value: boolean): void {
   if (value) {
@@ -499,7 +499,7 @@ export function writeBoolean(w: Writer, value: boolean): void {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#writenumber)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#writenumber)
  */
 export function writeNumber(w: Writer, value: number): void {
   if (Number.isInteger(value)) {
@@ -809,7 +809,7 @@ export interface WriteOptions {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/cbor/others/#write)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/cbor/others/#write)
  */
 export function write(
   w: Writer,

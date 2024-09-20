@@ -114,49 +114,49 @@ export default class BasicClient {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#state)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#state)
    */
   get state(): ConnectionState {
     return this.eng?.state ?? "closed";
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#endpoint)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#endpoint)
    */
   get endpoint(): URL | null | undefined {
     return this.eng?.endpoint;
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#namespace)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#namespace)
    */
   get namespace(): string | null | undefined {
     return this.eng?.namespace;
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#database)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#database)
    */
   get database(): string | null | undefined {
     return this.eng?.database;
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#token)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#token)
    */
   get token(): string | null | undefined {
     return this.eng?.token;
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#getconnectioninfo)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#getconnectioninfo)
    */
   getConnectionInfo(): ConnectionInfo | undefined {
     return this.eng?.getConnectionInfo();
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#on)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#on)
    */
   on<TEvent extends keyof EngineEventMap>(
     event: TEvent,
@@ -166,7 +166,7 @@ export default class BasicClient {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#off)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#off)
    */
   off<TEvent extends keyof EngineEventMap>(
     event: TEvent,
@@ -182,7 +182,7 @@ export default class BasicClient {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#once)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#once)
    */
   once<TEvent extends keyof EngineEventMap>(
     event: TEvent,
@@ -192,7 +192,7 @@ export default class BasicClient {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#connect)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#connect)
    */
   @mutex
   connect(
@@ -233,7 +233,7 @@ export default class BasicClient {
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#close)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#close)
    */
   @mutex
   close(options: ClientCloseOptions | undefined = {}): Promise<void> {

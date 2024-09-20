@@ -1,0 +1,229 @@
+---
+title: Uuid
+---
+
+import Badge from "~/components/en/Badge.astro";
+
+A Universally Unique Identifier (UUID) is a 128-bit identifier used to uniquely identify a specific entity. The `Uuid` class represents this identifier. It supports UUID versions from v1 to v7. Note that you need to use a separate library or a runtime-built-in feature (`node:crypto` etc.) to generate a UUID.
+
+### Import
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+Creates a new `Uuid` object.
+
+```ts
+new Uuid(source: Uint8Array); // decode-only, encodable
+new Uuid(source: Uint8Array | string); // standard
+```
+
+#### Arguments
+
+##### `source`
+
+The byte array representation of the UUID or a string if it's a standard preset.
+
+#### Returns
+
+When called through `new`, `Uuid` returns its instance.
+
+### `.bytes` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+The byte array of the UUID.
+
+```ts
+.bytes: Uint8Array;
+```
+
+### `.variant` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
+
+The variant of the UUID. It is defined by the top 4 bits of the 13th bit of the UUID, and there are three main variants and one reserved variant for future use.
+
+1. NCS compatible
+    - `0b0xxx`
+    - Indicates that the UUID is NCS (Network Computing System) compatible.
+    - Not commonly used.
+2. RFC 4122 compatible
+    - `0b10xx`
+    - UUID based on RFC 4122 (the standard specification of UUIDs).
+    - This is the commonly used format for UUIDs. It includes formats such as v1 (time-based) and v4 (random).
+3. Microsoft GUID compatible
+    - `0b110x`
+    - GUID (Globally Unique Identifier) format used by Microsoft.
+4. Reserved for future use
+    - `0b111x`
+
+This property also expresses the NIL UUID and MAX UUID in addition to the above variants.
+
+```ts
+.variant:
+  | "NIL" // 00000000-0000-0000-0000-000000000000
+  | "MAX" // ffffffff-ffff-ffff-ffff-ffffffffffff
+  | "NCS" // 0xxx (0b0000 ~ 0b0111)
+  | "RFC" // 10xx (0b1000 ~ 0b1011)
+  | "MS" // 110x (0b1100 ~ 0b1101)
+  | "RESERVED"; // 111x (0b1110 ~ 0b1111)
+```
+
+### `.version` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
+
+The UUID version number if the variant is `"RFC"`, otherwise `null`.
+
+```ts
+.version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | null;
+```
+
+### `.timestamp` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
+
+The timestamp part of the UUID if the variant is `"RFC"` and the version is one of v1, v6, or v7. Otherwise, it is `null`. For convenience, all timestamps are calculated in milliseconds from the UNIX epoch.
+
+```ts
+.timestamp: number | null;
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Converts the `Uuid` object to a string that can be used in a SurrealQL variable.
+
+`.valueOf()` and `.toJSON()` return the same result as this method.
+
+```ts
+.toString(): string;
+```
+
+#### Arguments
+
+None.
+
+#### Returns
+
+Returns the hexadecimal UUID string.
+
+#### Example
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+
+const bytes = new Uint8Array([
+  0x26, 0xc8, 0x01, 0x63,
+  0x3b, 0x83,
+  0x48, 0x1b,
+  0x93, 0xda,
+  0xc4, 0x73, 0x94, 0x7c, 0xcc, 0xbc,
+]);
+const uuid = new Uuid(bytes);
+console.log(uuid.toString());
+//-> 26c80163-3b83-481b-93da-c473947cccbc
+```
+
+### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+Converts the `Uuid` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but adds a `u` prefix to tell the query parser that the string is a UUID.
+
+```ts
+.toSurql(): string;
+```
+
+#### Arguments
+
+None.
+
+#### Returns
+
+Returns the hexadecimal UUID string with a `u` prefix.
+
+#### Example
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+
+const bytes = new Uint8Array([
+  0x26, 0xc8, 0x01, 0x63,
+  0x3b, 0x83,
+  0x48, 0x1b,
+  0x93, 0xda,
+  0xc4, 0x73, 0x94, 0x7c, 0xcc, 0xbc,
+]);
+const uuid = new Uuid(bytes);
+console.log(uuid.toSurql());
+//-> u'26c80163-3b83-481b-93da-c473947cccbc'
+```
+
+### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Clones the `Uuid` object.
+
+```ts
+.clone(): this;
+```
+
+#### Arguments
+
+None.
+
+#### Returns
+
+Returns a new `Uuid` object. If the `Uuid` class is inherited, an instance of that class will be returned.
+
+### `.compareTo()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+Compares the timestamps of `Uuid` objects.
+
+```ts
+.compareTo(other: Uuid): -1 | 0 | 1;
+```
+
+#### Arguments
+
+##### `other`
+
+The UUID to compare with.
+
+#### Returns
+
+Returns `0` if either one does not have a timestamp part, or if the timestamps are the same. Returns `-1` if the timestamp of the compared UUID is later, and `1` if it is earlier.
+
+#### Example
+
+In the following example, we compare the timestamps of different UUID versions and sort them in ascending order:
+
+```ts
+import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+
+const uuidv1 = new Uuid("0e004000-2073-11ef-8451-eb2a011f8691");
+const uuidv6 = new Uuid("1ef1fa9e-3968-6000-a77e-683eb1a35ebe");
+
+console.log(new Date(uuidv1.timestamp).toISOString());
+//-> 2024-06-02T00:00:00.000Z
+console.log(new Date(uuidv6.timestamp).toISOString());
+//-> 2024-06-01T00:00:00.000Z
+
+const uuidList = [
+  uuidv1,
+  uuidv6,
+];
+
+uuidList.sort((a, b) => a.compareTo(b));
+
+console.log(uuidList);
+//-> [
+//->   1ef1fa9e-3968-6000-a77e-683eb1a35ebe, (uuidv6)
+//->   0e004000-2073-11ef-8451-eb2a011f8691, (uuidv1)
+//-> ]
+```
+
+### Development
+
+#### General judgment of `Uuid` object
+
+It is recommended to use the `isUuid` function to determine if a value is a `Uuid` object without relying on presets. This function does not use `instanceof`, so it is useful when the preset of the value to be verified is unknown.
+
+```ts
+import { isUuid } from "@tai-kun/surrealdb";
+```

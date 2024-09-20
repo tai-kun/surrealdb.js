@@ -9,7 +9,7 @@ type ErrorOptionsBase =
 export interface SurrealErrorOptions extends ErrorOptionsBase {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#surrealerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#surrealerror)
  */
 export class SurrealError extends Error {
   static {
@@ -26,7 +26,7 @@ export class SurrealError extends Error {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#surrealtypeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#surrealtypeerror)
  */
 export class SurrealTypeError extends SurrealError {
   static {
@@ -82,7 +82,7 @@ export class SurrealValueError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#surrealaggregateerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#surrealaggregateerror)
  */
 export class SurrealAggregateError extends SurrealError {
   static {
@@ -102,7 +102,7 @@ export class SurrealAggregateError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#circularreferenceerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#circularreferenceerror)
  */
 export class CircularReferenceError extends SurrealError {
   static {
@@ -118,7 +118,7 @@ export interface NumberRangeErrorOptions extends SurrealErrorOptions {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#numberrangeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#numberrangeerror)
  */
 export class NumberRangeError extends SurrealError {
   static {
@@ -143,7 +143,7 @@ export class NumberRangeError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#unsupportedruntimeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#unsupportedruntimeerror)
  */
 export class UnsupportedRuntimeError extends SurrealError {
   static {
@@ -156,7 +156,7 @@ export class UnsupportedRuntimeError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#unreachableerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#unreachableerror)
  */
 export class UnreachableError extends SurrealError {
   static {

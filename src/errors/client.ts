@@ -11,7 +11,7 @@ import {
 } from "./general";
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#circularenginereferenceerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#circularenginereferenceerror)
  */
 export class CircularEngineReferenceError extends CircularReferenceError {
   static {
@@ -30,7 +30,7 @@ export class CircularEngineReferenceError extends CircularReferenceError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#enginenotfounderror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#enginenotfounderror)
  */
 export class EngineNotFoundError extends SurrealError {
   static {
@@ -46,7 +46,7 @@ export class EngineNotFoundError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#connectionconflicterror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#connectionconflicterror)
  */
 export class ConnectionConflictError extends SurrealError {
   static {
@@ -73,7 +73,7 @@ export class ConnectionConflictError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#namespaceconflicterror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#namespaceconflicterror)
  */
 export class NamespaceConflictError extends SurrealError {
   static {
@@ -100,7 +100,7 @@ export class NamespaceConflictError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#databaseconflicterror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#databaseconflicterror)
  */
 export class DatabaseConflictError extends SurrealError {
   static {
@@ -127,7 +127,7 @@ export class DatabaseConflictError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#missingnamespaceerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#missingnamespaceerror)
  */
 export class MissingNamespaceError extends SurrealError {
   static {
@@ -146,7 +146,7 @@ export class MissingNamespaceError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#rpcresponseerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#rpcresponseerror)
  */
 export class RpcResponseError extends ResponseError {
   static {
@@ -171,7 +171,7 @@ export class RpcResponseError extends ResponseError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#queryfailederror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#queryfailederror)
  */
 export class QueryFailedError extends SurrealAggregateError {
   static {
@@ -187,7 +187,7 @@ export class QueryFailedError extends SurrealAggregateError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/errors/#closeed)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#closeed)
  */
 export class Closed extends SurrealError {
   static {

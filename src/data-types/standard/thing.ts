@@ -8,6 +8,9 @@ import type { TableLike } from "./table";
 
 export type { ThingIdSource, ThingSource, ThingTbSource };
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/thing)
+ */
 export default class Thing<
   TTb extends ThingTbSource = ThingTbSource,
   TId extends ThingIdSource = ThingIdSource,

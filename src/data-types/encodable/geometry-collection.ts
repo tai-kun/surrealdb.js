@@ -138,6 +138,9 @@ export class GeometryCollectionBase<
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/geometry-collection)
+ */
 export class GeometryCollection extends GeometryCollectionBase<
   GeometryCollectionTypes<
     typeof GeometryPoint,

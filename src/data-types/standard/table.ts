@@ -9,14 +9,17 @@ export interface TableLike<TName extends TableSource = TableSource> {
   readonly name: TName;
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/table)
+ */
 export default class Table<TName extends TableSource = TableSource>
   extends Base<TName>
 {
   // @ts-expect-error readonly を外すだけ。
   name: TName;
 
-  constructor(value: TName | TableLike<TName>) {
-    super(typeof value === "string" ? value : value.name);
+  constructor(source: TName | TableLike<TName>) {
+    super(typeof source === "string" ? source : source.name);
   }
 
   clone(): this {

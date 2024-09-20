@@ -14,11 +14,11 @@ export interface SurrealInit<TClientConstructor extends ClientConstructor>
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/)
  */
 export interface Surreal<TClientConstructor extends ClientConstructor> {
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/guides/connecting/#constructor)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/connecting/#constructor)
    */
   new(): InstanceType<TClientConstructor> & AsyncDisposable;
 }

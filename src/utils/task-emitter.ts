@@ -10,7 +10,7 @@ interface TypedMap<T> {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/)
  */
 export type TaskListener<TArgs extends unknown[]> = (
   runnerArgs: TaskRunnerArgs,
@@ -18,12 +18,12 @@ export type TaskListener<TArgs extends unknown[]> = (
 ) => void | PromiseLike<void>;
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#once)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/#once)
  */
 export interface TaskListenerOptions extends TaskOptions {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/)
  */
 export default class TaskEmitter<
   TEventMap extends Record<string | number, unknown[]>,
@@ -39,7 +39,7 @@ export default class TaskEmitter<
   >;
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#on)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/#on)
    */
   on<TEvent extends keyof TEventMap>(
     this: this,
@@ -62,7 +62,7 @@ export default class TaskEmitter<
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#off)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/#off)
    */
   off<TEvent extends keyof TEventMap>(
     event: TEvent,
@@ -88,7 +88,7 @@ export default class TaskEmitter<
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#once)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/#once)
    */
   once<TEvent extends keyof TEventMap>(
     event: TEvent,
@@ -156,7 +156,7 @@ export default class TaskEmitter<
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#emit)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/#emit)
    */
   emit<TEvent extends keyof TEventMap>(
     event: TEvent,
@@ -171,14 +171,14 @@ export default class TaskEmitter<
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#idle)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/#idle)
    */
   idle(): StatefulPromise<void> {
     return this._queue.idle();
   }
 
   /**
-   * [API Reference](https://tai-kun.github.io/surrealdb.js/reference/utils/task-emitter/#abort)
+   * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/utils/task-emitter/#abort)
    */
   abort(reason?: unknown): void {
     this._queue.abort(reason);

@@ -4,6 +4,7 @@ import { defineAsFuture } from "../_internals/define";
 export type FutureSource = DataItem.Utf8String.FixedLength["value"];
 
 /**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/future)
  * @experimental
  */
 export default class Future {

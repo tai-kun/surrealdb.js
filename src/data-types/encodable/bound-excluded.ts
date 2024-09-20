@@ -5,6 +5,7 @@ import { CBOR_TAG_BOUND_EXCLUDED, type Encodable } from "./spec";
 export type * from "../decode-only/bound-excluded";
 
 /**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/bound-excluded)
  * @experimental
  */
 export default class BoundExcluded extends Base implements Encodable {

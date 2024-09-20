@@ -1,10 +1,15 @@
 import { RangeBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { isDataTypeOf } from "@tai-kun/surrealdb/utils";
+import { SurrealTypeError } from "src/errors/general";
 import BoundExcluded from "./bound-excluded";
 import BoundIncluded from "./bound-included";
 import { CBOR_TAG_RANGE, type Encodable } from "./spec";
 
 type BoundIncludedBase = new(source: any) => BoundIncluded;
 type BoundExcludedBase = new(source: any) => BoundExcluded;
+type Bound<TTypes extends RangeTypes> =
+  | InstanceType<TTypes["BoundIncluded"]>
+  | InstanceType<TTypes["BoundExcluded"]>;
 
 export type RangeTypes<
   TBoundIncluded extends BoundIncludedBase = BoundIncludedBase,
@@ -15,8 +20,8 @@ export type RangeTypes<
 };
 
 export type RangeSource<TTypes extends RangeTypes = RangeTypes> = readonly [
-  begin: InstanceType<TTypes["BoundIncluded"]> | null,
-  end: InstanceType<TTypes["BoundExcluded"]> | null,
+  begin: Bound<TTypes> | null,
+  end: Bound<TTypes> | null,
 ];
 
 /**
@@ -30,13 +35,31 @@ export class RangeBase<TTypes extends RangeTypes = RangeTypes>
     let s = "";
 
     if (this.begin) {
-      s += this.begin.toString();
+      s += this.begin.toSurql();
+
+      if (isDataTypeOf<BoundExcluded>(this.begin, "boundexcluded")) {
+        s += ">";
+      } else if (!isDataTypeOf(this.begin, "boundincluded")) {
+        throw new SurrealTypeError(
+          ["BoundIncluded", "BoundExcluded", "null"],
+          this.begin,
+        );
+      }
     }
 
     s += "..";
 
     if (this.end) {
-      s += this.end.toString();
+      if (isDataTypeOf<BoundIncluded>(this.end, "boundincluded")) {
+        s += "=";
+      } else if (!isDataTypeOf(this.end, "boundexcluded")) {
+        throw new SurrealTypeError(
+          ["BoundIncluded", "BoundExcluded", "null"],
+          this.end,
+        );
+      }
+
+      s += this.end.toSurql();
     }
 
     return s;
@@ -45,8 +68,8 @@ export class RangeBase<TTypes extends RangeTypes = RangeTypes>
   toCBOR(): [
     tag: typeof CBOR_TAG_RANGE,
     value: [
-      begin: InstanceType<TTypes["BoundIncluded"]> | null,
-      end: InstanceType<TTypes["BoundExcluded"]> | null,
+      begin: Bound<TTypes> | null,
+      end: Bound<TTypes> | null,
     ],
   ] {
     return [
@@ -67,8 +90,8 @@ export class RangeBase<TTypes extends RangeTypes = RangeTypes>
   }
 
   toPlainObject(): {
-    begin: InstanceType<TTypes["BoundIncluded"]> | null;
-    end: InstanceType<TTypes["BoundExcluded"]> | null;
+    begin: Bound<TTypes> | null;
+    end: Bound<TTypes> | null;
   } {
     return {
       begin: this.begin,

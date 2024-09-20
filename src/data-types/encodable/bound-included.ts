@@ -1,4 +1,5 @@
 import { BoundIncluded as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { toSurql } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_BOUND_INCLUDED, type Encodable } from "./spec";
 
 export type * from "../decode-only/bound-included";
@@ -26,7 +27,7 @@ export default class BoundIncluded extends Base implements Encodable {
   }
 
   toSurql(): string {
-    return this.toString();
+    return toSurql(this.value);
   }
 
   toPlainObject(): {

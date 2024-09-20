@@ -5,6 +5,8 @@ import {
 } from "@tai-kun/surrealdb/data-types/standard";
 import { describe, expect, test } from "vitest";
 
+type Bound = BoundIncluded | BoundExcluded;
+
 test(".begin, .end", () => {
   const r = new Range([new BoundIncluded(1), new BoundExcluded(3)]);
 
@@ -13,14 +15,27 @@ test(".begin, .end", () => {
 });
 
 describe(".toSurql()", () => {
-  test.for<[BoundIncluded | null, BoundExcluded | null, string]>([
-    [new BoundIncluded(1), new BoundExcluded(3), "1..3"],
-    [new BoundIncluded(1), null, "1.."],
-    [null, new BoundExcluded(3), "..3"],
-    [null, null, ".."],
-  ])("begin=%s ~ end=%s -> %s", ([begin, end, surql]) => {
-    const r = new Range([begin, end]);
+  // dprint-ignore
+  const tests: [Bound | null, Bound | null, string][] = [
+    [ new BoundIncluded(1), new BoundIncluded(3), "1..=3"  ],
+    [ new BoundExcluded(1), new BoundExcluded(3), "1>..3"  ],
 
-    expect(r.toSurql()).toBe(surql);
-  });
+    [ new BoundIncluded(1), new BoundExcluded(3), "1..3"   ],
+    [ new BoundIncluded(1),                 null, "1.."    ],
+    [                 null, new BoundExcluded(3), "..3"    ],
+
+    [ new BoundExcluded(1), new BoundIncluded(3), "1>..=3" ],
+    [ new BoundExcluded(1),                 null, "1>.."   ],
+    [                 null, new BoundIncluded(3), "..=3"   ],
+
+    [                 null,                 null, ".."     ],
+  ];
+
+  for (const [beg, end, surql] of tests) {
+    test(`beg=${String(beg).padEnd(4, " ")} ~ end=${String(end).padEnd(4, " ")} -> ${surql}`, () => {
+      const r = new Range([beg, end]);
+
+      expect(r.toSurql()).toBe(surql);
+    });
+  }
 });

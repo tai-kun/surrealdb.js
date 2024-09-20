@@ -4,6 +4,9 @@ import BoundIncluded from "./bound-included";
 
 type BoundIncludedBase = new(source: any) => BoundIncluded;
 type BoundExcludedBase = new(source: any) => BoundExcluded;
+type Bound<TTypes extends RangeTypes> =
+  | InstanceType<TTypes["BoundIncluded"]>
+  | InstanceType<TTypes["BoundExcluded"]>;
 
 export type RangeTypes<
   TBoundIncluded extends BoundIncludedBase = BoundIncludedBase,
@@ -14,16 +17,16 @@ export type RangeTypes<
 };
 
 export type RangeSource<TTypes extends RangeTypes = RangeTypes> = readonly [
-  begin: InstanceType<TTypes["BoundIncluded"]> | null,
-  end: InstanceType<TTypes["BoundExcluded"]> | null,
+  begin: Bound<TTypes> | null,
+  end: Bound<TTypes> | null,
 ];
 
 /**
  * @experimental
  */
 export class RangeBase<TTypes extends RangeTypes = RangeTypes> {
-  readonly begin: InstanceType<TTypes["BoundIncluded"]> | null;
-  readonly end: InstanceType<TTypes["BoundExcluded"]> | null;
+  readonly begin: Bound<TTypes> | null;
+  readonly end: Bound<TTypes> | null;
 
   constructor(source: RangeSource<TTypes>, readonly types: TTypes) {
     [this.begin, this.end] = source;

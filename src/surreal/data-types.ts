@@ -55,6 +55,7 @@ import type {
   Thing as StandardThing,
   Uuid as StandardUuid,
 } from "@tai-kun/surrealdb/data-types/standard";
+import { isDataTypeOf } from "@tai-kun/surrealdb/utils";
 
 export namespace DataType {
   export type Table =
@@ -162,93 +163,86 @@ export type DataType =
   | DataType.GeometryMultiPolygon
   | DataType.GeometryCollection;
 
-function isValue(o: unknown, id: string): boolean {
-  return !!o
-    && typeof o === "object"
-    // @ts-expect-error
-    && o["$$datatype"] === Symbol.for("@tai-kun/surrealdb/data-types/" + id);
-}
-
 export function isTable<T = DataType.Table>(o: unknown): o is T {
-  return isValue(o, "table");
+  return isDataTypeOf(o, "table");
 }
 
 export function isThing<T = DataType.Thing>(o: unknown): o is T {
-  return isValue(o, "thing");
+  return isDataTypeOf(o, "thing");
 }
 
 export function isDecimal<T = DataType.Decimal>(o: unknown): o is T {
-  return isValue(o, "decimal");
+  return isDataTypeOf(o, "decimal");
 }
 
 export function isDatetime<T = DataType.Datetime>(o: unknown): o is T {
-  return isValue(o, "datetime");
+  return isDataTypeOf(o, "datetime");
 }
 
 export function isDuration<T = DataType.Duration>(o: unknown): o is T {
-  return isValue(o, "duration");
+  return isDataTypeOf(o, "duration");
 }
 
 export function isFuture<T = DataType.Future>(o: unknown): o is T {
-  return isValue(o, "future");
+  return isDataTypeOf(o, "future");
 }
 
 export function isUuid<T = DataType.Uuid>(o: unknown): o is T {
-  return isValue(o, "uuid");
+  return isDataTypeOf(o, "uuid");
 }
 
 export function isRange<T = DataType.Range>(o: unknown): o is T {
-  return isValue(o, "range");
+  return isDataTypeOf(o, "range");
 }
 
 export function isBoundIncluded<T = DataType.BoundIncluded>(
   o: unknown,
 ): o is T {
-  return isValue(o, "boundincluded");
+  return isDataTypeOf(o, "boundincluded");
 }
 
 export function isBoundExcluded<T = DataType.BoundExcluded>(
   o: unknown,
 ): o is T {
-  return isValue(o, "boundexcluded");
+  return isDataTypeOf(o, "boundexcluded");
 }
 
 export function isGeometryPoint<T = DataType.GeometryPoint>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrypoint");
+  return isDataTypeOf(o, "geometrypoint");
 }
 
 export function isGeometryLine<T = DataType.GeometryLine>(o: unknown): o is T {
-  return isValue(o, "geometryline");
+  return isDataTypeOf(o, "geometryline");
 }
 
 export function isGeometryPolygon<T = DataType.GeometryPolygon>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrypolygon");
+  return isDataTypeOf(o, "geometrypolygon");
 }
 
 export function isGeometryMultiPoint<T = DataType.GeometryMultiPoint>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrymultipoint");
+  return isDataTypeOf(o, "geometrymultipoint");
 }
 
 export function isGeometryMultiLine<T = DataType.GeometryMultiLine>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrymultiline");
+  return isDataTypeOf(o, "geometrymultiline");
 }
 
 export function isGeometryMultiPolygon<T = DataType.GeometryMultiPolygon>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrymultipolygon");
+  return isDataTypeOf(o, "geometrymultipolygon");
 }
 
 export function isGeometryCollection<T = DataType.GeometryCollection>(
   o: unknown,
 ): o is T {
-  return isValue(o, "geometrycollection");
+  return isDataTypeOf(o, "geometrycollection");
 }

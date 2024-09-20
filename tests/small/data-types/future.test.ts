@@ -1,4 +1,5 @@
-import { Future } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { toSurql } from "@tai-kun/surrealdb/utils";
 import { expect, test } from "vitest";
 
 test(".block", () => {
@@ -34,18 +35,33 @@ test(".toPlainObject()", () => {
 });
 
 test(".surql()", () => {
-  const a = "foo";
-  const b = "bar";
-  const f = new Future("time::now()");
-  f.block = Future.surql`
-    LET $a = ${a} + ${Future.raw("'-'")};
-    LET $b = ${b};
+  const foo = "foo";
+  const rid = new Thing("person", "tai-kun");
+  const future = new Future(Future.surql`
+    LET $a = ${foo} + ${Future.raw("'-'")};
+    LET $b = type::string(${rid});
     string::concat($a, $b)
-  `;
+  `);
 
-  expect(f.toSurql()).toBe(`<future>{
+  expect(future.toSurql()).toBe(`<future>{
     LET $a = 'foo' + '-';
-    LET $b = 'bar';
+    LET $b = type::string(r'person:⟨tai-kun⟩');
+    string::concat($a, $b)
+  }`);
+});
+
+test(".surql() なし", () => {
+  const foo = "foo";
+  const rid = new Thing("person", "tai-kun");
+  const future = new Future(/*surql*/ `
+    LET $a = ${toSurql(foo)} + ${"'-'"};
+    LET $b = type::string(${rid.toSurql()});
+    string::concat($a, $b)
+  `);
+
+  expect(future.toSurql()).toBe(`<future>{
+    LET $a = 'foo' + '-';
+    LET $b = type::string(r'person:⟨tai-kun⟩');
     string::concat($a, $b)
   }`);
 });

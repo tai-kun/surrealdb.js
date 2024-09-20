@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-alpha.7](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2024-09-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **data-types/standard:** Duration の `set` を `sub` に修正
+
+### Bug Fixes
+
+* **data-types/standard:** Duration の `set` を `sub` に修正 ([5233ee1](https://github.com/tai-kun/surrealdb.js/commit/5233ee1ddbd67dfa58f7ddc5c61510e373b54f54))
+* **data-types:** `Range` の　SurrealQL 表現を修正 ([a2702d6](https://github.com/tai-kun/surrealdb.js/commit/a2702d6852f73ccb3e6734d4e0f63621cb3c7914))
+
 ## [2.0.0-alpha.6](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.5...v2.0.0-alpha.6) (2024-09-18)
 
 

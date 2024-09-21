@@ -1,0 +1,124 @@
+---
+title: 解码
+slug: zh-CN/v1/reference/cbor/decode
+---
+
+## 同步解码
+
+`decode` 函数用于将 CBOR 格式的 `Uint8Array` 解码为 JavaScript 值。
+
+### 导入
+
+```ts
+import { decode } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+```ts
+function decode(input: Uint8Array, options?: DecodeOptions): unknown;
+```
+
+#### 参数
+
+##### `input`
+
+用于解码为 JavaScript 值的 CBOR 格式的 `Uint8Array`。
+
+##### `options`
+
+解码选项。
+
+`mapType?: "Object" | "Map"`
+:   此选项用于选择将键值对形式的 对象解码为 JavaScript 的普通对象还是 `Map`。选择 `"Object"` 将解码为普通对象，选择 `"Map"` 将解码为 `Map` 类实例。默认值为 `"Object"`。普通对象的键只能接受字符串或数字（即 `string | number`），但将此选项设置为 `"Map"` 进行解码时，键可以接受所有解码后的值。
+
+`reviver?: Reviver | ReviverObject | (Reviver | ReviverObject)[]`
+:   此选项用于将 CBOR 的简单数据项或带标签的数据项转换为 JavaScript 值。简单数据项仅限于 0 到 19 和 32 到 255 的值。带标签的数据项的标签是 0 到 2^64-1 的 `number` 或 `bigint`。如果函数返回通过 `Symbol.for("@tai-kun/surrealdb/cbor/continue")` 获取的 `CONTINUE` 符号，则会调用后续函数。如果无法转换，则会抛出 `SurrealTypeError`。
+
+`isSafeMapKey?: (key: unknown, map: Map<unknown, unknown>) => boolean`
+:   此选项是一个函数，用于验证 `Map` 对象的键是否安全。函数接受两个参数 `key` 和 `map`。`key` 是键的值，`map` 是正在验证的 `Map` 对象。如果此函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，将 `"__proto__"` 或 `"constructor"` 视为不安全的键。请注意，指定此选项将完全覆盖默认验证。如果您想在默认验证之上添加自己的验证，您应该将 `"__proto__"` 或 `"constructor"` 也视为不安全的键。
+
+`isSafeObjectKey?: (key: unknown, obj: Record<string | number, unknown>) => boolean`
+:   此选项是一个函数，用于验证普通对象的键是否安全。函数接受两个参数 `key` 和 `obj`。`key` 是键的值，`obj` 是正在验证的普通对象。如果此函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，将 `"__proto__"` 或 `"constructor"` 视为不安全的键。请注意，指定此选项将完全覆盖默认验证。如果您想在默认验证之上添加自己的验证，您应该将 `"__proto__"` 或 `"constructor"` 也视为不安全的键。
+
+`maxDepth?: number`
+:   指定对象的最大深度。每次进入对象或数组时，深度都会增加 1。默认值为 `64`。由于解码使用递归处理，因此深度没有上限，但建议不要设置过大的值。
+
+#### 返回值
+
+从 CBOR 格式的 `Uint8Array` 解码的 JavaScript 值。
+
+### 示例
+
+#### 使用 `Map` 对象解码
+
+```ts
+import { decode } from "@tai-kun/surrealdb/cbor";
+
+const cbor = new Uint8Array([
+  0xa1, // mt: 5, ai: 1
+  // key
+  0x00, // mt: 0, ai: 0
+  // value
+  0x00, // mt: 0, ai: 0
+]);
+
+const value = decode(bytes, { mapType: "Map" });
+
+console.log(value); // Map(1) { [ 0 ] => 0 }
+```
+
+## 异步解码
+
+`decodeStream` 函数用于将 CBOR 格式的 `Uint8Array` 解码为 JavaScript 值。
+
+### 导入
+
+```ts
+import { decodeStream } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+```ts
+function decodeStream(
+  input: ReadableStream<Uint8Array>,
+  options?: DecodeStreamOptions,
+): unknown;
+```
+
+#### 参数
+
+##### `input`
+
+`Uint8Array` 的可读流。Fetch API 可能会根据请求在 `Response` 对象的 `body` 属性中提供此流。
+
+##### `options`
+
+除了同步解码的选项外，还可以指定以下选项：
+
+`signal?: AbortSignal`
+:   用于中止流的中止信号。
+
+#### 返回值
+
+一个用 JavaScript 值解析的 `StatefulPromise`。
+
+### 示例
+
+#### Fetch API
+
+```ts
+import { decodeStream } from "@tai-kun/surrealdb/cbor";
+
+const response = await fetch("http://localhost:8000/rpc", {
+  method: "POST",
+  headers: {
+    Accept: "application/cbor",
+    // ... more headers
+  },
+  // ... more properties
+})
+
+const result = await decodeStream(resp.body);
+```

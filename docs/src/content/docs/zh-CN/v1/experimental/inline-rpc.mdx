@@ -1,0 +1,27 @@
+---
+title: 内联 RPC
+slug: zh-CN/v1/experimental/inline-rpc
+banner:
+  content: 这是一个实验性功能，API 可能经常发生变化。
+---
+
+内联 RPC 是一个函数，无需创建 `Surreal` 类实例即可执行一次性的 RPC。其用法与 `.rpc()` 方法几乎相同，但请注意，默认情况下它使用 `JsonFormatter`。
+
+### 导入
+
+```ts
+import { rpc } from "@tai-kun/surrealdb";
+```
+
+### 示例
+
+```ts
+import { rpc } from "@tai-kun/surrealdb";
+
+const token = await rpc("http://127.0.0.1:8000", "signin", {
+  params: [{
+    user: "root",
+    pass: "root",
+  }],
+});
+```

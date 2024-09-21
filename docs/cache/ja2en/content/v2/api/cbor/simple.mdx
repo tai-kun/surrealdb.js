@@ -1,10 +1,11 @@
 ---
 title: Simple
+slug: en/v2/api/cbor/simple
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
-`Simple` is a simple value identified by an integer value ranging from 0 to 255.
+`Simple` is a simple value identified by an integer value from 0 to 255.
 
 ### Import
 
@@ -24,19 +25,19 @@ new Simple(value: number);
 
 ##### `value`
 
-An integer value ranging from 0 to 255.
+An integer value from 0 to 255.
 
 #### Return Value
 
-When invoked through `new`, `Simple` returns its instance.
+When called through `new`, `Simple` returns its instance.
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-An integer value ranging from 0 to 255 that identifies the `Simple` object.
+The integer value from 0 to 255 that identifies the `Simple` object.
 
 ### Notes
 
-Refer to the following materials:
+Please refer to the following documents:
 
 - [https://datatracker.ietf.org/doc/html/rfc8949#name-simple-values](https://datatracker.ietf.org/doc/html/rfc8949#name-simple-values)
 - [https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml](https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml)

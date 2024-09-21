@@ -1,0 +1,864 @@
+---
+title: 기간
+slug: ko/v2/api/data/duration
+---
+
+import Badge from "~/components/ko/Badge.astro";
+
+`Duration`은 기간을 나타내는 클래스입니다.
+
+### 가져오기
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+새로운 `Duration` 객체를 만듭니다.
+
+```ts
+new Duration(
+  source:
+    | [seconds?: number | bigint, nanoseconds?: undefined]
+    | [seconds: number | bigint, nanoseconds?: number | undefined],
+); // decode-only, encodable
+new Duration(
+  source:
+    | [seconds?: number | bigint, nanoseconds?: undefined]
+    | [seconds: number | bigint, nanoseconds?: number | undefined]
+    | number
+    | bigint
+    | string
+    | Duration,
+); // standard
+```
+
+#### 인수
+
+##### `source`
+
+초 단위와 나노초 단위의 쌍입니다. 프리셋이 standard인 경우 `Duration` 객체를 구성하는 데 더 많은 값을 사용할 수 있습니다.
+
+`number` 타입의 입력은 밀리초 단위로 계산됩니다. 이는 `Date` 객체 간의 차이를 `Duration` 객체로 변환하는 용도를 위해 사용됩니다:
+
+```ts
+const begin = new Date("2024-06-01T12:00:00.000Z");
+const end = new Date("2024-06-01T21:00:00.000Z");
+new Duration(end - begin);
+```
+
+`bigint` 타입의 입력은 나노초 단위로 계산됩니다. 이는 예를 들어 [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint)에서 반환된 나노초와 같이 고정밀 시간을 `Duration` 객체로 변환하는 용도를 위해 사용됩니다:
+
+```ts
+const begin = process.hrtime.bigint();
+await run();
+const end = process.hrtime.bigint();
+new Duration(end - begin);
+```
+
+`string` 타입의 입력은 기간의 문자열 표현이어야 합니다. 기간의 문자열 표현은 숫자와 단위의 조합으로 구성되며, 이들이 연속적으로 이어지는 형식을 의미합니다. 예를 들어 `1h4h30m20s1350ms`는 "1일 4시간 30분 21초 350밀리초"를 나타냅니다. 사용 가능한 단위는 다음과 같습니다:
+
+| 단위 | 설명 | 변환 |
+| --- | --- | --- |
+| `ns` | 나노초 |
+| `us` | 마이크로초 | `1us` -> `1000ns` |
+| `ms` | 밀리초 | `1ms` -> `1000us` |
+| `s`  | 초 | `1s` -> `1000ms` |
+| `m`  | 분 | `1m` -> `60s` |
+| `h`  | 시 | `1h` -> `60m` |
+| `d`  | 일 | `1d` -> `24h` |
+| `w` | 주 | `1w` -> `7d` |
+| `y` | 년 | `1y` -> `365d` |
+
+`us` (`0x75`, `0x73`)는 `µs` (`0xc2`, `0xb5`, `0x73`) 또는 `μs` (`0xce`, `0xbc`, `0x73`)로도 사용할 수 있습니다(괄호 안의 16진수는 단위 문자열을 UTF-8로 인코딩한 결과입니다).
+
+#### 반환값
+
+`new`를 통해 호출된 경우 `Duration`은 해당 인스턴스를 반환합니다.
+
+### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+기간의 초 단위 부분입니다. standard 미만의 프리셋에서는 읽기 전용입니다. 값은 0에서 2<sup>64</sup>-1까지의 정수입니다.
+
+```ts
+.seconds: bigint;
+```
+
+### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+기간의 나노초 단위 부분입니다. standard 미만의 프리셋에서는 읽기 전용입니다. 값은 0에서 999999999까지의 정수입니다.
+
+```ts
+.nanoseconds: number;
+```
+
+### `.parse()` <Badge variant="instance" /><Badge variant="property" /><Badge variant="encodable" />
+
+기간을 각 단위에 매핑합니다. 각 단위의 값은 0 이상이고 해당 단위의 최대값 미만입니다. 기간이 0인 경우 0나노초, 즉 `nanoseconds` 프로퍼티만 `0`을 가진 객체가 반환됩니다.
+
+```ts
+.parse(): {
+  years?: number;
+  weeks?: number;
+  days?: number;
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
+  microseconds?: number;
+  nanoseconds?: number;
+};
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+기간을 각 단위에 매핑한 결과를 반환합니다. 단위의 값이 0인 경우 프로퍼티가 생략되지만 기간이 0인 경우 `nanoseconds`만 `0`을 가진 객체가 반환됩니다.
+
+#### 예
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(0);
+console.log(duration.parse());
+//-> { nanoseconds: 0 }
+```
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.parse());
+//-> { milliseconds: 12, microseconds: 345 }
+```
+
+### `.valueOf()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+기간을 나노초 단위로 가져옵니다.
+
+```ts
+.valueOf(): bigint;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+기간을 나노초 단위로 반환합니다.
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.valueOf());
+//-> 12345000n
+```
+
+### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+기간의 문자열 표현을 가져옵니다.
+
+`.toJSON()`과 `.toSurql()`은 이 메서드와 동일한 결과를 반환합니다.
+
+```ts
+.toString(): string;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+밀리초 단위로 표현된 시간의 문자열 표현을 반환합니다.
+
+#### 예
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration(12_345_000n);
+console.log(duration.toString());
+//-> 12ms345µs
+```
+
+### `.toISOString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
+
+기간의 문자열을 ISO 형식으로 가져옵니다.
+
+```ts
+.toISOString(): string;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+기간의 문자열을 ISO 형식으로 반환합니다.
+
+#### 예
+
+```ts
+import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+
+const duration = new Duration("2m3s456ms");
+console.log(duration.toISOString());
+//-> P2M3S
+```
+
+### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+초 단위와 나노초 단위의 쌍을 가져옵니다.
+
+```ts
+.getCompact(): [seconds: bigint, nanoseconds: number];
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+초 단위와 나노초 단위의 쌍을 반환합니다.
+
+### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+초 단위와 나노초 단위의 쌍으로 날짜와 시간을 설정합니다.
+
+```ts
+.setCompact(compact: [seconds: bigint, nanoseconds: number]): void;
+```
+
+#### 인수
+
+##### `compact`
+
+초 단위와 나노초 단위의 쌍입니다.
+
+#### 반환값
+
+없음.
+
+### `.getYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+년도를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getYears(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+년도를 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 년도를 추가합니다.
+
+```ts
+.addYears(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+년도입니다.
+
+#### 반환값
+
+없음.
+
+### `.subYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 년도를 뺍니다.
+
+```ts
+.subYears(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+년도입니다.
+
+#### 반환값
+
+없음.
+
+### `.asYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+년도를 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asYears(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+년도를 밀리초로 변환한 값입니다.
+
+### `.getWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+주를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getWeeks(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+주를 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 주를 추가합니다.
+
+```ts
+.addWeeks(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+주입니다.
+
+#### 반환값
+
+없음.
+
+### `.subWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 주를 뺍니다.
+
+```ts
+.subWeeks(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+주입니다.
+
+#### 반환값
+
+없음.
+
+### `.asWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+주를 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asWeeks(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+주를 밀리초로 변환한 값입니다.
+
+### `.getDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+일을 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getDays(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+일을 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 일을 추가합니다.
+
+```ts
+.addDays(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+일입니다.
+
+#### 반환값
+
+없음.
+
+### `.subDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 일을 뺍니다.
+
+```ts
+.subDays(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+일입니다.
+
+#### 반환값
+
+없음.
+
+### `.asDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+일을 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asDays(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+일을 밀리초로 변환한 값입니다.
+
+### `.getHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+시를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getHours(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+시를 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 시를 추가합니다.
+
+```ts
+.addHours(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+시입니다.
+
+#### 반환값
+
+없음.
+
+### `.subHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 시를 뺍니다.
+
+```ts
+.subHours(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+시입니다.
+
+#### 반환값
+
+없음.
+
+### `.asHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+시를 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asHours(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+시를 밀리초로 변환한 값입니다.
+
+### `.getMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+분을 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getMinutes(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+분을 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 분을 추가합니다.
+
+```ts
+.addMinutes(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+분입니다.
+
+#### 반환값
+
+없음.
+
+### `.subMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 분을 뺍니다.
+
+```ts
+.subMinutes(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+분입니다.
+
+#### 반환값
+
+없음.
+
+### `.asMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+분을 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asMinutes(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+분을 밀리초로 변환한 값입니다.
+
+### `.getSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getSeconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+초를 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 초를 추가합니다.
+
+```ts
+.addSeconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+초입니다.
+
+#### 반환값
+
+없음.
+
+### `.subSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 초를 뺍니다.
+
+```ts
+.subSeconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+초입니다.
+
+#### 반환값
+
+없음.
+
+### `.asSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+초를 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asSeconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+초를 밀리초로 변환한 값입니다.
+
+### `.getMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+밀리초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getMilliseconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+밀리초를 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 밀리초를 추가합니다.
+
+```ts
+.addMilliseconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+밀리초입니다.
+
+#### 반환값
+
+없음.
+
+### `.subMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 밀리초를 뺍니다.
+
+```ts
+.subMilliseconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+밀리초입니다.
+
+#### 반환값
+
+없음.
+
+### `.asMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+밀리초를 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asMilliseconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+밀리초를 밀리초로 변환한 값입니다.
+
+### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+마이크로초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getMicroseconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+마이크로초를 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 마이크로초를 추가합니다.
+
+```ts
+.addMicroseconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+마이크로초입니다.
+
+#### 반환값
+
+없음.
+
+### `.subMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 마이크로초를 뺍니다.
+
+```ts
+.subMicroseconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+마이크로초입니다.
+
+#### 반환값
+
+없음.
+
+### `.asMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+마이크로초를 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asMicroseconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+마이크로초를 밀리초로 변환한 값입니다.
+
+### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+나노초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+
+```ts
+.getNanoseconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+나노초를 나타내는 0 이상의 정수를 반환합니다.
+
+### `.addNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에 지정된 수만큼 나노초를 추가합니다.
+
+```ts
+.addNanoseconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+나노초입니다.
+
+#### 반환값
+
+없음.
+
+### `.subNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+기간에서 지정된 수만큼 나노초를 뺍니다.
+
+```ts
+.subNanoseconds(value: number): void;
+```
+
+#### 인수
+
+##### `value`
+
+나노초입니다.
+
+#### 반환값
+
+없음.
+
+### `.asNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
+
+나노초를 밀리초로 변환한 값을 가져옵니다.
+
+```ts
+.asNanoseconds(): number;
+```
+
+#### 인수
+
+없음.
+
+#### 반환값
+
+나노초를 밀리초로 변환한 값입니다.

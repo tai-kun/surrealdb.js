@@ -1,10 +1,11 @@
 ---
 title: toSurql
+slug: en/v1/reference/utils/to-surql
 ---
 
-The `toSurql` function converts JavaScript values to SurrealQL strings.
+`toSurql` is a function that converts JavaScript values into SurrealQL strings.
 
-### Importing
+### Import
 
 ```ts
 import { toSurql } from "@tai-kun/surrealdb/utils";
@@ -20,7 +21,7 @@ function toSurql(value: unlnown): string;
 
 ##### `value`
 
-A JavaScript value. It accepts one of the following:
+A JavaScript value. It accepts one of the following values:
 
 - `string`
 - `number`
@@ -38,9 +39,9 @@ A JavaScript value. It accepts one of the following:
 
 `unknown` represents a value composed of the above types.
 
-During conversion, the above order indicates the priority. This means that even if a plain object has a `.toJSON` function, if it also has a `.toSurql` function, the latter takes precedence.
+The above order indicates the priority for conversion. In other words, even if a plain object has a `.toJSON` function, it will be prioritized if it also has a `.toSurql` function.
 
-For plain object determination, we use [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj). Therefore, if a plain object does not have `.toSurql` or `.toJSON`, but has `Symbol.toStringTag` or `Symbol.iterator`, it is not considered an object and an error is thrown.
+For plain object determination, [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) is used. Therefore, if a plain object does not have `.toSurql` or `.toJSON`, and has `Symbol.toStringTag` or `Symbol.iterator`, it will not be identified as an object and an error will be thrown.
 
 #### Return Value
 

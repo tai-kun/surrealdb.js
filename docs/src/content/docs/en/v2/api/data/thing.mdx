@@ -1,10 +1,11 @@
 ---
 title: Thing
+slug: en/v2/api/data/thing
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
-`Thing` is a class that represents a [record ID](https://surrealdb.com/docs/surrealql/datamodel/ids).
+`Thing` is a class representing a [record ID](https://surrealdb.com/docs/surrealql/datamodel/ids).
 
 ### Import
 
@@ -27,7 +28,7 @@ new Thing(tb: string, id: string | number | bigint | object);
 
 ##### `source`
 
-A tuple of the table part and ID part of the record ID.
+A pair of the table part and the ID part of the record ID.
 
 ##### `tb`
 
@@ -39,11 +40,11 @@ The ID part of the record ID.
 
 #### Return Value
 
-When called through `new`, `Thing` returns its instance.
+When called via `new`, `Thing` returns its instance.
 
 ### `.tb` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The table part of the record ID. This property does not escape the string when retrieved.
+The table part of the record ID. When accessing this property, the string is not escaped.
 
 ```ts
 .tb: string;
@@ -51,7 +52,7 @@ The table part of the record ID. This property does not escape the string when r
 
 #### Example
 
-This property does not escape the string when retrieved.
+When accessing this property, the string is not escaped.
 
 ```ts
 import { Thing } from "@tai-kun/surrealdb/data-types/decode-only";
@@ -71,7 +72,7 @@ The ID part of the record ID.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Thing` object to a string that can be used in a SurrealQL variable. The table name and ID part are escaped and formatted as in the SurrealDB implementation, respectively. The object's properties are also sorted in ascending order.
+Converts the `Thing` object to a string usable in SurrealQL variables. The table name and ID part are escaped and formatted the same way as in SurrealDB's implementation. Also, the object's properties are sorted in ascending order.
 
 `.valueOf()` and `.toJSON()` return the same result as this method.
 
@@ -85,7 +86,7 @@ None.
 
 #### Return Value
 
-Returns a string formatted as the record ID.
+Returns a string formatted as a record ID.
 
 #### Example
 
@@ -102,7 +103,7 @@ console.log(thing.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Thing` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but adds an `r` prefix to tell the query parser that the string is a record ID.
+Converts the `Thing` object to a string embeddable in SurrealQL. Similar to `.toString()`, but adds the `r` prefix to tell the query parser that the string is a record ID.
 
 ```ts
 .toSurql(): string;
@@ -114,7 +115,7 @@ None.
 
 #### Return Value
 
-Returns a string formatted as the record ID.
+Returns a string formatted as a record ID.
 
 #### Example
 
@@ -140,13 +141,13 @@ None.
 
 #### Return Value
 
-Returns a new `Thing` object. If inheriting from the `Thing` class, an instance of that class is returned.
+Returns a new `Thing` object. If inheriting the `Thing` class, returns an instance of that class.
 
-### Extension
+### Development
 
 #### Type Guard
 
-The table part and ID part of `Thing` can be type-safe by using type parameters:
+You can make the table part and ID part of `Thing` type-safe using type parameters:
 
 ```ts
 import { Thing, Uuid } from "@tai-kun/surrealdb/data-types/standard";
@@ -158,9 +159,9 @@ function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
 }
 ```
 
-#### Generic `Thing` Object Determination
+#### Generic Check of `Thing` Objects
 
-To determine if a value is a `Thing` object without relying on presets, it is recommended to use the `isThing` function. This function does not use `instanceof`, making it useful when the preset of the value being verified is unknown.
+To determine whether a value is a `Thing` object without relying on presets, it is recommended to use the `isThing` function. This function does not use `instanceof`, so it is useful when the preset of the value to be verified is unknown.
 
 ```ts
 import { isThing } from "@tai-kun/surrealdb";

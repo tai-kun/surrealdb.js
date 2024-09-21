@@ -1,8 +1,9 @@
 ---
 title: makeAbortApi
+slug: en/v1/reference/utils/make-abort-api
 ---
 
-`makeAbortApi` is a function that creates an abort signal and an associated abort function.
+`makeAbortApi` is a function that creates an abort signal and its associated abort function.
 
 ### Import
 
@@ -27,15 +28,15 @@ The abort signal to associate with.
 
 #### Return Value
 
-Returns an array containing the following in order:
+Returns an array in the following order:
 
 ##### `signal`
 
-The abort signal. It is not aborted by default.
+The abort signal. It is not aborted initially.
 
 ##### `abort`
 
-Dispatches an `"abort"` event to the abort signal. It can optionally take one argument `reason`, which can be used to pass the reason for aborting via the `"abort"` event.
+Dispatches an `"abort"` event to the abort signal. It can optionally take one argument `reason` to communicate the reason for the abortion through the `"abort"` event.
 
 #### Example
 
@@ -48,7 +49,7 @@ const [signal, abort] = makeAbortApi();
 abort();
 ```
 
-The above example is almost equivalent to `new AbortController()`. The difference is that `makeAbortApi` returns an array instead of an object.
+The above example is almost equivalent to `new AbortController()`.  The difference from `AbortController` is that `makeAbortApi` returns an array instead of an object.
 
 The following example creates an Abort API with an associated abort signal:
 
@@ -75,7 +76,7 @@ controller.signal test
 signal test
 ```
 
-Abort events propagate from the Abort API to the associated abort signal:
+The abort event is propagated from the Abort API to the associated abort signal when the Abort API is aborted:
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";

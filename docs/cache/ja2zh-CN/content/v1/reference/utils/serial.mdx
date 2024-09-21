@@ -1,0 +1,94 @@
+---
+title: 序列
+slug: zh-CN/v1/reference/utils/serial
+---
+
+import Badge from "~/components/zh-CN/Badge.astro";
+
+`Serial` 是一个生成递增 ID 的类。它用于生成双向通信中 RPC 请求的 ID。ID 是循环生成的，以确保 ID 不会超过安全整数的值。如果 ID 超过该值，它将重置为 1。
+
+### 导入
+
+```ts
+import { Serial } from "@tai-kun/surrealdb/utils";
+```
+
+### `.constructor()`
+
+```ts
+new Serial(max?: number);
+```
+
+#### 参数
+
+##### `max`
+
+设置递增 ID 的最大值。有效值为 1 到 2^53-1 之间的整数。默认值为 2^53-1。
+
+#### 返回值
+
+如果通过 `new` 调用，`Serial` 将返回其实例。
+
+#### 例子
+
+以下示例展示了基本用法：
+
+```ts
+import { Serial } from "@tai-kun/surrealdb/utils";
+
+const id = new Serial(3);
+
+console.log(id.next());
+console.log(id.next());
+console.log(id.next());
+
+console.log(id.next());
+console.log(id.next());
+
+id.reset();
+
+console.log(id.next());
+console.log(id.next());
+```
+
+输出：
+
+```js
+1
+2
+3
+1
+2
+1
+2
+```
+
+### `.next()` <Badge variant="instance" /><Badge variant="method" />
+
+`.next` 是一个获取下一个 ID 的函数。
+
+```ts
+next(): number;
+```
+
+#### 参数
+
+无。
+
+#### 返回值
+
+返回 1 到 `max` 之间的整数。如果该值是最大值，则下一个获取的值将为 1。
+
+### `.reset()` <Badge variant="instance" /><Badge variant="method" />
+
+```ts
+reset(): void;
+```
+
+#### 参数
+
+无。
+
+#### 返回值
+
+无。

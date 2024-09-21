@@ -1,12 +1,17 @@
 ---
 title: Range
+slug: en/v2/api/data/range
 banner:
   content: This is an experimental feature.
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
-## Description
+## Range
+
+### Description
+
+This type represents a range of values.
 
 ### Import
 
@@ -33,15 +38,15 @@ new Range(
 
 ##### `source`
 
-A pair of minimum and maximum values for the range. If it is unlimited, it is `null`.
+A pair of minimum and maximum values for the range. `null` if unbounded.
 
 #### Return Value
 
-When called via `new`, `Range` returns its instance.
+When invoked via `new`, `Range` returns its instance.
 
 ### `.begin` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The minimum value of the range. If there is no lower bound, it is `null`.
+The minimum value of the range. `null` if unbounded on the lower end.
 
 ```ts
 .begin: BoundIncluded | BoundExcluded | null;
@@ -49,7 +54,7 @@ The minimum value of the range. If there is no lower bound, it is `null`.
 
 ### `.end` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The maximum value of the range. If there is no upper bound, it is `null`.
+The maximum value of the range. `null` if unbounded on the upper end.
 
 ```ts
 .end: BoundIncluded | BoundExcluded | null;
@@ -57,7 +62,7 @@ The maximum value of the range. If there is no upper bound, it is `null`.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Range` object to a string that can be used in SurrealQL.
+Converts the `Range` object to a SurrealQL-usable string.
 
 `.toJSON()` and `.toSurql()` return the same result as this method.
 
@@ -119,11 +124,11 @@ console.log(range.toString());
 // -> ..
 ```
 
-### Development
+### Advancement
 
-#### General-Purpose `Range` Object Determination
+#### General Purpose Determination of `Range` Objects
 
-It is recommended to use the `isRange` function to determine if a value is a `Range` object without relying on presets. This function does not use `instanceof`, so it is useful when the preset of the value being verified is unknown.
+To determine if a value is a `Range` object without relying on presets, it is recommended to use the `isRange` function. This function does not use `instanceof`, making it useful when the preset of the value to be validated is unknown.
 
 ```ts
 import { isRange } from "@tai-kun/surrealdb";

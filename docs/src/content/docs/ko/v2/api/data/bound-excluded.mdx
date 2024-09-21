@@ -1,0 +1,40 @@
+---
+title: BoundExcluded
+slug: ko/v2/api/data/bound-excluded
+banner:
+  content: 이것은 실험적인 기능입니다.
+---
+
+import Badge from "~/components/ko/Badge.astro";
+
+[`Range`](/v2/api/data/range)를 참조하십시오.
+
+### 가져오기
+
+```ts
+import { BoundExcluded } from "@tai-kun/surrealdb/data-types/decode-only";
+import { BoundExcluded } from "@tai-kun/surrealdb/data-types/encodable";
+import { BoundExcluded } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+새로운 `BoundExcluded` 객체를 만듭니다.
+
+```ts
+new BoundExcluded(source: unknown);
+```
+
+#### 인수
+
+##### `source`
+
+조사 중입니다.
+
+#### 반환 값
+
+`new`를 통해 호출하면 `BoundExcluded`는 해당 인스턴스를 반환합니다.
+
+### `.value` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+조사 중입니다.

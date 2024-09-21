@@ -1,10 +1,11 @@
 ---
 title: Serial
+slug: en/v1/reference/utils/serial
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
-`Serial` is a class that generates incremental IDs. It is used to generate IDs for RPC requests in bidirectional communication. IDs are generated cyclically to ensure that the ID does not exceed a safe integer value. When the ID exceeds that value, it is reset to 1.
+The `Serial` class generates incremental IDs. It is used to generate IDs for RPC requests in bidirectional communication. IDs are generated cyclically to prevent IDs from exceeding a safe integer value. If the ID exceeds the value, it resets to 1.
 
 ### Import
 
@@ -22,15 +23,15 @@ new Serial(max?: number);
 
 ##### `max`
 
-Sets the maximum value of the incremental ID. Integers from 1 to 2^53-1 are valid. The default value is 2^53-1.
+Sets the maximum value for the incremental ID. Integers from 1 to 2^53-1 are valid. The default value is 2^53-1.
 
-#### Return Value
+#### Return value
 
-When called via `new`, `Serial` returns its instance.
+When called through `new`, `Serial` returns its instance.
 
 #### Example
 
-The following example demonstrates basic usage:
+The following example shows a basic usage:
 
 ```ts
 import { Serial } from "@tai-kun/surrealdb/utils";
@@ -74,9 +75,9 @@ next(): number;
 
 None.
 
-#### Return Value
+#### Return value
 
-Returns an integer greater than or equal to 1 and less than or equal to `max`. When this value is the maximum value, the next value to be retrieved is 1.
+Returns an integer between 1 and `max`. If this value is the maximum value, the next value to be retrieved is 1.
 
 ### `.reset()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -88,6 +89,6 @@ reset(): void;
 
 None.
 
-#### Return Value
+#### Return value
 
 None.

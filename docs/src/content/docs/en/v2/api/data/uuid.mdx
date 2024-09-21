@@ -1,10 +1,11 @@
 ---
 title: Uuid
+slug: en/v2/api/data/uuid
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
-A Universally Unique Identifier (UUID) is a 128-bit identifier used to uniquely identify a specific entity. The `Uuid` class represents this identifier. It supports UUID versions from v1 to v7. Note that you need to use a separate library or a runtime-built-in feature (`node:crypto` etc.) to generate a UUID.
+A UUID (Universally Unique Identifier) is a 128-bit identifier used to uniquely identify a specific entity. `Uuid` is a class that represents this. It supports UUID versions v1 through v7. Note that generating UUIDs requires a separate library or a built-in feature in the runtime (such as `node:crypto`).
 
 ### Import
 
@@ -27,11 +28,11 @@ new Uuid(source: Uint8Array | string); // standard
 
 ##### `source`
 
-The byte array representation of the UUID or a string if it's a standard preset.
+An array of bytes representing the UUID or a string if using the standard preset.
 
-#### Returns
+#### Return Value
 
-When called through `new`, `Uuid` returns its instance.
+When invoked through `new`, `Uuid` returns its instance.
 
 ### `.bytes` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
@@ -43,23 +44,23 @@ The byte array of the UUID.
 
 ### `.variant` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-The variant of the UUID. It is defined by the top 4 bits of the 13th bit of the UUID, and there are three main variants and one reserved variant for future use.
+The variant of the UUID. This is defined by the top 3 bits of the 13th byte of the UUID. There are 3 main variants and one reserved for future use.
 
 1. NCS compatible
     - `0b0xxx`
-    - Indicates that the UUID is NCS (Network Computing System) compatible.
+    - Indicates that the UUID is compatible with NCS (Network Computing System).
     - Not commonly used.
 2. RFC 4122 compatible
     - `0b10xx`
-    - UUID based on RFC 4122 (the standard specification of UUIDs).
-    - This is the commonly used format for UUIDs. It includes formats such as v1 (time-based) and v4 (random).
+    - UUIDs based on RFC 4122 (the standard specification for UUIDs).
+    - The most commonly used format for UUIDs. Includes formats like v1 (time-based) and v4 (random).
 3. Microsoft GUID compatible
     - `0b110x`
-    - GUID (Globally Unique Identifier) format used by Microsoft.
+    - The format of GUID (Globally Unique Identifier) used by Microsoft.
 4. Reserved for future use
     - `0b111x`
 
-This property also expresses the NIL UUID and MAX UUID in addition to the above variants.
+This property also represents NIL UUID and MAX UUID in addition to the above variants.
 
 ```ts
 .variant:
@@ -73,7 +74,7 @@ This property also expresses the NIL UUID and MAX UUID in addition to the above 
 
 ### `.version` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-The UUID version number if the variant is `"RFC"`, otherwise `null`.
+The UUID version number if the variant is `"RFC"`. Otherwise, it's `null`.
 
 ```ts
 .version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | null;
@@ -81,7 +82,7 @@ The UUID version number if the variant is `"RFC"`, otherwise `null`.
 
 ### `.timestamp` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-The timestamp part of the UUID if the variant is `"RFC"` and the version is one of v1, v6, or v7. Otherwise, it is `null`. For convenience, all timestamps are calculated in milliseconds from the UNIX epoch.
+The timestamp portion of the UUID if the variant is `"RFC"` and the version is either v1, v6, or v7. Otherwise, it's `null`. For convenience, all timestamps are calculated as milliseconds since the UNIX epoch.
 
 ```ts
 .timestamp: number | null;
@@ -89,7 +90,7 @@ The timestamp part of the UUID if the variant is `"RFC"` and the version is one 
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Uuid` object to a string that can be used in a SurrealQL variable.
+Converts the `Uuid` object to a string that can be used as a variable in SurrealQL.
 
 `.valueOf()` and `.toJSON()` return the same result as this method.
 
@@ -101,9 +102,9 @@ Converts the `Uuid` object to a string that can be used in a SurrealQL variable.
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns the hexadecimal UUID string.
+Returns the UUID string in hexadecimal format.
 
 #### Example
 
@@ -124,7 +125,7 @@ console.log(uuid.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Uuid` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but adds a `u` prefix to tell the query parser that the string is a UUID.
+Converts the `Uuid` object to a string that can be embedded in SurrealQL. Similar to `.toString()` but adds a `u` prefix to tell the query parser that the string is a UUID.
 
 ```ts
 .toSurql(): string;
@@ -134,9 +135,9 @@ Converts the `Uuid` object to a string that can be embedded in SurrealQL. Simila
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns the hexadecimal UUID string with a `u` prefix.
+Returns the UUID string in hexadecimal format with a `u` prefix.
 
 #### Example
 
@@ -167,13 +168,13 @@ Clones the `Uuid` object.
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns a new `Uuid` object. If the `Uuid` class is inherited, an instance of that class will be returned.
+Returns a new `Uuid` object. If `Uuid` is extended, an instance of that class is returned.
 
 ### `.compareTo()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Compares the timestamps of `Uuid` objects.
+Compares the timestamp of the `Uuid` object.
 
 ```ts
 .compareTo(other: Uuid): -1 | 0 | 1;
@@ -183,15 +184,15 @@ Compares the timestamps of `Uuid` objects.
 
 ##### `other`
 
-The UUID to compare with.
+The UUID to compare to.
 
-#### Returns
+#### Return Value
 
-Returns `0` if either one does not have a timestamp part, or if the timestamps are the same. Returns `-1` if the timestamp of the compared UUID is later, and `1` if it is earlier.
+Returns `0` if either one of the timestamps is missing or if the timestamps are the same. Returns `-1` if the timestamp of the compared UUID is later in time and `1` if it's earlier.
 
 #### Example
 
-In the following example, we compare the timestamps of different UUID versions and sort them in ascending order:
+The following example compares the timestamps of different UUID versions to sort them in ascending order:
 
 ```ts
 import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
@@ -218,11 +219,11 @@ console.log(uuidList);
 //-> ]
 ```
 
-### Development
+### Further Development
 
-#### General judgment of `Uuid` object
+#### General Purpose `Uuid` Object Check
 
-It is recommended to use the `isUuid` function to determine if a value is a `Uuid` object without relying on presets. This function does not use `instanceof`, so it is useful when the preset of the value to be verified is unknown.
+It is recommended to use the `isUuid` function to check if a value is a `Uuid` object without relying on any specific preset. This function does not use `instanceof`, so it is helpful when the preset of the value to be verified is unknown.
 
 ```ts
 import { isUuid } from "@tai-kun/surrealdb";

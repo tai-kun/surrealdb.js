@@ -1,0 +1,121 @@
+---
+title: encode
+slug: zh-CN/v2/api/cbor/encode
+---
+
+`encode` 函数用于将 JavaScript 值编码为 CBOR 格式的 `Uint8Array`。
+
+### 导入
+
+```ts
+import { encode } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+```ts
+function encode(value: unknown, options?: EncodeOptions): Uint8Array;
+```
+
+#### 参数
+
+##### `value`
+
+要编码为 CBOR 格式的 `Uint8Array` 的 JavaScript 值。`value` 可以是以下 JavaScript 值：
+
+- 基本类型
+  - `number`
+  - `bigint`
+  - `string`
+  - `boolean`
+  - `null`
+  - `undefined`
+- 具有 `.toCBOR()` 方法的对象
+- 数组或 `Set`
+- 普通对象或 `Map`
+- `Uint8Array`
+- `Simple` 对象
+- 可以由可选的 `replacer` 替换的值
+
+如果 `value` 不是基本类型，并且其 `toCBOR` 属性是一个函数，则优先调用该函数。
+
+##### `options`
+
+编码选项。
+
+`replacer?: Replacer | Replacer[]`
+:   编码器默认会将大多数值编码为 CBOR，但对于某些不符合该规则的特殊值，可以使用此选项将其替换为可编码的值。该选项接受一个函数或函数数组来实现替换过程。如果函数返回 `Symbol.for("@tai-kun/surrealdb/cbor/continue")` 获取的 `CONTINUE` 符号，则将调用后续函数。如果无法替换任何值，则会抛出 `SurrealTypeError`。
+
+`isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
+:   此选项是一个函数，用于验证 `Map` 对象的键是否安全。函数接受两个参数：`key` 和 `map`。`key` 是键的值，`map` 是要验证的 `Map` 对象。如果该函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，该函数会将 `"__proto__"` 或 `"constructor"` 视为不安全的键。请注意，如果指定了此选项，则默认验证将被完全覆盖。如果想在默认验证的基础上添加自定义验证，则也应将 `"__proto__"` 或 `"constructor"` 视为不安全的键。
+
+`isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
+:   此选项是一个函数，用于验证普通对象的键是否安全。函数接受两个参数：`key` 和 `obj`。`key` 是键的值，`obj` 是要验证的普通对象。如果该函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，该函数会将 `"__proto__"` 或 `"constructor"` 视为不安全的键。请注意，如果指定了此选项，则默认验证将被完全覆盖。如果想在默认验证的基础上添加自定义验证，则也应将 `"__proto__"` 或 `"constructor"` 视为不安全的键。
+
+`maxDepth?: number`
+:   指定对象的最大深度。每进入一个对象或数组，深度就会增加 1。默认值为 `64`。编码过程使用递归，因此深度没有上限，但建议不要设置过大的值。
+
+#### 返回值
+
+一个包含 JavaScript 值的 CBOR 编码的 `Uint8Array`。
+
+### 示例
+
+#### `isSafeObjectKey` 用于保护对象键
+
+```ts
+import { encode } from "@tai-kun/surrealdb/cbor";
+
+encode(
+  {
+    "API_KEY": "***"
+  },
+  {
+    isSafeObjectKey: k => !["constructor", "__proto__", "API_KEY"].includes(k),
+  }
+); // throws CborUnsafeMapKeyError
+```
+
+#### `replacer` 用于替换符号
+
+```ts
+import { CONTINUE, encode } from "@tai-kun/surrealdb/cbor";
+
+const bytes = encode(Symbol.for("ID"), {
+  replacer(o) {
+    switch (o) {
+      case Symbol.for("ID"):
+        return "ID";
+
+      default:
+        return CONTINUE;
+    }
+  },
+});
+
+console.log(bytes); // Uint8Array(3) [ 98, 73, 68 ]
+```
+
+#### `maxDepth` 用于限制最大深度
+
+```ts
+import { encode } from "@tai-kun/surrealdb/cbor";
+
+encode(
+  {
+    // depth: 1
+    a: new Map([
+      // depth: 2
+      ["b", [
+        // depth: 3
+        new Set([
+          // depth: 4
+        ]),
+      ]],
+    ]),
+  },
+  {
+    maxDepth: 3,
+  },
+); // throws CborMaxDepthReachedError
+```

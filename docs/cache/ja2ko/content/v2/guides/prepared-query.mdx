@@ -1,0 +1,164 @@
+---
+title: 미리 준비된 쿼리
+slug: ko/v2/guides/prepared-query
+---
+
+## 기본적인 사용 방법
+
+미리 준비된 쿼리를 사용하는 기본적인 예는 다음과 같습니다.
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const CreateUserQuery = surql`CREATE ONLY user:foo CONTENT { age: 42 };`
+  .as<[{ id: Thing<"user">, age: number }]>();
+
+const db = new Surreal();
+await db.connect(`ws://localhost:8000`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
+
+const results = await db.query(CreateUserQuery);
+//    ^? const results: [{ id: Thing<"user">, age: number }]
+
+await db.close();
+```
+
+쿼리를 미리 준비하면 형식 추론이 가능합니다. 하지만 추론되는 형식은 수동으로 설정해야 합니다.
+
+## 쿼리 결과 확인
+
+`.as` 인수에 쿼리 결과 검증기를 전달하면 쿼리가 더 안전해집니다. 다음 예에서는 zod를 사용하여 쿼리 결과가 의도한 값인지 확인합니다.
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+import { z } from "zod";
+
+const isUserTable = (id: Thing): id is Thing<"user"> => id.tb === "user";
+
+const CreatedUserSchema = z.tuple([
+  z.object({
+    id: z.instanceof(Thing).refine(isUserTable),
+    age: z.number(),
+  }),
+]);
+
+const CreateUserQuery = surql`CREATE ONLY user:bar CONTENT { age: 42 };`
+  .as(CreatedUserSchema.parse.bind(CreatedUserSchema));
+
+const db = new Surreal();
+await db.connect(`ws://localhost:8000`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
+
+const results = await db.query(CreateUserQuery);
+//    ^? const results: [{ id: Thing<"user">, age: number }]
+
+await db.close();
+```
+
+zod에 의존하지 않으므로 valibot 또는 범용 함수로 응답을 검증할 수 있습니다.
+
+## 쿼리에 변수 삽입
+
+`surql`은 템플릿 문자열로 쿼리를 작성할 수 있으므로 값을 시각적으로 삽입할 수 있습니다.
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const USERNAME = "baz";
+const USER_AGE = 42;
+
+const CreateUserQuery = surql`
+  CREATE ONLY type::thing('user', ${USERNAME}) CONTENT { age: ${USER_AGE} };`
+  .as<[{ id: Thing<"user">; age: number }]>();
+
+const db = new Surreal();
+await db.connect(`ws://localhost:8000`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
+
+const results = await db.query(CreateUserQuery);
+//    ^? const results: [{ id: Thing<"user">, age: number }]
+
+await db.close();
+```
+
+위 예에서 전송되는 RPC 요청의 매개변수는 다음과 같습니다.
+
+```text
+CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
+```
+
+```ts
+{
+  _jst_0: "baz",
+  _jst_1: 42
+}
+```
+
+## 쿼리에 인수 정의
+
+미리 정의된 쿼리에 인수를 정의하려면 `surql.slot`을 사용합니다.
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+import { z } from "zod";
+
+const isUserTable = (id: Thing): id is Thing<"user"> => id.tb === "user";
+
+const UserIdSchema = z.instanceof(Thing).refine(isUserTable);
+
+const UserIdSlot = surql.slot("id")
+  .as(UserIdSchema.parse.bind(UserIdSchema));
+
+const UserAgeSlot = surql.slot("age", 42);
+
+const CreateUserQuery = surql`
+  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };`
+  .as<[{ id: Thing<"user">; age: number }]>();
+
+const db = new Surreal();
+await db.connect(`ws://localhost:8000`);
+await db.signin({ user: "root", pass: "root" });
+await db.use("example", "example");
+
+const results = await db.query(CreateUserQuery, {
+  id: new Thing("user", "tai-kun"),
+});
+
+await db.close();
+```
+
+슬롯은 반드시 변수 이름이 필요합니다. `.as()` 메서드로 변수에 형식 수준으로 제약을 설정할 수 있습니다. `.as()`와 마찬가지로 `.as()` 인수에 값을 검증하는 함수를 전달할 수 있습니다. 위 예에서 변수 이름 `id` 슬롯은 테이블 이름이 `"user"`인 레코드 ID여야 합니다.
+
+슬롯 인수에는 변수 이름 다음에 기본값을 설정할 수 있습니다. 실행 시 슬롯의 변수 이름이 생략되면 이 기본값이 사용됩니다. 위 예에서 변수 이름 `age` 슬롯에는 기본값 `42`가 설정되어 있습니다.
+
+슬롯은 `.as()` 외에도 `.rename()` 및 `.default()` , `.optional()` , `.required()`를 사용할 수 있습니다.
+
+미리 정의된 쿼리에 실행 시 변수 지정이 필수인 슬롯이 포함되어 있고, 지정되지 않으면 쿼리는 실행 시 `SurrealTypeError`로 거부됩니다. TypeScript에서 올바르게 형식 추론되면 실행하지 않아도 형식 수준으로 오류가 표시됩니다. 예를 들어, 다음과 같이 필수 변수를 생략하고 `tsc`로 형식 검사를 하면 오류가 발생합니다.
+
+```ts
+import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
+
+const UserIdSlot = surql.slot("id").as<Thing<"user">>();
+
+const UserAgeSlot = surql.slot("age", 42);
+
+const CreateUserQuery = surql`
+  CREATE ONLY ${UserIdSlot} CONTENT { age: ${UserAgeSlot} };`
+  .as<[{ id: Thing<"user">, age: number }]>()
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const results = await db.query(CreateUserQuery, {
+  // id: new Thing("user", "tai-kun"),
+});
+
+await db.close();
+```
+
+`npx tsc --noEmit`:
+
+![tsc](./tsc.png)

@@ -1,0 +1,224 @@
+---
+title: 身份验证
+slug: zh-CN/v1/guides/authentication
+---
+
+import Badge from "~/components/zh-CN/Badge.astro";
+
+SurrealDB 提供两种身份验证方法：一种是使用用户名和密码进行身份验证，需要使用 [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) 语句定义的用户名和密码；另一种是使用 [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) 语句定义的自定义身份验证。我们将前者称为“用户身份验证”，后者称为“访问身份验证”。
+
+### `.signin()` <Badge variant="instance" /><Badge variant="method" />
+
+使用用户身份验证或访问身份验证登录 SurrealDB。
+
+```ts
+signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
+```
+
+#### 参数
+
+##### `auth`
+
+用户身份验证或访问身份验证所需的信息。每个身份验证类型所需的参数如下：
+
+| 身份验证类型 | 参数 |
+| --- | ---|
+| 根用户 | `{ user: string, pass: string }` |
+| 命名空间用户 | `{ user: string, pass: string, ns: string }` |
+| 数据库用户 | `{ user: string, pass: string, ns: string, db: string }` |
+| 范围用户 | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
+
+##### `options`
+
+PRC 请求的选项。
+
+#### 返回值
+
+返回一个以 `Jwt` 解析的 `Promise` 对象。
+
+#### 例子
+
+以下示例使用根用户登录 SurrealDB：
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  user: "root",
+  pass: "passw0rd",
+});
+
+console.log(jwt.issuedAt);  // e.g. 1722749786
+console.log(jwt.expiresAt); // e.g. 1722753386
+console.log(jwt.namespace); // undefined
+console.log(jwt.database);  // undefined
+console.log(jwt.access);    // undefined
+console.log(jwt.user);      // 'root'
+
+console.log(jwt.raw);             // 'eyJ0eXAiOiJKV1QiLCJhb ... '
+console.log(JSON.stringify(jwt)); // '"[REDACTED]"'
+
+await db.disconnect();
+```
+
+以下示例使用命名空间用户登录 SurrealDB：
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  ns: "my_namespace",
+  user: "ns_user",
+  pass: "passw0rd",
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // undefined
+console.log(jwt.access);    // undefined
+console.log(jwt.user);      // 'ns_user'
+
+await db.disconnect();
+```
+
+以下示例使用数据库用户登录 SurrealDB：
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  ns: "my_namespace",
+  db: "my_database",
+  user: "db_user",
+  pass: "passw0rd",
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // 'my_database'
+console.log(jwt.access);    // undefined
+console.log(jwt.user);      // 'db_user'
+
+await db.disconnect();
+```
+
+以下示例使用范围用户登录 SurrealDB。`.user` 属性将设置为记录 ID：
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signin({
+  ns: "my_namespace",
+  db: "my_database",
+  sc: "account",
+  // ...parmeters
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // 'my_database'
+console.log(jwt.scope);     // 'account'
+console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+
+await db.disconnect();
+```
+
+### `.signup()` <Badge variant="instance" /><Badge variant="method" />
+
+使用范围用户注册 SurrealDB。
+
+```ts
+signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
+```
+
+#### 参数
+
+##### `auth`
+
+范围用户所需的信息。
+
+##### `options`
+
+PRC 请求的选项。
+
+#### 返回值
+
+返回一个以 `Jwt` 解析的 `Promise` 对象。
+
+#### 例子
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("ws://localhost:8000");
+
+const jwt = await db.signup({
+  ns: "my_namespace",
+  db: "my_database",
+  sc: "account",
+  // ...parmeters
+});
+
+console.log(jwt.namespace); // 'my_namespace'
+console.log(jwt.database);  // 'my_database'
+console.log(jwt.scope);     // 'account'
+console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+
+await db.disconnect();
+```
+
+### `.authenticate()` <Badge variant="instance" /><Badge variant="method" />
+
+使用 JWT 对当前连接进行身份验证。
+
+```ts
+authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
+```
+
+#### 参数
+
+##### `token`
+
+要验证的 JWT。
+
+##### `options`
+
+RPC 请求的选项。
+
+#### 返回值
+
+返回一个以 `undefined` 解析的 `Promise` 对象。
+
+### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
+
+使当前连接的身份验证失效。
+
+```ts
+invalidate(options?: ClientRpcOptions): Promise<void>
+```
+
+#### 参数
+
+##### `options`
+
+RPC 请求的选项。
+
+#### 返回值
+
+返回一个以 `undefined` 解析的 `Promise` 对象。
+
+{/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
+
+#### 参数
+
+#### 返回值 */}

@@ -1,0 +1,337 @@
+---
+title: 其他工具
+slug: zh-CN/v1/reference/cbor/others
+---
+
+## write
+
+### 导入
+
+```ts
+import { write } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`write` 是一个辅助函数，用于将所有可 CBOR 编码的 JavaScript 值写入 `Writer`。
+
+```ts
+write(writer: Writer, value: unknown, options?: WriteOptions): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+要编码为 CBOR 形式的 `Uint8Array` 的 JavaScript 值。可以传递给 `value` 的 JavaScript 值如下：
+
+- 基本类型的值
+  - `number`
+  - `bigint`
+  - `string`
+  - `boolean`
+  - `null`
+  - `undefined`
+- 具有 `.toCBOR()` 方法的对象
+- 数组或 `Set`
+- 普通对象或 `Map`
+- `Uint8Array`
+- `Simple` 对象
+- 可由可选的 `replacer` 替换的值
+
+如果值不是基本类型，并且存在 `toCBOR` 属性且为函数，则会优先调用它。
+
+##### `options`
+
+写入选项。
+
+`replacer?: Replacer | Replacer[]`
+:   编码器默认将大多数值编码为 CBOR，但可以将不属于这些值的特殊值替换为可编码的值。可以使用此选项通过指定函数或函数数组来实现替换处理。如果函数返回由 `Symbol.for("@tai-kun/surrealdb/cbor/continue")` 获取的 `CONTINUE` 符号，则会调用后续函数。如果无法进行任何替换，则会抛出 `SurrealTypeError`。
+
+`isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
+:   此选项是一个函数，用于验证 `Map` 对象的键是否安全。该函数接受两个参数：`key` 和 `map`。`key` 是键的值，`map` 是要验证的 `Map` 对象。如果该函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，它将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。请注意，指定此选项将完全覆盖默认验证。如果要向默认验证添加自定义验证，则应该将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。
+
+`isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
+:   此选项是一个函数，用于验证普通对象的键是否安全。该函数接受两个参数：`key` 和 `obj`。`key` 是键的值，`obj` 是要验证的普通对象。如果该函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，它将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。请注意，指定此选项将完全覆盖默认验证。如果要向默认验证添加自定义验证，则应该将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。
+
+#### 返回值
+
+无。
+
+## writeNumber
+
+### 导入
+
+```ts
+import { writeNumber } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeNumber` 是一个辅助函数，用于将数字写入 `Writer`。
+
+```ts
+writeNumber(writer: Writer, value: number): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+数字。对于整数，有效值为 -2^53-1 到 2^53-1。在 JavaScript 中，没有办法将 `.0` 判定为浮点数，因此在这种情况下它将被编码为整数的 CBOR。例如，`-1.0` 是 `-1`，这是一个整数。
+
+#### 返回值
+
+无。
+
+## writeBigInt
+
+### 导入
+
+```ts
+import { writeInteger } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeBigInt` 是一个辅助函数，用于将 `bigint` 写入 `Writer`。
+
+```ts
+writeBigInt(writer: Writer, value: bigint): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+`bigint`。有效值为 -2^64 到 2^64-1。
+
+#### 返回值
+
+无。
+
+## writeByteString
+
+### 导入
+
+```ts
+import { writeByteString } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeByteString` 是一个辅助函数，用于将 `Uint8Array` 写入 `Writer`。
+
+```ts
+writeByteString(writer: Writer, value: Uint8Array): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+ `Uint8Array`。
+
+#### 返回值
+
+无。
+
+## writeUtf8String
+
+### 导入
+
+```ts
+import { writeUtf8String } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeUtf8String` 是一个辅助函数，用于将 UTF-8 格式的字符串写入 `Writer`。
+
+```ts
+writeUtf8String(writer: Writer, value: string): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+UTF-8 格式的字符串。
+
+#### 返回值
+
+无。
+
+## writeEncodedUtf8String
+
+### 导入
+
+```ts
+import { writeEncodedUtf8String } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeEncodedUtf8String` 是一个辅助函数，用于将 UTF-8 编码的字符串（`Uint8Array`）写入 `Writer`。
+
+```ts
+writeEncodedUtf8String(writer: Writer, value: Uint8Array): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+UTF-8 编码的字符串（`Uint8Array`）。
+
+#### 返回值
+
+无。
+
+## writeBoolean
+
+### 导入
+
+```ts
+import { writeBoolean } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeBoolean` 是一个辅助函数，用于将布尔值写入 `Writer`。
+
+```ts
+writeBoolean(writer: Writer, value: boolean): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+布尔值。
+
+#### 返回值
+
+无。
+
+## writeNullable
+
+### 导入
+
+```ts
+import { writeNullable } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeNullable` 是一个辅助函数，用于将 `null` 或 `undefined` 写入 `Writer`。
+
+```ts
+writeNullable(writer: Writer, value: null | undefined): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+`null` 或 `undefined`。
+
+#### 返回值
+
+无。
+
+## writeHeader
+
+### 导入
+
+```ts
+import { writeHeader } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writeHeader` 是一个辅助函数，用于将 CBOR 数据项的头部写入 `Writer`。
+
+```ts
+writeHeader(writer: Writer, mt: MajorType, length: number | bigint): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `mt`
+
+CBOR 的主要类型。必须是 0 到 7 之间的整数值。
+
+##### `length`
+
+数据本身或数据的字节长度。
+
+#### 返回值
+
+无。
+
+## writePayload
+
+### 导入
+
+```ts
+import { writePayload } from "@tai-kun/surrealdb/cbor";
+```
+
+### 语法
+
+`writePayload` 是一个辅助函数，用于将 CBOR 数据项的有效负载写入 `Writer`。
+
+```ts
+writePayload(writer: Writer, value: Uint8Array): void;
+```
+
+#### 参数
+
+##### `writer`
+
+用于将值写入 `Uint8Array` 的 `Writer`。
+
+##### `value`
+
+CBOR 数据项的有效负载。
+
+#### 返回值
+
+无。

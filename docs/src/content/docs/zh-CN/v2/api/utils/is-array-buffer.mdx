@@ -1,0 +1,32 @@
+---
+title: isBrowser
+slug: zh-CN/v2/api/utils/is-array-buffer
+---
+
+`isArrayBuffer` 函数用于判断传入的值是否为 `ArrayBuffer` 对象。
+
+### 导入
+
+```ts
+import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
+```
+
+### 使用方法
+
+```ts
+function isArrayBuffer(value: unknown): value is ArrayBuffer;
+```
+
+#### 参数
+
+##### `value`
+
+期望为 `ArrayBuffer` 对象的值。
+
+#### 返回值
+
+如果 `value` 是 `ArrayBuffer` 对象，则返回 `true`，否则返回 `false`。
+
+### 解释
+
+在某些版本的 Firefox 中，将 `fetch` 的响应主体设置为 `ArrayBuffer` 对象后，即使该对象拥有所有方法，也无法通过 `instanceof` 进行判断，因此需要通过标签名称进行判断。这与 lodash 的行为类似。

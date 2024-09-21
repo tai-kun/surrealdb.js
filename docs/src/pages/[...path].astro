@@ -47,6 +47,7 @@ export async function getStaticPaths() {
       },
     }).props.langs.push(lang);
 
+    // @ts-ignore
     if (lang === "en") {
       paths[rootPath].props.title = data.title;
     }
@@ -62,6 +63,7 @@ export async function getStaticPaths() {
       },
     }).props.langs.push(lang);
 
+    // @ts-ignore
     if (lang === "en") {
       paths[withLangPath].props.title = data.title;
     }
@@ -77,6 +79,7 @@ export async function getStaticPaths() {
       },
     }).props.langs.push(lang);
 
+    // @ts-ignore
     if (lang === "en") {
       paths[withVersionPath].props.title = data.title;
     }
@@ -137,9 +140,8 @@ function redirect(lang) {
 }
 
 for (const lang of langs) {
-  if (navigator.language.startsWith(lang)) {
-    redirect(lang);
-    return;
+  if (window.navigator.languages.includes(lang)) {
+    return redirect(lang);
   }
 }
 
@@ -157,9 +159,8 @@ function redirect(lang) {
 }
 
 for (const lang of langs) {
-  if (navigator.language.startsWith(lang)) {
-    redirect(lang);
-    return;
+  if (window.navigator.languages.includes(lang)) {
+    return redirect(lang);
   }
 }
 

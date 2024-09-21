@@ -1,0 +1,32 @@
+---
+title: isSafeNumber
+slug: zh-CN/v2/api/utils/is-safe-number
+---
+
+`isSafeNumber` 用于验证传递给它的数字是否在计算上是安全的。
+
+### 导入
+
+```ts
+import { isSafeNumber } from "@tai-kun/surrealdb/utils";
+```
+
+### 使用方法
+
+```ts
+function isSafeNumber(value: number): boolean;
+```
+
+#### 参数
+
+##### `value`
+
+要验证的数字。
+
+#### 返回值
+
+如果 `value` 是以下情况，则返回 `false`：
+
+- `NaN`
+- 无限
+- 超过 ±2^53-1 的范围

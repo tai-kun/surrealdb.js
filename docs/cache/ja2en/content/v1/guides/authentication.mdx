@@ -1,14 +1,15 @@
 ---
 title: Authentication
+slug: en/v1/guides/authentication
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
-There are two main ways to authenticate with SurrealDB: using a username and password, or using custom authentication. The first method, referred to as **user authentication**, requires a username and password defined using the [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) statement. The second method, referred to as **access authentication**, uses custom authentication defined using the [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement.
+There are two types of authentication methods. One is to authenticate with a username and password. This requires a username and password defined using the [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) statement. The other is custom authentication defined with the [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement. Here, we will call the former "user authentication" and the latter "access authentication".
 
 ### `.signin()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs in to SurrealDB using user or access authentication.
+Signs you in to SurrealDB with user authentication or access authentication.
 
 ```ts
 signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -18,22 +19,22 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-The required information for either user or access authentication. The required parameters for each authentication type are as follows:
+The information required for user authentication or access authentication. The parameters required for each authentication type are as follows:
 
-| Authentication Type | Parameters |
-|---|---|
-| Root User | `{ user: string, pass: string }` |
-| Namespace User | `{ user: string, pass: string, ns: string }` |
-| Database User | `{ user: string, pass: string, ns: string, db: string }` |
-| Scope User | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
+| Authentication type | Parameters |
+| --- | ---|
+| Root user | `{ user: string, pass: string }` |
+| Namespace user | `{ user: string, pass: string, ns: string }` |
+| Database user | `{ user: string, pass: string, ns: string, db: string }` |
+| Scope user | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
 
 ##### `options`
 
-RPC request options.
+Options for the RPC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to a `Jwt`.
+Returns a `Promise` object that resolves with a `Jwt`.
 
 #### Examples
 
@@ -133,7 +134,7 @@ await db.disconnect();
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs up to SurrealDB as a scope user.
+Signs you up to SurrealDB as a scope user.
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -143,15 +144,15 @@ signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-The required information for a scope user.
+The information required for a scope user.
 
 ##### `options`
 
-RPC request options.
+Options for the RPC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to a `Jwt`.
+Returns a `Promise` object that resolves with a `Jwt`.
 
 #### Examples
 
@@ -192,15 +193,15 @@ The JWT to authenticate with.
 
 ##### `options`
 
-RPC request options.
+Options for the RPC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to `undefined`.
+Returns a `Promise` object that resolves with `undefined`.
 
 ### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
 
-Invalidates the current connection's authentication.
+Invalidates the authentication of the current connection.
 
 ```ts
 invalidate(options?: ClientRpcOptions): Promise<void>
@@ -210,11 +211,11 @@ invalidate(options?: ClientRpcOptions): Promise<void>
 
 ##### `options`
 
-RPC request options.
+Options for the RPC request.
 
 #### Return Value
 
-Returns a `Promise` object that resolves to `undefined`.
+Returns a `Promise` object that resolves with `undefined`.
 
 {/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
 

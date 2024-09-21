@@ -1,0 +1,33 @@
+---
+title: 内联查询
+slug: zh-CN/v2/experimental/inline-query
+banner:
+  content: 这是一个实验性功能，API 可能经常发生变化。
+---
+
+内联查询是可以在不创建 `Surreal` 类实例的情况下，在现场执行一次性自定义查询的函数。使用方法与 [`.query()`](/v2/guides/querying#query) 方法几乎相同，但请注意默认使用的是 `JsonFormatter`。
+
+### 导入
+
+```ts
+import { query } from "@tai-kun/surrealdb";
+```
+
+### 示例
+
+```ts
+import { query, rpc } from "@tai-kun/surrealdb";
+
+const token = await rpc("http://127.0.0.1:8000", "signin", {
+  params: [{
+    user: "root",
+    pass: "root",
+  }],
+});
+
+const results = await query("http://127.0.0.1:8000", "RETURN 42", {}, {
+  token,
+  namespace: "test",
+  database: "test",
+});
+```

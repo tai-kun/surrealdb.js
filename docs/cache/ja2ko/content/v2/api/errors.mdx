@@ -1,0 +1,525 @@
+---
+title: 오류
+slug: ko/v2/api/errors
+---
+
+## SurrealError
+
+`SurrealError`는 이 SDK가 명시적으로 던지는 오류 객체의 대부분이 상속하는 기본 클래스입니다. 이 클래스는 JavaScript의 `Error` 클래스를 상속합니다. 이 오류 객체 자체가 던져지는 경우는 거의 없고, 일반적으로 상속된 특정 의미를 가진 오류 객체가 던져집니다. `try-catch` 구문 등에서 포착된 오류가 이 SDK가 명시적으로 던진 오류인지 쉽게 구분하기 위해 사용하는 것을 권장합니다.
+
+`.name: "SurrealError"`
+:   오류 이름입니다.
+
+`.message`
+:   오류 메시지입니다.
+
+`.stack`
+:   스택 추적이 기록될 수 있습니다.
+
+`.cause`
+:   오류가 발생한 원인이나 컨텍스트가 설정될 수 있습니다.
+
+## SurrealTypeError
+
+상속: `SurrealError`
+
+입력 값 또는 기타 검증에 실패한 경우 던지는 오류입니다.
+
+`.name: "SurrealTypeError"`
+:   오류 이름입니다.
+
+`.expected`
+:   예상되는 데이터 형식입니다.
+
+`.actual`
+:   실제 값의 문자열 표현입니다.
+
+## SurrealAggregateError
+
+상속: `SurrealError`
+
+여러 오류나 오류 메시지를 묶은 오류입니다.
+
+`.name: "SurrealAggregateError"`
+:   오류 이름입니다.
+
+`.cause: unknown[]`
+:   배열의 각 요소에 오류 또는 오류 메시지 등이 포함되어 있습니다.
+
+## CircularReferenceError
+
+상속: `SurrealError`
+
+순환 참조를 감지한 경우 던지는 오류입니다. 주로 JavaScript 값을 다른 형식으로 변환하는 과정에서 부모 객체와 같은 객체가 감지된 경우 던져집니다.
+
+`.name: "CircularReferenceError"`
+:   오류 이름입니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+
+const a = {};
+a.a = a;
+
+console.log(a); // <ref *1> { a: [Circular *1] }
+
+toSurql(a); // throws CircularReferenceError
+```
+
+## NumberRangeError
+
+상속: `SurrealError`
+
+숫자가 범위를 벗어난 값을 가진 경우 던지는 오류입니다.
+
+`.name: "NumberRangeError"`
+:   오류 이름입니다.
+
+`.range`
+:   예상되는 범위입니다.
+
+`.actual`
+:   실제 값입니다.
+
+`.integer`
+:   `true`인 경우 정수를 예상합니다.
+
+## UnsupportedRuntimeError
+
+상속: `SurrealError`
+
+지원되지 않는 런타임을 사용하고 있다고 판단된 경우 던지는 오류입니다.
+
+`.name: "UnsupportedRuntimeError"`
+:   오류 이름입니다.
+
+## UnreachableError
+
+상속: `SurrealError`
+
+도달할 수 없는 코드에 도달한 경우 던지는 오류입니다. 이 오류가 던져진 경우, 이 SDK의 버그를 만난 것으로 여겨질 수 있습니다.
+
+`.name: "UnreachableError"`
+:   오류 이름입니다.
+
+## CircularEngineReferenceError
+
+상속: `CircularReferenceError`
+
+데이터베이스에 연결할 때 엔진 간에 순환 참조가 발생한 경우 던지는 오류입니다.
+
+`.name: "CircularEngineReferenceError"`
+:   오류 이름입니다.
+
+`.seen: string[]`
+:   순환 참조가 발생할 때까지 거친 프로토콜 이름 목록입니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+const { Surreal } = initSurreal({
+  engines: {
+    http: "https",
+    https: "http",
+  },
+  // ...
+});
+
+await using db = new Surreal();
+await db.connect("https://localhost:8000"); // throws CircularEngineReferenceError: Circular engine reference: http,https
+```
+
+위의 예에서 https 프로토콜 엔진은 http에 설정된 엔진을 사용하도록 지정되었지만, http 프로토콜 엔진은 https에 설정된 엔진을 사용하려고 하기 때문에 순환 참조 오류가 발생합니다.
+
+## EngineNotFoundError
+
+상속: `SurrealError`
+
+엔진이 설정되지 않은 프로토콜로 연결하려고 할 때 던지는 오류입니다.
+
+`.name: "EngineNotFoundError"`
+:   오류 이름입니다.
+
+`.protocol: string`
+:   연결할 프로토콜 이름입니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+const { Surreal } = initSurreal({
+  engines: {
+    http: config => new HttpEngine(config),
+  },
+  // ...
+});
+
+await using db = new Surreal();
+await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No https protocol engine found.
+```
+
+## ConnectionConflictError
+
+상속: `SurrealError`
+
+클라이언트가 여러 엔드포인트에 동시에 연결하려고 할 때 던지는 오류입니다.
+
+`.name: "ConnectionConflictError"`
+:   오류 이름입니다.
+
+`.endpoint1: string`
+:   한쪽 엔드포인트입니다.
+
+`.endpoint2: string`
+:   다른 쪽 엔드포인트입니다.
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.connect("http://localhost:11298"); // throws ConnectionConflictError: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
+```
+
+`.connect` 메서드는 전달된 URL의 경로가 `/rpc`로 끝나지 않으면, 경로 끝에 추가합니다. 따라서 한쪽 엔드포인트의 URL 경로가 `/rpc`로 끝나는 경우, 외관상으로는 오류가 발생하지 않을 수도 있습니다.
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.connect("http://localhost:8000/rpc"); // OK!
+```
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000/rpc");
+await db.connect("http://localhost:8000"); // OK!
+```
+
+## NamespaceConflictError
+
+상속: `SurrealError`
+
+SDK가 동시에 여러 이름 공간으로 전환하려고 할 때 던지는 오류입니다.
+
+`.name: "NamespaceConflictError"`
+:   오류 이름입니다.
+
+`.namespace1: string`
+:   한쪽 이름 공간입니다.
+
+`.namespace2: string`
+:   다른 쪽 이름 공간입니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.signin({ user: "root", pass: "root" });
+await Promise.all([
+  db.use({ namespace: "foo" }),
+  db.use({ namespace: "bar" }),
+]);
+```
+
+## DatabaseConflictError
+
+상속: `SurrealError`
+
+SDK가 동시에 여러 데이터베이스로 전환하려고 할 때 던지는 오류입니다.
+
+`.name: "DatabaseConflictError"`
+:   오류 이름입니다.
+
+`.database1: string`
+:   한쪽 데이터베이스입니다.
+
+`.database2: string`
+:   다른 쪽 데이터베이스입니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+await using db = new Surreal();
+
+await db.connect("http://localhost:8000");
+await db.signin({ user: "root", pass: "root" });
+await Promise.all([
+  db.use({ namespace: "baz" database: "foo" }),
+  db.use({ namespace: "baz" database: "bar" }),
+]);
+```
+
+## MissingNamespaceError
+
+상속: `SurrealError`
+
+데이터베이스를 선택하기 전에 이름 공간이 선택되지 않은 경우 던지는 오류입니다. 또는 데이터베이스를 선택한 상태에서 이름 공간을 선택하지 않은 상태로 전환하려고 할 때도 던져집니다.
+
+`.name: "MissingNamespaceError"`
+:   오류 이름입니다.
+
+`.database: string`
+:   데이터베이스 이름입니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+await using db = new Surreal();
+await db.connect("http://localhost:8000");
+
+await db.use({ database: "example" }); // throws MissingNamespaceError: The namespace must be specified before the database.
+```
+
+## RpcResponseError
+
+상속: `SurrealError`
+
+RPC 응답이 오류를 나타내는 경우 던지는 오류입니다. 연결된 프로토콜에 의한 통신이나 응답 본문의 디코딩에는 문제가 없지만, SurrealDB가 RPC 요청을 처리할 수 없음을 의미합니다.
+
+`.name: "RpcResponseError"`
+:   오류 이름입니다.
+
+`.id?: string`
+:   RPC 요청을 식별하는 ID입니다. ID는 항상 `<메서드 이름>_`으로 시작합니다.
+
+`.code: number`
+:   SurrealDB의 문서에 명시되어 있지는 않지만, 아마도 JSON-RPC의 오류 코드일 것입니다.
+
+## QueryFailedError
+
+상속: `SurrealAggregateError`
+
+쿼리가 실패한 경우 던지는 오류입니다.
+
+`.name: "QueryFailedError"`
+:   오류 이름입니다.
+
+`.cause: string[]`
+:   오류 목록입니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+await using db = new Surreal();
+await db.connect("http://localhost:8000");
+
+await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 1 error(s)
+```
+
+## Closed
+
+상속: `SurrealError`
+
+연결이 강제로 종료되었음을 나타내는 오류입니다.
+
+`.name: "Closed"`
+:   오류 이름입니다.
+
+예를 들어 다음과 같은 경우 이 오류를 얻습니다.
+
+```ts
+const db = new Surreal();
+
+db.on("<event_name>", ({ signal }) => {
+  return new Promise((resolve, reject) => {
+    signal.addEventListener("abort", function() {
+      console.error(this.reason); // Closed
+      reject();
+    })
+
+    // ...
+  });
+});
+
+await db.close({ force: true });
+```
+
+## EngineError
+
+상속: `SurrealError`
+
+엔진에서 발생한 오류임을 나타냅니다. 이벤트 리스너를 통해 발송됩니다.
+
+`.name: "EngineError"`
+:   오류 이름입니다.
+
+`.fatal: boolean | undefined`
+:   이 오류가 치명적인지 여부를 나타냅니다.
+
+## HttpEngineError
+
+상속: `EngineError`
+
+HTTP 엔진에서 발생한 오류임을 나타냅니다. 현재 정의만 되어 있고 사용되지 않습니다.
+
+`.name: "HttpEngineError"`
+:   오류 이름입니다.
+
+## WebSocketEngineError
+
+상속: `EngineError`
+
+WebSocket 엔진에서 발생한 오류임을 나타냅니다. RPC 요청을 식별하는 ID를 찾기 전에 응답 본문의 구문 분석에 실패했거나 WebSocket 객체에서 오류 이벤트를 수신했거나 WebSocket 연결을 끊었을 때 사용됩니다.
+
+`.name: "WebSocketEngineError"`
+:   오류 이름입니다.
+
+`.code: number`
+:   다음 상태 코드 중 하나입니다.
+    - `1000`~`1015`: [MDN Reference](https://developer.mozilla.org/docs/Web/API/CloseEvent/code)
+    - `3150`: `WebSocket`[^1]의 인스턴스에서 "error" 이벤트를 수신했음을 나타냅니다.
+    - `3151`: WebSocket 엔진이 등록하는 "open" 이벤트 핸들러 내에서 오류가 발생했음을 나타냅니다. 연결 중 상태에서 연결 상태로 전환하는 중에 `StateTransitionError`가 발생한 경우가 대부분입니다.
+    - `3152`: WebSocket 엔진이 등록하는 "message" 이벤트 핸들러 내에서 오류가 발생했음을 나타냅니다. 다양한 원인이 있을 수 있지만, 이벤트 핸들러 내에서 `ResponseError` 또는 `RpcResponseError`가 발생한 가능성이 높습니다. 원인을 추적해 보면 `.query()` 메서드에서 잘못된 문법의 SurrealQL 사용자 지정 쿼리를 요청했거나 잘못된 RPC 매개 변수로 요청했을 수 있습니다. 이 경우 RPC 호출을 수행한 메서드는 (기본적으로) 5초 후에 시간 초과되어 실패합니다.
+    - `3153`: ping의 송수신에 실패했음을 나타냅니다. 일시적인 오류일 수도 있지만, 계속해서 수신하는 경우 연결이 유지되지 않을 수 있습니다.
+    - `3154`: WebSocket 엔진이 등록하는 "close" 이벤트 핸들러 내에서 오류가 발생했음을 나타냅니다. 연결 해제 중 상태에서 연결 해제 상태로 전환하는 중에 `StateTransitionError`가 발생한 경우가 대부분입니다.
+:   참고로, 위의 코드에서 다음 상태 코드는 제외합니다. 이 SDK에서는 오류로 처리하지 않습니다.
+    - `1000`: 정상적으로 연결이 해제되었습니다.
+    - `1001`: 조기 연결 해제는 자주 발생합니다.
+    - `1004`: 예약됨.
+    - `1005`: 예약됨.
+    - `1006`: 예약됨.
+    - `1015`: 예약됨.
+
+^1: `WebSocket`은 런타임이 전역 변수에 정의한 클래스이거나 `ws` SDK의 클래스일 수 있습니다.
+
+## StateTransitionError
+
+상속: `SurrealAggregateError`
+
+상태 전환 중에 이벤트 리스너를 실행하는 데 실패한 경우 던지는 오류입니다.
+
+`.name: "StateTransitionError"`
+:   오류 이름입니다.
+
+`.from: string`
+:   상태 전환을 시작할 때의 상태입니다.
+
+`.to: string`
+:   전환할 상태입니다.
+
+`.fallback: string`
+:   상태 전환에 실패한 경우 대체 전환할 상태입니다. `.to`와 동일한 값이면 강제로 전환되었음을 의미합니다.
+
+예를 들어 다음과 같은 경우 이 오류가 던져집니다.
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+import { CONNECTING } from "@tai-kun/surrealdb/engine";
+
+await using db = new Surreal();
+
+db.on(CONNECTING, () => {
+  throw new Error("Don't let me connect !!!")
+});
+
+await db.connect("http://localhost:8000"); // throws ...
+// StateTransitionError: The transition from `3` to `0` failed, falling back to `3`.
+//     at <stack trace ...> {
+//   cause: [
+//     Error: Don't let me connect !!!
+//         at <stack trace ...>
+//   ],
+//   from: 3,
+//   to: 0,
+//   fallback: 3
+// }
+```
+
+## ConnectionUnavailableError
+
+상속: `SurrealError`
+
+연결되지 않은 상태에서 RPC 요청을 보내려고 할 때 던지는 오류입니다.
+
+`.name: "ConnectionUnavailableError"`
+:   오류 이름입니다.
+
+## ResponseError
+
+상속: `SurrealError`
+
+응답을 PRC 응답으로 구문 분석할 수 없는 경우 던지는 오류입니다. `RpcResponseError`와 다릅니다.
+
+`.name: "ResponseError"`
+:   오류 이름입니다.
+
+## CborError
+
+상속: `SurrealError`
+
+`@tai-kun/surrealdb/cbor`가 명시적으로 던지는 CBOR 관련 모든 오류가 상속하는 클래스입니다. 직접 던져지는 일은 없습니다.
+
+`.name: "CborError"`
+:   오류 이름입니다.
+
+## CborWellFormednessError
+
+상속: `CborError`
+
+`@tai-kun/surrealdb/cbor`가 명시적으로 던지는 CBOR 디코딩 관련 모든 오류가 상속하는 클래스입니다. 직접 던져지는 일은 없습니다.
+
+RFC8949의 부록 F에 있는 " [Well-Formedness Errors and Examples](https://datatracker.ietf.org/doc/html/rfc8949#name-well-formedness-errors-and-)"를 참조하십시오.
+
+`.name: "CborWellFormednessError"`
+:   오류 이름입니다.
+
+## CborTooMuchDataError
+
+상속: `CborWellFormednessError`
+
+소비되지 않은 입력 바이트가 남아 있음을 나타냅니다.
+
+[RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.2)
+
+`.name: "CborTooMuchDataError"`
+:   오류 이름입니다.
+
+## CborTooLittleDataError
+
+상속: `CborWellFormednessError`
+
+입력 바이트가 불완전함을 나타냅니다.
+
+[RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.4)
+
+`.name: "CborTooLittleDataError"`
+:   오류 이름입니다.
+
+## CborSyntaxError
+
+상속: `CborWellFormednessError`
+
+입력 바이트가 CBOR 인코딩 형식과 일치하지 않음을 나타냅니다.
+
+[RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.6)
+
+`.name: "CborSyntaxError"`
+:   오류 이름입니다.
+
+## CborMaxDepthReachedError
+
+상속: `CborError`
+
+CBOR 인코딩 또는 디코딩 중에 JavaScript 객체의 깊이가 최대 값에 도달한 경우 던지는 오류입니다. 객체 또는 배열에 들어갈 때마다 깊이가 1씩 증가합니다.
+
+`.name: "CborMaxDepthReachedError"`
+:   오류 이름입니다.
+
+`.maxDepth: number`
+:   최대 깊이입니다.
+
+## CborUnsafeMapKeyError
+
+상속: `CborError`
+
+CBOR 인코딩 또는 디코딩 중에 안전하지 않은 맵 키가 발견된 경우 던지는 오류입니다.
+
+`.name: "CborUnsafeMapKeyError"`
+:   오류 이름입니다.
+
+`.key: unknown`
+:   안전하지 않다고 판단된 맵 키입니다.

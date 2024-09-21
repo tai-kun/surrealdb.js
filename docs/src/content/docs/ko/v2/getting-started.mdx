@@ -1,0 +1,70 @@
+---
+title: 시작하기
+slug: ko/v2/getting-started
+---
+
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+## 설치
+
+<Tabs>
+  <TabItem label="npm">
+    ```bash
+    npm install @tai-kun/surrealdb@alpha
+    ```
+  </TabItem>
+  <TabItem label="yarn">
+    ```bash
+    yarn add @tai-kun/surrealdb@alpha
+    ```
+  </TabItem>
+  <TabItem label="pnpm">
+    ```bash
+    pnpm add @tai-kun/surrealdb@alpha
+    ```
+  </TabItem>
+  <TabItem label="bun">
+    ```bash
+    bun add @tai-kun/surrealdb@alpha
+    ```
+  </TabItem>
+</Tabs>
+
+## 사용해 보기
+
+```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
+const db = new Surreal();
+await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
+
+try {
+  await db.signin({ user: "root", pass: "root" });
+  await db.use("sample_namespace", "sample_database");
+  const results = await db.query<[number]>(/*surql*/ `RETURN 42;`);
+  console.log(results); // [ 42 ]
+} finally {
+  await db.close();
+}
+```
+
+## 커스터마이징
+
+```ts
+import { initSurreal } from "@tai-kun/surrealdb";
+import Client from "@tai-kun/surrealdb/clients/standard";
+import HttpEngine from "@tai-kun/surrealdb/engines/http";
+import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+
+const { Surreal } = initSurreal({
+  Client: Client,
+  engines: {
+    http: config => new HttpEngine({
+      ...config,
+      // fetch: <your custom fetch function>
+    }),
+    https: "http",
+  },
+  formatter: new JsonFormatter(),
+});
+```

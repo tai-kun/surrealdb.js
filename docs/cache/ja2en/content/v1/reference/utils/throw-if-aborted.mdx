@@ -1,10 +1,11 @@
 ---
 title: throwIfAborted
+slug: en/v1/reference/utils/throw-if-aborted
 ---
 
-`throwIfAborted` is a function that throws an error if the provided abort signal is aborted. It is provided for environments that do not implement `new AbortSignal().throwIfAborted()`.
+`throwIfAborted` is a function that throws an error if the provided abort signal has been aborted. It is provided for environments where `new AbortSignal().throwIfAborted()` is not implemented.
 
-## Importing
+## Import
 
 ```ts
 import { throwIfAborted } from "@tai-kun/surrealdb/utils";
@@ -21,6 +22,6 @@ function throwIfAborted(signal: AbortSignal | null | undefined): void;
 `signal`
 :   The abort signal.
 
-#### Returns
+#### Return Value
 
 None.

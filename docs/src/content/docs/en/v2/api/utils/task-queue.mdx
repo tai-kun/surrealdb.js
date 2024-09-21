@@ -1,11 +1,12 @@
 ---
 title: TaskQueue
+slug: en/v2/api/utils/task-queue
 ---
 
 import { Aside } from "@astrojs/starlight/components";
 import Badge from "~/components/en/Badge.astro";
 
-`TaskQueue` is a class that manages asynchronous tasks. It does not provide a way to control concurrency. All task runners are executed asynchronously.
+`TaskQueue` is a class that manages asynchronous tasks. It does not have any way to control concurrency. All task runners are executed asynchronously.
 
 ### Import
 
@@ -25,7 +26,7 @@ None.
 
 #### Return Value
 
-When called via `new`, `TaskQueue` returns its instance.
+When called with `new`, `TaskQueue` returns its instance.
 
 ### `.count` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
@@ -43,22 +44,22 @@ add<T>(
 ```
 
 <Aside type="caution">
-  If a task runner may take a long time to execute, it is recommended that the task runner immediately interrupt the task when the abort signal passed to the task runner receives an abort event.
+  If the task runner could take a long time to execute, it is recommended that the task runner immediately abort the task when it receives an abort event passed to the task runner.
 </Aside>
 
 #### Arguments
 
 ##### `runner`
 
-The task runner. The task runner's arguments will include `TaskRunnerArgs`, which includes the abort signal `signal`.
+A task runner. The task runner will be passed `TaskRunnerArgs`, which includes the abort signal `signal`.
 
 ##### `options`
 
-The task runner's options. You can pass the abort signal for this task runner.
+Options for the task runner. You can pass the abort signal for this task runner.
 
 #### Return Value
 
-Returns a `StatefulPromise` that resolves with the task runner's return value.
+Returns a `StatefulPromise` that resolves with the return value of the task runner.
 
 #### Example
 
@@ -77,14 +78,14 @@ console.log(text);
 
 ### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
-`.idle` is a function to wait until the queue is empty. A task runner is removed from the queue immediately after it completes, whether it resolves or rejects. Therefore, an empty queue means that all task runners have finished executing.
+`.idle` is a function that waits until the queue is empty. A task runner is removed from the queue immediately after the task runner completes, regardless of whether it resolves or rejects. Therefore, an empty queue means that all task runners have completed execution.
 
 ```ts
 idle(): StatefulPromise<void>;
 ```
 
 <Aside type="caution">
-  `.idle` does not catch errors thrown by task runners added with the `.add` method. Task runners are executed within a `StatefulPromise`, so you cannot be aware of errors in task runners without error handling.
+  `.idle` does not catch errors thrown by task runners added with the `.add` method. Since task runners are executed within `StatefulPromise`, you cannot be aware of errors in the task runner without error handling.
 </Aside>
 
 #### Arguments
@@ -97,7 +98,7 @@ Returns a `StatefulPromise` that resolves with `void`.
 
 #### Example
 
-The following example waits for the task runners added to the queue to finish, regardless of whether they resolve or reject:
+The following example waits for all task runners added to the queue to finish, regardless of whether they resolve or reject:
 
 ```ts
 import { TaskQueue } from "@tai-kun/surrealdb/utils";
@@ -127,7 +128,7 @@ Output:
 [ 'Hello' ]
 ```
 
-In the above example, `throw null` is not caught anywhere and the script exits normally. To be aware of task runner errors, you need to handle them individually.
+In the example above, `throw null` is not caught anywhere, and the script ends successfully. To be aware of errors in task runners, you need to handle errors individually.
 
 ### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 

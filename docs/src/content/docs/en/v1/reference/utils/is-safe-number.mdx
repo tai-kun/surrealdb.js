@@ -1,8 +1,9 @@
 ---
 title: isSafeNumber
+slug: en/v1/reference/utils/is-safe-number
 ---
 
-The `isSafeNumber` function checks if a given number is safe for arithmetic operations.
+`isSafeNumber` checks if the provided number is a safe number in terms of arithmetic operations.
 
 ### Import
 
@@ -20,12 +21,12 @@ function isSafeNumber(value: number): boolean;
 
 ##### `value`
 
-The number to be validated.
+The number to be checked.
 
-#### Return Value
+#### Returns
 
 Returns `false` if `value` is:
 
 - `NaN`
 - Infinity
-- Outside the range of ±2^53-1
+- Beyond the range of ±2^53-1

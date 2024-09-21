@@ -1,0 +1,337 @@
+---
+title: 기타 도구
+slug: ko/v1/reference/cbor/others
+---
+
+## write
+
+### 가져오기
+
+```ts
+import { write } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`write`는 `Writer`에 CBOR 형식으로 인코딩 가능한 JavaScript 값을 모두 기록하는 도우미 함수입니다.
+
+```ts
+write(writer: Writer, value: unknown, options?: WriteOptions): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+CBOR 형식의 `Uint8Array`로 인코딩하기 위한 JavaScript 값입니다. `value`에 전달할 수 있는 JavaScript 값은 다음과 같습니다.
+
+- 기본 값
+  - `number`
+  - `bigint`
+  - `string`
+  - `boolean`
+  - `null`
+  - `undefined`
+- `.toCBOR()` 메서드가 있는 객체
+- 배열 또는 `Set`
+- 일반 객체 또는 `Map`
+- `Uint8Array`
+- `Simple` 객체
+- 옵션의 `replacer`로 교체 가능한 값
+
+기본 값이 아니고, `toCBOR` 속성이 함수이면, 우선적으로 함수를 호출합니다.
+
+##### `options`
+
+기록 옵션입니다.
+
+`replacer?: Replacer | Replacer[]`
+:   인코더는 기본적으로 대부분의 값을 CBOR로 인코딩하지만, 그렇지 않은 특수한 값을 인코딩 가능한 값으로 교체할 수 있습니다. 이 옵션은 함수 또는 함수 배열을 지정하여 교체 처리를 구현할 수 있습니다. 함수가 `Symbol.for("@tai-kun/surrealdb/cbor/continue")`로 얻은 `CONTINUE` 심볼을 반환하면 후속 함수가 호출됩니다. 어떤 것으로도 교체할 수 없으면 `SurrealTypeError`가 발생합니다.
+
+`isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
+:   이 옵션은 `Map` 객체의 키가 안전한지 검증하는 함수입니다. 함수는 `key`와 `map`의 두 인수를 받습니다. `key`는 키 값이고, `map`은 검증하는 `Map` 객체입니다. 이 함수가 `false`를 반환하면 `CborUnsafeMapKeyError`가 발생합니다. 기본적으로 `"__proto__"` 또는 `"constructor"`를 안전하지 않은 키로 판단합니다. 이 옵션을 지정하면, 기본 검증이 완전히 덮어쓰여진다는 점에 유의하십시오. 기본 검증에 고유한 검증을 추가하려면 `"__proto__"` 또는 `"constructor"`를 안전하지 않은 키로 판단해야 합니다.
+
+`isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
+:   이 옵션은 일반 객체의 키가 안전한지 검증하는 함수입니다. 함수는 `key`와 `obj`의 두 인수를 받습니다. `key`는 키 값이고, `obj`는 검증하는 일반 객체입니다. 이 함수가 `false`를 반환하면 `CborUnsafeMapKeyError`가 발생합니다. 기본적으로 `"__proto__"` 또는 `"constructor"`를 안전하지 않은 키로 판단합니다. 이 옵션을 지정하면, 기본 검증이 완전히 덮어쓰여진다는 점에 유의하십시오. 기본 검증에 고유한 검증을 추가하려면 `"__proto__"` 또는 `"constructor"`를 안전하지 않은 키로 판단해야 합니다.
+
+#### 반환 값
+
+없음.
+
+## writeNumber
+
+### 가져오기
+
+```ts
+import { writeNumber } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeNumber`는 `Writer`에 숫자를 기록하는 도우미 함수입니다.
+
+```ts
+writeNumber(writer: Writer, value: number): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+숫자입니다. 정수의 경우, -2^53-1에서 2^53-1까지의 값이 유효합니다. JavaScript에서는 `.0`을 부동 소수점 수로 판단하는 방법이 없으므로, 이 경우 정수 값으로 CBOR에 인코딩됩니다. 예를 들어 `-1.0`은 `-1`이고, 정수입니다.
+
+#### 반환 값
+
+없음.
+
+## writeBigInt
+
+### 가져오기
+
+```ts
+import { writeInteger } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeBigInt`는 `Writer`에 `bigint`를 기록하는 도우미 함수입니다.
+
+```ts
+writeBigInt(writer: Writer, value: bigint): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+`bigint`입니다. -2^64에서 2^64-1까지의 값이 유효합니다.
+
+#### 반환 값
+
+없음.
+
+## writeByteString
+
+### 가져오기
+
+```ts
+import { writeByteString } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeByteString`는 `Writer`에 `Uint8Array`를 기록하는 도우미 함수입니다.
+
+```ts
+writeByteString(writer: Writer, value: Uint8Array): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+ `Uint8Array`입니다.
+
+#### 반환 값
+
+없음.
+
+## writeUtf8String
+
+### 가져오기
+
+```ts
+import { writeUtf8String } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeUtf8String`는 UTF-8 형식의 문자열을 `Writer`에 기록하는 도우미 함수입니다.
+
+```ts
+writeUtf8String(writer: Writer, value: string): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+UTF-8 형식의 문자열입니다.
+
+#### 반환 값
+
+없음.
+
+## writeEncodedUtf8String
+
+### 가져오기
+
+```ts
+import { writeEncodedUtf8String } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeEncodedUtf8String`는 UTF-8로 인코딩된 문자열 (`Uint8Array`)을 `Writer`에 기록하는 도우미 함수입니다.
+
+```ts
+writeEncodedUtf8String(writer: Writer, value: Uint8Array): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+UTF-8로 인코딩된 문자열 (`Uint8Array`)입니다.
+
+#### 반환 값
+
+없음.
+
+## writeBoolean
+
+### 가져오기
+
+```ts
+import { writeBoolean } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeBoolean`은 `Writer`에 불리언 값을 기록하는 도우미 함수입니다.
+
+```ts
+writeBoolean(writer: Writer, value: boolean): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+불리언 값입니다.
+
+#### 반환 값
+
+없음.
+
+## writeNullable
+
+### 가져오기
+
+```ts
+import { writeNullable } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeNullable`는 `Writer`에 `null` 또는 `undefined`를 기록하는 도우미 함수입니다.
+
+```ts
+writeNullable(writer: Writer, value: null | undefined): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+`null` 또는 `undefined`입니다.
+
+#### 반환 값
+
+없음.
+
+## writeHeader
+
+### 가져오기
+
+```ts
+import { writeHeader } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writeHeader`는 `Writer`에 CBOR 데이터 항목의 헤더를 기록하는 도우미 함수입니다.
+
+```ts
+writeHeader(writer: Writer, mt: MajorType, length: number | bigint): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `mt`
+
+CBOR의 메이저 타입입니다. 0에서 7까지의 정수 값이어야 합니다.
+
+##### `length`
+
+데이터 자체 또는 데이터의 바이트 길이입니다.
+
+#### 반환 값
+
+없음.
+
+## writePayload
+
+### 가져오기
+
+```ts
+import { writePayload } from "@tai-kun/surrealdb/cbor";
+```
+
+### 구문
+
+`writePayload`는 `Writer`에 CBOR 데이터 항목의 페이로드를 기록하는 도우미 함수입니다.
+
+```ts
+writePayload(writer: Writer, value: Uint8Array): void;
+```
+
+#### 인수
+
+##### `writer`
+
+값을 `Uint8Array`로 기록하기 위한 `Writer`입니다.
+
+##### `value`
+
+CBOR 데이터 항목의 페이로드입니다.
+
+#### 반환 값
+
+없음.

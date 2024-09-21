@@ -1,0 +1,40 @@
+---
+title: BoundIncluded
+slug: zh-CN/v2/api/data/bound-included
+banner:
+  content: 这是一个实验性功能。
+---
+
+import Badge from "~/components/zh-CN/Badge.astro";
+
+请参考 [`Range`](/v2/api/data/range)。
+
+### 导入
+
+```ts
+import { BoundIncluded } from "@tai-kun/surrealdb/data-types/decode-only";
+import { BoundIncluded } from "@tai-kun/surrealdb/data-types/encodable";
+import { BoundIncluded } from "@tai-kun/surrealdb/data-types/standard";
+```
+
+### `.constructor()`
+
+创建一个新的 `BoundIncluded` 对象。
+
+```ts
+new BoundIncluded(source: unknown);
+```
+
+#### 参数
+
+##### `source`
+
+待调查。
+
+#### 返回值
+
+当通过 `new` 调用时，`BoundIncluded` 将返回其实例。
+
+### `.value` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+
+待调查。

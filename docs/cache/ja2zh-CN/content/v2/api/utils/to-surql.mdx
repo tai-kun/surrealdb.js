@@ -1,0 +1,80 @@
+---
+title: toSurql
+slug: zh-CN/v2/api/utils/to-surql
+---
+
+`toSurql` 函数用于将 JavaScript 值转换为 SurrealQL 字符串。
+
+### 导入
+
+```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+```
+
+### 使用方法
+
+```ts
+function toSurql(value: unlnown): string;
+```
+
+#### 参数
+
+##### `value`
+
+JavaScript 值，可以是以下类型之一：
+
+- `string`
+- `number`
+- `bigint`
+- `boolean`
+- `undefined`
+- `null`
+- `{ toSurql(): string }`
+- `Date`
+- `{ toJSON(): string }`
+- `unknown[]`
+- `{ [key: string]: unknown }`
+- `Set<unknown>`
+- `Map<unknown, unknown>`
+
+`unknown` 表示上述类型组成的值。
+
+转换时，上述类型顺序代表优先级，即如果一个普通对象同时拥有 `.toJSON` 和 `.toSurql` 方法，则优先使用 `.toSurql` 方法。
+
+判断普通对象使用 [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) 库。因此，如果一个普通对象既没有 `.toSurql` 和 `.toJSON` 方法，又没有 `Symbol.toStringTag` 和 `Symbol.iterator` 属性，则不会被识别为对象，并抛出错误。
+
+#### 返回值
+
+SurrealQL 字符串。
+
+#### 示例
+
+```ts
+import { toSurql } from "@tai-kun/surrealdb/utils";
+
+const surql = toSurql({
+  bigint: 9007199254740992n, // Number.MAX_SAFE_INTEGER + 1
+  boolean: [true, false],
+  date: new Date("2024-06-01T12:34:56.789Z"),
+  map: new Map([
+    [0, {
+      toJSON: () => [0, 1],
+    }],
+  ]),
+  null: null,
+  number: 123,
+  set: new Set([{
+    toSurql: () => `<bytes>"hello"`,
+  }]),
+  string: "字符串",
+  undefined: undefined,
+});
+
+console.log(surql);
+```
+
+输出:
+
+```text
+{bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'字符串',undefined:NONE}
+```

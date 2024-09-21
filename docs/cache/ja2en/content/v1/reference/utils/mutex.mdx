@@ -1,13 +1,14 @@
 ---
 title: mutex
+slug: en/v1/reference/utils/mutex
 ---
 
 import { Aside } from "@astrojs/starlight/components"
 
-The `mutex` decorator is used to ensure that one or more class methods are executed asynchronously with a concurrency of 1.
+The `mutex` decorator allows you to execute one or more class methods concurrently with a concurrency limit of 1.
 
 <Aside type="caution">
-  While this SDK works seamlessly with the built JavaScript SDK, direct usage of the source code (TypeScript) requires Stage 3 decorator support.
+  This should not pose any problems when using the pre-built SDK for JavaScript, but if you are using the SDK source code (TypeScript) directly, then Stage 3 decorator support is required.
 </Aside>
 
 ### Import
@@ -33,15 +34,15 @@ The class method.
 
 ##### `context`
 
-The Stage 3 decorator context for class methods.
+The Stage 3 class method decorator context.
 
-#### Return Value
+#### Returns
 
 An asynchronous function with a concurrency limit of 1.
 
 #### Example
 
-The following example demonstrates the difference in hunting timing for asynchronous operations with and without the `mutex`:
+The following example shows how the hunting timing of asynchronous processing differs with and without `mutex`:
 
 ```ts
 import { mutex } from "@tai-kun/surrealdb/utils";

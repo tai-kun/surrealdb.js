@@ -1,12 +1,13 @@
 ---
 title: Inline RPC
+slug: en/v2/experimental/inline-rpc
 banner:
-  content: This is an experimental feature, and the API may change frequently.
+  content: This is an experimental feature and the API may change frequently.
 ---
 
-Inline RPC is a function that allows you to perform one-time RPC calls without creating an instance of the `Surreal` class. It functions similarly to the `.rpc()` method but uses `JsonFormatter` by default.
+Inline RPC provides a function to execute a one-time RPC call without creating an instance of the `Surreal` class. It is similar to the `.rpc()` method, but uses the `JsonFormatter` by default.
 
-### Import
+### Importing
 
 ```ts
 import { rpc } from "@tai-kun/surrealdb";

@@ -1,5 +1,6 @@
 ---
-title: decode
+title: Decode CBOR
+slug: en/v1/reference/cbor/decode
 ---
 
 ## Synchronous Decoding
@@ -29,27 +30,27 @@ A `Uint8Array` in CBOR format to be decoded into a JavaScript value.
 Decoding options.
 
 `mapType?: "Object" | "Map"`
-:   This option can be used to choose whether to decode a key-value object as a plain JavaScript object or a `Map`. Choosing `"Object"` will decode it as a plain object, while `"Map"` will decode it as an instance of the `Map` class. The default is `"Object"`. While plain object keys can only accept strings or numbers (i.e. `string | number`), decoding with this option set to `"Map"` allows keys to accept any decoded value.
+:   This option can be used to select whether key-value formatted objects are decoded as JavaScript plain objects or `Map` objects.  Selecting `"Object"` will result in decoding as plain objects while selecting `"Map"` will result in decoding as instances of the `Map` class. The default is `"Object"`. Plain objects can only accept strings or numbers (i.e. `string | number`) as keys, but if you decode with this option set to `"Map"`, keys can accept any decoded value.
 
 `reviver?: Reviver | ReviverObject | (Reviver | ReviverObject)[]`
-:   This option is used to convert CBOR simple data items or tagged data items into JavaScript values. Simple data items are limited to values between 0 and 19 and 32 and 255. Tagged data items have a tag which is a `number` or `bigint` between 0 and 2^64-1. If the function returns the `CONTINUE` symbol obtained with `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, subsequent functions will be invoked. A `SurrealTypeError` will be thrown if no conversion could be made.
+:   This option is used to convert simple CBOR data items or tagged data items into JavaScript values.  Simple data items are limited to values between 0 and 19 and 32 to 255.  Tagged data items' tags can be any `number` or `bigint` between 0 and 2^64-1.  If the function returns the `CONTINUE` symbol obtained with `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, subsequent functions will be invoked. If nothing can be converted, a `SurrealTypeError` is thrown.
 
 `isSafeMapKey?: (key: unknown, map: Map<unknown, unknown>) => boolean`
-:   This option is a function to verify whether a key in a `Map` object is safe. The function takes two arguments, `key` and `map`. `key` is the value of the key and `map` is the `Map` object being verified. If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that providing this option will completely override the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` unsafe keys.
+:   This option is a function to verify if the key of a `Map` object is safe. The function accepts two arguments, `key` and `map`. `key` is the value of the key and `map` is the `Map` object being verified. If this function returns `false`, a `CborUnsafeMapKeyError` is thrown. By default, it considers `"__proto__"` or `"constructor"` to be unsafe keys. Note that specifying this option will completely override the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` to be unsafe keys.
 
 `isSafeObjectKey?: (key: unknown, obj: Record<string | number, unknown>) => boolean`
-:   This option is a function to verify whether a key in a plain object is safe. The function takes two arguments, `key` and `obj`. `key` is the value of the key and `obj` is the plain object being verified. If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that providing this option will completely override the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` unsafe keys.
+:   This option is a function to verify if the key of a plain object is safe. The function accepts two arguments, `key` and `obj`. `key` is the value of the key and `obj` is the plain object being verified. If this function returns `false`, a `CborUnsafeMapKeyError` is thrown. By default, it considers `"__proto__"` or `"constructor"` to be unsafe keys. Note that specifying this option will completely override the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` to be unsafe keys.
 
 `maxDepth?: number`
-:   This option specifies the maximum depth of objects. The depth increases by 1 every time an object or array is entered. The default value is `64`. Decoding does not use recursion, so there is no upper limit on depth, but it is recommended to avoid making it too large.
+:   Specifies the maximum depth of an object. The depth increases by one every time it enters an object or array. The default value is `64`.  Decoding does not use recursion, so there is no upper limit on the depth, but it is recommended that you don't make it too large.
 
 #### Return Value
 
-A JavaScript value decoded from the `Uint8Array` in CBOR format.
+The JavaScript value decoded from the `Uint8Array` in CBOR format.
 
-### Examples
+### Example
 
-#### Decoding with a `Map` object
+#### Decoding as a `Map` object
 
 ```ts
 import { decode } from "@tai-kun/surrealdb/cbor";
@@ -90,7 +91,7 @@ function decodeStream(
 
 ##### `input`
 
-A readable stream of `Uint8Array`. The Fetch API can provide this stream in the `body` property of the `Response` object for requests.
+A readable stream of `Uint8Array` objects.  The Fetch API may provide this stream in the `body` property of the `Response` object for a request.
 
 ##### `options`
 
@@ -101,9 +102,9 @@ In addition to the options for synchronous decoding, the following options can b
 
 #### Return Value
 
-A `StatefulPromise` that resolves with a JavaScript value.
+A `StatefulPromise` that resolves to a JavaScript value.
 
-### Examples
+### Example
 
 #### Fetch API
 

@@ -1,10 +1,11 @@
 ---
 title: Table
+slug: en/v2/api/data/table
 ---
 
 import Badge from "~/components/en/Badge.astro";
 
-The `Table` class represents a table name in the SurrealDB database, allowing you to interact with tables in a type-safe manner.
+`Table` is a class that represents a table name with a record ID.
 
 ### Import
 
@@ -27,11 +28,11 @@ new Table(source: string | { name: string }); // standard
 
 ##### `source`
 
-The table name or a `Table` object. If the preset is below `standard`, only the table name can be provided.
+The table name or `Table` object. If the preset is below standard, only the table name can be passed.
 
-#### Return Value
+#### Return value
 
-When called via `new`, `Table` returns its instance.
+When called through `new`, `Table` returns its instance.
 
 ### `.name` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
@@ -55,7 +56,7 @@ console.log(table.name);
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Table` object into a string suitable for use with SurrealQL variables.
+Converts the `Table` object to a string that can be used in SurrealQL variables.
 
 `.valueOf()` and `.toJSON()` return the same result as this method.
 
@@ -67,7 +68,7 @@ Converts the `Table` object into a string suitable for use with SurrealQL variab
 
 None.
 
-#### Return Value
+#### Return value
 
 Returns the table name.
 
@@ -83,7 +84,7 @@ console.log(table.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Table` object into a string that can be embedded within SurrealQL. Similar to `.toString()`, but the table name is escaped as per the SurrealDB implementation.
+Converts the `Table` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but the table name is escaped the same way as in the SurrealDB implementation.
 
 ```ts
 .toSurql(): string;
@@ -93,9 +94,9 @@ Converts the `Table` object into a string that can be embedded within SurrealQL.
 
 None.
 
-#### Return Value
+#### Return value
 
-Returns the table name as an escaped string.
+Returns the table name with an escaped string.
 
 #### Example
 
@@ -119,15 +120,15 @@ Clones the `Table` object.
 
 None.
 
-#### Return Value
+#### Return value
 
-Returns a new `Table` object. If the `Table` class is inherited, an instance of that class is returned.
+Returns a new `Table` object. If you inherit the `Table` class, an instance of that class is returned.
 
-### Advanced Usage
+### Advanced
 
-#### Type Guards
+#### Type Guard
 
-You can use type parameters with `Table` to ensure type safety for table names:
+You can type-safe the table name of `Table` using a type parameter:
 
 ```ts
 import { Table } from "@tai-kun/surrealdb/data-types/standard";
@@ -138,9 +139,9 @@ function isUserTable(table: unknown): table is Table<"user"> {
 }
 ```
 
-#### Generic `Table` Object Check
+#### Generic Judgment of `Table` Objects
 
-For determining whether a value is a `Table` object without relying on a specific preset, the `isTable` function is recommended. This function avoids using `instanceof`, making it useful when the preset of the value being checked is unknown.
+To determine whether a value is a `Table` object without relying on the preset, it is recommended to use the `isTable` function. This function does not use `instanceof`, which is helpful when the preset of the value to be verified is unknown.
 
 ```ts
 import { isTable } from "@tai-kun/surrealdb";

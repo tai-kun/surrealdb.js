@@ -1,0 +1,102 @@
+---
+title: makeAbortApi
+slug: zh-CN/v2/api/utils/make-abort-api
+---
+
+`makeAbortApi` 函数用于创建中止信号及其相关联的中止函数。
+
+### 导入
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+```
+
+### 使用方法
+
+```ts
+function makeAbortApi(signal?: AbortSignal): [
+  signal: AbortSignal,
+  abort: (reason?: unknown) => void,
+];
+```
+
+#### 参数
+
+##### `signal`
+
+要关联的中止信号。
+
+#### 返回值
+
+返回一个按以下顺序排列的数组：
+
+##### `signal`
+
+中止信号。初始状态未中断。
+
+##### `abort`
+
+向中止信号发送 `"abort"` 事件。可选地接收一个参数 `reason`，用于通过 `"abort"` 事件传递中止原因。
+
+#### 例子
+
+以下示例创建了一个不带参数的 Abort API：
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+
+const [signal, abort] = makeAbortApi();
+abort();
+```
+
+以上示例与 `new AbortController()` 的意义几乎相同。不同之处在于 `makeAbortApi` 返回的是数组，而不是对象。
+
+以下示例指定要关联的中止信号来创建 Abort API：
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+
+const controller = new AbortController();
+controller.signal.addEventListener("abort", function() {
+  console.log("controller.signal", this.reason);
+});
+
+const [signal] = makeAbortApi(controller.signal);
+signal.addEventListener("abort", function() {
+  console.log("signal", this.reason);
+});
+
+controller.abort("test");
+```
+
+输出：
+
+```js
+controller.signal test
+signal test
+```
+
+中止事件会从 Abort API 中止后传播到关联的中止信号：
+
+```ts
+import { makeAbortApi } from "@tai-kun/surrealdb/utils";
+
+const controller = new AbortController();
+controller.signal.addEventListener("abort", function() {
+  console.log("controller.signal", this.reason);
+});
+
+const [signal, abort] = makeAbortApi(controller.signal);
+signal.addEventListener("abort", function() {
+  console.log("signal", this.reason);
+});
+
+abort("test");
+```
+
+输出：
+
+```js
+controller.signal test
+signal test
+```

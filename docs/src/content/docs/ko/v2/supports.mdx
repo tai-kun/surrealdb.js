@@ -1,0 +1,47 @@
+---
+title: 지원되는 환경
+slug: ko/v2/supports
+---
+
+import { Aside } from "@astrojs/starlight/components"
+
+## JavaScript
+
+이 SDK는 `bigint`를 사용하기 때문에 JavaScript 언어 사양으로 ES2020 이상을 필요로 합니다. 또한 이 SDK가 런타임에 필요로 하는 기능을 고려하면 다음 런타임에서 작동할 것으로 예상됩니다.
+
+| 런타임 | 버전 |
+| --- | --- |
+| Node.js | `18.x`,`20.x`,`^22.5.1` |
+| Deno | `^1.44.3` |
+| Bun | `^1.1.13` |
+| Chrome  | `>=78` |
+| Edge    | `>=79` |
+| Safari  | `>=14` |
+| Firefox | `>=68` |
+
+## 테스트
+
+테스트에는 Vitest와 Playwright를 사용합니다. 이러한 도구가 작동하는 최소 버전의 런타임으로 테스트하고 있기 때문에 실제로는 다음에 표시된 버전보다 이전 버전의 런타임에서도 작동할 수 있습니다.
+
+### 서버
+
+| 런타임 | 버전 | 상태 |
+| --- | --- | --- |
+| SurrealDB | `^2.0.0` | [GitHub](https://github.com/surrealdb/surrealdb) |
+| Node.js   | `18.x`,<br/>`20.x`,<br/>`^22.5.1` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=main&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml) |
+| Deno      | `1.x` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surrealdb.js/actions/workflows/deno.yml) |
+| Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
+
+- Node.js v22를 사용하는 경우, 아직 LTS가 아님을 유의하세요.
+- Deno는 항상 최신 버전을 사용하는 것이 좋습니다.
+- Bun은 항상 최신 버전을 사용하는 것이 좋습니다.
+
+### 브라우저
+
+| 런타임 | 버전 | 상태 |
+| --- | --- | --- |
+| Chromium  | `>=104` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/chromium.yml?branch=main&logo=googlechrome&label=Chromium)](https://github.com/tai-kun/surrealdb.js/actions/workflows/chromium.yml) |
+| Firefox | `>=100` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=main&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml) |
+| WebKit  | `>=15.4` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/webkit.yml?branch=main&style=flat&logo=safari&label=WebKit)](https://github.com/tai-kun/surrealdb.js/actions/workflows/webkit.yml) |
+
+- 지원하는 브라우저(엔진)는 CI에서 Playwright가 작동하는 최소 버전과 일치합니다. 따라서 위 버전보다 낮더라도 작동할 가능성이 있지만, 테스트하지 않았습니다.

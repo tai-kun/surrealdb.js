@@ -1,0 +1,149 @@
+---
+title: 任务队列
+slug: zh-CN/v1/reference/utils/task-queue
+---
+
+import { Aside } from "@astrojs/starlight/components";
+import Badge from "~/components/zh-CN/Badge.astro";
+
+`TaskQueue` 是一个用于管理异步任务的类。它没有提供控制并发性的方法，所有任务运行器都异步执行。
+
+### 导入
+
+```ts
+import { TaskQueue } from "@tai-kun/surrealdb/utils";
+```
+
+### `.constructor()`
+
+```ts
+new TaskQueue();
+```
+
+#### 参数
+
+无。
+
+#### 返回值
+
+通过 `new` 调用时，`TaskQueue` 会返回其实例。
+
+### `.count` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
+
+表示当前添加到队列中的任务运行器数量。
+
+### `.add()` <Badge variant="instance" /><Badge variant="method" />
+
+`.add` 用于将任务运行器添加到队列中。
+
+```ts
+add<T>(
+  runner: (args: TaskRunnerArgs) => T | PromiseLike<T>,
+  options?: TaskOptions,
+): StatefulPromise<T>;
+```
+
+<Aside type="caution">
+  如果任务运行器可能需要很长时间才能执行，建议在将中止信号传递给任务运行器时，任务运行器应立即中断，以响应中止事件。
+</Aside>
+
+#### 参数
+
+##### `runner`
+
+任务运行器。任务运行器的参数将包含一个包含中止信号 `signal` 的 `TaskRunnerArgs`。
+
+##### `options`
+
+任务运行器的选项。可以将该任务运行器的中止信号传递给它。
+
+#### 返回值
+
+返回一个以任务运行器返回值解决的 `StatefulPromise`。
+
+#### 示例
+
+```ts
+import { TaskQueue } from "@tai-kun/surrealdb/utils";
+
+const queue = new TaskQueue();
+const promise = queue.add(async ({ signal }) => {
+  const response = await fetch("https://example.com/", { signal });
+  return await response.text();
+});
+
+const text = await promise;
+console.log(text);
+```
+
+### `.idle()` <Badge variant="instance" /><Badge variant="method" />
+
+`.idle` 是一个用于等待队列为空的函数。只有当任务运行器完成（无论成功或失败）后才会从队列中删除它。因此，队列为空意味着所有任务运行器都已完成执行。
+
+```ts
+idle(): StatefulPromise<void>;
+```
+
+<Aside type="caution">
+  `.idle` 不会捕获在 `.add` 方法中添加的任务运行器抛出的错误。由于任务运行器在 `StatefulPromise` 内执行，因此在没有错误处理的情况下无法察觉任务运行器的错误。
+</Aside>
+
+#### 参数
+
+无。
+
+#### 返回值
+
+返回一个以 `void` 解决的 `StatefulPromise`。
+
+#### 示例
+
+以下示例将等待所有添加到队列中的任务运行器完成（无论成功或失败）：
+
+```ts
+import { TaskQueue } from "@tai-kun/surrealdb/utils";
+
+const queue = new TaskQueue();
+const results: string[] = [];
+queue.add(async () => {
+  results.push("Hello");
+});
+queue.add(() => {
+  throw null;
+});
+
+console.log(queue.count);
+
+await queue.idle();
+
+console.log(queue.count);
+console.log(results);
+```
+
+输出：
+
+```js
+2
+0
+[ 'Hello' ]
+```
+
+在上面的示例中，`throw null` 没有被任何地方捕获，并且脚本成功完成。要意识到任务运行器的错误，需要单独处理错误。
+
+### `.abort()` <Badge variant="instance" /><Badge variant="method" />
+
+`.abort` 是一个向所有任务运行器的 `signal` 发送中止事件的函数。
+
+```ts
+abort(reason?: unknown): void;
+```
+
+#### 参数
+
+##### `reason`
+
+中止原因。
+
+#### 返回值
+
+无。

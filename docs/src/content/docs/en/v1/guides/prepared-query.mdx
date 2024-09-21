@@ -1,10 +1,11 @@
 ---
-title: Pre-Prepared Queries
+title: Prepared Queries
+slug: en/v1/guides/prepared-query
 ---
 
 ## Basic Usage
 
-Here is a basic example of how to use pre-prepared queries:
+A basic example of using prepared queries is shown below:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -23,11 +24,11 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-Preparing queries beforehand enables type inference. However, you need to manually set the inferred type.
+Preparing the query enables type inference. However, the inferred type must be manually specified.
 
 ## Validating Query Results
 
-Queries become more robust by providing a validator for the query results as an argument to `.returns`. The following example uses zod to validate whether the query result is as intended:
+The query can be made safer by passing a validator for the query results to `.returns`. The following example uses Zod to validate that the query results are as expected:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -56,11 +57,11 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-You are not limited to zod, and can use valibot or any general purpose functions to validate the response.
+The library is not dependent on Zod, so you can use Valibot or a general-purpose function to validate the response.
 
-## Embedding Variables into Queries
+## Interpolate Variables into Queries
 
-`surql` allows you to visually embed values into your queries using template literals:
+`surql` allows queries to be written with template literals, enabling the visual interpolation of values:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -83,7 +84,7 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-The parameters sent in the RPC request for the above example are as follows:
+The parameters of the RPC request sent in the above example are:
 
 ```text
 CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
@@ -96,9 +97,9 @@ CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
 }
 ```
 
-## Defining Arguments for Queries
+## Define Arguments in Queries
 
-Use `surql.slot` to define arguments for pre-defined queries:
+To define arguments for a prepared query, use `surql.slot`:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -129,13 +130,13 @@ const results = await db.query(CreateUserQuery, {
 await db.disconnect();
 ```
 
-Slots always require a variable name. The `.type()` method imposes type-level constraints on the variable. Similar to `.returns()`, you can pass a function that validates the value to `.type()`. In the example above, the slot with the variable name `id` must be a record ID where the table name is `"user"`.
+Slots must have a variable name. You can constrain a variable at the type level with the `.type()` method. Similar to `.returns()`, you can pass a function that validates the value to `.type()`. In the example above, the slot with variable name `id` must be a record ID with table name `"user"`.
 
-A slot's argument can include a default value after the variable name. This default value is used when the variable name for the slot is omitted at runtime. In the example above, the slot with the variable name `age` has a default value of `42`.
+A slot can have a default value after the variable name. This default value will be used if the slot's variable name is omitted at runtime. In the example above, the slot with variable name `age` has a default value of `42`.
 
-Besides `.type()`, slots also have `.rename()`, `.default()`, `.optional()`, and `.required()`.
+Slots have other methods such as `.rename()`, `.default()`, `.optional()`, and `.required()`.
 
-If a pre-defined query contains a slot whose variable must be specified at runtime, the query will be rejected with a `SurrealTypeError` at runtime if it's not specified. If it's correctly type-inferred by TypeScript, you will see the error at the type level without running the query. For example, if you omit the required variable and run type checking with `tsc`, you will see an error:
+If a prepared query contains a slot that requires a variable to be specified at runtime and it is not specified, the query will be rejected at runtime with a `SurrealTypeError`.  If the types are correctly inferred in TypeScript, an error will be displayed at the type level even before running the query. For example, if you omit the required variable and check the types with `tsc`, you will see an error like this:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";

@@ -73,60 +73,6 @@ export class ConnectionConflictError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#namespaceconflicterror)
- */
-export class NamespaceConflictError extends SurrealError {
-  static {
-    this.prototype.name = "NamespaceConflictError";
-  }
-
-  namespace1: string;
-  namespace2: string;
-
-  constructor(
-    namespace1: unknown,
-    namespace2: unknown,
-    options?: SurrealErrorOptions | undefined,
-  ) {
-    namespace1 = String(namespace1);
-    namespace2 = String(namespace2);
-    super(
-      `Namespace conflict between ${namespace1} and ${namespace2}.`,
-      options,
-    );
-    this.namespace1 = namespace1 as string;
-    this.namespace2 = namespace2 as string;
-  }
-}
-
-/**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#databaseconflicterror)
- */
-export class DatabaseConflictError extends SurrealError {
-  static {
-    this.prototype.name = "DatabaseConflictError";
-  }
-
-  database1: string;
-  database2: string;
-
-  constructor(
-    database1: unknown,
-    database2: unknown,
-    options?: SurrealErrorOptions | undefined,
-  ) {
-    database1 = String(database1);
-    database2 = String(database2);
-    super(
-      `Database conflict between ${database1} and ${database2}.`,
-      options,
-    );
-    this.database1 = database1 as string;
-    this.database2 = database2 as string;
-  }
-}
-
-/**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#missingnamespaceerror)
  */
 export class MissingNamespaceError extends SurrealError {

@@ -9,9 +9,7 @@ import {
 } from "@tai-kun/surrealdb/engine";
 import {
   ConnectionUnavailableError,
-  DatabaseConflictError,
   MissingNamespaceError,
-  NamespaceConflictError,
   ResponseError,
   RpcResponseError,
   SurrealTypeError,
@@ -451,14 +449,9 @@ export default class WebSocketEngine extends EngineAbc {
           throw new MissingNamespaceError(database);
         }
 
-        // (1) JSON では null と undefined を区別しないけど、SurealDB は区別する。
-        //     null は選択中の名前空間またはデータベースを未選択にするので、undefined を使える
-        //     CBOR フォーマッターと同じような使い方を JSON フォーマッターですると事故る可能性が高い。
-        //
-        // (2) あと名前空間とデータベースが両方選択されている状態で CBOR で
-        //     [ "名前空間", undefined ] をリクエストするとデータベースが未選択になる。
-        //     (これは SurrealDB のバグ？)
-        //
+        // - JSON では null と undefined を区別しないけど、SurealDB は区別する。
+        // - null は選択中の名前空間またはデータベースを未選択にするので、undefined を使える
+        //   CBOR フォーマッターと同じような使い方を JSON フォーマッターですると事故る可能性が高い。
         // という動機があって、undefined を文字列に置き換えるように努力する。
         {
           if (ns === undefined && conn.namespace !== null) {
@@ -520,21 +513,11 @@ export default class WebSocketEngine extends EngineAbc {
         case "use": {
           const [ns, db] = rpc.params;
 
-          // `.rpc` メソッドの実行開始直後の名前空間から変更がなければ更新する。
           if (ns !== undefined) {
-            if (this.namespace !== conn.namespace && this.namespace !== ns) {
-              throw new NamespaceConflictError(this.namespace, conn.namespace);
-            }
-
             this.namespace = ns;
           }
 
-          // `.rpc` メソッドの実行開始直後のデータベースから変更がなければ更新する。
           if (db !== undefined) {
-            if (this.database !== conn.database && this.database !== db) {
-              throw new DatabaseConflictError(this.database, conn.database);
-            }
-
             this.database = db;
           }
 

@@ -18,10 +18,8 @@ export {
   CircularEngineReferenceError,
   Closed,
   ConnectionConflictError,
-  DatabaseConflictError,
   EngineNotFoundError,
   MissingNamespaceError,
-  NamespaceConflictError,
   QueryFailedError,
   RpcResponseError,
 } from "./client";

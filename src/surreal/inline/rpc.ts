@@ -63,6 +63,7 @@ export type InlineRpcMethod =
   | "query"
   | "relate"
   | "run"
+  | "graphql"
   | "select"
   | "signin"
   | "signup"

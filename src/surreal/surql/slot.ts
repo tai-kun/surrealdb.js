@@ -49,12 +49,21 @@ export default class Slot<
     return options;
   }
 
+  /**
+   * @alias {@link type}
+   */
   as<TBind extends TValue>(): Slot<TName, true, TBind>;
 
+  /**
+   * @alias {@link type}
+   */
   as<TBind extends TValue>(
     parser: (value: unknown) => TBind,
   ): Slot<TName, true, TBind>;
 
+  /**
+   * @alias {@link type}
+   */
   as(parser: (value: unknown) => unknown = v => v): Slot<TName, true> {
     const This = this.constructor as typeof Slot;
     const options: Writable<SlotOptions> = { parse: parser };
@@ -66,6 +75,25 @@ export default class Slot<
     }
 
     return new This(this.name, true, options);
+  }
+
+  /**
+   * @alias {@link as}
+   */
+  type<TBind extends TValue>(): Slot<TName, true, TBind>;
+
+  /**
+   * @alias {@link as}
+   */
+  type<TBind extends TValue>(
+    parser: (value: unknown) => TBind,
+  ): Slot<TName, true, TBind>;
+
+  /**
+   * @alias {@link as}
+   */
+  type(parser: (value: unknown) => any = v => v): Slot<TName, true> {
+    return this.as(parser);
   }
 
   rename<const TName extends string>(

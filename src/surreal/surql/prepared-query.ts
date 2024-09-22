@@ -28,7 +28,6 @@ export default class PreparedQuery<
   readonly text: string | EncodedJSON<string> | EncodedCBOR<string>;
   readonly originalText: string;
 
-  /** @deprecated */
   // @ts-expect-error 型だけ
   readonly __type: TTransformed extends None ? TResults : TTransformed;
   readonly _parse: (results: unknown[]) => TResults;
@@ -46,12 +45,18 @@ export default class PreparedQuery<
     this._trans = options.trans || passthrough;
   }
 
+  /**
+   * @alias {@link type}
+   */
   as<TResults extends unknown[] = unknown[]>(): PreparedQuery<
     TSlot,
     TResults,
     TTransformed
   >;
 
+  /**
+   * @alias {@link type}
+   */
   as<TResults extends unknown[] = unknown[]>(
     parser: (results: unknown[]) => TResults,
   ): PreparedQuery<TSlot, TResults, TTransformed>;
@@ -68,6 +73,29 @@ export default class PreparedQuery<
     });
   }
 
+  /**
+   * @alias {@link as}
+   */
+  type<TResults extends unknown[] = unknown[]>(): PreparedQuery<
+    TSlot,
+    TResults,
+    TTransformed
+  >;
+
+  /**
+   * @alias {@link as}
+   */
+  type<TResults extends unknown[] = unknown[]>(
+    parser: (results: unknown[]) => TResults,
+  ): PreparedQuery<TSlot, TResults, TTransformed>;
+
+  type(parser = this._parse): PreparedQuery<SlotLike, any, any> {
+    return this.as(parser);
+  }
+
+  /**
+   * @alias {@link transform}
+   */
   to<TTransformed>(
     transformer: (results: TResults) => TTransformed,
   ): PreparedQuery<TSlot, TResults, TTransformed> {
@@ -78,5 +106,14 @@ export default class PreparedQuery<
       trans: transformer,
       encodedText: this.text,
     });
+  }
+
+  /**
+   * @alias {@link to}
+   */
+  transform<TTransformed>(
+    transformer: (results: TResults) => TTransformed,
+  ): PreparedQuery<TSlot, TResults, TTransformed> {
+    return this.to(transformer);
   }
 }

@@ -1,5 +1,0 @@
-- [x] CBOR に Range を追加
-- [x] CBOR に Future を追加
-- [ ] rpc に graphql を追加
-- [ ] rpc に insert_relation を追加
-- [ ] ~~コネクションプールを追加~~

@@ -12,7 +12,7 @@ type TableRecord = {
 export type RpcResultMapping = {
   ping: void;
   use: void;
-  info: TableRecord;
+  info: TableRecord | null | undefined; // JSON: null, CBOR: undefined
   signup: string;
   signin: string;
   authenticate: void;

@@ -135,8 +135,23 @@ class AutoReconnect extends TaskEmitter<AutoReconnectEventMap> {
           counter = 0;
         }
 
-        if (e instanceof WebSocketEngineError && e.code === 3153) {
-          counter += 1;
+        // エラーイベントのステータスコードが、サーバーに接続できる可能性があることを示しているなら
+        // 再接続を試みる。
+        if (e instanceof WebSocketEngineError) {
+          // ping に失敗
+          if (e.code === 3153) {
+            counter += 1;
+          }
+
+          if (
+            e.code === 1012 // サーバーが再起動するため、接続を一旦終了
+            || e.code === 1013 // サーバーが過負荷のため、一部のクライアントとの接続を終了
+          ) {
+            time = now;
+            counter = 0;
+
+            return true;
+          }
         }
 
         if (counter >= threshold) {

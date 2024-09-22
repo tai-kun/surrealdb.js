@@ -1,9 +1,10 @@
 {
+  "last-release-sha": "e2f875df9fac862d6f4e6ba2c6a8b057708d27f8",
   "packages": {
     ".": {
       "versioning": "prerelease",
       "prerelease": true,
-      "prerelease-type": "beta.1",
+
       "release-type": "node",
       "include-component-in-tag": false,
       "changelog-sections": [

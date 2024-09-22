@@ -3,7 +3,7 @@
     ".": {
       "versioning": "prerelease",
       "prerelease": true,
-      "prerelease-type": "alpha",
+      "prerelease-type": "beta.1",
       "release-type": "node",
       "include-component-in-tag": false,
       "changelog-sections": [

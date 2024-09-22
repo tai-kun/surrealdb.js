@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.0-alpha.8](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2024-09-22)
+
+
+### Changes
+
+* **engines/websocket:** 名前空間とデータベースの矛盾を検知しない ([9bdbc58](https://github.com/tai-kun/surrealdb.js/commit/9bdbc5826a5500756ac1b4ec6133f55fd584fa5c))
+
+
+### Bug Fixes
+
+* **surreal/utils:** WebSocket でステータスコードが `1012` `1013` なら再接続を試みる。 ([533f8c2](https://github.com/tai-kun/surrealdb.js/commit/533f8c2b6b0eaef9d7a232ab0bd85b6e3a2adab8))
+
 ## [2.0.0-alpha.7](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2024-09-20)
 
 

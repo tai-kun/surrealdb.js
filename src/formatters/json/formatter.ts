@@ -36,7 +36,7 @@ export default class JsonFormatter implements Formatter {
       throw new JsonUnsafeMapKeyError("constructor");
     }
 
-    return JSON.parse(toString(data));
+    return JSON.parse(json);
   }
 
   cloneSync<T>(data: T): T {
@@ -87,7 +87,8 @@ function toString(data: Data): string {
       return utf8.decode(data);
 
     case typeof Buffer !== "undefined"
-      && Array.isArray(data) && data.every(b => Buffer.isBuffer(b)):
+      && Array.isArray(data)
+      && data.every(b => Buffer.isBuffer(b)):
       return utf8.decode(Buffer.concat(data));
 
     default:

@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0-beta.1](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2024-09-22)
+
+
+### Features
+
+* `insert_relation` を実装 ([5656331](https://github.com/tai-kun/surrealdb.js/commit/56563318b9b7a8a94d35865e4818ed2fcdfb776e))
+* **surreal/surql:** `.as` のエイリアスに `.type`、`.to` のエイリアスに `.toransform` ([b022a25](https://github.com/tai-kun/surrealdb.js/commit/b022a25c38f20c650965fd86d3023b844d6c5aaf))
+* 実験的な `graphql` を実装 ([f7c4e58](https://github.com/tai-kun/surrealdb.js/commit/f7c4e58b46b42dcf5cf5fecbcce9e94389fdcdd8))
+
+
+### Bug Fixes
+
+* **clients/standard:** `graphql` の API を修正 ([8a63cbf](https://github.com/tai-kun/surrealdb.js/commit/8a63cbf3a0a5e3e6ddf94c2337d37a1714f66c8d))
+* **clients/standard:** `insert` の引数であるテーブル名をオプションにする ([3e95f30](https://github.com/tai-kun/surrealdb.js/commit/3e95f3044edf615156f06ab41d2eba581b9f77b2))
+* **surreal/inline:** インライン RPC に `graphql` を追加 ([368c9e1](https://github.com/tai-kun/surrealdb.js/commit/368c9e1b439865b64433c46bad15cdaa6487142e))
+
 ## [2.0.0-alpha.8](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2024-09-22)
 
 

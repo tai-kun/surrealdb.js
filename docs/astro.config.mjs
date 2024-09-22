@@ -111,6 +111,15 @@ export default defineConfig({
                     ko: "사전 정의된 쿼리",
                   },
                 },
+                {
+                  slug: "v2/guides/errors",
+                  label: "Errors",
+                  translations: {
+                    ja: "エラー",
+                    "zh-CN": "错误",
+                    ko: "오류",
+                  },
+                },
               ],
             },
             {
@@ -322,15 +331,6 @@ export default defineConfig({
                       label: "toSurql",
                     },
                   ],
-                },
-                {
-                  slug: "v2/api/errors",
-                  label: "Errors",
-                  translations: {
-                    ja: "エラー",
-                    "zh-CN": "错误",
-                    ko: "오류",
-                  },
                 },
               ],
             },

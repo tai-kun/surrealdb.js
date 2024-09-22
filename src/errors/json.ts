@@ -1,11 +1,17 @@
 import { SurrealError, type SurrealErrorOptions } from "./general";
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#json)
+ */
 export class JsonError extends SurrealError {
   static {
     this.prototype.name = "JsonError";
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#jsonunsafemapkeyerror)
+ */
 export class JsonUnsafeMapKeyError extends JsonError {
   static {
     this.prototype.name = "JsonUnsafeMapKeyError";

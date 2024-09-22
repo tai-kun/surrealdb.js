@@ -9,7 +9,7 @@ export interface EngineSurrealErrorOptions extends SurrealErrorOptions {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#engineerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#engineerror)
  */
 export class EngineError extends SurrealError {
   static {
@@ -28,7 +28,7 @@ export class EngineError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#httpengineerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#httpengineerror)
  */
 export class HttpEngineError extends EngineError {
   static {
@@ -80,7 +80,7 @@ export type WebSocketEngineStatusCode =
   | WebSocketEngineStatusCode.Custom;
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#websocketengineerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#websocketengineerror)
  */
 export class WebSocketEngineError extends EngineError {
   static {
@@ -97,7 +97,7 @@ export class WebSocketEngineError extends EngineError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#statetransitionerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#statetransitionerror)
  */
 export class StateTransitionError extends SurrealAggregateError {
   static {
@@ -121,7 +121,7 @@ export class StateTransitionError extends SurrealAggregateError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#connectionunavailableerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#connectionunavailableerror)
  */
 export class ConnectionUnavailableError extends SurrealError {
   static {

@@ -1,4 +1,4 @@
-import getType, { type TypeName } from "./get-type-name";
+import getTypeName, { type TypeName } from "./get-type-name";
 
 // dprint-ignore
 type ErrorOptionsBase =
@@ -9,7 +9,7 @@ type ErrorOptionsBase =
 export interface SurrealErrorOptions extends ErrorOptionsBase {}
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#surrealerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#surrealerror)
  */
 export class SurrealError extends Error {
   static {
@@ -26,7 +26,7 @@ export class SurrealError extends Error {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#surrealtypeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#surrealtypeerror)
  */
 export class SurrealTypeError extends SurrealError {
   static {
@@ -44,13 +44,16 @@ export class SurrealTypeError extends SurrealError {
     expected = typeof expected === "string"
       ? expected
       : expected.slice().sort().join(" | ");
-    actual = getType(actual);
+    actual = getTypeName(actual);
     super(`Expected ${expected} but got ${actual}.`, options);
     this.expected = expected;
     this.actual = actual as string;
   }
 }
 
+/**
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#surrealvalueerror)
+ */
 export class SurrealValueError extends SurrealError {
   static {
     this.prototype.name = "SurrealValueError";
@@ -75,14 +78,16 @@ export class SurrealValueError extends SurrealError {
         : `${s.slice(0, 12)} ... ${s.slice(-12)}`
     );
     super(
-      `Expected ${expected} but got type ${getType(actual)}${s && ` of ${s}`}.`,
+      `Expected ${expected} but got type ${getTypeName(actual)}${
+        s && ` of ${s}`
+      }.`,
       options,
     );
   }
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#surrealaggregateerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#surrealaggregateerror)
  */
 export class SurrealAggregateError extends SurrealError {
   static {
@@ -102,7 +107,7 @@ export class SurrealAggregateError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#circularreferenceerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#circularreferenceerror)
  */
 export class CircularReferenceError extends SurrealError {
   static {
@@ -118,7 +123,7 @@ export interface NumberRangeErrorOptions extends SurrealErrorOptions {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#numberrangeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#numberrangeerror)
  */
 export class NumberRangeError extends SurrealError {
   static {
@@ -143,7 +148,7 @@ export class NumberRangeError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#unsupportedruntimeerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#unsupportedruntimeerror)
  */
 export class UnsupportedRuntimeError extends SurrealError {
   static {
@@ -156,7 +161,7 @@ export class UnsupportedRuntimeError extends SurrealError {
 }
 
 /**
- * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/errors/#unreachableerror)
+ * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#unreachableerror)
  */
 export class UnreachableError extends SurrealError {
   static {

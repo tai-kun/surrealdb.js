@@ -71,6 +71,7 @@
   "src/content/docs/ja/v2/getting-started.mdx": "3ff8c4486a8bc22577a62c062d7bb533fc07edada45818f855d72c902ab33fb0",
   "src/content/docs/ja/v2/guides/authentication.mdx": "4e14a03ccf5e9909d8e34c91d1cd57e6967adba64f42cc70977e4336e108bd43",
   "src/content/docs/ja/v2/guides/connecting.mdx": "d359e8540947a14fe27d7f4a4ef56a438ec0f06aa4fb0d420e7c5ea79ccade9a",
+  "src/content/docs/ja/v2/guides/errors.mdx": "3f6fb00044cb2d267fc8bed2c47129b31b06dcc0043974ed152774d92641af5c",
   "src/content/docs/ja/v2/guides/prepared-query.mdx": "f50edd1d83e2e296b6ca019fb27823f0b63c498742bc3b4f9de32c461952f7cf",
   "src/content/docs/ja/v2/guides/querying.mdx": "4fa8ff5de559a0a1d119b0f29ddef09ae1c814d0658a836f36a1495d98ba8a26",
   "src/content/docs/ja/v2/index.mdx": "b43660b727904827fa71595a2f5422771813f90ffb962ae8a6258236f6fc6ef2",

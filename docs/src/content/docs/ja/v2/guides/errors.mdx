@@ -1,11 +1,19 @@
 ---
 title: エラー
-slug: ja/v2/api/errors
+slug: ja/v2/guides/errors
 ---
 
-## SurrealError
+## はじめに
+
+一部のエラーオブジェクトには `.cause` プロパティーが設定されていることがあります。ほとんどの場合これは `unknown` 型であり、値は今後予告なく変更されることがあります。
+
+## 一般
+
+### SurrealError
 
 `SurrealError` はこの SDK が明示的に投げるエラーオブジェクトのほとんどすべてが継承する基底クラスです。このクラスは JavaScript の `Error` クラスを継承してます。このエラーオブジェクトが単体で投げられることはほとんど無く、基本的には継承先の特別な意味を持つエラーオブジェクトが投げられます。`try-catch` 構文などで補足したエラーがこの SDK が明示的に投げたエラーであることを簡単に分類するために使うことを推奨します。
+
+#### プロパティー
 
 `.name: "SurrealError"`
 :   エラー名です。
@@ -19,11 +27,13 @@ slug: ja/v2/api/errors
 `.cause`
 :   エラーが発生した原因やコンテクストが設定される場合があります。
 
-## SurrealTypeError
+### SurrealTypeError
 
 継承元: `SurrealError`
 
 これは入力値やその他の検証に失敗した場合に投げられるエラーです。
+
+#### プロパティー
 
 `.name: "SurrealTypeError"`
 :   エラー名です。
@@ -34,11 +44,38 @@ slug: ja/v2/api/errors
 `.actual`
 :   実際の値の文字列表現です。
 
-## SurrealAggregateError
+#### 解決策
+
+スタックトレースを辿って期待するデータ形式が入力されない原因を探します。
+
+### SurrealValueError
+
+継承元: `SurrealError`
+
+これは入力値やその他の検証に失敗した場合に投げられるエラーです。
+
+#### プロパティー
+
+`.name: "SurrealValueError"`
+:   エラー名です。
+
+`.expected`
+:   期待するデータ形式です。
+
+`.actual`
+:   実際の値です。
+
+#### 解決策
+
+スタックトレースを辿って期待するデータ形式が入力されない原因を探します。
+
+### SurrealAggregateError
 
 継承元: `SurrealError`
 
 これは複数のエラーやエラーメッセージがまとめられたエラーです。
+
+#### プロパティー
 
 `.name: "SurrealAggregateError"`
 :   エラー名です。
@@ -46,11 +83,13 @@ slug: ja/v2/api/errors
 `.cause: unknown[]`
 :   配列の各要素にエラーやエラーメッセージ等が含まれています。
 
-## CircularReferenceError
+### CircularReferenceError
 
 継承元: `SurrealError`
 
 これは循環参照を検知した場合に投げられるエラーです。主に JavaScript の値を別の形式に変換する過程で、親のオブジェクトと同じオブジェクトが検知された場合に投げられます。
+
+#### プロパティー
 
 `.name: "CircularReferenceError"`
 :   エラー名です。
@@ -68,11 +107,17 @@ console.log(a); // <ref *1> { a: [Circular *1] }
 toSurql(a); // throws CircularReferenceError
 ```
 
-## NumberRangeError
+#### 解決策
+
+このエラーは `toSurql` 関数以外でも投げられる一般的なエラーです。オブジェクトの内側に、そのオブジェクトが含まれていないか思慮深くデバッグする必要があります。
+
+### NumberRangeError
 
 継承元: `SurrealError`
 
 これは数値が範囲外の値を取った場合に投げられるエラーです。
+
+#### プロパティー
 
 `.name: "NumberRangeError"`
 :   エラー名です。
@@ -86,29 +131,51 @@ toSurql(a); // throws CircularReferenceError
 `.integer`
 :   `true` の場合、整数を期待します。
 
-## UnsupportedRuntimeError
+#### 解決策
+
+スタックトレースを辿って期待するデータ形式が入力されない原因を探します。
+
+### UnsupportedRuntimeError
 
 継承元: `SurrealError`
 
 これはサポートされていないランタイムを使用していると判断された場合に投げられるエラーです。
 
+#### プロパティー
+
 `.name: "UnsupportedRuntimeError"`
 :   エラー名です。
 
-## UnreachableError
+#### 解決策
+
+そのランタイムを使用しないか、ポリフィルを使用して、十分にテストする必要があります。
+
+### UnreachableError
 
 継承元: `SurrealError`
 
 これは到達不可能なコードに到達した場合に投げられるエラーです。このエラーが投げられた場合、おそらくこの SDK のバグに遭遇したものと考えられます。
 
+#### プロパティー
+
 `.name: "UnreachableError"`
 :   エラー名です。
 
-## CircularEngineReferenceError
+#### 解決策
+
+以下の URL からこの問題を提起することができます:
+
+[https://github.com/tai-kun/surrealdb.js/issues](https://github.com/tai-kun/surrealdb.js/issues)
+
+## クライアント
+
+### CircularEngineReferenceError
 
 継承元: `CircularReferenceError`
 
 これはデータベースに接続する際に、エンジン間で循環参照が発生した場合に投げられるエラーです。
+
+#### プロパティー
 
 `.name: "CircularEngineReferenceError"`
 :   エラー名です。
@@ -119,6 +186,8 @@ toSurql(a); // throws CircularReferenceError
 例えば次のような場合にこのエラーは投げられます:
 
 ```ts
+import { initSurreal } from "@tai-kun/surrealdb";
+
 const { Surreal } = initSurreal({
   engines: {
     http: "https",
@@ -133,11 +202,34 @@ await db.connect("https://localhost:8000"); // throws CircularEngineReferenceErr
 
 上記の例では、https プロトコルのエンジンが http に設定されているエンジンを使うことを示しているにもかかわらず、http プロトコルのエンジンは https に設定されているエンジンを使おうとするため、循環参照エラーが投げられます。
 
-## EngineNotFoundError
+#### 解決策
+
+文字列が指定されているプロトコル名を別のプロトコル名の値に設定せず、代わりにエンジンを作成する具体的な実装に置き換えます:
+
+```ts del={6} ins={7-10}
+import { initSurreal } from "@tai-kun/surrealdb";
+import HttpEngine from "@tai-kun/surrealdb/engines/http";
+
+const { Surreal } = initSurreal({
+  engines: {
+    http: "https",
+    http: config => new HttpEngine({
+      ...config,
+      // fetch: <your custom fetch function>
+    }),
+    https: "http",
+  },
+  // ...
+});
+```
+
+### EngineNotFoundError
 
 継承元: `SurrealError`
 
 これはエンジンが設定されていないプロトコルで接続しようとした倍に投げられるエラーです。
+
+#### プロパティー
 
 `.name: "EngineNotFoundError"`
 :   エラー名です。
@@ -148,6 +240,8 @@ await db.connect("https://localhost:8000"); // throws CircularEngineReferenceErr
 例えば次のような場合にこのエラーは投げられます:
 
 ```ts
+import { initSurreal } from "@tai-kun/surrealdb";
+
 const { Surreal } = initSurreal({
   engines: {
     http: config => new HttpEngine(config),
@@ -159,11 +253,29 @@ await using db = new Surreal();
 await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No https protocol engine found.
 ```
 
-## ConnectionConflictError
+#### 解決策
+
+接続先のエンドポイントのプロトコルでエンジンを作成できるかどうか `engines` プロパティーを確認してください。
+
+```ts ins={6}
+import { initSurreal } from "@tai-kun/surrealdb";
+
+const { Surreal } = initSurreal({
+  engines: {
+    http: config => new HttpEngine(config),
+    https: "http",
+  },
+  // ...
+});
+```
+
+### ConnectionConflictError
 
 継承元: `SurrealError`
 
 これはクライエントが複数のエンドポイントに同時に接続しようとした場合に投げられるエラーです。
+
+#### プロパティー
 
 `.name: "ConnectionConflictError"`
 :   エラー名です。
@@ -175,6 +287,8 @@ await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No ht
 :   もう一方のエンドポイントです。
 
 ```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
 await using db = new Surreal();
 
 await db.connect("http://localhost:8000");
@@ -184,6 +298,8 @@ await db.connect("http://localhost:11298"); // throws ConnectionConflictError: C
 `.connect` メソッドは渡された URL のパスが `/rpc` で終わらない場合、それを末尾に追加します。そのため、一方のエンドポイントの URL パスが `/rpc` で終わる場合は、その見た目に反してエラーにならないことがあります:
 
 ```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
 await using db = new Surreal();
 
 await db.connect("http://localhost:8000");
@@ -191,73 +307,35 @@ await db.connect("http://localhost:8000/rpc"); // OK!
 ```
 
 ```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
 await using db = new Surreal();
 
 await db.connect("http://localhost:8000/rpc");
 await db.connect("http://localhost:8000"); // OK!
 ```
 
-## NamespaceConflictError
+#### 解決策
 
-継承元: `SurrealError`
+`.connect` メソッドを呼び出す前に `.close` メソッドを呼び出すことで、任意のエンドポイントに接続することができます。
 
-これは SDK が同時に異なる複数の名前空間に切り替えようとした場合に投げられるエラーです。
+```ts ins={6}
+import { Surreal } from "@tai-kun/surrealdb";
 
-`.name: "NamespaceConflictError"`
-:   エラー名です。
-
-`.namespace1: string`
-:   一方の名前空間です。
-
-`.namespace2: string`
-:   もう一方の名前空間です。
-
-例えば次のような場合にこのエラーは投げられます:
-
-```ts
 await using db = new Surreal();
 
 await db.connect("http://localhost:8000");
-await db.signin({ user: "root", pass: "root" });
-await Promise.all([
-  db.use({ namespace: "foo" }),
-  db.use({ namespace: "bar" }),
-]);
+await db.close();
+await db.connect("http://localhost:11298");
 ```
 
-## DatabaseConflictError
-
-継承元: `SurrealError`
-
-これは SDK が同時に異なる複数のデータベースに切り替えようとした場合に投げられるエラーです。
-
-`.name: "DatabaseConflictError"`
-:   エラー名です。
-
-`.database1: string`
-:   一方のデータベースです。
-
-`.database2: string`
-:   もう一方のデータベースです。
-
-例えば次のような場合にこのエラーは投げられます:
-
-```ts
-await using db = new Surreal();
-
-await db.connect("http://localhost:8000");
-await db.signin({ user: "root", pass: "root" });
-await Promise.all([
-  db.use({ namespace: "baz" database: "foo" }),
-  db.use({ namespace: "baz" database: "bar" }),
-]);
-```
-
-## MissingNamespaceError
+### MissingNamespaceError
 
 継承元: `SurrealError`
 
 これはデータベースを選択する前に名前空間が選択されていない場合に投げられるエラーです。または、データベースを選択したまま名前空間を未選択状態にしようとしても投げられます。
+
+#### プロパティー
 
 `.name: "MissingNamespaceError"`
 :   エラー名です。
@@ -268,17 +346,39 @@ await Promise.all([
 例えば次のような場合にこのエラーは投げられます:
 
 ```ts
+import { Surreal } from "@tai-kun/surrealdb";
+
 await using db = new Surreal();
 await db.connect("http://localhost:8000");
 
-await db.use({ database: "example" }); // throws MissingNamespaceError: The namespace must be specified before the database.
+await db.use({
+  database: "example",
+}); // throws MissingNamespaceError: The namespace must be specified before the database.
 ```
 
-## RpcResponseError
+#### 解決策
+
+データベースを選択する場合は名前空間も選択するようにします。
+
+```ts ins={7}
+import { Surreal } from "@tai-kun/surrealdb";
+
+await using db = new Surreal();
+await db.connect("http://localhost:8000");
+
+await db.use({
+  namespace: "example",
+  database: "example",
+});
+```
+
+### RpcResponseError
 
 継承元: `SurrealError`
 
 これは RPC レスポンスがエラーを示した場合に投げられるエラーです。接続したプロトコルによる通信やレスポンスボディのデコードなどに問題はありませんが、SurrealDB が RPC リクエストを処理できないことを意味します。
+
+#### プロパティー
 
 `.name: "RpcResponseError"`
 :   エラー名です。
@@ -289,11 +389,17 @@ await db.use({ database: "example" }); // throws MissingNamespaceError: The name
 `.code: number`
 :   SurrealDB のドキュメントに明記されていませんが、おそらく JSON-RPC のエラーコードだと思われます。
 
-## QueryFailedError
+#### 解決策
+
+多様な原因が考えられますが、この SDK が対応している SurrelDB のバージョンと RPC をリクエストを処理する SurrealDB のバージョンが異なっている可能性があります。
+
+### QueryFailedError
 
 継承元: `SurrealAggregateError`
 
 これはクエリーに失敗した場合に投げられるエラーです。
+
+#### プロパティー
 
 `.name: "QueryFailedError"`
 :   エラー名です。
@@ -310,11 +416,17 @@ await db.connect("http://localhost:8000");
 await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 1 error(s)
 ```
 
-## Closed
+#### 解決策
+
+SurrelQL の文法が正しいか確認します。
+
+### Closed
 
 継承元: `SurrealError`
 
 これは接続が強制的に終了されたことを示すエラーです。
+
+#### プロパティー
 
 `.name: "Closed"`
 :   エラー名です。
@@ -338,11 +450,15 @@ db.on("<event_name>", ({ signal }) => {
 await db.close({ force: true });
 ```
 
-## EngineError
+## エンジン
+
+### EngineError
 
 継承元: `SurrealError`
 
 これはエンジンに起因するエラーであることを示します。イベントリスナー経由で発送されます。
+
+#### プロパティー
 
 `.name: "EngineError"`
 :   エラー名です。
@@ -350,20 +466,26 @@ await db.close({ force: true });
 `.fatal: boolean | undefined`
 :   このエラーが致命的であるかどうかを示しています。
 
-## HttpEngineError
+### HttpEngineError
 
 継承元: `EngineError`
 
 これは HTTP エンジンに起因するエラーであることを示します。現在は定義されているだけで、使用されていません。
 
+#### プロパティー
+
 `.name: "HttpEngineError"`
 :   エラー名です。
 
-## WebSocketEngineError
+### WebSocketEngineError
 
 継承元: `EngineError`
 
 これは WebSocket エンジンに起因するエラーであることを示します。RPC リクエストを識別する ID を見つける前にレスポンスボディの解析に失敗した場合や、WebSocket オブジェクトからエラーイベントを受け取ったとき、WebSocket の接続を切ったときなど使用されます。
+
+この SDK では `315x` をカスタムのステータスコードに使用します。この範囲は [IANA](https://www.iana.org/assignments/websocket/websocket.xml#close-code-number) では未割り当てのステータスコードです。
+
+#### プロパティー
 
 `.name: "WebSocketEngineError"`
 :   エラー名です。
@@ -384,13 +506,26 @@ await db.close({ force: true });
     - `1006`: 予約済み。
     - `1015`: 予約済み。
 
-^1: `WebSocket` はランタイムがグローバル変数に定義しているクラスであったり、`ws`  SDK のクラスであったりします。
+^1: `WebSocket` はランタイムがグローバル変数に定義しているクラスであったり、`ws` のクラスであったりします。
 
-## StateTransitionError
+#### 解決策
+
+`1002`,`1003`,`1007`...`1011`,`1014`,`3150`,`3151`,`3154`
+:   このステータスコードから自動的に回復する方法はおそらくありません。ランタイムや SurrealDB の設定、ハードコーディングされた実装を修正する必要があります。
+
+`3152`
+:   メソッドに渡した引数 (つまり RPC リクエストの内容) が正しいか確認します。
+
+`1012`,`1013`,`3153`
+:   実験的な機能である [`autoReconnect()`](/v2/experimental/auto-reconnect) を使用して自動的に回復できるかもしれません。
+
+### StateTransitionError
 
 継承元: `SurrealAggregateError`
 
 これは状態遷移中にイベントリスナーの実行に失敗した場合に投げられるエラーです。
+
+#### プロパティー
 
 `.name: "StateTransitionError"`
 :   エラー名です。
@@ -408,11 +543,10 @@ await db.close({ force: true });
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
-import { CONNECTING } from "@tai-kun/surrealdb/engine";
 
 await using db = new Surreal();
 
-db.on(CONNECTING, () => {
+db.on("connecting", () => {
   throw new Error("Don't let me connect !!!")
 });
 
@@ -429,36 +563,50 @@ await db.connect("http://localhost:8000"); // throws ...
 // }
 ```
 
-## ConnectionUnavailableError
+### ConnectionUnavailableError
 
 継承元: `SurrealError`
 
 これは未接続状態で RPC リクエストを送信しようとした場合に投げられるエラーです。
 
+#### プロパティー
+
 `.name: "ConnectionUnavailableError"`
 :   エラー名です。
 
-## ResponseError
+### ResponseError
 
 継承元: `SurrealError`
 
 これはレスポンスを PRC レスポンスとして解析できない場合に投げられるエラーです。`RpcResponseError` とは異なります。
 
+#### プロパティー
+
 `.name: "ResponseError"`
 :   エラー名です。
 
-## CborError
+#### 解決策
+
+通常このエラーが投げられることは無いはずですが、もし投げられた場合は、この SDK が対応している SurrelDB のバージョンと RPC をリクエストを処理する SurrealDB のバージョンが異なっている可能性があります。
+
+## CBOR
+
+### CborError
 
 継承元: `SurrealError`
 
 これは `@tai-kun/surrealdb/cbor` が明示的に投げる、CBOR に関連したすべてのエラーが継承するクラスです。これが直接投げられることはありません。
 
+#### プロパティー
+
 `.name: "CborError"`
 :   エラー名です。
 
-## CborWellFormednessError
+### CborWellFormednessError
 
 継承元: `CborError`
+
+#### プロパティー
 
 これは `@tai-kun/surrealdb/cbor` が明示的に投げる、CBOR のデコードに関連したすべてのエラーが継承するクラスです。これが直接投げられることはありません。
 
@@ -467,7 +615,7 @@ RFC8949 の付録 F にある「[Well-Formedness Errors and Examples](https://da
 `.name: "CborWellFormednessError"`
 :   エラー名です。
 
-## CborTooMuchDataError
+### CborTooMuchDataError
 
 継承元: `CborWellFormednessError`
 
@@ -475,10 +623,16 @@ RFC8949 の付録 F にある「[Well-Formedness Errors and Examples](https://da
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.2)
 
+#### プロパティー
+
 `.name: "CborTooMuchDataError"`
 :   エラー名です。
 
-## CborTooLittleDataError
+#### 解決策
+
+デコード対象のバイト配列が正しい CBOR の形式かどうか確認します。
+
+### CborTooLittleDataError
 
 継承元: `CborWellFormednessError`
 
@@ -486,10 +640,16 @@ RFC8949 の付録 F にある「[Well-Formedness Errors and Examples](https://da
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.4)
 
+#### プロパティー
+
 `.name: "CborTooLittleDataError"`
 :   エラー名です。
 
-## CborSyntaxError
+#### 解決策
+
+デコード対象のバイト配列が正しい CBOR の形式かどうか確認します。
+
+### CborSyntaxError
 
 継承元: `CborWellFormednessError`
 
@@ -497,14 +657,22 @@ RFC8949 の付録 F にある「[Well-Formedness Errors and Examples](https://da
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.6)
 
+#### プロパティー
+
 `.name: "CborSyntaxError"`
 :   エラー名です。
 
-## CborMaxDepthReachedError
+#### 解決策
+
+デコード対象のバイト配列が正しい CBOR の形式かどうか確認します。
+
+### CborMaxDepthReachedError
 
 継承元: `CborError`
 
 CBOR のエンコードまたはデコード時に JavaScript オブジェクトの深さが最大値に達した場合に投げられるエラーです。オブジェクトまたは配列に入る度に深さが 1 増加します。
+
+#### プロパティー
 
 `.name: "CborMaxDepthReachedError"`
 :   エラー名です。
@@ -512,13 +680,60 @@ CBOR のエンコードまたはデコード時に JavaScript オブジェクト
 `.maxDepth: number`
 :   最大深さです。
 
-## CborUnsafeMapKeyError
+#### 解決策
+
+オプションの `.maxDepth` の上限を緩和するか、オブジェクトのネストが浅くなるようにデータ構造を見直します。
+
+```ts
+import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
+
+const cborFormatter = new CborFormatter({
+  encode: {
+    maxDepth: 1024,
+  },
+  decode: {
+    maxDepth: 1024,
+  },
+  // ...
+})
+```
+
+### CborUnsafeMapKeyError
 
 継承元: `CborError`
 
 CBOR のエンコードまたはデコード時に安全ではないマップキーが見つかった場合に投げられるエラーです。
 
+#### プロパティー
+
 `.name: "CborUnsafeMapKeyError"`
+:   エラー名です。
+
+`.key: unknown`
+:   安全ではないと判定されたマップキーです。
+
+## JSON
+
+### JsonError
+
+継承元: `SurrealError`
+
+これは `@tai-kun/surrealdb/formatters/json` が明示的に投げる、JSON に関連したすべてのエラーが継承するクラスです。これが直接投げられることはありません。
+
+#### プロパティー
+
+`.name: "JsonError"`
+:   エラー名です。
+
+### JsonUnsafeMapKeyError
+
+継承元: `JsonError`
+
+JSON のデコード時に安全ではないマップキーが見つかった場合に投げられるエラーです。
+
+#### プロパティー
+
+`.name: "JsonUnsafeMapKeyError"`
 :   エラー名です。
 
 `.key: unknown`

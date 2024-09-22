@@ -8,6 +8,7 @@ import type {
   QueryResult,
   ReadonlyPatch,
   RecordAccessAuth,
+  RpcGraphqlRequest,
   RpcResultMapping,
   SlotLike,
 } from "@tai-kun/surrealdb/types";
@@ -75,6 +76,10 @@ export interface PatchOptions extends ClientRpcOptions {
 export interface RunOptions extends ClientRpcOptions {
   readonly version?: string | undefined;
 }
+
+export interface GraphqlOptions
+  extends ClientRpcOptions, NonNullable<RpcGraphqlRequest["params"][1]>
+{}
 
 type RecordData = {
   [p: string]: unknown;
@@ -729,6 +734,18 @@ export default class Client extends Base {
     const { version, ...rest } = opts || {};
 
     return await this.rpc("run", [funcName, version, args], rest);
+  }
+
+  /**
+   * @experimental
+   */
+  async graphql<TResult = unknown>(
+    query: string,
+    options: GraphqlOptions | undefined = {},
+  ): Promise<TResult> {
+    const { signal, ...gqlOptions } = options;
+
+    return await this.rpc("graphql", [query, gqlOptions], { signal });
   }
 
   async relate<

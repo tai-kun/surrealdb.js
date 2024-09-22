@@ -48,7 +48,7 @@ export type RpcResultMapping<TTypeMap extends TypeMap = TypeMap> = {
   delete: Arrayable<NormalRecord<TTypeMap>>;
   version: string;
   run: unknown;
-  // graphql: unknown;
+  graphql: unknown;
   relate: Arrayable<RelationRecord<TTypeMap>>;
 };
 

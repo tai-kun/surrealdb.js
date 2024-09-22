@@ -184,22 +184,25 @@ export type RpcRunRequest = {
   ];
 };
 
-// // https://surrealdb.com/docs/surrealdb/integration/rpc#graphql
-// export type RpcGraphqlRequest = {
-//   readonly method: "graphql";
-//   readonly params: readonly [
-//     query:
-//       | string
-//       | {
-//         readonly query: string;
-//         readonly vars?: { readonly [p: string]: unknown } | undefined;
-//         readonly variables?: { readonly [p: string]: unknown } | undefined;
-//         readonly operation?: { readonly [p: string]: unknown } | undefined;
-//         readonly operationName?: { readonly [p: string]: unknown } | undefined;
-//       },
-//     options?: {} | undefined,
-//   ];
-// };
+// https://surrealdb.com/docs/surrealdb/integration/rpc#graphql
+export type RpcGraphqlRequest = {
+  readonly method: "graphql";
+  readonly params: readonly [
+    query:
+      | string
+      | {
+        readonly query: string;
+        readonly vars?: { readonly [p: string]: unknown } | undefined;
+        readonly variables?: { readonly [p: string]: unknown } | undefined;
+        readonly operation?: { readonly [p: string]: unknown } | undefined;
+        readonly operationName?: { readonly [p: string]: unknown } | undefined;
+      },
+    options?: {
+      readonly pretty?: boolean | undefined;
+      readonly format?: "json" /* | "cbor" */ | undefined;
+    } | undefined,
+  ];
+};
 
 // https://surrealdb.com/docs/surrealdb/integration/rpc#relate
 export type RpcRelateRequest = {
@@ -236,7 +239,7 @@ export type RpcRequest =
   | RpcDeleteRequest
   | RpcVersionRequest
   | RpcRunRequest
-  // | RpcGraphqlRequest
+  | RpcGraphqlRequest
   | RpcRelateRequest;
 
 export type RpcMethod = RpcRequest["method"];

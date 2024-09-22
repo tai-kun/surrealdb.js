@@ -55,6 +55,7 @@ export type InlineRpcMethod =
   | "delete"
   | "info"
   | "insert"
+  | "insert_relation"
   | "invalidate"
   | "merge"
   | "patch"

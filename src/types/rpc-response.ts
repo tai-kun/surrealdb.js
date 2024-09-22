@@ -40,7 +40,7 @@ export type RpcResultMapping<TTypeMap extends TypeMap = TypeMap> = {
   select: Arrayable<NormalRecord<TTypeMap>>;
   create: Arrayable<NormalRecord<TTypeMap>>;
   insert: NormalRecord<TTypeMap>[];
-  // insert_relation: RelationRecord<TTypeMap>[];
+  insert_relation: RelationRecord<TTypeMap>[];
   update: Arrayable<NormalRecord<TTypeMap>>;
   upsert: Arrayable<NormalRecord<TTypeMap>>;
   merge: Arrayable<NormalRecord<TTypeMap>>;

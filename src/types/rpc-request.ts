@@ -113,17 +113,17 @@ export type RpcInsertRequest = {
   ];
 };
 
-// // https://surrealdb.com/docs/surrealdb/integration/rpc#insert_relation
-// export type RpcInsertRelationRequest = {
-//   readonly method: "insert_relation";
-//   readonly params: readonly [
-//     table: string | object | null | undefined,
-//     data?:
-//       | { readonly [p: string]: unknown }
-//       | readonly { readonly [p: string]: unknown }[]
-//       | undefined,
-//   ];
-// };
+// https://surrealdb.com/docs/surrealdb/integration/rpc#insert_relation
+export type RpcInsertRelationRequest = {
+  readonly method: "insert_relation";
+  readonly params: readonly [
+    table: string | object | null | undefined,
+    data?:
+      | { readonly [p: string]: unknown }
+      | readonly { readonly [p: string]: unknown }[]
+      | undefined,
+  ];
+};
 
 // https://surrealdb.com/docs/surrealdb/integration/rpc#update
 export type RpcUpdateRequest = {
@@ -228,7 +228,7 @@ export type RpcRequest =
   | RpcSelectRequest
   | RpcCreateRequest
   | RpcInsertRequest
-  // | RpcInsertRelationRequest
+  | RpcInsertRelationRequest
   | RpcUpdateRequest
   | RpcUpsertRequest
   | RpcMergeRequest

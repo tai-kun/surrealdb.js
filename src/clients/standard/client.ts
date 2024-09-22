@@ -56,6 +56,18 @@ export type ActionResult<
   ? ({ id: DataType.Thing | string } & TData)
   : TData;
 
+type _In<T> = [Extract<keyof T, "in">] extends [never]
+  ? ({ in: DataType.Thing | string } & T)
+  : T;
+
+type _Out<T> = [Extract<keyof T, "out">] extends [never]
+  ? ({ out: DataType.Thing | string } & T)
+  : T;
+
+export type RelateResult<
+  TData extends Readonly<RecordData> = RecordData,
+> = ActionResult<_In<_Out<TData>>>;
+
 export interface PatchOptions extends ClientRpcOptions {
   readonly diff?: boolean | undefined;
 }
@@ -71,16 +83,7 @@ type RecordData = {
 // DEFINE TABLE ... TYPE NORMAL
 type NormalRecord = {
   id: DataType.Thing | string;
-  // Readonly<RecordData>
-  [p: string]: unknown;
-};
-
-// DEFINE TABLE ... TYPE RELATION
-type RelationRecord = {
-  in: string | object;
-  out: string | object;
-  // NormalRecord
-  id: string | object;
+  // RecordData
   [p: string]: unknown;
 };
 
@@ -492,6 +495,63 @@ export default class Client extends Base {
     return await this.rpc("insert", [table, data], options);
   }
 
+  async insert_relation<
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
+  >(
+    table: DataType.Table | string,
+    data?: TData | readonly TData[] | undefined,
+    options?: ClientRpcOptions | undefined,
+  ): Promise<RelateResult<TResult>[]>;
+
+  async insert_relation<
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<NormalRecord> = (
+      TResult extends { readonly id: any } ? TResult
+        : ({ id: DataType.Thing | string } & TResult)
+    ),
+  >(
+    table: DataType.Table | string | null | undefined,
+    data?: TData | readonly TData[] | undefined,
+    options?: ClientRpcOptions | undefined,
+  ): Promise<RelateResult<TResult>[]>;
+
+  async insert_relation<
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<NormalRecord> = (
+      TResult extends { readonly id: any } ? TResult
+        : ({ id: DataType.Thing | string } & TResult)
+    ),
+  >(
+    data: TData | readonly TData[],
+    options?: ClientRpcOptions | undefined,
+  ): Promise<RelateResult<TResult>[]>;
+
+  async insert_relation(
+    ...args:
+      | [
+        table: DataType.Table | string | null | undefined,
+        data?:
+          | Readonly<RecordData>
+          | readonly Readonly<RecordData>[]
+          | undefined,
+        options?: ClientRpcOptions | undefined,
+      ]
+      | [
+        data: Readonly<NormalRecord> | readonly Readonly<NormalRecord>[],
+        options?: ClientRpcOptions | undefined,
+      ]
+  ) {
+    const [table, data, options]: [any?, any?, any?] =
+      isDataTypeOf<DataType.Table>(args[0], "table")
+        || typeof args[0] === "string"
+        || typeof args[0] == null
+        ? args
+        : [null, args[0], args[1]];
+
+    return await this.rpc("insert_relation", [table, data], options);
+  }
+
   async update<
     TResult extends Readonly<RecordData> = RecordData,
     TData extends Readonly<RecordData> = TResult,
@@ -680,7 +740,7 @@ export default class Client extends Base {
     to: DataType.Thing | string | readonly (DataType.Thing | string)[],
     data?: TData | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<TResult[]>;
+  ): Promise<RelateResult<TResult>[]>;
 
   async relate<
     TResult extends Readonly<RecordData> = RecordData,
@@ -691,7 +751,7 @@ export default class Client extends Base {
     to: DataType.Thing | string | readonly (DataType.Thing | string)[],
     data?: TData | undefined,
     options?: ClientRpcOptions | undefined,
-  ): Promise<TResult>;
+  ): Promise<RelateResult<TResult>>;
 
   async relate(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],

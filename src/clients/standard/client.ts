@@ -24,11 +24,12 @@ type Override<T, U> = Simplify<Omit<T, keyof U> & U>;
 export type InferSlotVars<TSlot extends SlotLike> = UnionToIntersection<
   // dprint-ignore
   {
-    [TName in TSlot["name"]]: TSlot extends SlotLike<TName, infer TRequired, infer TValue>
-      ? TRequired extends false
-      ? { readonly [_ in TName]?: TValue }
-      : { readonly [_ in TName]:  TValue } // boolean の場合も必須で。
-      : never;
+    [TName in TSlot["name"]]:
+      TSlot extends SlotLike<TName, infer TRequired, infer TValue>
+        ? TRequired extends false
+        ? { readonly [_ in TName]?: TValue }
+        : { readonly [_ in TName]:  TValue } // boolean の場合も必須で。
+        : never;
   }[TSlot["name"]]
 >;
 
@@ -301,7 +302,7 @@ export default class Client extends Base {
    */
   async query<TResult>(
     surql: Override<PreparedQueryLike, {
-      readonly slots: readonly (never | SlotLike<string, false>)[];
+      readonly slots: readonly SlotLike<any, false, any>[];
       readonly __type: TResult;
     }>,
     vars?: { readonly [p: string]: unknown } | undefined,
@@ -316,7 +317,7 @@ export default class Client extends Base {
       readonly slots: readonly TSlot[];
       readonly __type: TResult;
     }>,
-    vars: Simplify<InferSlotVars<TSlot> & { readonly [p: string]: unknown }>,
+    vars: Simplify<InferSlotVars<TSlot>> & { readonly [p: string]: unknown },
     options?: ClientRpcOptions | undefined,
   ): Promise<TResult>;
 

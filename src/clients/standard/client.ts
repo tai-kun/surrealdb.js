@@ -11,7 +11,7 @@ import type {
   RpcResultMapping,
   SlotLike,
 } from "@tai-kun/surrealdb/types";
-import type { TaskListener } from "@tai-kun/surrealdb/utils";
+import { isDataTypeOf, type TaskListener } from "@tai-kun/surrealdb/utils";
 import type { Simplify, UnionToIntersection } from "type-fest";
 import type { DataType } from "../../surreal/data-types";
 import Jwt from "./jwt";
@@ -45,15 +45,15 @@ export type InferLivePayload<
   TData extends RecordData = { [p: string]: unknown },
   TPatch extends Patch[] = Patch[],
 > = TUuid extends { __diff: false }
-  ? LivePayload.Data<TData, string | DataType.Thing>
+  ? LivePayload.Data<TData, DataType.Thing | string>
   : TUuid extends { __diff: true }
-    ? LivePayload.Diff<TData, TPatch, string | DataType.Thing>
+    ? LivePayload.Diff<TData, TPatch, DataType.Thing | string>
   : LivePayload<TData, TPatch>;
 
 export type ActionResult<
   TData extends RecordData = { [p: string]: unknown },
 > = [Extract<keyof TData, "id">] extends [never]
-  ? ({ id: string | DataType.Thing } & TData)
+  ? ({ id: DataType.Thing | string } & TData)
   : TData;
 
 export interface PatchOptions extends ClientRpcOptions {
@@ -70,7 +70,7 @@ type RecordData = {
 
 // DEFINE TABLE ... TYPE NORMAL
 type NormalRecord = {
-  readonly id: string | object;
+  readonly id: DataType.Thing | string;
   // RecordData
   readonly [p: string]: unknown;
 };
@@ -385,14 +385,14 @@ export default class Client extends Base {
   }
 
   async select<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
   >(
     table: DataType.Table | string,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<TResult>[]>;
 
   async select<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
   >(
     thing: DataType.Thing,
     options?: ClientRpcOptions | undefined,
@@ -408,7 +408,7 @@ export default class Client extends Base {
   }
 
   async create<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     table: DataType.Table | string,
@@ -417,7 +417,7 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>>;
 
   async create<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     thing: DataType.Thing,
@@ -436,7 +436,7 @@ export default class Client extends Base {
   }
 
   async insert<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     table: DataType.Table | string,
@@ -444,19 +444,53 @@ export default class Client extends Base {
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<TResult>[]>;
 
-  async insert(
-    target: DataType.Table | string,
-    data?:
-      | RecordData
-      | readonly RecordData[]
-      | undefined,
+  async insert<
+    TResult extends RecordData = { [p: string]: unknown },
+    TData extends NormalRecord = (
+      TResult extends { readonly id: any } ? TResult
+        : ({ id: DataType.Thing | string } & TResult)
+    ),
+  >(
+    table: DataType.Table | string | null | undefined,
+    data?: TData | readonly TData[] | undefined,
     options?: ClientRpcOptions | undefined,
+  ): Promise<ActionResult<TResult>[]>;
+
+  async insert<
+    TResult extends RecordData = { [p: string]: unknown },
+    TData extends NormalRecord = (
+      TResult extends { readonly id: any } ? TResult
+        : ({ id: DataType.Thing | string } & TResult)
+    ),
+  >(
+    data: TData | readonly TData[],
+    options?: ClientRpcOptions | undefined,
+  ): Promise<ActionResult<TResult>[]>;
+
+  async insert(
+    ...args:
+      | [
+        table: DataType.Table | string | null | undefined,
+        data?: RecordData | readonly RecordData[] | undefined,
+        options?: ClientRpcOptions | undefined,
+      ]
+      | [
+        data: NormalRecord | readonly NormalRecord[],
+        options?: ClientRpcOptions | undefined,
+      ]
   ) {
-    return await this.rpc("insert", [target, data], options);
+    const [table, data, options]: [any?, any?, any?] =
+      isDataTypeOf<DataType.Table>(args[0], "table")
+        || typeof args[0] === "string"
+        || typeof args[0] == null
+        ? args
+        : [null, args[0], args[1]];
+
+    return await this.rpc("insert", [table, data], options);
   }
 
   async update<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     table: DataType.Table | string,
@@ -465,7 +499,7 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async update<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     thing: DataType.Thing,
@@ -484,7 +518,7 @@ export default class Client extends Base {
   }
 
   async upsert<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     table: DataType.Table | string,
@@ -493,7 +527,7 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async upsert<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     thing: DataType.Thing,
@@ -512,7 +546,7 @@ export default class Client extends Base {
   }
 
   async merge<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     table: DataType.Table | string,
@@ -521,7 +555,7 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async merge<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     thing: DataType.Thing,
@@ -540,7 +574,7 @@ export default class Client extends Base {
   }
 
   async patch<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
   >(
     table: DataType.Table | string,
     patches: readonly ReadonlyPatch[],
@@ -550,7 +584,7 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async patch<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
   >(
     thing: DataType.Thing,
     patches: readonly ReadonlyPatch[],
@@ -584,14 +618,14 @@ export default class Client extends Base {
   }
 
   async delete<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
   >(
     table: DataType.Table | string,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<TResult>[]>;
 
   async delete<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
   >(
     thing: DataType.Thing,
     options?: ClientRpcOptions | undefined,
@@ -635,7 +669,7 @@ export default class Client extends Base {
   }
 
   async relate<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],
@@ -646,7 +680,7 @@ export default class Client extends Base {
   ): Promise<TResult[]>;
 
   async relate<
-    TResult extends RecordData = RecordData,
+    TResult extends RecordData = { [p: string]: unknown },
     TData extends RecordData = TResult,
   >(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],

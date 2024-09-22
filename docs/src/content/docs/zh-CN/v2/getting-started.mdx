@@ -1,5 +1,5 @@
 ---
-title: 开始使用
+title: 入门
 slug: zh-CN/v2/getting-started
 ---
 
@@ -10,33 +10,33 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 <Tabs>
   <TabItem label="npm">
     ```bash
-    npm install @tai-kun/surrealdb@alpha
+    npm install @tai-kun/surrealdb@beta
     ```
   </TabItem>
   <TabItem label="yarn">
     ```bash
-    yarn add @tai-kun/surrealdb@alpha
+    yarn add @tai-kun/surrealdb@beta
     ```
   </TabItem>
   <TabItem label="pnpm">
     ```bash
-    pnpm add @tai-kun/surrealdb@alpha
+    pnpm add @tai-kun/surrealdb@beta
     ```
   </TabItem>
   <TabItem label="bun">
     ```bash
-    bun add @tai-kun/surrealdb@alpha
+    bun add @tai-kun/surrealdb@beta
     ```
   </TabItem>
 </Tabs>
 
-## 开始使用
+## 使用示例
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
 
 const db = new Surreal();
-await db.connect("<your_surrealdb_server>"); // 例如：ws://localhost:8000
+await db.connect("<your_surrealdb_server>"); // 例如 ws://localhost:8000
 
 try {
   await db.signin({ user: "root", pass: "root" });

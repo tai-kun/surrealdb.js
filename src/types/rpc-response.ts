@@ -4,35 +4,52 @@ import type { RpcMethod } from "./rpc-request";
 
 type Arrayable<TResult> = TResult | TResult[];
 
-type TableRecord = {
-  id: string | object;
+type TypeMap = Record<
+  | "Uuid"
+  | "Thing",
+  object
+>;
+
+// DEFINE TABLE ... TYPE NORMAL
+type NormalRecord<TTypeMap extends TypeMap> = {
+  id: string | TTypeMap["Thing"];
   [p: string]: unknown;
 };
 
-export type RpcResultMapping = {
+// DEFINE TABLE ... TYPE RELATION
+type RelationRecord<TTypeMap extends TypeMap> = {
+  id: string | TTypeMap["Thing"];
+  in: string | TTypeMap["Thing"];
+  out: string | TTypeMap["Thing"];
+  [p: string]: unknown;
+};
+
+export type RpcResultMapping<TTypeMap extends TypeMap = TypeMap> = {
   ping: void;
   use: void;
-  info: TableRecord | null | undefined; // JSON: null, CBOR: undefined
+  info: NormalRecord<TTypeMap> | null | undefined; // JSON: null, CBOR: undefined
   signup: string;
   signin: string;
   authenticate: void;
   invalidate: void;
   let: void;
   unset: void;
-  live: string | object;
+  live: string | TTypeMap["Uuid"];
   kill: void;
   query: QueryResult[];
-  select: Arrayable<TableRecord>;
-  create: Arrayable<TableRecord>;
-  insert: TableRecord[];
-  update: Arrayable<TableRecord>;
-  upsert: Arrayable<TableRecord>;
-  merge: Arrayable<TableRecord>;
-  patch: Arrayable<TableRecord> | Arrayable<Patch>[];
-  delete: Arrayable<TableRecord>;
+  select: Arrayable<NormalRecord<TTypeMap>>;
+  create: Arrayable<NormalRecord<TTypeMap>>;
+  insert: NormalRecord<TTypeMap>[];
+  // insert_relation: RelationRecord<TTypeMap>[];
+  update: Arrayable<NormalRecord<TTypeMap>>;
+  upsert: Arrayable<NormalRecord<TTypeMap>>;
+  merge: Arrayable<NormalRecord<TTypeMap>>;
+  patch: Arrayable<NormalRecord<TTypeMap>> | Arrayable<Patch>[];
+  delete: Arrayable<NormalRecord<TTypeMap>>;
   version: string;
   run: unknown;
-  relate: Arrayable<TableRecord>;
+  // graphql: unknown;
+  relate: Arrayable<RelationRecord<TTypeMap>>;
 };
 
 export type RpcResult<TMethod extends RpcMethod = RpcMethod> =

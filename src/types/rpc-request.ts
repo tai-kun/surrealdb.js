@@ -105,7 +105,7 @@ export type RpcCreateRequest = {
 export type RpcInsertRequest = {
   readonly method: "insert";
   readonly params: readonly [
-    thing: string | object,
+    table: string | object | null | undefined,
     data?:
       | { readonly [p: string]: unknown }
       | readonly { readonly [p: string]: unknown }[]

@@ -42,7 +42,7 @@ export type LiveHandler<TPayload extends LivePayload<any, any> = LivePayload> =
 
 export type InferLivePayload<
   TUuid,
-  TData extends RecordData = { [p: string]: unknown },
+  TData extends Readonly<RecordData> = RecordData,
   TPatch extends Patch[] = Patch[],
 > = TUuid extends { __diff: false }
   ? LivePayload.Data<TData, DataType.Thing | string>
@@ -51,7 +51,7 @@ export type InferLivePayload<
   : LivePayload<TData, TPatch>;
 
 export type ActionResult<
-  TData extends RecordData = { [p: string]: unknown },
+  TData extends Readonly<RecordData> = RecordData,
 > = [Extract<keyof TData, "id">] extends [never]
   ? ({ id: DataType.Thing | string } & TData)
   : TData;
@@ -65,23 +65,23 @@ export interface RunOptions extends ClientRpcOptions {
 }
 
 type RecordData = {
-  readonly [p: string]: unknown;
+  [p: string]: unknown;
 };
 
 // DEFINE TABLE ... TYPE NORMAL
 type NormalRecord = {
-  readonly id: DataType.Thing | string;
-  // RecordData
-  readonly [p: string]: unknown;
+  id: DataType.Thing | string;
+  // Readonly<RecordData>
+  [p: string]: unknown;
 };
 
 // DEFINE TABLE ... TYPE RELATION
 type RelationRecord = {
-  readonly in: string | object;
-  readonly out: string | object;
+  in: string | object;
+  out: string | object;
   // NormalRecord
-  readonly id: string | object;
-  readonly [p: string]: unknown;
+  id: string | object;
+  [p: string]: unknown;
 };
 
 export default class Client extends Base {
@@ -296,7 +296,7 @@ export default class Client extends Base {
    */
   async queryRaw<TResults extends readonly QueryResult[] = QueryResult[]>(
     surql: string | PreparedQueryLike,
-    vars?: RecordData | undefined,
+    vars?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<TResults> {
     const results: readonly QueryResult[] = await this.rpc(
@@ -313,7 +313,7 @@ export default class Client extends Base {
    */
   async query<TReturns extends readonly unknown[] = unknown[]>(
     surql: string,
-    vars?: RecordData | undefined,
+    vars?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<TReturns>;
 
@@ -325,7 +325,7 @@ export default class Client extends Base {
       readonly slots: readonly SlotLike<any, false, any>[];
       readonly __type: TResult;
     }>,
-    vars?: RecordData | undefined,
+    vars?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<TResult>;
 
@@ -337,13 +337,13 @@ export default class Client extends Base {
       readonly slots: readonly TSlot[];
       readonly __type: TResult;
     }>,
-    vars: Simplify<InferSlotVars<TSlot>> & RecordData,
+    vars: Simplify<InferSlotVars<TSlot>> & Readonly<RecordData>,
     options?: ClientRpcOptions | undefined,
   ): Promise<TResult>;
 
   async query(
     surql: string | PreparedQueryLike,
-    vars?: RecordData | undefined,
+    vars?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ): Promise<unknown> {
     const results = await this.queryRaw(surql, vars, options);
@@ -385,14 +385,14 @@ export default class Client extends Base {
   }
 
   async select<
-    TResult extends RecordData = { [p: string]: unknown },
+    TResult extends Readonly<RecordData> = RecordData,
   >(
     table: DataType.Table | string,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<TResult>[]>;
 
   async select<
-    TResult extends RecordData = { [p: string]: unknown },
+    TResult extends Readonly<RecordData> = RecordData,
   >(
     thing: DataType.Thing,
     options?: ClientRpcOptions | undefined,
@@ -408,8 +408,8 @@ export default class Client extends Base {
   }
 
   async create<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     table: DataType.Table | string,
     data?: TData | undefined,
@@ -417,8 +417,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>>;
 
   async create<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     thing: DataType.Thing,
     data?: TData | undefined,
@@ -429,15 +429,15 @@ export default class Client extends Base {
     target:
       | (DataType.Table | string)
       | DataType.Thing,
-    data?: RecordData | undefined,
+    data?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("create", [target, data], options);
   }
 
   async insert<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     table: DataType.Table | string,
     data?: TData | readonly TData[] | undefined,
@@ -445,8 +445,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async insert<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends NormalRecord = (
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<NormalRecord> = (
       TResult extends { readonly id: any } ? TResult
         : ({ id: DataType.Thing | string } & TResult)
     ),
@@ -457,8 +457,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async insert<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends NormalRecord = (
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<NormalRecord> = (
       TResult extends { readonly id: any } ? TResult
         : ({ id: DataType.Thing | string } & TResult)
     ),
@@ -471,11 +471,14 @@ export default class Client extends Base {
     ...args:
       | [
         table: DataType.Table | string | null | undefined,
-        data?: RecordData | readonly RecordData[] | undefined,
+        data?:
+          | Readonly<RecordData>
+          | readonly Readonly<RecordData>[]
+          | undefined,
         options?: ClientRpcOptions | undefined,
       ]
       | [
-        data: NormalRecord | readonly NormalRecord[],
+        data: Readonly<NormalRecord> | readonly Readonly<NormalRecord>[],
         options?: ClientRpcOptions | undefined,
       ]
   ) {
@@ -490,8 +493,8 @@ export default class Client extends Base {
   }
 
   async update<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     table: DataType.Table | string,
     data?: TData | undefined,
@@ -499,8 +502,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async update<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     thing: DataType.Thing,
     data?: TData | undefined,
@@ -511,15 +514,15 @@ export default class Client extends Base {
     target:
       | (DataType.Table | string)
       | DataType.Thing,
-    data?: RecordData | undefined,
+    data?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("update", [target, data], options);
   }
 
   async upsert<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     table: DataType.Table | string,
     data?: TData | undefined,
@@ -527,8 +530,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async upsert<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     thing: DataType.Thing,
     data?: TData | undefined,
@@ -539,15 +542,15 @@ export default class Client extends Base {
     target:
       | (DataType.Table | string)
       | DataType.Thing,
-    data?: RecordData | undefined,
+    data?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("upsert", [target, data], options);
   }
 
   async merge<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     table: DataType.Table | string,
     data: TData,
@@ -555,8 +558,8 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async merge<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     thing: DataType.Thing,
     data: TData,
@@ -567,14 +570,14 @@ export default class Client extends Base {
     target:
       | (DataType.Table | string)
       | DataType.Thing,
-    data: RecordData,
+    data: Readonly<RecordData>,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("merge", [target, data], options);
   }
 
   async patch<
-    TResult extends RecordData = { [p: string]: unknown },
+    TResult extends Readonly<RecordData> = RecordData,
   >(
     table: DataType.Table | string,
     patches: readonly ReadonlyPatch[],
@@ -584,7 +587,7 @@ export default class Client extends Base {
   ): Promise<ActionResult<TResult>[]>;
 
   async patch<
-    TResult extends RecordData = { [p: string]: unknown },
+    TResult extends Readonly<RecordData> = RecordData,
   >(
     thing: DataType.Thing,
     patches: readonly ReadonlyPatch[],
@@ -618,14 +621,14 @@ export default class Client extends Base {
   }
 
   async delete<
-    TResult extends RecordData = { [p: string]: unknown },
+    TResult extends Readonly<RecordData> = RecordData,
   >(
     table: DataType.Table | string,
     options?: ClientRpcOptions | undefined,
   ): Promise<ActionResult<TResult>[]>;
 
   async delete<
-    TResult extends RecordData = { [p: string]: unknown },
+    TResult extends Readonly<RecordData> = RecordData,
   >(
     thing: DataType.Thing,
     options?: ClientRpcOptions | undefined,
@@ -669,8 +672,8 @@ export default class Client extends Base {
   }
 
   async relate<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],
     thing: string,
@@ -680,8 +683,8 @@ export default class Client extends Base {
   ): Promise<TResult[]>;
 
   async relate<
-    TResult extends RecordData = { [p: string]: unknown },
-    TData extends RecordData = TResult,
+    TResult extends Readonly<RecordData> = RecordData,
+    TData extends Readonly<RecordData> = TResult,
   >(
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],
     thing: DataType.Thing,
@@ -694,7 +697,7 @@ export default class Client extends Base {
     from: DataType.Thing | string | readonly (DataType.Thing | string)[],
     thing: DataType.Thing | string,
     to: DataType.Thing | string | readonly (DataType.Thing | string)[],
-    data?: RecordData | undefined,
+    data?: Readonly<RecordData> | undefined,
     options?: ClientRpcOptions | undefined,
   ) {
     return await this.rpc("relate", [from, thing, to, data], options);

@@ -24,7 +24,11 @@ Bun.serve({
               ...["--user", "root"],
               ...["--pass", "root"],
               // ...["--strict"],
-            ]);
+            ], {
+              env: {
+                SURREAL_EXPERIMENTAL_GRAPHQL: "true",
+              },
+            });
             procMap.set(port, proc);
 
             return new Response(port.toString(10));

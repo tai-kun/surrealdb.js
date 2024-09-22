@@ -194,8 +194,8 @@ export type RpcGraphqlRequest = {
         readonly query: string;
         readonly vars?: { readonly [p: string]: unknown } | undefined;
         readonly variables?: { readonly [p: string]: unknown } | undefined;
-        readonly operation?: { readonly [p: string]: unknown } | undefined;
-        readonly operationName?: { readonly [p: string]: unknown } | undefined;
+        readonly operation?: string | undefined;
+        readonly operationName?: string | undefined;
       },
     options?: {
       readonly pretty?: boolean | undefined;

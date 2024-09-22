@@ -739,10 +739,28 @@ export default class Client extends Base {
   /**
    * @experimental
    */
-  async graphql<TResult = unknown>(
-    query: string,
+  async graphql(
+    // `vars` of `variables`
+    // `operation` or `operationName`
+    query: string | {
+      readonly query: string;
+      readonly vars?: Readonly<RecordData> | undefined;
+      readonly operation?: string | undefined;
+    } | {
+      readonly query: string;
+      readonly vars?: Readonly<RecordData> | undefined;
+      readonly operationName?: string | undefined;
+    } | {
+      readonly query: string;
+      readonly variables?: Readonly<RecordData> | undefined;
+      readonly operation?: string | undefined;
+    } | {
+      readonly query: string;
+      readonly variables?: Readonly<RecordData> | undefined;
+      readonly operationName?: string | undefined;
+    },
     options: GraphqlOptions | undefined = {},
-  ): Promise<TResult> {
+  ): Promise<string> {
     const { signal, ...gqlOptions } = options;
 
     return await this.rpc("graphql", [query, gqlOptions], { signal });

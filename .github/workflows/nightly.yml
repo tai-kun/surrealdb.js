@@ -2,7 +2,9 @@ name: Nightly tests
 
 on:
   schedule:
-    - cron: "0 9 * * *"
+    # surrealdb/surrealdb の nightly リリースの 2　時間後。
+    # ビルドには概ね 30 ~ 40 分かかるようなので、長めに見積もる。
+    - cron: "0 2 * * *"
 
 jobs:
   nodejs:

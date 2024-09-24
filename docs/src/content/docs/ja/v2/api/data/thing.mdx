@@ -20,8 +20,8 @@ import { Thing } from "@tai-kun/surrealdb/data-types/standard";
 新しい `Thing` オブジェクトを作成します。
 
 ```ts
-new Thing(source: [tb: string, id: string | number | bigint | object]);
-new Thing(tb: string, id: string | number | bigint | object);
+new Thing(source: [table: string, id: string | number | bigint | object]);
+new Thing(table: string, id: string | number | bigint | object);
 ```
 
 #### 引数
@@ -30,7 +30,7 @@ new Thing(tb: string, id: string | number | bigint | object);
 
 レコード ID のテーブル部と ID 部のペアです。
 
-##### `tb`
+##### `table`
 
 レコード ID のテーブル部です。
 
@@ -42,12 +42,12 @@ new Thing(tb: string, id: string | number | bigint | object);
 
 `new` を通じて呼び出された場合、`Thing` はそのインスタンスを返します。
 
-### `.tb` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+### `.table` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
 レコード ID のテーブル部です。このプロパティーを取得する場合、文字列はエスケープされません。
 
 ```ts
-.tb: string;
+.table: string;
 ```
 
 #### 例
@@ -154,7 +154,7 @@ import { Thing, Uuid } from "@tai-kun/surrealdb/data-types/standard";
 
 function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
   return thing instanceof Thing
-    && thing.tb === "user"
+    && thing.table === "user"
     && thing.id instanceof Uuid
 }
 ```

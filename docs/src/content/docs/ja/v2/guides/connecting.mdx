@@ -267,10 +267,10 @@ off(
 
 `live_${string}`
 :   通常モードのライブクエリー:
-:   - `{ action: "CREATE" | "UPDATE" | "DELETE", result: object }`
+:   - `{ action: "CREATE" | "UPDATE" | "DELETE", result: object, record: string | object }`
 :   差分取得モードのライブクエリー:
-:   - `{ action: "CREATE" | "UPDATE", result: object[] }`
-    - `{ action: "DELETE", result: object }`
+:   - `{ action: "CREATE" | "UPDATE", result: object[], record: string | object }`
+    - `{ action: "DELETE", result: object, record: string | object }`
 
 `error`
 :   次のいずれかです:

@@ -17,20 +17,20 @@ import { Thing } from "@tai-kun/surrealdb/data-types/standard";
 
 ### `.constructor()`
 
-새로운 `Thing` 객체를 생성합니다.
+새로운 `Thing` 객체를 만듭니다.
 
 ```ts
-new Thing(source: [tb: string, id: string | number | bigint | object]);
-new Thing(tb: string, id: string | number | bigint | object);
+new Thing(source: [table: string, id: string | number | bigint | object]);
+new Thing(table: string, id: string | number | bigint | object);
 ```
 
 #### 인수
 
 ##### `source`
 
-레코드 ID의 테이블 부분과 ID 부분 쌍입니다.
+레코드 ID의 테이블 부분과 ID 부분의 쌍입니다.
 
-##### `tb`
+##### `table`
 
 레코드 ID의 테이블 부분입니다.
 
@@ -38,21 +38,21 @@ new Thing(tb: string, id: string | number | bigint | object);
 
 레코드 ID의 ID 부분입니다.
 
-#### 반환값
+#### 반환 값
 
-`new`를 통해 호출될 경우, `Thing`은 자신의 인스턴스를 반환합니다.
+`new`를 통해 호출되는 경우 `Thing`은 해당 인스턴스를 반환합니다.
 
-### `.tb` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
+### `.table` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-레코드 ID의 테이블 부분입니다. 이 프로퍼티를 가져올 경우, 문자열은 이스케이프되지 않습니다.
+레코드 ID의 테이블 부분입니다. 이 프로퍼티를 가져올 때 문자열은 이스케이프되지 않습니다.
 
 ```ts
-.tb: string;
+.table: string;
 ```
 
 #### 예
 
-이 프로퍼티를 가져올 경우, 문자열은 이스케이프되지 않습니다.
+이 프로퍼티를 가져올 때 문자열은 이스케이프되지 않습니다.
 
 ```ts
 import { Thing } from "@tai-kun/surrealdb/data-types/decode-only";
@@ -72,7 +72,7 @@ console.log(this.id);
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-`Thing` 객체를 SurrealQL의 변수로 사용 가능한 문자열로 변환합니다. 테이블 이름과 ID 부분은 각각 SurrealDB 구현과 동일하게 이스케이프 및 포맷됩니다. 또한 객체의 프로퍼티는 오름차순으로 정렬됩니다.
+`Thing` 객체를 SurrealQL의 변수로 사용할 수 있는 문자열로 변환합니다. 테이블 이름과 ID 부분은 각각 SurrealDB 구현과 동일하게 이스케이프되고 포맷됩니다. 또한 객체의 프로퍼티는 오름차순으로 정렬됩니다.
 
 `.valueOf()`와 `.toJSON()`은 이 메서드와 동일한 결과를 반환합니다.
 
@@ -84,7 +84,7 @@ console.log(this.id);
 
 없음.
 
-#### 반환값
+#### 반환 값
 
 레코드 ID로 포맷된 문자열을 반환합니다.
 
@@ -103,7 +103,7 @@ console.log(thing.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-`Thing` 객체를 SurrealQL에 삽입 가능한 문자열로 변환합니다. `.toString()`과 유사하지만, `r` 접두사를 추가하여 쿼리 파서에 문자열이 레코드 ID임을 알립니다.
+`Thing` 객체를 SurrealQL에 삽입할 수 있는 문자열로 변환합니다. `.toString()`과 비슷하지만 `r` 접두사를 추가하여 쿼리 파서에 문자열이 레코드 ID임을 알립니다.
 
 ```ts
 .toSurql(): string;
@@ -113,7 +113,7 @@ console.log(thing.toString());
 
 없음.
 
-#### 반환값
+#### 반환 값
 
 레코드 ID로 포맷된 문자열을 반환합니다.
 
@@ -129,7 +129,7 @@ console.log(thing.toSurql());
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-`Thing` 객체를 복제합니다. 단, ID 부분은 복제되지 않고 참조됩니다.
+`Thing` 객체를 복제합니다. 단 ID 부분은 복제되지 않고 참조됩니다.
 
 ```ts
 .clone(): this;
@@ -139,29 +139,29 @@ console.log(thing.toSurql());
 
 없음.
 
-#### 반환값
+#### 반환 값
 
-새로운 `Thing` 객체를 반환합니다. `Thing` 클래스를 상속하는 경우, 해당 클래스의 인스턴스가 반환됩니다.
+새로운 `Thing` 객체를 반환합니다. `Thing` 클래스를 상속하고 있는 경우 해당 클래스의 인스턴스를 반환합니다.
 
-### 발전
+### 개발
 
-#### 형식 가드
+#### 타입 가드
 
-`Thing`의 테이블 부분과 ID 부분을 각각 형식 매개 변수를 사용하여 형식 안전하게 만들 수 있습니다:
+`Thing`의 테이블 부분과 ID 부분을 각각 타입 매개변수를 사용하여 타입 안전하게 할 수 있습니다:
 
 ```ts
 import { Thing, Uuid } from "@tai-kun/surrealdb/data-types/standard";
 
 function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
   return thing instanceof Thing
-    && thing.tb === "user"
+    && thing.table === "user"
     && thing.id instanceof Uuid
 }
 ```
 
-#### `Thing` 객체의 범용적인 판정
+#### `Thing` 객체의 범용적인 판단
 
-프리셋에 의존하지 않고 값이 `Thing` 객체인지 판정하려면 `isThing` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로, 검증할 값의 프리셋이 불분명한 경우에 유용합니다.
+프리셋에 의존하지 않고 값이 `Thing` 객체인지 판단하려면 `isThing` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로 검증할 값의 프리셋이 불명확한 경우에 유용합니다.
 
 ```ts
 import { isThing } from "@tai-kun/surrealdb";

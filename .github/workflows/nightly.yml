@@ -5,9 +5,10 @@ on:
     # surrealdb/surrealdb の nightly リリースの 2　時間後。
     # ビルドには概ね 30 ~ 40 分かかるようなので、長めに見積もる。
     - cron: "0 2 * * *"
+  workflow_dispatch:
 
 jobs:
-  nodejs:
+  server:
     name: Server (node@${{ matrix.nodejs-version }}, surrealdb@${{ matrix.surrealdb-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -46,7 +47,7 @@ jobs:
         run: cat /tmp/logs
         if: always()
 
-  chromium:
+  browser:
     name: Browser (playwright@${{ matrix.playwright-version }}, surrealdb@${{ matrix.surrealdb-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 30

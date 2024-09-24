@@ -198,7 +198,7 @@ describe("isSafeObjectKey", () => {
     const run = () => {
       encode(
         {
-          "constructor": 0,
+          "constructor": Object,
         },
       );
     };

@@ -1,5 +1,26 @@
 # Changelog
 
+## [2.0.0-beta.2](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-09-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **data-types:** `tb` を `table` に改名
+
+### Changes
+
+* **data-types:** `tb` を `table` に改名 ([72809e0](https://github.com/tai-kun/surrealdb.js/commit/72809e01170d54c4d8a6a009876f5e67f7e30e6d))
+
+
+### Features
+
+* **data-types:** `Bound` に型パラメーターを追加する ([853a5fc](https://github.com/tai-kun/surrealdb.js/commit/853a5fce5e399821bbdbfc03c2da36b722d421c4))
+
+
+### Bug Fixes
+
+* **utils:** プレーンオブジェクトの判定をより厳格に行う ([28846ca](https://github.com/tai-kun/surrealdb.js/commit/28846ca1a05e48300b6a6557c6104b515abc4e18))
+
 ## [2.0.0-beta.1](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2024-09-22)
 
 

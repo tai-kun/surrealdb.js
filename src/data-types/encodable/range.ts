@@ -1,6 +1,6 @@
 import { RangeBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { isBoundExcluded, isBoundIncluded } from "@tai-kun/surrealdb/utils";
-import { SurrealTypeError } from "src/errors/general";
 import BoundExcluded from "./bound-excluded";
 import BoundIncluded from "./bound-included";
 import { CBOR_TAG_RANGE, type Encodable } from "./spec";

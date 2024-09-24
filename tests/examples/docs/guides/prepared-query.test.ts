@@ -37,7 +37,7 @@ test("クエリーの結果を検証する", async () => {
   {
   }
 
-  const isUserTable = (id: Thing): id is Thing<"user"> => id.tb === "user";
+  const isUserTable = (id: Thing): id is Thing<"user"> => id.table === "user";
 
   const CreatedUserSchema = z.tuple([
     z.object({
@@ -108,7 +108,7 @@ test("クエリーに引数を定義する", async () => {
   {
   }
 
-  const isUserTable = (id: Thing): id is Thing<"user"> => id.tb === "user";
+  const isUserTable = (id: Thing): id is Thing<"user"> => id.table === "user";
 
   const UserIdSchema = z.instanceof(Thing).refine(isUserTable);
 

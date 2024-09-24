@@ -2,21 +2,21 @@ import {
   Thing as Base,
   type ThingIdSource,
   type ThingSource,
-  type ThingTbSource,
+  type ThingTableSource,
 } from "@tai-kun/surrealdb/data-types/decode-only";
-import { escapeRid, quoteStr } from "@tai-kun/surrealdb/utils";
-import { escapeId, toString } from "../_internals/thing";
+import { quoteStr } from "@tai-kun/surrealdb/utils";
+import { toString } from "../_internals/thing";
 import { CBOR_TAG_RECORDID, type Encodable } from "./spec";
 
-export type { ThingIdSource, ThingSource, ThingTbSource };
+export type { ThingIdSource, ThingSource, ThingTableSource };
 
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/thing)
  */
 export default class Thing<
-  TTb extends ThingTbSource = ThingTbSource,
+  TTable extends ThingTableSource = ThingTableSource,
   TId extends ThingIdSource = ThingIdSource,
-> extends Base<TTb, TId> implements Encodable {
+> extends Base<TTable, TId> implements Encodable {
   override valueOf(): string {
     return this.toString();
   }
@@ -40,10 +40,10 @@ export default class Thing<
 
   toCBOR(): [
     tag: typeof CBOR_TAG_RECORDID,
-    value: [tb: string, id: unknown] | string,
+    value: [table: TTable, id: TId] | string,
   ] {
     // ID ジェネレーターを使いたければ surql`${surql.raw(<...>)}` を使う。
-    return [CBOR_TAG_RECORDID, [this.tb, this.id]];
+    return [CBOR_TAG_RECORDID, [this.table, this.id]];
   }
 
   toJSON(): string {
@@ -54,61 +54,13 @@ export default class Thing<
     return "r" + quoteStr(this.toString());
   }
 
-  toPlainObject(
-    options?: {
-      readonly escape?: undefined | false | {
-        readonly tb?: boolean | undefined;
-        readonly id?: false | undefined;
-      };
-    },
-  ): {
-    tb: string;
-    id: unknown;
-  };
-
-  toPlainObject(
-    options?: {
-      readonly escape?: undefined | true | {
-        readonly tb?: boolean | undefined;
-        readonly id: true;
-      };
-    },
-  ): {
-    tb: string;
-    id: string;
-  };
-
-  toPlainObject(
-    options: {
-      readonly escape?: undefined | boolean | {
-        readonly tb?: boolean | undefined;
-        readonly id?: boolean | undefined;
-      };
-    } = {},
-  ): {
-    tb: string;
-    id: any;
+  toPlainObject(): {
+    table: TTable;
+    id: TId;
   } {
-    let tb: string = this.tb, id: unknown = this.id;
-    const escape = options.escape && (
-      options.escape === true
-        ? { tb: true, id: true }
-        : options.escape
-    );
-
-    if (escape) {
-      if (escape.tb) {
-        tb = escapeRid(tb);
-      }
-
-      if (escape.id) {
-        tb = escapeId(id);
-      }
-    }
-
     return {
-      tb,
-      id,
+      table: this.table,
+      id: this.id,
     };
   }
 }

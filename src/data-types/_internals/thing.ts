@@ -37,11 +37,11 @@ export function escapeId(id: unknown): string {
 
 export function toString(
   thing: {
-    readonly tb: string;
+    readonly table: string;
     readonly id: unknown;
   },
 ): string {
   // SurrealDB では String を escape_rid でエスケープしている:
   // https://github.com/surrealdbdb/surrealdbdb/blob/v2.0.0-alpha.7/core/sql/thing.rs#L97
-  return escapeRid(thing.tb) + ":" + escapeId(thing.id);
+  return escapeRid(thing.table) + ":" + escapeId(thing.id);
 }

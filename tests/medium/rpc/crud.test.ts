@@ -47,7 +47,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(record).toStrictEqual(
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: expect.stringMatching(/^[0-9a-z]{20}$/),
             }),
             name: "ichiro",
@@ -69,7 +69,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(record).toStrictEqual(
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: expect.stringMatching(/^[0-9a-z]{20}$/),
             }),
             name: "jiro",
@@ -93,7 +93,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expect(record).toStrictEqual({
           id: expect.objectContaining({
-            tb: "user",
+            table: "user",
             id: "X",
           }),
           name: "saburo",
@@ -124,7 +124,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: expect.stringMatching(/^[0-9a-z]{20}$/),
             }),
             name: "ichiro",
@@ -151,14 +151,14 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: expect.stringMatching(/^[0-9a-z]{20}$/),
             }),
             name: "ichiro",
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: expect.stringMatching(/^[0-9a-z]{20}$/),
             }),
             name: "jiro",
@@ -181,7 +181,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expect(record).toStrictEqual({
           id: expect.objectContaining({
-            tb: "user",
+            table: "user",
             id: 1,
           }),
           name: "tai-kun",
@@ -215,14 +215,14 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -243,14 +243,14 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -269,7 +269,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expect(record).toStrictEqual({
           id: expect.objectContaining({
-            tb: "user",
+            table: "user",
             id: 1,
           }),
           name: "ichiro",
@@ -305,14 +305,14 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "名無し",
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "名無し",
@@ -335,14 +335,14 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             age: 42,
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             age: 42,
@@ -361,7 +361,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expect(record).toStrictEqual({
           id: expect.objectContaining({
-            tb: "user",
+            table: "user",
             id: 1,
           }),
         });
@@ -412,7 +412,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "jiro",
@@ -433,7 +433,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expect(record).toStrictEqual({
           id: expect.objectContaining({
-            tb: "user",
+            table: "user",
             id: 1,
           }),
           name: "ichiro",
@@ -473,7 +473,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
@@ -481,7 +481,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -509,7 +509,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
@@ -517,7 +517,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -543,7 +543,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expect(record).toStrictEqual({
           id: expect.objectContaining({
-            tb: "user",
+            table: "user",
             id: 1,
           }),
           name: "ichiro",
@@ -586,7 +586,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
@@ -594,7 +594,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -624,7 +624,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
@@ -632,7 +632,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -687,14 +687,14 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -717,14 +717,14 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         expect(records).toStrictEqual([
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 1,
             }),
             name: "ichiro",
           },
           {
             id: expect.objectContaining({
-              tb: "user",
+              table: "user",
               id: 2,
             }),
             name: "jiro",
@@ -746,7 +746,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
         expect(record).toStrictEqual({
           id: expect.objectContaining({
-            tb: "user",
+            table: "user",
             id: 1,
           }),
           name: "ichiro",
@@ -755,7 +755,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
           [
             {
               id: expect.objectContaining({
-                tb: "user",
+                table: "user",
                 id: 2,
               }),
               name: "jiro",

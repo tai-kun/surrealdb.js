@@ -6,10 +6,10 @@ import {
 } from "@tai-kun/surrealdb/data-types/standard";
 import { expect, test } from "vitest";
 
-test(".tb, .id", () => {
+test(".table, .id", () => {
   const t = new Thing("foo", "bar");
 
-  expect(t.tb).toBe("foo");
+  expect(t.table).toBe("foo");
   expect(t.id).toBe("bar");
 });
 
@@ -29,7 +29,7 @@ test(".toPlainObject", () => {
   const t = new Thing("foo", "bar");
 
   expect(t.toPlainObject()).toStrictEqual({
-    tb: "foo",
+    table: "foo",
     id: "bar",
   });
 });

@@ -1,7 +1,7 @@
 import type { DataItem } from "@tai-kun/surrealdb/cbor";
 import { defineAsThing } from "../_internals/define";
 
-export type ThingTbSource = DataItem.Utf8String.FixedLength["value"];
+export type ThingTableSource = DataItem.Utf8String.FixedLength["value"];
 
 export type ThingIdSource =
   | DataItem.UnsignedInteger["value"]
@@ -10,10 +10,10 @@ export type ThingIdSource =
   | object; // DataItem.Array, DataItem.Map, DataItem.Map, Uuid, Range
 
 export type ThingSource<
-  TTb extends ThingTbSource = ThingTbSource,
+  TTable extends ThingTableSource = ThingTableSource,
   TId extends ThingIdSource = ThingIdSource,
 > = readonly [
-  tb: TTb,
+  table: TTable,
   id: TId,
 ];
 
@@ -21,14 +21,14 @@ export type ThingSource<
  * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/thing)
  */
 export default class Thing<
-  TTb extends ThingTbSource = ThingTbSource,
+  TTable extends ThingTableSource = ThingTableSource,
   TId extends ThingIdSource = ThingIdSource,
 > {
-  readonly tb: TTb;
+  readonly table: TTable;
   readonly id: TId;
 
-  constructor(source: ThingSource<TTb, TId>) {
-    [this.tb, this.id] = source;
+  constructor(source: ThingSource<TTable, TId>) {
+    [this.table, this.id] = source;
     defineAsThing(this);
   }
 }

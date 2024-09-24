@@ -24,7 +24,7 @@ export default class Raw {
     } else if (value && typeof value === "object") {
       if (isThing(value)) {
         this._str = isGenerator(value.id)
-          ? escapeTb(value.tb) + ":" + value.id
+          ? escapeTb(value.table) + ":" + value.id
           : toString(value);
       } else if ("toSurql" in value) {
         this._str = value.toSurql();

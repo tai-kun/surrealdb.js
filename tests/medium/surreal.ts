@@ -169,7 +169,7 @@ function define(
   };
 }
 
-function host(): `127.0.0.1:${number}` {
+export function host(): `127.0.0.1:${number}` {
   if (typeof port !== "number") {
     throw new Error("テスト外でホストを取得できません。");
   }

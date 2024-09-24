@@ -5,6 +5,7 @@ import HttpEngine from "@tai-kun/surrealdb/engines/http";
 import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import { SemVer } from "semver";
 import { afterAll, beforeAll, vi } from "vitest";
 import { WebSocket } from "ws";
 
@@ -39,6 +40,38 @@ function define(
 } & {
   suite: `${Engines}_${Formatters}`;
   url(): `${"http" | "ws"}://127.0.0.1:${number}`;
+  ver: {
+    (): SemVer;
+    gt(major: number, minor?: number, patch?: number): boolean;
+    ge(major: number, minor?: number, patch?: number): boolean;
+    lt(major: number, minor?: number, patch?: number): boolean;
+    le(major: number, minor?: number, patch?: number): boolean;
+    eq(major: number, minor?: number, patch?: number): boolean;
+    beta: {
+      (): boolean;
+      gt(version: number): boolean;
+      ge(version: number): boolean;
+      lt(version: number): boolean;
+      le(version: number): boolean;
+      eq(version: number): boolean;
+    };
+    alpha: {
+      (): boolean;
+      gt(version: number): boolean;
+      ge(version: number): boolean;
+      lt(version: number): boolean;
+      le(version: number): boolean;
+      eq(version: number): boolean;
+    };
+    nightly: {
+      (): boolean;
+      gt(year: number, month?: number, day?: number): boolean;
+      ge(year: number, month?: number, day?: number): boolean;
+      lt(year: number, month?: number, day?: number): boolean;
+      le(year: number, month?: number, day?: number): boolean;
+      eq(year: number, month?: number, day?: number): boolean;
+    };
+  };
 } {
   let surreal: InitializedSurreal<typeof Client>;
   let formatter;
@@ -104,18 +137,64 @@ function define(
         ? `http://${host()}`
         : `ws://${host()}`;
     },
+    // dprint-ignore
+    ver: Object.assign(() => v(), {
+      gt: (a: number, b = 0, c = 0) => v().major >  a && v().minor >  b && v().patch >  c,
+      ge: (a: number, b = 0, c = 0) => v().major >= a && v().minor >= b && v().patch >= c,
+      lt: (a: number, b = 0, c = 0) => v().major <  a && v().minor <  b && v().patch <  c,
+      le: (a: number, b = 0, c = 0) => v().major <= a && v().minor <= b && v().patch <= c,
+      eq: (a: number, b = 0, c = 0) => v().major == a && v().minor == b && v().patch == c,
+      beta: Object.assign(() => v().prerelease[0] === "beta", {
+        gt: (ver: number, x?: any) => (x = v().prerelease)[0] === "beta" && typeof (x = x[1]) === "number" && x >  ver,
+        ge: (ver: number, x?: any) => (x = v().prerelease)[0] === "beta" && typeof (x = x[1]) === "number" && x >= ver,
+        lt: (ver: number, x?: any) => (x = v().prerelease)[0] === "beta" && typeof (x = x[1]) === "number" && x <  ver,
+        le: (ver: number, x?: any) => (x = v().prerelease)[0] === "beta" && typeof (x = x[1]) === "number" && x <= ver,
+        eq: (ver: number, x?: any) => (x = v().prerelease)[0] === "beta" && typeof (x = x[1]) === "number" && x == ver,
+      }),
+      alpha: Object.assign(() => v().prerelease[0] === "alpha", {
+        gt: (ver: number, x?: any) => (x = v().prerelease)[0] === "alpha" && typeof (x = x[1]) === "number" && x >  ver,
+        ge: (ver: number, x?: any) => (x = v().prerelease)[0] === "alpha" && typeof (x = x[1]) === "number" && x >= ver,
+        lt: (ver: number, x?: any) => (x = v().prerelease)[0] === "alpha" && typeof (x = x[1]) === "number" && x <  ver,
+        le: (ver: number, x?: any) => (x = v().prerelease)[0] === "alpha" && typeof (x = x[1]) === "number" && x <= ver,
+        eq: (ver: number, x?: any) => (x = v().prerelease)[0] === "alpha" && typeof (x = x[1]) === "number" && x == ver,
+      }),
+      nightly: Object.assign(() => v().build.length > 0, {
+        gt: (y: number, m = nowMonth(), d = nowDay(), x?: any) => (x = v().build).length > 0 && typeof (x = x[0]) === "string" && Number(x.slice(0, 4)) >  y && Number(x.slice(4, 6)) >  m && Number(x.slice(6)) >  d,
+        ge: (y: number, m = nowMonth(), d = nowDay(), x?: any) => (x = v().build).length > 0 && typeof (x = x[0]) === "string" && Number(x.slice(0, 4)) >= y && Number(x.slice(4, 6)) >= m && Number(x.slice(6)) >= d,
+        lt: (y: number, m = nowMonth(), d = nowDay(), x?: any) => (x = v().build).length > 0 && typeof (x = x[0]) === "string" && Number(x.slice(0, 4)) <  y && Number(x.slice(4, 6)) <  m && Number(x.slice(6)) <  d,
+        le: (y: number, m = nowMonth(), d = nowDay(), x?: any) => (x = v().build).length > 0 && typeof (x = x[0]) === "string" && Number(x.slice(0, 4)) <= y && Number(x.slice(4, 6)) <= m && Number(x.slice(6)) <= d,
+        eq: (y: number, m = nowMonth(), d = nowDay(), x?: any) => (x = v().build).length > 0 && typeof (x = x[0]) === "string" && Number(x.slice(0, 4)) == y && Number(x.slice(4, 6)) == m && Number(x.slice(6)) == d,
+      })
+    }),
   };
 }
 
-export function host(): `127.0.0.1:${number}` {
+function host(): `127.0.0.1:${number}` {
   if (typeof port !== "number") {
-    throw new Error("ポート番号が確定する前にホストを取得できません。");
+    throw new Error("テスト外でホストを取得できません。");
   }
 
   return `127.0.0.1:${port}`;
 }
 
+function v(): SemVer {
+  if (!ver) {
+    throw new Error("テスト外でバージョンを取得できません。");
+  }
+
+  return ver;
+}
+
+function nowMonth() {
+  return new Date().getUTCMonth() + 1;
+}
+
+function nowDay() {
+  return new Date().getUTCDay();
+}
+
 let port: number;
+let ver: SemVer;
 
 beforeAll(async () => {
   port = await vi.waitFor(
@@ -152,6 +231,9 @@ beforeAll(async () => {
       timeout: 10_000,
     },
   );
+  const resp = await fetch(`http://127.0.0.1:${port}/version`);
+  const text = await resp.text();
+  ver = new SemVer(text.substring("surrealdb-".length));
 }, 30e3);
 
 afterAll(async () => {

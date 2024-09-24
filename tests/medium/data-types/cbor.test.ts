@@ -21,7 +21,7 @@ import { toSurql } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test } from "vitest";
 import surreal from "../surreal";
 
-for (const { suite, fmt, url, Surreal } of surreal) {
+for (const { suite, fmt, url, ver, Surreal } of surreal) {
   describe.runIf(fmt === "cbor")(suite, () => {
     test("JavaScript ネイティブ", async () => {
       await using db = new Surreal();
@@ -169,7 +169,12 @@ for (const { suite, fmt, url, Surreal } of surreal) {
       }
     });
 
-    test("Range", async () => {
+    test("Range", async c => {
+      // >2.0.1 で修正済み。
+      if (!(ver.gt(2, 0, 1) || (ver.eq(2, 0, 1) && ver.nightly()))) {
+        c.skip();
+      }
+
       await using db = new Surreal();
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
@@ -191,7 +196,12 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         ]);
     });
 
-    test("IdRange", async () => {
+    test("IdRange", async c => {
+      // >2.0.1 で修正済み。
+      if (!(ver.gt(2, 0, 1) || (ver.eq(2, 0, 1) && ver.nightly()))) {
+        c.skip();
+      }
+
       await using db = new Surreal();
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });

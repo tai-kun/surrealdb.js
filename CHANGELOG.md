@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.0-beta.3](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2024-09-24)
+
+
+### Bug Fixes
+
+* **data-types/encodable:** ファイルパスを修正 ([dba6642](https://github.com/tai-kun/surrealdb.js/commit/dba664250e78d6ad547158f0299054f64798e203))
+
 ## [2.0.0-beta.2](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2024-09-24)
 
 

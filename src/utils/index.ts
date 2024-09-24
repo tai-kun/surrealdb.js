@@ -25,8 +25,26 @@ export { default as getTimeoutSignal } from "./get-timeout-signal";
 export type * from "./is-browser";
 export { default as isBrowser } from "./is-browser";
 
-export type * from "./is-data-type-of";
-export { default as isDataTypeOf } from "./is-data-type-of";
+export {
+  isBoundExcluded,
+  isBoundIncluded,
+  isDataTypeOf,
+  isDatetime,
+  isDecimal,
+  isDuration,
+  isFuture,
+  isGeometryCollection,
+  isGeometryLine,
+  isGeometryMultiLine,
+  isGeometryMultiPoint,
+  isGeometryMultiPolygon,
+  isGeometryPoint,
+  isGeometryPolygon,
+  isRange,
+  isTable,
+  isThing,
+  isUuid,
+} from "./is-data-type-of";
 
 export type * from "./is-live-result";
 export { default as isLiveResult } from "./is-live-result";

@@ -1,5 +1,5 @@
 import { RangeBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
-import { isDataTypeOf } from "@tai-kun/surrealdb/utils";
+import { isBoundExcluded, isBoundIncluded } from "@tai-kun/surrealdb/utils";
 import { SurrealTypeError } from "src/errors/general";
 import BoundExcluded from "./bound-excluded";
 import BoundIncluded from "./bound-included";
@@ -34,31 +34,31 @@ export class RangeBase<TTypes extends RangeTypes = RangeTypes>
   override toString(): string {
     let s = "";
 
-    if (this.begin) {
-      s += this.begin.toSurql();
+    if (isBoundExcluded(this.begin)) {
+      s = ">";
+    } else if (!isBoundIncluded(this.begin) && this.begin !== null) {
+      throw new SurrealTypeError(
+        ["BoundIncluded", "BoundExcluded", "null"],
+        this.begin,
+      );
+    }
 
-      if (isDataTypeOf<BoundExcluded>(this.begin, "boundexcluded")) {
-        s += ">";
-      } else if (!isDataTypeOf(this.begin, "boundincluded")) {
-        throw new SurrealTypeError(
-          ["BoundIncluded", "BoundExcluded", "null"],
-          this.begin,
-        );
-      }
+    if (this.begin) {
+      s = this.begin.toString() + s;
     }
 
     s += "..";
 
-    if (this.end) {
-      if (isDataTypeOf<BoundIncluded>(this.end, "boundincluded")) {
-        s += "=";
-      } else if (!isDataTypeOf(this.end, "boundexcluded")) {
-        throw new SurrealTypeError(
-          ["BoundIncluded", "BoundExcluded", "null"],
-          this.end,
-        );
-      }
+    if (isBoundIncluded(this.end)) {
+      s += "=";
+    } else if (!isBoundExcluded(this.end) && this.end !== null) {
+      throw new SurrealTypeError(
+        ["BoundIncluded", "BoundExcluded", "null"],
+        this.end,
+      );
+    }
 
+    if (this.end) {
       s += this.end.toSurql();
     }
 

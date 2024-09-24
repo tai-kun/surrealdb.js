@@ -12,7 +12,7 @@ import type {
   RpcResultMapping,
   SlotLike,
 } from "@tai-kun/surrealdb/types";
-import { isDataTypeOf, type TaskListener } from "@tai-kun/surrealdb/utils";
+import { isTable, type TaskListener } from "@tai-kun/surrealdb/utils";
 import type { Simplify, UnionToIntersection } from "type-fest";
 import type { DataType } from "../../surreal/data-types";
 import Jwt from "./jwt";
@@ -491,7 +491,7 @@ export default class Client extends Base {
       ]
   ) {
     const [table, data, options]: [any?, any?, any?] =
-      isDataTypeOf<DataType.Table>(args[0], "table")
+      isTable<DataType.Table>(args[0])
         || typeof args[0] === "string"
         || typeof args[0] == null
         ? args
@@ -548,7 +548,7 @@ export default class Client extends Base {
       ]
   ) {
     const [table, data, options]: [any?, any?, any?] =
-      isDataTypeOf<DataType.Table>(args[0], "table")
+      isTable<DataType.Table>(args[0])
         || typeof args[0] === "string"
         || typeof args[0] == null
         ? args

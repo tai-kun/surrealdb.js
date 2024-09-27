@@ -18,6 +18,7 @@ jobs:
         nodejs-version:
           - "22.x"
         surrealdb-version:
+          - "latest"
           - "nightly"
     steps:
       - uses: actions/checkout@v4
@@ -57,6 +58,7 @@ jobs:
         playwright-version:
           - "latest"
         surrealdb-version:
+          - "latest"
           - "nightly"
     steps:
       - uses: actions/checkout@v4

@@ -2,6 +2,7 @@ import { Future as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import { SurrealTypeError, SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { escapeTb, toString } from "../_internals/thing";
+import type { Standard } from "./spec";
 
 export type * from "../encodable/future";
 
@@ -9,7 +10,7 @@ export type * from "../encodable/future";
  * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/api/data/future)
  * @experimental
  */
-export default class Future extends Base {
+export default class Future extends Base implements Standard {
   static raw(value: RawValue): Raw {
     return new Raw(value);
   }
@@ -62,6 +63,12 @@ export default class Future extends Base {
 
   // @ts-expect-error readonly を外すだけ
   block: string;
+
+  clone(): this {
+    const This = this.constructor as typeof Future;
+
+    return new This(this.block) as this;
+  }
 }
 
 const THING = /* @__PURE__ */ Symbol.for("@tai-kun/surrealdb/data-types/thing");

@@ -77,6 +77,8 @@ export { default as Thing } from "./thing";
 export type * from "./uuid";
 export { default as Uuid } from "./uuid";
 
+export { type Standard } from "./spec";
+
 export {
   CBOR_TAG_BOUND_EXCLUDED,
   CBOR_TAG_BOUND_INCLUDED,

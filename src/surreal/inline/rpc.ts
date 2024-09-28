@@ -7,8 +7,8 @@ import {
 import type { HttpFetcherRequestInit } from "@tai-kun/surrealdb/engines/http";
 import {
   MissingNamespaceError,
-  ResponseError,
   RpcResponseError,
+  ServerResponseError,
   SurrealTypeError,
 } from "@tai-kun/surrealdb/errors";
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
@@ -147,14 +147,17 @@ async function rpc(
   };
 
   if (!(resp instanceof Response) || resp.body === null) {
-    throw new ResponseError("Expected `Response` contains a non-null body.", {
-      cause: Object.assign({ response: resp }, cause),
-    });
+    throw new ServerResponseError(
+      "Expected `Response` contains a non-null body.",
+      {
+        cause: Object.assign({ response: resp }, cause),
+      },
+    );
   }
 
   if (resp.status !== 200) {
     const message = await resp.text();
-    throw new ResponseError(message, {
+    throw new ServerResponseError(message, {
       cause: Object.assign({ response: resp }, cause),
     });
   }
@@ -179,7 +182,7 @@ async function rpc(
   }
 
   if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
-    throw new ResponseError("Expected id-less rpc response.", {
+    throw new ServerResponseError("Expected id-less rpc response.", {
       cause: Object.assign({ response: rpcResp }, cause),
     });
   }

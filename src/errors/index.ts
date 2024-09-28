@@ -29,7 +29,7 @@ export {
   EngineError,
   type EngineSurrealErrorOptions,
   HttpEngineError,
-  ResponseError,
+  ServerResponseError,
   StateTransitionError,
   WebSocketEngineError,
   type WebSocketEngineStatusCode,

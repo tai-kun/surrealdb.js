@@ -9,7 +9,7 @@ import {
 import {
   ConnectionUnavailableError,
   MissingNamespaceError,
-  ResponseError,
+  ServerResponseError,
   SurrealTypeError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
@@ -221,16 +221,19 @@ export default class HttpEngine extends EngineAbc {
     };
 
     if (!(resp instanceof Response) || resp.body === null) {
-      throw new ResponseError("Expected `Response` contains a non-null body.", {
-        cause: Object.assign(cause, {
-          response: resp,
-        }),
-      });
+      throw new ServerResponseError(
+        "Expected `Response` contains a non-null body.",
+        {
+          cause: Object.assign(cause, {
+            response: resp,
+          }),
+        },
+      );
     }
 
     if (resp.status !== 200) {
       const message = await resp.text();
-      throw new ResponseError(message, {
+      throw new ServerResponseError(message, {
         cause: Object.assign(cause, {
           status: resp.status,
         }),
@@ -257,7 +260,7 @@ export default class HttpEngine extends EngineAbc {
     }
 
     if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
-      throw new ResponseError("Expected id-less rpc response.", {
+      throw new ServerResponseError("Expected id-less rpc response.", {
         cause: Object.assign(cause, {
           response: rpcResp,
         }),

@@ -29,7 +29,7 @@
   "devDependencies": {
     "@size-limit/preset-small-lib": "^11.1.5",
     "@tsconfig/strictest": "^2.0.5",
-    "@types/node": "^20.16.5",
+    "@types/node": "^22.7.4",
     "@types/semver": "^7.5.8",
     "@types/unzipper": "^0.10.10",
     "@vitest/browser": "^2.1.1",
@@ -77,10 +77,11 @@
     "docs:ja2ko": "cd docs && npm run ja2ko",
     "docs:trans": "run-s docs:ja2cn docs:ja2en docs:ja2ko",
     "docs:build": "cd docs && npm run build",
-    "docs:preview": "cd docs && npm run preview"
+    "docs:preview": "cd docs && npm run preview",
+    "commit-msg": "NODE_OPTIONS='--disable-warning=ExperimentalWarning' node scripts/commit-msg.mjs"
   },
   "volta": {
-    "node": "20.16.0"
+    "node": "22.9.0"
   },
   "exports": {
     ".": {

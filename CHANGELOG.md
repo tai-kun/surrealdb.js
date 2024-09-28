@@ -1,5 +1,137 @@
 # Changelog
 
+## [2.0.0](https://github.com/tai-kun/surrealdb.js/compare/v1.4.3...v2.0.0) (2024-09-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **data-types:** `tb` を `table` に改名
+* **data-types/standard:** Duration の `set` を `sub` に修正
+* **formatter:** Sec-Websocket-Protocol ヘッダーを必ず指定する
+* **clients/standard:** Jwt の `.getTimeUntilExpiration` を `.getSecondsUntilExpiration` に変更
+* **surreal/surql:** メソッド名に統一感出す
+* disconnect を close に改名
+* v2
+
+### Changes
+
+* **clients/standard:** Jwt の `.getTimeUntilExpiration` を `.getSecondsUntilExpiration` に変更 ([c4bd5da](https://github.com/tai-kun/surrealdb.js/commit/c4bd5da9308ee4f7825687b535b47153ee3a5b9d))
+* **data-types:** `tb` を `table` に改名 ([72809e0](https://github.com/tai-kun/surrealdb.js/commit/72809e01170d54c4d8a6a009876f5e67f7e30e6d))
+* disconnect を close に改名 ([a4588a9](https://github.com/tai-kun/surrealdb.js/commit/a4588a96eb84773321f93aebe5e0e82b0827860f))
+* **engines/websocket:** 名前空間とデータベースの矛盾を検知しない ([9bdbc58](https://github.com/tai-kun/surrealdb.js/commit/9bdbc5826a5500756ac1b4ec6133f55fd584fa5c))
+* **formatters/json:** CBOR と同様に __proto__ と constructor を安全ではないキーとみなす ([30b7357](https://github.com/tai-kun/surrealdb.js/commit/30b73570ef363e120cecf9373a400ce6dba5f97c))
+* **scripts:** Vitest が報告するエラーのフォーマットを変更 ([4ef9e8e](https://github.com/tai-kun/surrealdb.js/commit/4ef9e8e3bd36ce1899b2e97f0d28f417464bd602))
+* **surreal/surql:** メソッド名に統一感出す ([0750def](https://github.com/tai-kun/surrealdb.js/commit/0750def28a9baa79a3a3d4147823ef8cd8b5b41b))
+* **surreal/surql:** 事前準備されたクエリーがエンコード前のクエリーを保持するようにする ([a0af5e5](https://github.com/tai-kun/surrealdb.js/commit/a0af5e59fa393880254b4b9b0fd9bced35f6e146))
+
+
+### Features
+
+* `insert_relation` を実装 ([5656331](https://github.com/tai-kun/surrealdb.js/commit/56563318b9b7a8a94d35865e4818ed2fcdfb776e))
+* **clients/basic:** デフォルトのエラーハンドラーをオフにするオプションを追加 ([5906a2b](https://github.com/tai-kun/surrealdb.js/commit/5906a2bc75a297b4e38009496838d5d14416da6b))
+* **clients/standard:** Jwt に `.getMillisecondsUntilExpiration` を追加 ([70645a9](https://github.com/tai-kun/surrealdb.js/commit/70645a9d90d91e1e23559d3c3a0d5ca1998b7033))
+* **clients/standard:** JWT を安全に扱いやすくする。 ([930126b](https://github.com/tai-kun/surrealdb.js/commit/930126b128368b3b80f6b91751c99144df04683a))
+* **clients:** basic クライアントと standard クライアントを追加 ([f33719c](https://github.com/tai-kun/surrealdb.js/commit/f33719cc28faeada671e6deff3702180fa6fef99))
+* **data-types:** .structure メソッドを追加 ([959966e](https://github.com/tai-kun/surrealdb.js/commit/959966ec022f365192e35848228c4e863055c0f8))
+* **data-types/encodable:** Thing を ID ジェネレーターに対応させる ([11cc58c](https://github.com/tai-kun/surrealdb.js/commit/11cc58c5f9f84f0e1be5ce8b755c09f9795dc42b))
+* **data-types/standard:** `Future`と `Range` 関連に `.clone()` メソッドを生やす ([#39](https://github.com/tai-kun/surrealdb.js/issues/39)) ([2979052](https://github.com/tai-kun/surrealdb.js/commit/2979052a45a50bc527143033018455136bebeb65))
+* **data-types/standard:** GeometryLine にリング系のプロパティーを追加 ([64877f6](https://github.com/tai-kun/surrealdb.js/commit/64877f6e74b0ca419d6cc8029a743158abde3c87))
+* **data-types:** `Bound` に型パラメーターを追加する ([853a5fc](https://github.com/tai-kun/surrealdb.js/commit/853a5fce5e399821bbdbfc03c2da36b722d421c4))
+* **data-types:** Table を追加 ([e8b5278](https://github.com/tai-kun/surrealdb.js/commit/e8b52789765cb92e6189713430dc9770e1be3537))
+* **data-types:** Thing を追加 ([2557860](https://github.com/tai-kun/surrealdb.js/commit/255786065f4bff8ad36f1a83b7ea4914dd1156fd))
+* **data-types:** Uuid を追加 ([d05b388](https://github.com/tai-kun/surrealdb.js/commit/d05b388f4bbbe3ea22bc55e9f7ac9ba396defa62))
+* **data-types:** 実験的な `Future` を実装 ([0ebdadd](https://github.com/tai-kun/surrealdb.js/commit/0ebdadd507bf060bb30e406201452d9d04eaa32a))
+* **data-types:** 実験的な `Range` を実装 ([0874743](https://github.com/tai-kun/surrealdb.js/commit/08747437eafd0bd768254c1bde2c65c947a2c3ce))
+* **engines/http:** HTTP エンジンに RPC レスポンスのイベントを追加 ([#41](https://github.com/tai-kun/surrealdb.js/issues/41)) ([64235ba](https://github.com/tai-kun/surrealdb.js/commit/64235bad5f6c5aab9f70dc744c9bb1538ae9a10d))
+* **engines/websocket:** `use` メソッドの機能強化 ([526efb1](https://github.com/tai-kun/surrealdb.js/commit/526efb14ff4b6f2750cca04c71f581681ea491c1))
+* **formatters/cbor:** CBOR のエンコーダーとデコーダーを追加 ([27a66ce](https://github.com/tai-kun/surrealdb.js/commit/27a66ced0c7981dd8648287a56642eb017138e16))
+* **formatters:** json フォーマッターと cbor フォーマッターを追加 ([df0fe13](https://github.com/tai-kun/surrealdb.js/commit/df0fe1321223e6ac360d33ca849e0bfcf6aeeba9))
+* http エンジンと websocket エンジンを追加 ([6fa7a40](https://github.com/tai-kun/surrealdb.js/commit/6fa7a4025be8348daf01c57146c72b8949d0b8c1))
+* **surreal/surql:** `.as` のエイリアスに `.type`、`.to` のエイリアスに `.toransform` ([b022a25](https://github.com/tai-kun/surrealdb.js/commit/b022a25c38f20c650965fd86d3023b844d6c5aaf))
+* **surreal:** 1 回限りの RPC を実行する関数を追加 ([fbf82c4](https://github.com/tai-kun/surrealdb.js/commit/fbf82c46b16556dba96255168b2096cb76e039ca))
+* **surreal:** initSurreal とデフォルトの Surreal を追加 ([2c988d8](https://github.com/tai-kun/surrealdb.js/commit/2c988d8a93c39ba5ef78d8914e2061e357f85d5f))
+* **surreal:** SurrealQL に文字列を埋め込む surql.raw を追加 ([4bff2a6](https://github.com/tai-kun/surrealdb.js/commit/4bff2a67e13b934d0e95dd13b94ab8ab0a97b107))
+* **surreal:** SurrealQL を事前定義する関数を実験的に追加 ([6c35d2a](https://github.com/tai-kun/surrealdb.js/commit/6c35d2ad8c61d9fb3e13de78d5a72b493affddfa))
+* **surreal:** エンドポイントを自動変形させないためのオプションを追加 ([cdb90bc](https://github.com/tai-kun/surrealdb.js/commit/cdb90bc81ce0135a97fb383128da669b001253f9))
+* **surreal:** スロットに値を検証する機能を追加 ([81fefe8](https://github.com/tai-kun/surrealdb.js/commit/81fefe84dfdc5256c6984b702ee4cf3f233bd7d4))
+* ライブクエリーに `record` プロパティを追加 ([94ca01c](https://github.com/tai-kun/surrealdb.js/commit/94ca01c8bf9b21cc116f034ca4094a1ea7728641))
+* 事前に定義されたクエリーに後から変数を割り当てる機能を追加 ([1ee76a8](https://github.com/tai-kun/surrealdb.js/commit/1ee76a8c27b021a49eb2dd3060874b3562f175dc))
+* 実験的な `graphql` を実装 ([f7c4e58](https://github.com/tai-kun/surrealdb.js/commit/f7c4e58b46b42dcf5cf5fecbcce9e94389fdcdd8))
+
+
+### Bug Fixes
+
+* `~/` エイリアスを削除 ([95eb7e9](https://github.com/tai-kun/surrealdb.js/commit/95eb7e9ef4c38a9c668247969c3310326dbaa9c1))
+* **cbor:** `undefined` のエンコードを SurrealDB 式に合わせる ([e9f46a3](https://github.com/tai-kun/surrealdb.js/commit/e9f46a3768bc5727ad352349443976ed88999ab6))
+* **cbor:** Lexcer を終了する前にループを抜け出す ([310e4f3](https://github.com/tai-kun/surrealdb.js/commit/310e4f3ad8733fdbde8bc2cce9aa27808a36debe))
+* **cbor:** lexer の制限に関するバグを修正 ([ecad937](https://github.com/tai-kun/surrealdb.js/commit/ecad937d26aaf7e5623acf6fa3fee3d0005de009))
+* **cbor:** maxDepth + 1 までネストできていた不具合を修正 ([a12aecb](https://github.com/tai-kun/surrealdb.js/commit/a12aecb35e763a4a7d1bc349c2a2ea710f9553ca))
+* **cbor:** SurrealDB との互換性を向上させる ([b7f7ea4](https://github.com/tai-kun/surrealdb.js/commit/b7f7ea4950f15c1cf50b6f832ff1ef32337e322c))
+* **cbor:** toCBOR で Writer に書き込むとエンコードが終わらないバグを修正 ([b5dd88e](https://github.com/tai-kun/surrealdb.js/commit/b5dd88eb0c4cd26fa9aebfb237a87d0272977e0a))
+* **cbor:** エンコード時の循環参照エラーを追加 ([259061f](https://github.com/tai-kun/surrealdb.js/commit/259061fb70113bd3950af0b8f313fc5a8900eb45))
+* **cbor:** タグ付きデータアイテムの値がエンコードされないバグを修正 ([8c81ad5](https://github.com/tai-kun/surrealdb.js/commit/8c81ad59154108db255f5c301e41ef18cab83328))
+* **cbor:** タンクサイズを超える入力が合った時にエンコードに失敗する不具合を修正 ([e6d1439](https://github.com/tai-kun/surrealdb.js/commit/e6d1439b12cc7ba836f03be1ef7417ab824aa827))
+* **cbor:** ネストされたオブジェクトのエンコード時に循環参照を検知できないことがる不具合を修正 ([8a8674a](https://github.com/tai-kun/surrealdb.js/commit/8a8674a1261d414b70f372543af85952de8e7887))
+* **cbor:** バッファーの必要サイズの要求時に安全な整数値を超える可能性がある ([8109455](https://github.com/tai-kun/surrealdb.js/commit/8109455c936338547f7cfc34ced98011b9774c44))
+* **cbor:** 不定長文字列内に不定長文字列を入れてエラーにならない不具合を修正 ([92cc063](https://github.com/tai-kun/surrealdb.js/commit/92cc063ff0fec2be2f9822c44d5fb69c7af021f2))
+* **clients/standard:** `graphql` の API を修正 ([8a63cbf](https://github.com/tai-kun/surrealdb.js/commit/8a63cbf3a0a5e3e6ddf94c2337d37a1714f66c8d))
+* **clients/standard:** `insert` の引数であるテーブル名をオプションにする ([3e95f30](https://github.com/tai-kun/surrealdb.js/commit/3e95f3044edf615156f06ab41d2eba581b9f77b2))
+* **clients/standard:** クエリーの変数を必須にする条件を修正 ([9a85f64](https://github.com/tai-kun/surrealdb.js/commit/9a85f64131129c783aeb9abd8fde45580af80ae6))
+* **clients/standard:** 型を修正 ([56b138f](https://github.com/tai-kun/surrealdb.js/commit/56b138fdce5cc69d21f244cdf802413d9e9f7a45))
+* **clients/standard:** 変数名と型を自明に ([9d88437](https://github.com/tai-kun/surrealdb.js/commit/9d88437fb3aee51d60c1e60423ff210f7ddd32be))
+* **clients:** `use` メソッドで null と undefined を区別する ([b38d0e8](https://github.com/tai-kun/surrealdb.js/commit/b38d0e809b4684b590de1737ae9d1cdcae422518))
+* **data-types/decode-only:** Datetime が -0 を 0 にしない不具合を修正 ([622a263](https://github.com/tai-kun/surrealdb.js/commit/622a26326d53977c495f05512ab3b5e2a232759e))
+* **data-types/encodable:** typo ([c6b0310](https://github.com/tai-kun/surrealdb.js/commit/c6b03107a43455eee219ace8aa77e26d3bdb3b26))
+* **data-types/encodable:** ファイルパスを修正 ([dba6642](https://github.com/tai-kun/surrealdb.js/commit/dba664250e78d6ad547158f0299054f64798e203))
+* **data-types/standard:** Decimal のstructure を encodable から拡張する ([9c64683](https://github.com/tai-kun/surrealdb.js/commit/9c646831a7b97bedec115c6d9624ec1b8ccdebe8))
+* **data-types/standard:** Duration の `set` を `sub` に修正 ([5233ee1](https://github.com/tai-kun/surrealdb.js/commit/5233ee1ddbd67dfa58f7ddc5c61510e373b54f54))
+* **data-types:** `Range` の　SurrealQL 表現を修正 ([a2702d6](https://github.com/tai-kun/surrealdb.js/commit/a2702d6852f73ccb3e6734d4e0f63621cb3c7914))
+* **data-types:** multiline -&gt; multilinestring ([d5a21fb](https://github.com/tai-kun/surrealdb.js/commit/d5a21fbd7e75d042fdf93c2d5b17a0219172e74b))
+* **data-types:** Thing の id の型を改善 ([ee8f24a](https://github.com/tai-kun/surrealdb.js/commit/ee8f24aefef68a258024ada9930044d4ab67d39a))
+* **data-types:** 継承元の型を export ([fd67887](https://github.com/tai-kun/surrealdb.js/commit/fd6788771843da1e931af0ff01ee757855c2083e))
+* Duration の型を修正 ([f28e01f](https://github.com/tai-kun/surrealdb.js/commit/f28e01fc47ee226affeea0efa4058deb45526c9a))
+* **engines/http:** 名前空間とデータベースのから文字列を許可する ([e69b5f6](https://github.com/tai-kun/surrealdb.js/commit/e69b5f6b27a532135c37e7d107d56d1e8d1b1eb5))
+* **engines/websocket:** 3000 番台のステータスコードで iana に登録されているコードを避ける ([7fa876d](https://github.com/tai-kun/surrealdb.js/commit/7fa876d9b15b1a7bb9cbb5d5502f901c264fe6a0))
+* **engines/websocket:** Blob に対応する ([f09326d](https://github.com/tai-kun/surrealdb.js/commit/f09326d219008b1e32de9d998cc160988ce7131b))
+* **engines/websocket:** close イベント内のエラーを送信する ([c416eb7](https://github.com/tai-kun/surrealdb.js/commit/c416eb75ca6f3147294d7a0444ba728d2e767393))
+* **engines/websocket:** ライブクエリの結果をすべて受け取る ([95f6c42](https://github.com/tai-kun/surrealdb.js/commit/95f6c4252b5b7d48fe7bcc2b7b0ff5bddcd6e713))
+* **engines/websocket:** 予約済みのステータスコードをエラーとして扱わない ([2e6d97d](https://github.com/tai-kun/surrealdb.js/commit/2e6d97dbb4dfc027e35c2783e0d3755a4d2f523b))
+* **engine:** 名前空間とデータベース選択に関するバグを修正 ([5fc1f78](https://github.com/tai-kun/surrealdb.js/commit/5fc1f78a41f668b421a6f4d5eeb60f4f2d66ae42))
+* **engine:** 接続情報の命名ミスを修正 ([cf47291](https://github.com/tai-kun/surrealdb.js/commit/cf472917201e09bcaba79f69e9831ad8d14e6596))
+* **engine:** 遷移時の状態をエラーメッセージに反映できていなかった不具合を修正 ([e955a5f](https://github.com/tai-kun/surrealdb.js/commit/e955a5f29ac886baa059e0ff469a6ea6ce47e194))
+* **errors:** .toSorted() が使えない環境に対応 ([1c1cd38](https://github.com/tai-kun/surrealdb.js/commit/1c1cd384696309978dbb4fb42df915626e4fa196))
+* **errors:** 古いブラウザーをサポートするために静的初期化ブロックを使わない ([314bbae](https://github.com/tai-kun/surrealdb.js/commit/314bbae881e51ebcf9c12ed7a786047705978e40))
+* experimental 属性のつけ忘れ ([131f49f](https://github.com/tai-kun/surrealdb.js/commit/131f49fcd95f4ff942f5b9ebc282a115b3ff105a))
+* **formatters/cbor:** Buffer 判定をして Uint8Array にする。 ([b19f163](https://github.com/tai-kun/surrealdb.js/commit/b19f1635bfa956380fda2892325b89dd1128dc63))
+* **formatters/cbor:** UUID のタグ付けを修正 ([7420a89](https://github.com/tai-kun/surrealdb.js/commit/7420a89a7ad7b2f001e1d1cf47d48dfaaaa11bf0))
+* **formatters/cbor:** デフォルトで実験的機能を実装しない ([06c1146](https://github.com/tai-kun/surrealdb.js/commit/06c1146d021170a0612603d0be354fbb2c3a793c))
+* **formatters/json:** 不変にする ([ef7cd13](https://github.com/tai-kun/surrealdb.js/commit/ef7cd13ee8e931ff8f8b8853149403812d131272))
+* **formatters:** Buffer をすべて使う ([0e2e433](https://github.com/tai-kun/surrealdb.js/commit/0e2e4332dfaa443b89b0444ac7c28de95a90d80c))
+* **formatter:** Sec-Websocket-Protocol ヘッダーを必ず指定する ([5ba5757](https://github.com/tai-kun/surrealdb.js/commit/5ba5757fd050e7d36be2b7001c6919d2b0ab78b7))
+* insert の型を修正 ([3048988](https://github.com/tai-kun/surrealdb.js/commit/30489882a03bcec48cafdb097954c489180d6511))
+* pinger を正しく終了させる ([c879c14](https://github.com/tai-kun/surrealdb.js/commit/c879c148c93e384f17d49bc7f402ae612562cdb6))
+* PR ([e8597bb](https://github.com/tai-kun/surrealdb.js/commit/e8597bbc3c3be8f3f1969b1f488ccab87ef224e5))
+* size-limit でインポートする値を修正 ([a4c583f](https://github.com/tai-kun/surrealdb.js/commit/a4c583fc290784c410473a55fe49afa8e4e803c0))
+* **surreal/inline:** インライン RPC に `graphql` を追加 ([368c9e1](https://github.com/tai-kun/surrealdb.js/commit/368c9e1b439865b64433c46bad15cdaa6487142e))
+* **surreal/utils:** WebSocket でステータスコードが `1012` `1013` なら再接続を試みる。 ([533f8c2](https://github.com/tai-kun/surrealdb.js/commit/533f8c2b6b0eaef9d7a232ab0bd85b6e3a2adab8))
+* **surreal:** rpc に非同期デコードを実装し忘れた ([f4516e5](https://github.com/tai-kun/surrealdb.js/commit/f4516e548d89fc53f507f54c080507a13c0d09d4))
+* **surreal:** クライエントに引数をすべて渡せていなかった ([92549e7](https://github.com/tai-kun/surrealdb.js/commit/92549e726ad30700f996b35987919338609842fe))
+* **surreal:** スロットの .required でデフォルト値が引き継がれる不具合を修正 ([3bd2ad5](https://github.com/tai-kun/surrealdb.js/commit/3bd2ad5816598f6c9d15e1fd6f4bb430c07d3861))
+* **surreal:** 特定の変数名から始まるスロットでエラー ([eb6c600](https://github.com/tai-kun/surrealdb.js/commit/eb6c600347a6e4ca8b323fc9977536a036349535))
+* trait に検証項目を追加 ([35e2784](https://github.com/tai-kun/surrealdb.js/commit/35e2784bddf6ae381a5d5d832e4959d8bc7fec53))
+* **types:** 命名に一貫性をもたせる ([260eeae](https://github.com/tai-kun/surrealdb.js/commit/260eeaead84a9a374f8810bb4e8c2ea6019b89ad))
+* **utils:** API リファレンスの URL を修正 ([8c08770](https://github.com/tai-kun/surrealdb.js/commit/8c08770229ee1a9424f728adc99c373fae1fe445))
+* **utils:** isLiveResult で record プロパティーの存在を確認する ([553e325](https://github.com/tai-kun/surrealdb.js/commit/553e32587c2875e33c8afd3991e44e0eac78c27e))
+* **utils:** StatefulPromise が Promise で解決できない不具合を修正 ([767bc88](https://github.com/tai-kun/surrealdb.js/commit/767bc88c0f9fb6a2a84133fd5c4032c8874e01bd))
+* **utils:** toSurql CBOR 形式にできる値を受け入れるようにする ([58e0351](https://github.com/tai-kun/surrealdb.js/commit/58e03519bb26071be4594a189f1fb01d2780bdc9))
+* **utils:** プレーンオブジェクトの判定をより厳格に行う ([28846ca](https://github.com/tai-kun/surrealdb.js/commit/28846ca1a05e48300b6a6557c6104b515abc4e18))
+* **utils:** レコード ID のエスケープを修正 ([ab00006](https://github.com/tai-kun/surrealdb.js/commit/ab0000645311b7c481d4f4147aaeb8ad772fef9d))
+
+
+### Code Refactoring
+
+* v2 ([a81cf50](https://github.com/tai-kun/surrealdb.js/commit/a81cf504313c08b5f978f3f3268f0996c1607cc8))
+
 ## [2.0.0-beta.3](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2024-09-24)
 
 

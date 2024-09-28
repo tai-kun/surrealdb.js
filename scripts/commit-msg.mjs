@@ -147,7 +147,7 @@ if (!debug && !message) {
     scopes: [
       "main",
     ],
-    commentPattern: /^release \d+\.\d+\.\d+(?:-[a-z]+\.\d+)? /,
+    commentPattern: /^release \d+\.\d+\.\d+(?:-[0-9a-z]+\.[0-9a-z]+)?/,
   });
 }
 

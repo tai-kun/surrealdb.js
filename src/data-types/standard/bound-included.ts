@@ -2,6 +2,7 @@ import {
   BoundIncluded as Base,
   type BoundIncludedSource,
 } from "@tai-kun/surrealdb/data-types/encodable";
+import type { Standard } from "./spec";
 
 export type * from "../encodable/bound-included";
 
@@ -11,7 +12,13 @@ export type * from "../encodable/bound-included";
  */
 export default class BoundIncluded<
   TValue extends BoundIncludedSource = BoundIncludedSource,
-> extends Base<TValue> {
+> extends Base<TValue> implements Standard {
   // @ts-expect-error readonly を外すだけ
   value: TValue;
+
+  clone(): this {
+    const This = this.constructor as typeof BoundIncluded<TValue>;
+
+    return new This(this.value) as this;
+  }
 }

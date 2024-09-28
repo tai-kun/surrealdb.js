@@ -39,3 +39,50 @@ describe(".toSurql()", () => {
     });
   }
 });
+
+describe(".clone()", () => {
+  class MyRange extends Range {}
+  class MyBoundIncluded extends BoundIncluded {}
+  class MyBoundExcluded extends BoundExcluded {}
+
+  test(".begin, .end", () => {
+    const object = new MyRange([
+      new MyBoundIncluded(1),
+      new MyBoundExcluded(3),
+    ]);
+    const cloned = object.clone();
+
+    expect(cloned).not.toBe(object);
+    expect(cloned).toBeInstanceOf(MyRange);
+    expect(cloned.end).toBeInstanceOf(MyBoundExcluded);
+    expect(cloned.begin).toBeInstanceOf(MyBoundIncluded);
+    expect(cloned).toStrictEqual(object);
+  });
+
+  // dprint-ignore
+  const tests: [Bound | null, Bound | null][] = [
+    [ new MyBoundIncluded(1), new MyBoundIncluded(3) ],
+    [ new MyBoundExcluded(1), new MyBoundExcluded(3) ],
+
+    [ new MyBoundIncluded(1), new MyBoundExcluded(3) ],
+    [ new MyBoundIncluded(1),                   null ],
+    [                   null, new MyBoundExcluded(3) ],
+
+    [ new MyBoundExcluded(1), new MyBoundIncluded(3) ],
+    [ new MyBoundExcluded(1),                   null ],
+    [                   null, new MyBoundIncluded(3) ],
+
+    [                   null,                   null ],
+  ];
+
+  for (const [beg, end] of tests) {
+    test(`beg=${String(beg).padEnd(4, " ")} ~ end=${String(end).padEnd(4, " ")}`, () => {
+      const object = new MyRange([beg, end]);
+      const cloned = object.clone();
+
+      expect(cloned).not.toBe(object);
+      expect(cloned).toBeInstanceOf(MyRange);
+      expect(cloned).toStrictEqual(object);
+    });
+  }
+});

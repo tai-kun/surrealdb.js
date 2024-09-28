@@ -7,6 +7,16 @@ on:
     paths:
       - ".github/workflows/gh-pages.yml"
       - "docs/**"
+      - "tests/**"
+      - "*.json"
+      - "*.ts"
+  pull_request:
+    paths:
+      - ".github/workflows/gh-pages.yml"
+      - "docs/**"
+      - "tests/**"
+      - "*.json"
+      - "*.ts"
   workflow_dispatch:
 
 env:
@@ -38,6 +48,7 @@ jobs:
           path: docs/dist
 
   deploy:
+    if: ${{ github.event_name != 'pull_request' }}
     needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 5

@@ -39,3 +39,18 @@ describe(".toSurql()", () => {
     });
   }
 });
+
+test(".clone()", () => {
+  class MyRange extends Range {}
+  class MyBoundIncluded extends BoundIncluded {}
+  class MyBoundExcluded extends BoundExcluded {}
+
+  const object = new MyRange([new MyBoundIncluded(1), new MyBoundExcluded(3)]);
+  const cloned = object.clone();
+
+  expect(cloned).not.toBe(object);
+  expect(cloned).toBeInstanceOf(MyRange);
+  expect(cloned.end).toBeInstanceOf(MyBoundExcluded);
+  expect(cloned.begin).toBeInstanceOf(MyBoundIncluded);
+  expect(cloned).toStrictEqual(object);
+});

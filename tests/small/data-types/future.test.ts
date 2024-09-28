@@ -65,3 +65,14 @@ test(".surql() なし", () => {
     string::concat($a, $b)
   }`);
 });
+
+test(".clone()", () => {
+  class MyFuture extends Future {}
+
+  const object = new MyFuture("time::now()");
+  const cloned = object.clone();
+
+  expect(cloned).not.toBe(object);
+  expect(cloned).toBeInstanceOf(MyFuture);
+  expect(cloned).toStrictEqual(object);
+});

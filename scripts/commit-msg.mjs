@@ -168,8 +168,6 @@ ${message}
  * @returns {string[]}
  */
 function scan(cwd, pattern, skip) {
-  console.log({ cwd, pattern, skip });
-
   const paths = fs.globSync(pattern, {
     cwd,
     exclude: skip && (file => {
@@ -215,31 +213,31 @@ function match(message, schema) {
 
     for (const type of types) {
       let summary = type;
+      let pattern = `^${type}`;
 
       if (scope) {
-        summary += `(${
-          scope
-            .replaceAll("@", "") // GitHub でメンションになるので無効化
-            .replaceAll("#", "") // GitHub でリンクになるので無効化
-        })`;
+        scope = scope
+          .replaceAll("@", "") // GitHub でメンションになるので無効化
+          .replaceAll("#", ""); // GitHub でリンクになるので無効化
+
+        summary += `(${scope})`;
+        pattern += `(${scope})`;
+      }
+
+      if (allowBreaking) {
+        pattern += "!?";
+      }
+
+      pattern += ": ";
+
+      if (commentPattern) {
+        pattern += commentPattern.source;
+      } else {
+        pattern += ".+";
       }
 
       if (debug) {
-        summary = `^${summary}`;
-
-        if (allowBreaking) {
-          summary += "!?";
-        }
-
-        summary += ": ";
-
-        if (commentPattern) {
-          summary += commentPattern.source;
-        } else {
-          summary += ".+";
-        }
-
-        console.log(summary);
+        console.log(pattern);
         continue;
       }
 
@@ -251,6 +249,8 @@ function match(message, schema) {
             : message.length > summary.length + 2
         )
       ) {
+        console.log(`Matched: ${pattern}`);
+        console.log(`Message: \n~~~\n${message}\n~~~\n`);
         process.exit(0);
       }
 
@@ -263,6 +263,8 @@ function match(message, schema) {
             : message.length > summary.length + 3
         )
       ) {
+        console.log(`Matched: ${pattern}`);
+        console.log(`Message: \n~~~\n${message}\n~~~\n`);
         process.exit(0);
       }
     }

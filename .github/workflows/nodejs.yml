@@ -5,6 +5,8 @@ on:
     branches:
       - main
     paths:
+      - ".github/workflows/codecov.yml"
+      - ".github/workflows/nightly.yml"
       - ".github/workflows/nodejs.yml"
       - "src/**"
       - "tests/**"
@@ -12,8 +14,15 @@ on:
       - "*.json"
       - "*.ts"
   pull_request:
-    paths-ignore:
-      - "docs/**"
+    paths:
+      - ".github/workflows/codecov.yml"
+      - ".github/workflows/nightly.yml"
+      - ".github/workflows/nodejs.yml"
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "*.json"
+      - "*.ts"
   workflow_dispatch:
 
 jobs:

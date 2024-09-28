@@ -5,6 +5,9 @@ on:
     branches:
       - main
     paths:
+      - ".github/workflows/browser.medium.yml"
+      - ".github/workflows/browser.small.yml"
+      - ".github/workflows/nightly.yml"
       - ".github/workflows/webkit.yml"
       - "src/**"
       - "tests/**"
@@ -12,8 +15,16 @@ on:
       - "*.json"
       - "*.ts"
   pull_request:
-    paths-ignore:
-      - "docs/**"
+    paths:
+      - ".github/workflows/browser.medium.yml"
+      - ".github/workflows/browser.small.yml"
+      - ".github/workflows/nightly.yml"
+      - ".github/workflows/webkit.yml"
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "*.json"
+      - "*.ts"
   workflow_dispatch:
 
 jobs:

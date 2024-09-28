@@ -5,7 +5,19 @@ on:
     branches:
       - main
     paths:
+      - ".github/workflows/chromium.yml"
       - ".github/workflows/codecov.yml"
+      - ".github/workflows/nodejs.yml"
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "*.json"
+      - "*.ts"
+  pull_request:
+    paths:
+      - ".github/workflows/chromium.yml"
+      - ".github/workflows/codecov.yml"
+      - ".github/workflows/nodejs.yml"
       - "src/**"
       - "tests/**"
       - "scripts/**"

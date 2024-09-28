@@ -6,14 +6,21 @@ on:
       - main
     paths:
       - ".github/workflows/deno.yml"
+      - ".github/workflows/nightly.yml"
       - "src/**"
       - "tests/**"
       - "scripts/**"
       - "*.json"
       - "*.ts"
   pull_request:
-    paths-ignore:
-      - "docs/**"
+    paths:
+      - ".github/workflows/deno.yml"
+      - ".github/workflows/nightly.yml"
+      - "src/**"
+      - "tests/**"
+      - "scripts/**"
+      - "*.json"
+      - "*.ts"
   workflow_dispatch:
 
 jobs:

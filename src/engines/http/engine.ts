@@ -15,6 +15,7 @@ import {
 } from "@tai-kun/surrealdb/errors";
 import { cloneSync } from "@tai-kun/surrealdb/formatter";
 import type {
+  BidirectionalRpcResponse,
   IdLessRpcResponse,
   RpcParams,
   RpcQueryRequest,
@@ -292,7 +293,16 @@ export default class HttpEngine extends EngineAbc {
       }
     }
 
-    // this.ee.emit(`rpc/${rpc.method}/${id}`, rpcResp);
+    // 双方向通信のレスポンスに擬態する。
+    const id: BidirectionalRpcResponse["id"] = `${request.method}_0`;
+    const hooks = this.ee.emit(`rpc_${id}`, {
+      id,
+      ...rpcResp,
+    });
+
+    if (hooks) {
+      await Promise.all(hooks);
+    }
 
     return rpcResp;
   }

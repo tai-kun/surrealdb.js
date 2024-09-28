@@ -2,7 +2,7 @@ import type {
   BidirectionalRpcResponseErr,
   IdLessRpcResponseErr,
 } from "@tai-kun/surrealdb/types";
-import { ResponseError } from "./engine";
+import { ServerResponseError } from "./engine";
 import {
   CircularReferenceError,
   SurrealAggregateError,
@@ -94,7 +94,7 @@ export class MissingNamespaceError extends SurrealError {
 /**
  * [API Reference](https://tai-kun.github.io/surrealdb.js/v2/guides/errors/#rpcresponseerror)
  */
-export class RpcResponseError extends ResponseError {
+export class RpcResponseError extends ServerResponseError {
   static {
     this.prototype.name = "RpcResponseError";
   }

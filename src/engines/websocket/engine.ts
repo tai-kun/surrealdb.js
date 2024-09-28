@@ -10,8 +10,8 @@ import {
 import {
   ConnectionUnavailableError,
   MissingNamespaceError,
-  ResponseError,
   RpcResponseError,
+  ServerResponseError,
   SurrealTypeError,
   unreachable,
   WebSocketEngineError,
@@ -224,7 +224,7 @@ export default class WebSocketEngine extends EngineAbc {
         const rpcResp = this.fmt.decodeSync(data);
 
         if (!isRpcResponse(rpcResp)) {
-          throw new ResponseError("Missing rpc response.", {
+          throw new ServerResponseError("Missing rpc response.", {
             // cause: (evt.data as Buffer).map(v => v).join(),
             cause: {
               endpoint: endpoint.href,
@@ -239,7 +239,7 @@ export default class WebSocketEngine extends EngineAbc {
           this.ee.emit(`rpc_${rpcResp.id}`, rpcResp);
         } else if ("result" in rpcResp) {
           if (!isLiveResult(rpcResp.result)) {
-            throw new ResponseError("Missing live result", {
+            throw new ServerResponseError("Missing live result", {
               cause: {
                 endpoint: endpoint.href,
                 liveResult: rpcResp.result,

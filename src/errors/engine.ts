@@ -133,8 +133,8 @@ export class ConnectionUnavailableError extends SurrealError {
   }
 }
 
-export class ResponseError extends SurrealError {
+export class ServerResponseError extends SurrealError {
   static {
-    this.prototype.name = "ResponseError";
+    this.prototype.name = "ServerResponseError";
   }
 }

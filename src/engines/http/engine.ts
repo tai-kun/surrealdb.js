@@ -9,12 +9,13 @@ import {
 import {
   ConnectionUnavailableError,
   MissingNamespaceError,
-  ResponseError,
+  ServerResponseError,
   SurrealTypeError,
   unreachable,
 } from "@tai-kun/surrealdb/errors";
 import { cloneSync } from "@tai-kun/surrealdb/formatter";
 import type {
+  BidirectionalRpcResponse,
   IdLessRpcResponse,
   RpcParams,
   RpcQueryRequest,
@@ -220,16 +221,19 @@ export default class HttpEngine extends EngineAbc {
     };
 
     if (!(resp instanceof Response) || resp.body === null) {
-      throw new ResponseError("Expected `Response` contains a non-null body.", {
-        cause: Object.assign(cause, {
-          response: resp,
-        }),
-      });
+      throw new ServerResponseError(
+        "Expected `Response` contains a non-null body.",
+        {
+          cause: Object.assign(cause, {
+            response: resp,
+          }),
+        },
+      );
     }
 
     if (resp.status !== 200) {
       const message = await resp.text();
-      throw new ResponseError(message, {
+      throw new ServerResponseError(message, {
         cause: Object.assign(cause, {
           status: resp.status,
         }),
@@ -256,7 +260,7 @@ export default class HttpEngine extends EngineAbc {
     }
 
     if (!isRpcResponse(rpcResp) || "id" in rpcResp) {
-      throw new ResponseError("Expected id-less rpc response.", {
+      throw new ServerResponseError("Expected id-less rpc response.", {
         cause: Object.assign(cause, {
           response: rpcResp,
         }),
@@ -292,7 +296,16 @@ export default class HttpEngine extends EngineAbc {
       }
     }
 
-    // this.ee.emit(`rpc/${rpc.method}/${id}`, rpcResp);
+    // 双方向通信のレスポンスに擬態する。
+    const id: BidirectionalRpcResponse["id"] = `${request.method}_0`;
+    const hooks = this.ee.emit(`rpc_${id}`, {
+      id,
+      ...rpcResp,
+    });
+
+    if (hooks) {
+      await Promise.all(hooks);
+    }
 
     return rpcResp;
   }

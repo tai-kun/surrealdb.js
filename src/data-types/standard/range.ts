@@ -1,6 +1,7 @@
 import { RangeBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
 import BoundExcluded from "./bound-excluded";
 import BoundIncluded from "./bound-included";
+import type { Standard } from "./spec";
 
 type BoundIncludedBase = new(source: any) => BoundIncluded;
 type BoundExcludedBase = new(source: any) => BoundExcluded;
@@ -26,11 +27,20 @@ export type RangeSource<TTypes extends RangeTypes = RangeTypes> = readonly [
  */
 export class RangeBase<TTypes extends RangeTypes = RangeTypes>
   extends Base<TTypes>
+  implements Standard
 {
   // @ts-expect-error readonly を外すだけ
   begin: Bound<TTypes> | null;
   // @ts-expect-error readonly を外すだけ
   end: Bound<TTypes> | null;
+
+  clone(): this {
+    const This = this.constructor as typeof RangeBase<TTypes>;
+    const begin = this.begin ? this.begin.clone() : null;
+    const end = this.end ? this.end.clone() : null;
+
+    return new This([begin, end], this.types) as this;
+  }
 }
 
 /**

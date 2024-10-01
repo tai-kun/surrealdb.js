@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0...v2.0.1) (2024-10-01)
+
+
+### Miscellaneous Chores
+
+* **.config:** リリース項目を追加 ([d19573c](https://github.com/tai-kun/surrealdb.js/commit/d19573cf3c0a0ea926ef402a0415e4da05addea2))
+* **deps:** パッケージを更新 ([ce57c09](https://github.com/tai-kun/surrealdb.js/commit/ce57c0981f7b7234d9f1a129ff5180663018443e))
+
 ## [2.0.0](https://github.com/tai-kun/surrealdb.js/compare/v1.4.3...v2.0.0) (2024-09-28)
 
 

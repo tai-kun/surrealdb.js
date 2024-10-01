@@ -13,7 +13,7 @@ A modular SurrealDB client working in major JavaScript runtimes.
 [![License](https://img.shields.io/npm/l/%40tai-kun%2Fsurrealdb?style=flat&logo=apache&color=rgb(40%2C%2038%2C%2097))](https://opensource.org/licenses/Apache-2.0)
 
 [![Latest Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb?style=flat&logo=npm)](https://www.npmjs.com/package/@tai-kun/surrealdb)
-![Beta Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb/beta?style=flat&logo=npm)
+<!-- ![Beta Version](https://img.shields.io/npm/v/%40tai-kun%2Fsurrealdb/beta?style=flat&logo=npm) -->
 
 > [!NOTE]
 > The main branch is currently under development for SurrealDB v2.
@@ -25,10 +25,8 @@ A modular SurrealDB client working in major JavaScript runtimes.
 
 ## Install
 
-Beta release:
-
 ```sh
-npm i @tai-kun/surrealdb@beta
+npm i @tai-kun/surrealdb
 ```
 
 ## Quick Start

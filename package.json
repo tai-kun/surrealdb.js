@@ -23,7 +23,7 @@
   "dependencies": {
     "@types/big.js": "^6.2.2",
     "big.js": "^6.2.2",
-    "isows": "^1.0.4",
+    "isows": "^1.0.6",
     "type-fest": "^4.26.1"
   },
   "devDependencies": {

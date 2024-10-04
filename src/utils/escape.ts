@@ -35,21 +35,16 @@ function escape(
   return left + str.replaceAll(right, escaped) + right;
 }
 
+// v2.0.3
+// https://github.com/surrealdb/surrealdb/blob/56672077ac3ba7b88cad776c81d39fcd68a94157/core/src/sql/escape.rs#L81-L94
+// もはや escape_starts_numeric との違いは無くなった。
 function escapeNormal(
   str: string,
   left: string,
   right: string,
   escaped: string,
 ): string {
-  for (let i = 0, len = str.length, code: number; i < len; i++) {
-    code = str.charCodeAt(i);
-
-    if (!(isAsciiAlphaNumeric(code) || code === UNDERSCORE)) {
-      return escape(str, left, right, escaped);
-    }
-  }
-
-  return str;
+  return escapeStartsNumeric(str, left, right, escaped);
 }
 
 function escapeStartsNumeric(

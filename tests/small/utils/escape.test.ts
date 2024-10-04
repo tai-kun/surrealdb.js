@@ -67,7 +67,7 @@ describe("escapeKey", () => {
   test.for<[input: string, expected: string]>([
     // ASCII
     [``, `""`],
-    [`123`, `123`],
+    [`123`, `"123"`],
     [`foo_bar`, `foo_bar`],
     [`foo-bar`, `"foo-bar"`],
     [`ehco "hello"`, `"ehco \\"hello\\""`],

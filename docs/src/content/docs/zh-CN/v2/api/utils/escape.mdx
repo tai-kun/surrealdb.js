@@ -5,47 +5,47 @@ slug: zh-CN/v2/api/utils/escape
 
 ## quoteStr
 
-`quoteStr` 函数用于给字符串添加引号。为了方便起见，即使空字符串也会被加上引号。
+`quoteStr` 函数用于将字符串用引号括起来。为了方便起见，空字符串也会用引号括起来。
 
 ### 导入
 
-```javascript
+```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 ```
 
-### 用法
+### 使用方法
 
-```javascript
+```ts
 function quoteStr(str: string): string;
 ```
 
-给字符串添加引号（`"` 或 `'`)。
+用引号 (`"` 或 `'`) 括起字符串。
 
 #### 参数
 
 ##### `str`
 
-需要添加引号的字符串。
+要括起的字符串。
 
 #### 返回值
 
-返回添加了引号的字符串。添加的引号类型取决于给定的字符串中是否包含单引号 (`'`)：
+返回用引号括起的字符串。用于括起的引号取决于给定字符串中是否包含单引号 (`'`)：
 
-- 如果给定的字符串为空
+- 如果给定字符串为空
   - 返回 `''`。
-- 如果给定的字符串**不包含**单引号
-  - 使用单引号将字符串括起来。
-- 如果给定的字符串**包含**单引号
-  - 使用双引号将字符串括起来。
-- 如果给定的字符串既包含单引号又包含双引号
-  - 使用双引号将字符串括起来。
-  - 双引号需要用反斜杠 (`\`) 转义。
+- 如果给定字符串**不**包含单引号
+  - 用单引号括起来。
+- 如果给定字符串**包含**单引号
+  - 用双引号括起来。
+- 如果给定字符串同时包含单引号和双引号
+  - 用双引号括起来。
+  - 双引号用反斜杠 (`\`) 转义。
 
-#### 示例
+#### 例子
 
-以下示例中，**不包含**单引号的字符串会被使用单引号括起来：
+以下例子展示了如何用单引号括起**不包含**单引号的字符串：
 
-```javascript
+```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 
 console.log(quoteStr(``));
@@ -65,9 +65,9 @@ console.log(quoteStr(`パ`));
 'パ'
 ```
 
-以下示例中，**包含**单引号的字符串会被使用双引号括起来：
+以下例子展示了如何用双引号括起**包含**单引号的字符串：
 
-```javascript
+```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 
 console.log(quoteStr(`cat's`));
@@ -85,9 +85,9 @@ console.log(quoteStr(`'パ`));
 "'パ"
 ```
 
-以下示例中，包含单引号和双引号的字符串会被使用双引号括起来，并在需要时进行转义：
+以下例子展示了如何用双引号括起同时包含单引号和双引号的字符串，并在需要时进行转义：
 
-```javascript
+```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 
 console.log(quoteStr(`cat's "toy"`));
@@ -109,17 +109,17 @@ console.log(quoteStr(`'パ"`));
 
 ## escapeKey
 
-`escapeKey` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但它专门用于处理对象的键。为了方便起见，即使空字符串也会被加上引号。
+`escapeKey` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于对象键。为了方便起见，空字符串也会用引号括起来。
 
 ### 导入
 
-```javascript
+```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
 ```
 
-### 用法
+### 使用方法
 
-```javascript
+```ts
 function escapeKey(key: string): string;
 ```
 
@@ -131,43 +131,42 @@ function escapeKey(key: string): string;
 
 #### 返回值
 
-返回转义后的字符串。在需要时使用双引号将其括起来：
+返回转义后的字符串。根据需要用双引号括起来：
 
-- 如果给定的字符串为空
+- 如果给定字符串为空
   - 返回 `""`。
-- 如果给定的字符串只包含字母数字和下划线
-  - 直接返回该字符串。
-- 如果给定的字符串包含字母数字和下划线以外的字符
-  - 使用双引号将其括起来。
-- 如果给定的字符串包含反斜杠 (`\`)
+- 如果给定字符串不以数字开头，并且只包含字母数字和下划线
+  - 直接返回。
+- 如果给定字符串包含双引号
   - 对其进行转义。
-- 如果给定的字符串包含双引号
+- 如果给定字符串包含反斜杠 (`\`)
   - 对其进行转义。
+- 如果给定字符串以数字开头，或者包含非字母数字和下划线的字符
+  - 用双引号括起来。
 
-#### 示例
+#### 例子
 
-以下示例中，因为字符串只包含字母数字和下划线，所以直接返回该字符串：
+以下例子展示了如何直接获得字符串，因为该字符串只包含字母数字和下划线：
 
-```javascript
+```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
 
-console.log(escapeKey(`123`));
 console.log(escapeKey(`foo_bar`));
 ```
 
 输出：
 
 ```js
-123
 foo_bar
 ```
 
-以下示例中，使用双引号将字符串括起来，并在需要时进行转义：
+以下例子展示了如何用双引号括起字符串，并在需要时进行转义：
 
-```javascript
+```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeKey(``));
+console.log(escapeKey(`123`));
 console.log(escapeKey(`foo-bar`));
 console.log(escapeKey(`'\\"\\`));
 console.log(escapeKey(`𩸽's "feed"`));
@@ -179,6 +178,7 @@ console.log(escapeKey(`'パ"`));
 
 ```js
 ""
+"123"
 "foo-bar"
 "'\\\"\\"
 "𩸽's \"feed\""
@@ -188,17 +188,17 @@ console.log(escapeKey(`'パ"`));
 
 ## escapeRid
 
-`escapeRid` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但它专门用于处理记录 ID。为了方便起见，即使空字符串也会被加上引号。
+`escapeRid` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于记录 ID。为了方便起见，空字符串也会用引号括起来。
 
 ### 导入
 
-```javascript
+```ts
 import { escapeRid } from "@tai-kun/surrealdb/utils";
 ```
 
-### 用法
+### 使用方法
 
-```javascript
+```ts
 function escapeRid(rid: string): string;
 ```
 
@@ -210,22 +210,22 @@ function escapeRid(rid: string): string;
 
 #### 返回值
 
-返回转义后的字符串。在需要时使用尖括号 (`⟨⟩`) 将其括起来：
+返回转义后的字符串。根据需要用尖括号 (`⟨⟩`) 括起来：
 
-- 如果给定的字符串为空
+- 如果给定字符串为空
   - 返回 `⟨⟩`。
-- 如果给定的字符串不以数字开头且只包含字母数字和下划线
-  - 直接返回该字符串。
-- 如果给定的字符串包含尖括号 (`⟩`)
+- 如果给定字符串不以数字开头，并且只包含字母数字和下划线
+  - 直接返回。
+- 如果给定字符串包含尖括号 (`⟩`)
   - 对其进行转义。
-- 如果给定的字符串全部由数字组成或包含字母数字和下划线以外的字符
-  - 使用尖括号 (`⟨⟩`) 将其括起来。
+- 如果给定字符串全部由数字组成，或者包含非字母数字和下划线的字符
+  - 用尖括号 (`⟨⟩`) 括起来。
 
-#### 示例
+#### 例子
 
-以下示例中，因为字符串不以数字开头且只包含字母数字和下划线，所以直接返回该字符串：
+以下例子展示了如何直接获得字符串，因为该字符串不以数字开头，并且只包含字母数字和下划线：
 
-```javascript
+```ts
 import { escapeRid } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeRid(`foo_123`));
@@ -237,9 +237,9 @@ console.log(escapeRid(`foo_123`));
 foo_123
 ```
 
-以下示例中，使用尖括号 (`⟨⟩`) 将字符串括起来，并在需要时进行转义：
+以下例子展示了如何用尖括号 (`⟨⟩`) 括起字符串，并在需要时进行转义：
 
-```javascript
+```ts
 import { escapeRid } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeRid(``));
@@ -263,17 +263,17 @@ console.log(escapeRid(`'パ⟩`));
 
 ## escapeIdent
 
-`escapeIdent` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但它专门用于处理命名空间、数据库、表和字段的名称。为了方便起见，即使空字符串也会被加上引号。
+`escapeIdent` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于命名空间、数据库、表和字段的名称。为了方便起见，空字符串也会用引号括起来。
 
 ### 导入
 
-```javascript
+```ts
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
 ```
 
-### 用法
+### 使用方法
 
-```javascript
+```ts
 function escapeIdent(ident: string): string;
 ```
 
@@ -285,22 +285,22 @@ function escapeIdent(ident: string): string;
 
 #### 返回值
 
-返回转义后的字符串。在需要时使用反引号 (<code>`</code>) 将其括起来：
+返回转义后的字符串。根据需要用反引号 (<code>`</code>) 括起来：
 
-- 如果给定的字符串为空
+- 如果给定字符串为空
   - 返回 <code>``</code>。{/* TODO(tai-kun): " になる問題解決する */}
-- 如果给定的字符串不以数字开头且只包含字母数字和下划线
-  - 直接返回该字符串。
-- 如果给定的字符串包含反引号 (<code>`</code>)
+- 如果给定字符串不以数字开头，并且只包含字母数字和下划线
+  - 直接返回。
+- 如果给定字符串包含反引号 (<code>`</code>)
   - 对其进行转义。
-- 如果给定的字符串以数字开头或包含字母数字和下划线以外的字符
-  - 使用反引号 (<code>`</code>) 将其括起来。
+- 如果给定字符串以数字开头，或者包含非字母数字和下划线的字符
+  - 用反引号 (<code>`</code>) 括起来。
 
-#### 示例
+#### 例子
 
-以下示例中，因为字符串不以数字开头且只包含字母数字和下划线，所以直接返回该字符串：
+以下例子展示了如何直接获得字符串，因为该字符串不以数字开头，并且只包含字母数字和下划线：
 
-```javascript
+```ts
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeIdent(`foo_123`));
@@ -312,9 +312,9 @@ console.log(escapeIdent(`foo_123`));
 foo_123
 ```
 
-以下示例中，使用反引号 (<code>`</code>) 将字符串括起来，并在需要时进行转义：
+以下例子展示了如何用反引号 (<code>`</code>) 括起字符串，并在需要时进行转义：
 
-```javascript
+```ts
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeIdent(""));
@@ -336,11 +336,11 @@ console.log(escapeIdent("'パ`"));
 `'パ\``
 ```
 
-## 专栏
+## 栏目
 
 ### 字符串长度
 
-前面示例中使用的字符串包含一些 JavaScript 中的字符串长度与人类理解的字符串长度不一致的字符：
+前面例子中使用的字符串包含一些在 JavaScript 中的字符串长度与人类感知的字符串长度不同的字符：
 
 | 类型 | 显示 | `.length` | `Uint8Array` |
 | --- | --- | --- | --- |

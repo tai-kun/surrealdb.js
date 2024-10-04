@@ -135,14 +135,14 @@ function escapeKey(key: string): string;
 
 - 与えられた文字列が空の場合
   - `""` を返します。
-- 与えられた文字列が英数字とアンダースコアのみで構成される場合
+- 与えられた文字列が数字で始まらず、英数字とアンダースコアのみで構成される場合
   - そのまま返します。
-- 与えられた文字列に英数字とアンダースコア以外が含まれている場合
-  - 二重引用符で囲います。
-- 与えられた文字列にバックスラッシュ (`\`) が含まれている場合
-  - それをエスケープします。
 - 与えられた文字列に二重引用符が含まれている場合
   - それをエスケープします。
+- 与えられた文字列にバックスラッシュ (`\`) が含まれている場合
+  - それをエスケープします。
+- 与えられた文字列が数字で始まるか、英数字とアンダースコア以外が含まれている場合
+  - 二重引用符で囲います。
 
 #### 例
 
@@ -151,14 +151,12 @@ function escapeKey(key: string): string;
 ```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
 
-console.log(escapeKey(`123`));
 console.log(escapeKey(`foo_bar`));
 ```
 
 出力:
 
 ```js
-123
 foo_bar
 ```
 
@@ -168,6 +166,7 @@ foo_bar
 import { escapeKey } from "@tai-kun/surrealdb/utils";
 
 console.log(escapeKey(``));
+console.log(escapeKey(`123`));
 console.log(escapeKey(`foo-bar`));
 console.log(escapeKey(`'\\"\\`));
 console.log(escapeKey(`𩸽's "feed"`));
@@ -179,6 +178,7 @@ console.log(escapeKey(`'パ"`));
 
 ```js
 ""
+"123"
 "foo-bar"
 "'\\"\"
 "𩸽's \"feed\""

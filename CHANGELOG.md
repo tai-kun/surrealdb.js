@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.2](https://github.com/tai-kun/surrealdb.js/compare/v2.0.1...v2.0.2) (2024-10-04)
+
+
+### Bug Fixes
+
+* **utils:** escapeKey を surrealdb の実装と同期する ([#46](https://github.com/tai-kun/surrealdb.js/issues/46)) ([846cb09](https://github.com/tai-kun/surrealdb.js/commit/846cb0952d74e0d3e276db4281f2372ec626c1ef))
+
 ## [2.0.1](https://github.com/tai-kun/surrealdb.js/compare/v2.0.0...v2.0.1) (2024-10-01)
 
 

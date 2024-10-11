@@ -73,7 +73,7 @@ import { Surreal } from "@tai-kun/surrealdb";
 const db = new Surreal();
 
 await db.connect("ws://localhost:8000");
-await db.connect("ws://localhost:1129"); // throws ConnectionConflictError: Connection conflict between ws://localhost:8000/rpc and ws://localhost:1129/rpc.
+await db.connect("ws://localhost:1129"); // throws ConnectionConflictError: An attempt was made to connect to ws://localhost:1129/rpc while ws://localhost:8000/rpc was already connected.
 ```
 
 `.connect()` は非同期処理のコンテクストで同時に実行されるされることはないため、次の例も同様に接続に失敗します。通常どのエンドポイントが先に接続を確立するかわからないため、エラーメッセージは都度異なる可能性があります:

@@ -113,6 +113,13 @@ export class CircularReferenceError extends SurrealError {
   static {
     this.prototype.name = "CircularReferenceError";
   }
+
+  constructor(
+    public reference: unknown,
+    options?: SurrealErrorOptions | undefined,
+  ) {
+    super("Circular reference is detected", options);
+  }
 }
 
 /**
@@ -130,7 +137,7 @@ export class NumberRangeError extends SurrealError {
     this.prototype.name = "NumberRangeError";
   }
 
-  public integer: boolean;
+  integer: boolean;
 
   constructor(
     public range: [from: number | bigint, to: number | bigint],
@@ -155,8 +162,11 @@ export class UnsupportedRuntimeError extends SurrealError {
     this.prototype.name = "UnsupportedRuntimeError";
   }
 
-  constructor(reason: string, options?: SurrealErrorOptions | undefined) {
-    super("Unsupported runtime. " + reason, options);
+  // @ts-expect-error
+  cause: string;
+
+  constructor(reason: string) {
+    super("Unsupported runtime.", { cause: reason });
   }
 }
 

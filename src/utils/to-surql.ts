@@ -58,7 +58,7 @@ export default function toSurql(value: unknown): string {
     }
 
     if (c.seen.has(x)) {
-      throw new CircularReferenceError(String(x));
+      throw new CircularReferenceError(x);
     }
 
     if (canToSurql(x)) {

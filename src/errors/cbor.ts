@@ -132,9 +132,9 @@ export class CborMemoryBlockConflictError extends CborMemoryBlockError {
   }
 
   constructor(
-    address: MemoryAddress,
-    expectedSize: number,
-    actualSize: number,
+    public address: MemoryAddress,
+    public expectedSize: number,
+    public actualSize: number,
   ) {
     super(
       `Memory conflict at address ${address}: `
@@ -154,7 +154,7 @@ export class CborUndefinedMemoryBlockError extends CborMemoryBlockError {
     this.prototype.name = "CborUndefinedMemoryBlockError";
   }
 
-  constructor(address: MemoryAddress) {
+  constructor(public address: MemoryAddress) {
     super(`Memory block at address ${address} is not defined.`);
   }
 }

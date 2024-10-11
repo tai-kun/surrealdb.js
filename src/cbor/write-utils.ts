@@ -855,8 +855,7 @@ export function write(
     } else if (kind === "bigint") {
       writeBigInt(w, value as bigint);
     } else if (seen.has(value)) {
-      // TODO(tai-kun): エラーメッセージを改善
-      throw new CircularReferenceError(String(value));
+      throw new CircularReferenceError(value);
     } else if (canToCBOR(value)) {
       const cbor = value.toCBOR(w);
 

@@ -90,8 +90,8 @@ export default class BasicClient {
     }
   }
 
-  protected async createEngine(protocol: string): Promise<EngineAbc> {
-    let engine = this._engines[protocol];
+  protected async createEngine(scheme: string): Promise<EngineAbc> {
+    let engine = this._engines[scheme];
     const seen: string[] = [];
 
     while (typeof engine === "string") {
@@ -104,7 +104,7 @@ export default class BasicClient {
     }
 
     if (!engine) {
-      throw new EngineNotFoundError(protocol);
+      throw new EngineNotFoundError(scheme);
     }
 
     return await engine({
@@ -215,12 +215,12 @@ export default class BasicClient {
         unreachable(conn as never);
       }
 
-      const protocol = endpoint.protocol.slice(0, -1 /* remove `:` */);
+      const scheme = endpoint.protocol.slice(0, -1 /* remove `:` */);
       const { signal = getTimeoutSignal(15_000) } = options;
 
       return (async () => {
         try {
-          this.eng = await this.createEngine(protocol);
+          this.eng = await this.createEngine(scheme);
           await this.eng.connect({ endpoint, signal });
         } catch (e) {
           this.eng = null;
@@ -275,7 +275,9 @@ export default class BasicClient {
     }
 
     if (!this.eng) {
-      throw new ConnectionUnavailableError();
+      throw new ConnectionUnavailableError({
+        cause: "The engine is not set.",
+      });
     }
 
     return await rpc({

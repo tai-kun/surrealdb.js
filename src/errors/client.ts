@@ -18,6 +18,8 @@ export class CircularEngineReferenceError extends CircularReferenceError {
     this.prototype.name = "CircularEngineReferenceError";
   }
 
+  // @ts-expect-error
+  reference: string;
   seen: string[];
 
   constructor(
@@ -38,10 +40,10 @@ export class EngineNotFoundError extends SurrealError {
   }
 
   constructor(
-    public protocol: string,
+    public scheme: string,
     options?: SurrealErrorOptions | undefined,
   ) {
-    super(`No ${protocol} protocol engine found.`, options);
+    super(`No ${scheme} scheme engine found.`, options);
   }
 }
 
@@ -64,7 +66,8 @@ export class ConnectionConflictError extends SurrealError {
     endpoint1 = String(endpoint1);
     endpoint2 = String(endpoint2);
     super(
-      `Connection conflict between ${endpoint1} and ${endpoint2}.`,
+      `An attempt was made to connect to ${endpoint2}`
+        + ` while ${endpoint1} was already connected.`,
       options,
     );
     this.endpoint1 = endpoint1 as string;

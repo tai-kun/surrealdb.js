@@ -122,7 +122,9 @@ export default class HttpEngine extends EngineAbc {
     const conn = this.getConnectionInfo();
 
     if (conn.state !== "open") {
-      throw new ConnectionUnavailableError();
+      throw new ConnectionUnavailableError({
+        cause: "The connection is not established via the .connect() method.",
+      });
     }
 
     switch (request.method) {

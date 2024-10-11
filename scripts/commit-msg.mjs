@@ -29,7 +29,7 @@ if (!debug && !message) {
     "tests", // 別途設定
   ];
 
-  for (const file of scan(root, `.?*`, skip)) {
+  for (const file of [...scan(root, `*`, skip), ...scan(root, `.*`, skip)]) {
     const scopes = [
       path.posix.normalize(file),
     ];

@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.0.3](https://github.com/tai-kun/surrealdb.js/compare/v2.0.2...v2.0.3) (2024-10-11)
+
+
+### Bug Fixes
+
+* **errors:** エラーメッセージの修正 ([#49](https://github.com/tai-kun/surrealdb.js/issues/49)) ([5162825](https://github.com/tai-kun/surrealdb.js/commit/5162825fe6cc5dc98b99489ff49133a0144b5978))
+
+
+### Miscellaneous Chores
+
+* **package.json:** exports フィールドをフラットにする ([#50](https://github.com/tai-kun/surrealdb.js/issues/50)) ([4a763b5](https://github.com/tai-kun/surrealdb.js/commit/4a763b5b5e4899dff6b7bcb19d954ebf8852c473))
+
 ## [2.0.2](https://github.com/tai-kun/surrealdb.js/compare/v2.0.1...v2.0.2) (2024-10-04)
 
 

@@ -429,7 +429,9 @@ export default class WebSocketEngine extends EngineAbc {
     const conn = this.getConnectionInfo();
 
     if (!this.ws || conn.state !== "open") {
-      throw new ConnectionUnavailableError();
+      throw new ConnectionUnavailableError({
+        cause: "The connection is not established via the .connect() method.",
+      });
     }
 
     switch (request.method) {

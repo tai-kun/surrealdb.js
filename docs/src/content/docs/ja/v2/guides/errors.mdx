@@ -94,6 +94,9 @@ slug: ja/v2/guides/errors
 `.name: "CircularReferenceError"`
 :   エラー名です。
 
+`.reference: unknown`
+:   循環参照が発生した値です。
+
 例えば次のような場合にこのエラーは投げられます:
 
 ```ts
@@ -180,8 +183,11 @@ toSurql(a); // throws CircularReferenceError
 `.name: "CircularEngineReferenceError"`
 :   エラー名です。
 
+`.reference: string`
+:   循環参照が発生したスキーム名です。
+
 `.seen: string[]`
-:   循環参照が発生するまでに経由したプロトコル名のリストです。
+:   循環参照が発生するまでに経由したスキーム名のリストです。
 
 例えば次のような場合にこのエラーは投げられます:
 
@@ -234,7 +240,7 @@ const { Surreal } = initSurreal({
 `.name: "EngineNotFoundError"`
 :   エラー名です。
 
-`.protocol: string`
+`.scheme: string`
 :   接続先のプロトコル名です。
 
 例えば次のような場合にこのエラーは投げられます:
@@ -250,7 +256,7 @@ const { Surreal } = initSurreal({
 });
 
 await using db = new Surreal();
-await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No https protocol engine found.
+await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No https scheme engine found.
 ```
 
 #### 解決策
@@ -281,7 +287,7 @@ const { Surreal } = initSurreal({
 :   エラー名です。
 
 `.endpoint1: string`
-:   一方のエンドポイントです。
+:   すでに接続済みのエンドポイントです。
 
 `.endpoint2: string`
 :   もう一方のエンドポイントです。
@@ -291,8 +297,8 @@ import { Surreal } from "@tai-kun/surrealdb";
 
 await using db = new Surreal();
 
-await db.connect("http://localhost:8000");
-await db.connect("http://localhost:11298"); // throws ConnectionConflictError: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
+await db.connect("ws://localhost:8000");
+await db.connect("ws://localhost:1129"); // throws ConnectionConflictError: An attempt was made to connect to ws://localhost:1129/rpc while ws://localhost:8000/rpc was already connected.
 ```
 
 `.connect` メソッドは渡された URL のパスが `/rpc` で終わらない場合、それを末尾に追加します。そのため、一方のエンドポイントの URL パスが `/rpc` で終わる場合は、その見た目に反してエラーにならないことがあります:

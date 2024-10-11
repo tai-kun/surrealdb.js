@@ -1,3 +1,29 @@
+// 参考: https://github.com/twada/type-name/blob/master/index.js
+
+const { toString } = Object.prototype;
+const funcNameRegex = /^\s*function\s*([^\(\s]+)/i;
+
+function capitalize(str: string): string {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function getFuncName(func: Function): string {
+  return (func.name || funcNameRegex.exec(func.toString())?.[1]) || "Function";
+}
+
+function getConstructorName(obj: object): string {
+  const name = toString.call(obj).slice(8, -1);
+
+  if (
+    (name === "Object" || name === "Error")
+    && typeof obj.constructor === "function"
+  ) {
+    return getFuncName(obj.constructor);
+  }
+
+  return name;
+}
+
 export type TypeName =
   | "null"
   | "undefined"
@@ -23,25 +49,13 @@ export type TypeName =
   | (string & {});
 
 export default function getTypeName(x: unknown): TypeName {
-  switch (typeof x) {
-    case "object":
-      return x === null
-        ? "null"
-        : (x.constructor.name || "Object");
-
-    case "function":
-      return x.constructor.name || "Function";
-
-    case "bigint":
-      return "BigInt";
-
-    case "boolean":
-    case "number":
-    case "string":
-    case "symbol":
-      return (typeof x).charAt(0).toUpperCase() + (typeof x).substring(1);
-
-    default:
-      return typeof x;
-  }
+  return x == null
+    ? String(x)
+    : typeof x === "object"
+    ? getConstructorName(x)
+    : typeof x === "bigint"
+    ? "BigInt"
+    : typeof x === "function"
+    ? getFuncName(x.constructor)
+    : capitalize(typeof x);
 }

@@ -163,6 +163,51 @@
       "types": "./dist/formatters/json/index.d.ts",
       "import": "./dist/formatters/json/index.mjs",
       "require": "./dist/formatters/json/index.cjs"
+    },
+    "./decode-only-data-types": {
+      "types": "./dist/data-types/decode-only/index.d.ts",
+      "import": "./dist/data-types/decode-only/index.mjs",
+      "require": "./dist/data-types/decode-only/index.cjs"
+    },
+    "./encodable-data-types": {
+      "types": "./dist/data-types/encodable/index.d.ts",
+      "import": "./dist/data-types/encodable/index.mjs",
+      "require": "./dist/data-types/encodable/index.cjs"
+    },
+    "./standard-data-types": {
+      "types": "./dist/data-types/standard/index.d.ts",
+      "import": "./dist/data-types/standard/index.mjs",
+      "require": "./dist/data-types/standard/index.cjs"
+    },
+    "./http-engine": {
+      "types": "./dist/engines/http/index.d.ts",
+      "import": "./dist/engines/http/index.mjs",
+      "require": "./dist/engines/http/index.cjs"
+    },
+    "./websocket-engine": {
+      "types": "./dist/engines/websocket/index.d.ts",
+      "import": "./dist/engines/websocket/index.mjs",
+      "require": "./dist/engines/websocket/index.cjs"
+    },
+    "./basic-client": {
+      "types": "./dist/clients/basic/index.d.ts",
+      "import": "./dist/clients/basic/index.mjs",
+      "require": "./dist/clients/basic/index.cjs"
+    },
+    "./standard-client": {
+      "types": "./dist/clients/standard/index.d.ts",
+      "import": "./dist/clients/standard/index.mjs",
+      "require": "./dist/clients/standard/index.cjs"
+    },
+    "./cbor-formatter": {
+      "types": "./dist/formatters/cbor/index.d.ts",
+      "import": "./dist/formatters/cbor/index.mjs",
+      "require": "./dist/formatters/cbor/index.cjs"
+    },
+    "./json-formatter": {
+      "types": "./dist/formatters/json/index.d.ts",
+      "import": "./dist/formatters/json/index.mjs",
+      "require": "./dist/formatters/json/index.cjs"
     }
   },
   "size-limit": [

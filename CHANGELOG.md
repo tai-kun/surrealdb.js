@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0](https://github.com/tai-kun/surrealdb.js/compare/v2.0.3...v2.1.0) (2024-10-17)
+
+
+### Features
+
+* **surreal:** コネクションプールを追加 ([a523c38](https://github.com/tai-kun/surrealdb.js/commit/a523c38b1ca97390a4b7b5088977b0d4db5200ee))
+
+
+### Bug Fixes
+
+* **errors:** メッセージを修正 ([566b7d9](https://github.com/tai-kun/surrealdb.js/commit/566b7d9c6be7a78864916dbbd17a62c4d6f53541))
+
 ## [2.0.3](https://github.com/tai-kun/surrealdb.js/compare/v2.0.2...v2.0.3) (2024-10-11)
 
 

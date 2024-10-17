@@ -62,6 +62,7 @@ export {
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
+  Pool,
   Range,
   surql,
   Surreal,
@@ -71,6 +72,9 @@ export {
 } from "./default";
 
 export type * from "@tai-kun/surrealdb/types";
+
+export type * from "./init-pool";
+export { default as initPool } from "./init-pool";
 
 export type * from "./init-surreal";
 export { default as initSurreal } from "./init-surreal";

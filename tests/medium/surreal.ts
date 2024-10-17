@@ -6,8 +6,9 @@ import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
 import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
 import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
 import { SemVer } from "semver";
-import { afterAll, beforeAll, vi } from "vitest";
+import { afterAll, beforeAll } from "vitest";
 import { WebSocket } from "ws";
+import { stopSurrealDb, viWaitForSurrealDb } from "./surrealdb";
 
 const engines = {
   http: HttpEngine,
@@ -197,40 +198,7 @@ let port: number;
 let ver: SemVer;
 
 beforeAll(async () => {
-  port = await vi.waitFor(
-    async () => {
-      const resp = await fetch("http://127.0.0.1:3150/surrealdb/start", {
-        method: "POST",
-      });
-
-      if (!resp.ok) {
-        await resp.body?.cancel();
-        throw new Error(resp.statusText);
-      }
-
-      const text = await resp.text();
-
-      return Number(text);
-    },
-    {
-      interval: 1_000,
-      timeout: 10_000,
-    },
-  );
-  await vi.waitFor(
-    async () => {
-      const resp = await fetch(`http://127.0.0.1:${port}/health`);
-      await resp.body?.cancel();
-
-      if (!resp.ok) {
-        throw new Error(resp.statusText);
-      }
-    },
-    {
-      interval: 1_000,
-      timeout: 10_000,
-    },
-  );
+  port = await viWaitForSurrealDb();
   const resp = await fetch(`http://127.0.0.1:${port}/version`);
   const text = await resp.text();
   ver = new SemVer(text.substring("surrealdb-".length));
@@ -238,11 +206,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   try {
-    const resp = await fetch("http://127.0.0.1:3150/stop", {
-      method: "POST",
-      body: String(port),
-    });
-    await resp.body?.cancel();
+    await stopSurrealDb(port);
   } catch (e) {
     console.warn(e);
   }

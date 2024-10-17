@@ -19,7 +19,7 @@ A modular SurrealDB client working in major JavaScript runtimes.
 > The main branch is currently under development for SurrealDB v2.
 > You can find the repository for SurrealDB v1 [here](https://github.com/tai-kun/surrealdb.js/tree/v1).
 
-## Document (JA/EN)
+## Document (JA/EN/KO/zh-CN)
 
 [https://tai-kun.github.io/surrealdb.js/getting-started/](https://tai-kun.github.io/surrealdb.js/getting-started/)
 
@@ -79,7 +79,7 @@ The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.j
 | Env | Version |
 | --- | --- |
 | Node.js | `20.x`,`^22.5.1` *1 |
-| Deno | `1.x` *2 |
+| Deno | `1.x`, `2.x` *2 |
 | Bun | `^1.1.13` |
 | Chromium | `>=104` *3 |
 | Firefox | `>=100` *4 |

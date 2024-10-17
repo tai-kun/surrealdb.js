@@ -79,7 +79,7 @@ export class SurrealValueError extends SurrealError {
     );
     super(
       `Expected ${expected} but got type ${getTypeName(actual)}${
-        s && ` of ${s}`
+        s && ` of value ${s}`
       }.`,
       options,
     );

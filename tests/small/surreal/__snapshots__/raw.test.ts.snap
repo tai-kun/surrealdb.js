@@ -4,7 +4,7 @@ exports[`.toString() 明示的に定義されていないならエラー 1`] = `
 {
   "actual": {},
   "expected": "Object contains encode methods",
-  "message": "Expected Object contains encode methods but got type Object of [object Object].",
+  "message": "Expected Object contains encode methods but got type Object of value [object Object].",
   "name": "SurrealValueError",
 }
 `;

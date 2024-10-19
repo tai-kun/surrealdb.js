@@ -91,9 +91,16 @@ The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.j
 *4: Probably works with `>=68`  
 *5: Probably works with `>=14`
 
-and:
+## Tested
 
-Do not expect sub-millisecond precision for dates prior to the UNIX epoch.
+| Env | Version |
+| --- | --- |
+| Node.js | `18.x`,`20.x`,`^22.5.1`,`23.x` |
+| Deno | `1.x`,`2.x` |
+| Bun | `^1.1.13` |
+| Chromium | `>=104` |
+| Firefox | `>=100` |
+| WebKit | `>=15.4` |
 
 ## License
 

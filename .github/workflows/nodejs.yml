@@ -69,6 +69,7 @@ jobs:
           - "18.x"
           - "20.x"
           - "22.x"
+          - "23.x"
     steps:
       - uses: actions/checkout@v4
 
@@ -93,10 +94,11 @@ jobs:
       fail-fast: false
       matrix:
         nodejs-version:
-          # TODO(tai-kun): v18 だけなんか失敗する。要調査。
+          # TODO(tai-kun): v18 が CI 上でだけ失敗する。要調査。
           # - "18.x"
           - "20.x"
           - "22.x"
+          - "23.x"
         surrealdb-version:
           - "v2.0.0"
           - "latest"

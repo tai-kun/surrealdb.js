@@ -1,4 +1,4 @@
-import { Duration as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Duration as Base } from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { NumberRangeError } from "@tai-kun/surrealdb/errors";
 import { CBOR_TAG_DURATION, type Encodable } from "./spec";
 

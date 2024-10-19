@@ -7,18 +7,14 @@ banner:
 
 import Badge from "~/components/en/Badge.astro";
 
-## Range
-
-### Description
-
-This type represents a range of values.
+## Description
 
 ### Import
 
 ```ts
-import { Range } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Range } from "@tai-kun/surrealdb/data-types/encodable";
-import { Range } from "@tai-kun/surrealdb/data-types/standard";
+import { Range } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Range } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Range } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -38,15 +34,15 @@ new Range(
 
 ##### `source`
 
-A pair of minimum and maximum values for the range. `null` if unbounded.
+A pair of minimum and maximum values for the range. If there is no limit, it is `null`.
 
 #### Return Value
 
-When invoked via `new`, `Range` returns its instance.
+When called through `new`, `Range` returns its instance.
 
 ### `.begin` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The minimum value of the range. `null` if unbounded on the lower end.
+The minimum value of the range. If there is no lower bound, it is `null`.
 
 ```ts
 .begin: BoundIncluded | BoundExcluded | null;
@@ -54,7 +50,7 @@ The minimum value of the range. `null` if unbounded on the lower end.
 
 ### `.end` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The maximum value of the range. `null` if unbounded on the upper end.
+The maximum value of the range. If there is no upper bound, it is `null`.
 
 ```ts
 .end: BoundIncluded | BoundExcluded | null;
@@ -62,7 +58,7 @@ The maximum value of the range. `null` if unbounded on the upper end.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Range` object to a SurrealQL-usable string.
+Converts the `Range` object into a string usable in SurrealQL.
 
 `.toJSON()` and `.toSurql()` return the same result as this method.
 
@@ -76,16 +72,16 @@ None.
 
 #### Return Value
 
-Returns a string representation of the range.
+Returns the string representation of the range.
 
-#### Example
+#### Examples
 
 ```ts
 import {
   Range,
   BoundIncluded,
   BoundExcluded,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 
 const range = new Range([new BoundIncluded(1), new BoundIncluded(3)]);
 console.log(range.toString());
@@ -124,11 +120,11 @@ console.log(range.toString());
 // -> ..
 ```
 
-### Advancement
+### Further Development
 
-#### General Purpose Determination of `Range` Objects
+#### Generic Judgement of `Range` Objects
 
-To determine if a value is a `Range` object without relying on presets, it is recommended to use the `isRange` function. This function does not use `instanceof`, making it useful when the preset of the value to be validated is unknown.
+It is recommended to use the `isRange` function to determine whether a value is a `Range` object without relying on presets. This function does not use `instanceof`, making it useful when the preset of the value to be verified is unknown.
 
 ```ts
 import { isRange } from "@tai-kun/surrealdb";

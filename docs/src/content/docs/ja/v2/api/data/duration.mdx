@@ -10,9 +10,9 @@ import Badge from "~/components/ja/Badge.astro";
 ### インポート
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
-import { Duration } from "@tai-kun/surrealdb/data-types/standard";
+import { Duration } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Duration } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -124,7 +124,7 @@ new Duration(end - begin);
 #### 例
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(0);
 console.log(duration.parse());
@@ -132,7 +132,7 @@ console.log(duration.parse());
 ```
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.parse());
@@ -156,7 +156,7 @@ console.log(duration.parse());
 期間をナノ秒単位で返します。
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.valueOf());
@@ -184,7 +184,7 @@ console.log(duration.valueOf());
 #### 例
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.toString());
@@ -210,7 +210,7 @@ console.log(duration.toString());
 #### 例
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration("2m3s456ms");
 console.log(duration.toISOString());

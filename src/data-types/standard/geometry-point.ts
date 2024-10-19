@@ -3,7 +3,7 @@ import {
   GeometryPointBase as Base,
   type GeometryPointSource,
   type GeometryPointTypes,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import { canClone } from "@tai-kun/surrealdb/utils";
 import {
   coord,

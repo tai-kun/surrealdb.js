@@ -1,7 +1,7 @@
 import {
   Table as Base,
   type TableSource,
-} from "@tai-kun/surrealdb/data-types/decode-only";
+} from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_TABLE, type Encodable } from "./spec";
 

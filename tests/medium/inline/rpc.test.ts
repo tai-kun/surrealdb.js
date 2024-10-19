@@ -1,7 +1,7 @@
 import { rpc } from "@tai-kun/surrealdb";
-import { Jwt } from "@tai-kun/surrealdb/clients/standard";
-import * as decodeOnlyDataTypes from "@tai-kun/surrealdb/data-types/decode-only";
-import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
+import CborFormatter from "@tai-kun/surrealdb/cbor-formatter";
+import * as decodeOnlyDataTypes from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Jwt } from "@tai-kun/surrealdb/standard-client";
 import { expect, test } from "vitest";
 import { host } from "../surreal";
 

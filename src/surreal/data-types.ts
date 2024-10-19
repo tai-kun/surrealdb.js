@@ -16,7 +16,7 @@ import type {
   Table as DecodeOnlyTable,
   Thing as DecodeOnlyThing,
   Uuid as DecodeOnlyUuid,
-} from "@tai-kun/surrealdb/data-types/decode-only";
+} from "@tai-kun/surrealdb/decodeonly-datatypes";
 import type {
   BoundExcluded as EncodableBoundExcluded,
   BoundIncluded as EncodableBoundIncluded,
@@ -35,7 +35,7 @@ import type {
   Table as EncodableTable,
   Thing as EncodableThing,
   Uuid as EncodableUuid,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import type {
   BoundExcluded as StandardBoundExcluded,
   BoundIncluded as StandardBoundIncluded,
@@ -54,7 +54,7 @@ import type {
   Table as StandardTable,
   Thing as StandardThing,
   Uuid as StandardUuid,
-} from "@tai-kun/surrealdb/data-types/standard";
+} from "@tai-kun/surrealdb/standard-datatypes";
 import { isDataTypeOf } from "@tai-kun/surrealdb/utils";
 
 export namespace DataType {

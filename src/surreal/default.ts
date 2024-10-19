@@ -1,4 +1,6 @@
-import Client from "@tai-kun/surrealdb/clients/standard";
+import Formatter from "@tai-kun/surrealdb/cbor-formatter";
+import HttpEngine from "@tai-kun/surrealdb/http-engine";
+import Client from "@tai-kun/surrealdb/standard-client";
 import {
   BoundExcluded,
   BoundIncluded,
@@ -17,12 +19,10 @@ import {
   Table,
   Thing,
   Uuid,
-} from "@tai-kun/surrealdb/data-types/standard";
-import HttpEngine from "@tai-kun/surrealdb/engines/http";
+} from "@tai-kun/surrealdb/standard-datatypes";
 import WebSocketEngine, {
   type WebSocketEngineConfig,
-} from "@tai-kun/surrealdb/engines/websocket";
-import Formatter from "@tai-kun/surrealdb/formatters/cbor";
+} from "@tai-kun/surrealdb/websocket-engine";
 import { WebSocket } from "isows";
 import initPool from "./init-pool";
 import initSurreal from "./init-surreal";

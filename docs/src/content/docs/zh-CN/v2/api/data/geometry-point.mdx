@@ -10,9 +10,9 @@ import Badge from "~/components/zh-CN/Badge.astro";
 ### 导入
 
 ```ts
-import { GeometryPoint } from "@tai-kun/surrealdb/data-types/decode-only";
-import { GeometryPoint } from "@tai-kun/surrealdb/data-types/encodable";
-import { GeometryPoint } from "@tai-kun/surrealdb/data-types/standard";
+import { GeometryPoint } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { GeometryPoint } from "@tai-kun/surrealdb/encodable-datatypes";
+import { GeometryPoint } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -31,4 +31,4 @@ new GeometryPoint(source);
 
 #### 返回值
 
-如果通过 `new` 调用，`GeometryPoint` 将返回它的实例。
+通过 `new` 调用时，`GeometryPoint` 将返回其实例。

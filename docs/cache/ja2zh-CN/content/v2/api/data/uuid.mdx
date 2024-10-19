@@ -5,14 +5,14 @@ slug: zh-CN/v2/api/data/uuid
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-UUID（通用唯一识别码）是一个 128 位的标识符，用于唯一地标识特定实体。`Uuid` 类表示 UUID，支持 UUID v1 到 v7。需要注意的是，生成 UUID 需要使用单独的库或运行时内置功能（例如 `node:crypto`）。
+UUID（Universally Unique Identifier）是一种用于唯一标识特定实体的 128 位标识符。`Uuid` 类用于表示 UUID。它支持 UUID v1 到 v7。需要注意的是，要生成 UUID，需要使用单独的库或运行时内置的函数（例如 `node:crypto`）。
 
 ### 导入
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
-import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+import { Uuid } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Uuid } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Uuid } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -28,11 +28,11 @@ new Uuid(source: Uint8Array | string); // standard
 
 ##### `source`
 
-UUID 的字节数组表示，如果是 `standard` 预设，则为字符串。
+UUID 的字节数组表示形式，如果使用 standard 预设，则为字符串。
 
 #### 返回值
 
-通过 `new` 调用时，`Uuid` 返回其实例。
+通过 `new` 调用时，`Uuid` 将返回其实例。
 
 ### `.bytes` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
@@ -44,23 +44,23 @@ UUID 的字节数组。
 
 ### `.variant` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-UUID 的变体。它由 UUID 第 13 位的高位比特定义，有三个主要变体和一个为将来保留的变体。
+UUID 的变体。这由 UUID 的第 13 位的上位比特定义，包括以下三个主要变体和一个为将来保留的变体：
 
 1. NCS 兼容
     - `0b0xxx`
-    - 表示 UUID 与 NCS（网络计算系统）兼容。
-    - 不常使用。
+    - 表示 UUID 与 NCS（Network Computing System）兼容。
+    - 不常被使用。
 2. RFC 4122 兼容
     - `0b10xx`
     - 基于 RFC 4122（UUID 标准规范）的 UUID。
-    - 是最常用的 UUID 格式，包括 v1（时间戳）和 v4（随机）等格式。
+    - 是 UUID 的常用形式，包括 v1（基于时间）和 v4（随机）等形式。
 3. Microsoft GUID 兼容
     - `0b110x`
-    - Microsoft 使用的 GUID（全局唯一标识符）格式。
+    - Microsoft 使用的 GUID（Globally Unique Identifier）的格式。
 4. 为将来保留
     - `0b111x`
 
-此属性除了以上变体外，还表示 NIL UUID 和 MAX UUID。
+此属性除了以上变体之外，还表示 NIL UUID 和 MAX UUID。
 
 ```ts
 .variant:
@@ -74,7 +74,7 @@ UUID 的变体。它由 UUID 第 13 位的高位比特定义，有三个主要�
 
 ### `.version` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-如果 UUID 的变体为 `"RFC"`，则为 UUID 版本号。否则为 `null`。
+如果 UUID 的变体为 `"RFC"`，则表示 UUID 版本号。否则为 `null`。
 
 ```ts
 .version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | null;
@@ -82,7 +82,7 @@ UUID 的变体。它由 UUID 第 13 位的高位比特定义，有三个主要�
 
 ### `.timestamp` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-如果 UUID 的变体为 `"RFC"`，版本为 v1、v6 或 v7 之一，则为时间戳部分。否则为 `null`。为了方便，所有时间戳都计算为自 UNIX 纪元以来的毫秒数。
+如果 UUID 的变体为 `"RFC"` 且版本为 v1、v6 或 v7 之一，则表示时间戳部分。否则为 `null`。为了方便起见，所有时间戳都被计算为自 UNIX 纪元以来的毫秒数。
 
 ```ts
 .timestamp: number | null;
@@ -92,7 +92,7 @@ UUID 的变体。它由 UUID 第 13 位的高位比特定义，有三个主要�
 
 将 `Uuid` 对象转换为 SurrealQL 变量中可用的字符串。
 
-`.valueOf()` 和 `.toJSON()` 返回与该方法相同的结果。
+`.valueOf()` 和 `.toJSON()` 将返回与该方法相同的结果。
 
 ```ts
 .toString(): string;
@@ -109,7 +109,7 @@ UUID 的变体。它由 UUID 第 13 位的高位比特定义，有三个主要�
 #### 例子
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+import { Uuid } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const bytes = new Uint8Array([
   0x26, 0xc8, 0x01, 0x63,
@@ -125,7 +125,7 @@ console.log(uuid.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Uuid` 对象转换为可以嵌入 SurrealQL 的字符串。类似于 `.toString()`，但添加了 `u` 前缀，告诉查询解析器该字符串是一个 UUID。
+将 `Uuid` 对象转换为可嵌入 SurrealQL 的字符串。与 `.toString()` 类似，但添加了 `u` 前缀，告诉查询解析器该字符串是 UUID。
 
 ```ts
 .toSurql(): string;
@@ -142,7 +142,7 @@ console.log(uuid.toString());
 #### 例子
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+import { Uuid } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const bytes = new Uint8Array([
   0x26, 0xc8, 0x01, 0x63,
@@ -188,14 +188,14 @@ console.log(uuid.toSurql());
 
 #### 返回值
 
-如果任一方没有时间戳部分，或者时间戳相同，则返回 `0`。如果比较的 UUID 的时间戳比当前时间戳更早，则返回 `-1`，如果更晚，则返回 `1`。
+如果一方没有时间戳部分，或者时间戳相同，则返回 `0`。如果比较对象的 UUID 时间戳比当前时间戳更早，则返回 `-1`，如果更晚，则返回 `1`。
 
 #### 例子
 
-以下示例比较不同 UUID 版本的时间戳，并按升序排列：
+以下示例比较不同 UUID 版本的时间戳，并按升序排序：
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+import { Uuid } from "@tai-kun/surrealdb/standard-datatypes";
 
 const uuidv1 = new Uuid("0e004000-2073-11ef-8451-eb2a011f8691");
 const uuidv6 = new Uuid("1ef1fa9e-3968-6000-a77e-683eb1a35ebe");
@@ -223,7 +223,7 @@ console.log(uuidList);
 
 #### `Uuid` 对象的通用判断
 
-建议使用 `isUuid` 函数来判断值是否为 `Uuid` 对象，而不依赖于预设。该函数不使用 `instanceof`，因此当验证值的预设未知时很有用。
+建议使用 `isUuid` 函数来判断值是否为 `Uuid` 对象，而无需依赖于预设。该函数不使用 `instanceof`，因此在验证值预设未知的情况下非常有用。
 
 ```ts
 import { isUuid } from "@tai-kun/surrealdb";

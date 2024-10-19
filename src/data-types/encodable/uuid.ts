@@ -1,4 +1,4 @@
-import { Uuid as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Uuid as Base } from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_UUID, type Encodable } from "./spec";
 

@@ -3,7 +3,7 @@ import {
   GeometryMultiPolygonBase as Base,
   type GeometryMultiPolygonSource as GeometryMultiPolygonSourceBase,
   type GeometryMultiPolygonTypes as GeometryMultiPolygonTypesBase,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import {
   type Coord,
   isGeometryMultiPolygon,

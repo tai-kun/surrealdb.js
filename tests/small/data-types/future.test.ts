@@ -1,4 +1,4 @@
-import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { expect, test } from "vitest";
 

@@ -1,4 +1,4 @@
-import type Client from "@tai-kun/surrealdb/clients/basic";
+import type Client from "@tai-kun/surrealdb/basic-client";
 import type { EngineEventMap } from "@tai-kun/surrealdb/engine";
 import { WebSocketEngineError } from "@tai-kun/surrealdb/errors";
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";

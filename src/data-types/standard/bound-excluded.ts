@@ -1,7 +1,7 @@
 import {
   BoundExcluded as Base,
   type BoundExcludedSource,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import type { Standard } from "./spec";
 
 export type * from "../encodable/bound-excluded";

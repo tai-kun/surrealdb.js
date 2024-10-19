@@ -10,9 +10,9 @@ The `Thing` class represents a [record ID](https://surrealdb.com/docs/surrealql/
 ### Import
 
 ```ts
-import { Thing } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Thing } from "@tai-kun/surrealdb/data-types/encodable";
-import { Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Thing } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Thing } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Thing } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -28,7 +28,7 @@ new Thing(table: string, id: string | number | bigint | object);
 
 ##### `source`
 
-A pair of table and ID parts of the record ID.
+A pair of the table and ID parts of the record ID.
 
 ##### `table`
 
@@ -38,13 +38,13 @@ The table part of the record ID.
 
 The ID part of the record ID.
 
-#### Return Value
+#### Returns
 
-When invoked through `new`, `Thing` returns its instance.
+When called via `new`, the `Thing` returns its instance.
 
 ### `.table` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The table part of the record ID. This property will not escape the string when retrieved.
+The table part of the record ID. When getting this property, the string is not escaped.
 
 ```ts
 .table: string;
@@ -52,10 +52,10 @@ The table part of the record ID. This property will not escape the string when r
 
 #### Example
 
-This property will not escape the string when retrieved.
+When getting this property, the string is not escaped.
 
 ```ts
-import { Thing } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Thing } from "@tai-kun/surrealdb/decodeonly-datatypes";
 
 const thing = new Thing("foo-bar", 0);
 console.log(this.id);
@@ -72,7 +72,7 @@ The ID part of the record ID.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Thing` object into a string that can be used as a variable in SurrealQL. The table name and ID part will be escaped and formatted the same way as SurrealDB's implementation. Also, the object's properties are sorted in ascending order.
+Converts the `Thing` object into a string usable as a SurrealQL variable. The table and ID parts are escaped and formatted in the same way as the SurrealDB implementation. Also, the object's properties are sorted in ascending order.
 
 `.valueOf()` and `.toJSON()` return the same result as this method.
 
@@ -84,14 +84,14 @@ Converts the `Thing` object into a string that can be used as a variable in Surr
 
 None.
 
-#### Return Value
+#### Returns
 
 Returns a string formatted as a record ID.
 
 #### Example
 
 ```ts
-import { Thing } from "@tai-kun/surrealdb/data-types/encodable";
+import { Thing } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const thing = new Thing([
   "foo-bar",
@@ -103,7 +103,7 @@ console.log(thing.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Thing` object into a string that can be embedded in SurrealQL. Similar to `.toString()`, but adds an `r` prefix to tell the query parser that the string is a record ID.
+Converts the `Thing` object into a string embeddable in SurrealQL. Similar to `.toString()`, but it adds the `r` prefix to tell the query parser that the string is a record ID.
 
 ```ts
 .toSurql(): string;
@@ -113,14 +113,14 @@ Converts the `Thing` object into a string that can be embedded in SurrealQL. Sim
 
 None.
 
-#### Return Value
+#### Returns
 
 Returns a string formatted as a record ID.
 
 #### Example
 
 ```ts
-import { Thing } from "@tai-kun/surrealdb/data-types/encodable";
+import { Thing } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const thing = new Thing("foo", "bar");
 console.log(thing.toSurql());
@@ -129,7 +129,7 @@ console.log(thing.toSurql());
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Clones the `Thing` object. However, the ID part will not be cloned and referenced.
+Clones the `Thing` object. However, the ID part is referenced, not cloned.
 
 ```ts
 .clone(): this;
@@ -139,18 +139,18 @@ Clones the `Thing` object. However, the ID part will not be cloned and reference
 
 None.
 
-#### Return Value
+#### Returns
 
-Returns a new `Thing` object. If the `Thing` class is inherited, an instance of that class will be returned.
+Returns a new `Thing` object. If the `Thing` class is inherited, it returns an instance of that class.
 
 ### Development
 
 #### Type Guard
 
-You can type-safely set the table part and ID part of `Thing` with type parameters:
+You can use type parameters for type safety for both the table and ID parts of the `Thing`.
 
 ```ts
-import { Thing, Uuid } from "@tai-kun/surrealdb/data-types/standard";
+import { Thing, Uuid } from "@tai-kun/surrealdb/standard-datatypes";
 
 function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
   return thing instanceof Thing
@@ -159,9 +159,9 @@ function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
 }
 ```
 
-#### Generic `Thing` Object Determination
+#### General Purpose Judgement of `Thing` Objects
 
-It is recommended to use the `isThing` function to determine if a value is a `Thing` object without relying on presets. This function does not use `instanceof`, making it useful when the preset of the value being validated is unknown.
+It is recommended to use the `isThing` function to determine if a value is a `Thing` object without relying on presets. This function does not use `instanceof`, so it is helpful when the preset of the value to be validated is unknown.
 
 ```ts
 import { isThing } from "@tai-kun/surrealdb";

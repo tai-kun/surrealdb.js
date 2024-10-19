@@ -10,9 +10,9 @@ import Badge from "~/components/ko/Badge.astro";
 ### 가져오기
 
 ```ts
-import { GeometryMultiPoint } from "@tai-kun/surrealdb/data-types/decode-only";
-import { GeometryMultiPoint } from "@tai-kun/surrealdb/data-types/encodable";
-import { GeometryMultiPoint } from "@tai-kun/surrealdb/data-types/standard";
+import { GeometryMultiPoint } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { GeometryMultiPoint } from "@tai-kun/surrealdb/encodable-datatypes";
+import { GeometryMultiPoint } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -31,4 +31,4 @@ new GeometryMultiPoint(source);
 
 #### 반환 값
 
-`new`를 통해 호출된 경우 `GeometryMultiPoint`는 해당 인스턴스를 반환합니다.
+`new`를 통해 호출될 경우, `GeometryMultiPoint`는 해당 인스턴스를 반환합니다.

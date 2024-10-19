@@ -10,9 +10,9 @@ import Badge from "~/components/ko/Badge.astro";
 ### 가져오기
 
 ```ts
-import { GeometryPolygon } from "@tai-kun/surrealdb/data-types/decode-only";
-import { GeometryPolygon } from "@tai-kun/surrealdb/data-types/encodable";
-import { GeometryPolygon } from "@tai-kun/surrealdb/data-types/standard";
+import { GeometryPolygon } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { GeometryPolygon } from "@tai-kun/surrealdb/encodable-datatypes";
+import { GeometryPolygon } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -31,4 +31,4 @@ new GeometryPolygon(source);
 
 #### 반환 값
 
-`new`를 통해 호출하면 `GeometryPolygon`은 해당 인스턴스를 반환합니다.
+`new`를 통해 호출된 경우 `GeometryPolygon`은 해당 인스턴스를 반환합니다.

@@ -10,14 +10,14 @@ import Badge from "~/components/ko/Badge.astro";
 ### 가져오기
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
-import { Duration } from "@tai-kun/surrealdb/data-types/standard";
+import { Duration } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Duration } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
 
-새로운 `Duration` 객체를 만듭니다.
+새로운 `Duration` 객체를 생성합니다.
 
 ```ts
 new Duration(
@@ -40,9 +40,9 @@ new Duration(
 
 ##### `source`
 
-초 단위와 나노초 단위의 쌍입니다. 프리셋이 standard인 경우 `Duration` 객체를 구성하는 데 더 많은 값을 사용할 수 있습니다.
+초와 나노초 쌍입니다. 프리셋이 `standard`인 경우 더 많은 값을 `Duration` 객체로 만들 수 있습니다.
 
-`number` 타입의 입력은 밀리초 단위로 계산됩니다. 이는 `Date` 객체 간의 차이를 `Duration` 객체로 변환하는 용도를 위해 사용됩니다:
+`number` 유형의 입력은 밀리초 단위로 계산됩니다. 이는 `Date` 객체 간의 차이를 `Duration` 객체로 변환하기 위한 용도입니다.
 
 ```ts
 const begin = new Date("2024-06-01T12:00:00.000Z");
@@ -50,7 +50,7 @@ const end = new Date("2024-06-01T21:00:00.000Z");
 new Duration(end - begin);
 ```
 
-`bigint` 타입의 입력은 나노초 단위로 계산됩니다. 이는 예를 들어 [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint)에서 반환된 나노초와 같이 고정밀 시간을 `Duration` 객체로 변환하는 용도를 위해 사용됩니다:
+`bigint` 유형의 입력은 나노초 단위로 계산됩니다. 이는 예를 들어 [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint)에서 반환되는 나노초와 같이 고정밀 시간을 `Duration` 객체로 변환하기 위한 용도입니다.
 
 ```ts
 const begin = process.hrtime.bigint();
@@ -59,7 +59,7 @@ const end = process.hrtime.bigint();
 new Duration(end - begin);
 ```
 
-`string` 타입의 입력은 기간의 문자열 표현이어야 합니다. 기간의 문자열 표현은 숫자와 단위의 조합으로 구성되며, 이들이 연속적으로 이어지는 형식을 의미합니다. 예를 들어 `1h4h30m20s1350ms`는 "1일 4시간 30분 21초 350밀리초"를 나타냅니다. 사용 가능한 단위는 다음과 같습니다:
+`string` 유형의 입력은 기간을 나타내는 문자열 표현이어야 합니다. 기간을 나타내는 문자열 표현은 숫자와 단위를 한 쌍으로 하여 이들이 연속적으로 나열된 형식을 말합니다. 예를 들어 `1h4h30m20s1350ms`는 "1일과 4시간 30분, 21초 350밀리초"를 나타냅니다. 사용 가능한 단위는 다음과 같습니다.
 
 | 단위 | 설명 | 변환 |
 | --- | --- | --- |
@@ -73,15 +73,15 @@ new Duration(end - begin);
 | `w` | 주 | `1w` -> `7d` |
 | `y` | 년 | `1y` -> `365d` |
 
-`us` (`0x75`, `0x73`)는 `µs` (`0xc2`, `0xb5`, `0x73`) 또는 `μs` (`0xce`, `0xbc`, `0x73`)로도 사용할 수 있습니다(괄호 안의 16진수는 단위 문자열을 UTF-8로 인코딩한 결과입니다).
+`us` (`0x75`, `0x73`)는 `µs` (`0xc2`, `0xb5`, `0x73`) 또는 `μs` (`0xce`, `0xbc`, `0x73`)로 표기할 수 있습니다(괄호 안의 16진수는 단위 문자열을 UTF-8로 인코딩한 결과입니다).
 
 #### 반환값
 
-`new`를 통해 호출된 경우 `Duration`은 해당 인스턴스를 반환합니다.
+`new`를 통해 호출될 경우 `Duration`은 해당 인스턴스를 반환합니다.
 
 ### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-기간의 초 단위 부분입니다. standard 미만의 프리셋에서는 읽기 전용입니다. 값은 0에서 2<sup>64</sup>-1까지의 정수입니다.
+기간의 초 부분입니다. `standard` 미만의 프리셋에서는 읽기 전용입니다. 값은 0에서 2<sup>64</sup>-1까지의 정수입니다.
 
 ```ts
 .seconds: bigint;
@@ -89,7 +89,7 @@ new Duration(end - begin);
 
 ### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-기간의 나노초 단위 부분입니다. standard 미만의 프리셋에서는 읽기 전용입니다. 값은 0에서 999999999까지의 정수입니다.
+기간의 나노초 부분입니다. `standard` 미만의 프리셋에서는 읽기 전용입니다. 값은 0에서 999999999까지의 정수입니다.
 
 ```ts
 .nanoseconds: number;
@@ -97,7 +97,7 @@ new Duration(end - begin);
 
 ### `.parse()` <Badge variant="instance" /><Badge variant="property" /><Badge variant="encodable" />
 
-기간을 각 단위에 매핑합니다. 각 단위의 값은 0 이상이고 해당 단위의 최대값 미만입니다. 기간이 0인 경우 0나노초, 즉 `nanoseconds` 프로퍼티만 `0`을 가진 객체가 반환됩니다.
+기간을 각 단위에 매핑합니다. 각 단위의 값은 0 이상 해당 단위의 최댓값 미만입니다. 기간이 0인 경우 0 나노초, 즉 `nanoseconds` 속성만 `0`을 가진 객체를 반환합니다.
 
 ```ts
 .parse(): {
@@ -115,16 +115,16 @@ new Duration(end - begin);
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-기간을 각 단위에 매핑한 결과를 반환합니다. 단위의 값이 0인 경우 프로퍼티가 생략되지만 기간이 0인 경우 `nanoseconds`만 `0`을 가진 객체가 반환됩니다.
+기간을 각 단위에 매핑한 결과를 반환합니다. 단위의 값이 0인 경우 속성이 생략되지만, 기간이 0인 경우 `nanoseconds`만 `0`을 가진 객체를 반환합니다.
 
 #### 예
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(0);
 console.log(duration.parse());
@@ -132,7 +132,7 @@ console.log(duration.parse());
 ```
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.parse());
@@ -149,14 +149,14 @@ console.log(duration.parse());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
 기간을 나노초 단위로 반환합니다.
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.valueOf());
@@ -165,7 +165,7 @@ console.log(duration.valueOf());
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-기간의 문자열 표현을 가져옵니다.
+기간을 나타내는 문자열을 가져옵니다.
 
 `.toJSON()`과 `.toSurql()`은 이 메서드와 동일한 결과를 반환합니다.
 
@@ -175,16 +175,16 @@ console.log(duration.valueOf());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-밀리초 단위로 표현된 시간의 문자열 표현을 반환합니다.
+밀리초 정밀도의 시간 문자열을 가져옵니다.
 
 #### 예
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.toString());
@@ -193,7 +193,7 @@ console.log(duration.toString());
 
 ### `.toISOString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-기간의 문자열을 ISO 형식으로 가져옵니다.
+기간을 나타내는 문자열을 ISO 형식으로 가져옵니다.
 
 ```ts
 .toISOString(): string;
@@ -201,16 +201,16 @@ console.log(duration.toString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-기간의 문자열을 ISO 형식으로 반환합니다.
+기간을 나타내는 문자열을 ISO 형식으로 반환합니다.
 
 #### 예
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration("2m3s456ms");
 console.log(duration.toISOString());
@@ -219,7 +219,7 @@ console.log(duration.toISOString());
 
 ### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-초 단위와 나노초 단위의 쌍을 가져옵니다.
+초와 나노초 쌍을 가져옵니다.
 
 ```ts
 .getCompact(): [seconds: bigint, nanoseconds: number];
@@ -227,15 +227,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-초 단위와 나노초 단위의 쌍을 반환합니다.
+초와 나노초 쌍을 반환합니다.
 
 ### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-초 단위와 나노초 단위의 쌍으로 날짜와 시간을 설정합니다.
+초와 나노초 쌍으로 날짜와 시간을 설정합니다.
 
 ```ts
 .setCompact(compact: [seconds: bigint, nanoseconds: number]): void;
@@ -245,15 +245,15 @@ console.log(duration.toISOString());
 
 ##### `compact`
 
-초 단위와 나노초 단위의 쌍입니다.
+초와 나노초 쌍입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.getYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-년도를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+년을 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getYears(): number;
@@ -261,15 +261,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-년도를 나타내는 0 이상의 정수를 반환합니다.
+년을 나타내는 0 이상의 정수를 반환합니다.
 
 ### `.addYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 년도를 추가합니다.
+기간에서 년을 지정된 수만큼 더합니다.
 
 ```ts
 .addYears(value: number): void;
@@ -279,15 +279,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-년도입니다.
+년 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 년도를 뺍니다.
+기간에서 년을 지정된 수만큼 뺍니다.
 
 ```ts
 .subYears(value: number): void;
@@ -297,15 +297,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-년도입니다.
+년 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-년도를 밀리초로 변환한 값을 가져옵니다.
+년 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asYears(): number;
@@ -313,15 +313,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-년도를 밀리초로 변환한 값입니다.
+년 수를 밀리초 표현으로 반환합니다.
 
 ### `.getWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-주를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+주를 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getWeeks(): number;
@@ -329,7 +329,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -337,7 +337,7 @@ console.log(duration.toISOString());
 
 ### `.addWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 주를 추가합니다.
+기간에서 주를 지정된 수만큼 더합니다.
 
 ```ts
 .addWeeks(value: number): void;
@@ -347,15 +347,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-주입니다.
+주 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 주를 뺍니다.
+기간에서 주를 지정된 수만큼 뺍니다.
 
 ```ts
 .subWeeks(value: number): void;
@@ -365,15 +365,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-주입니다.
+주 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-주를 밀리초로 변환한 값을 가져옵니다.
+주 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asWeeks(): number;
@@ -381,15 +381,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-주를 밀리초로 변환한 값입니다.
+주 수를 밀리초 표현으로 반환합니다.
 
 ### `.getDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-일을 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+일을 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getDays(): number;
@@ -397,7 +397,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -405,7 +405,7 @@ console.log(duration.toISOString());
 
 ### `.addDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 일을 추가합니다.
+기간에서 일을 지정된 수만큼 더합니다.
 
 ```ts
 .addDays(value: number): void;
@@ -415,15 +415,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-일입니다.
+일 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 일을 뺍니다.
+기간에서 일을 지정된 수만큼 뺍니다.
 
 ```ts
 .subDays(value: number): void;
@@ -433,15 +433,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-일입니다.
+일 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-일을 밀리초로 변환한 값을 가져옵니다.
+일 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asDays(): number;
@@ -449,15 +449,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-일을 밀리초로 변환한 값입니다.
+일 수를 밀리초 표현으로 반환합니다.
 
 ### `.getHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-시를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+시를 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getHours(): number;
@@ -465,7 +465,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -473,7 +473,7 @@ console.log(duration.toISOString());
 
 ### `.addHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 시를 추가합니다.
+기간에서 시를 지정된 수만큼 더합니다.
 
 ```ts
 .addHours(value: number): void;
@@ -483,15 +483,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-시입니다.
+시 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 시를 뺍니다.
+기간에서 시를 지정된 수만큼 뺍니다.
 
 ```ts
 .subHours(value: number): void;
@@ -501,15 +501,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-시입니다.
+시 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-시를 밀리초로 변환한 값을 가져옵니다.
+시 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asHours(): number;
@@ -517,15 +517,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-시를 밀리초로 변환한 값입니다.
+시 수를 밀리초 표현으로 반환합니다.
 
 ### `.getMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-분을 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+분을 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getMinutes(): number;
@@ -533,7 +533,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -541,7 +541,7 @@ console.log(duration.toISOString());
 
 ### `.addMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 분을 추가합니다.
+기간에서 분을 지정된 수만큼 더합니다.
 
 ```ts
 .addMinutes(value: number): void;
@@ -551,15 +551,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-분입니다.
+분 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 분을 뺍니다.
+기간에서 분을 지정된 수만큼 뺍니다.
 
 ```ts
 .subMinutes(value: number): void;
@@ -569,15 +569,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-분입니다.
+분 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-분을 밀리초로 변환한 값을 가져옵니다.
+분 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asMinutes(): number;
@@ -585,15 +585,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-분을 밀리초로 변환한 값입니다.
+분 수를 밀리초 표현으로 반환합니다.
 
 ### `.getSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+초를 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getSeconds(): number;
@@ -601,7 +601,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -609,7 +609,7 @@ console.log(duration.toISOString());
 
 ### `.addSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 초를 추가합니다.
+기간에서 초를 지정된 수만큼 더합니다.
 
 ```ts
 .addSeconds(value: number): void;
@@ -619,15 +619,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-초입니다.
+초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 초를 뺍니다.
+기간에서 초를 지정된 수만큼 뺍니다.
 
 ```ts
 .subSeconds(value: number): void;
@@ -637,15 +637,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-초입니다.
+초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-초를 밀리초로 변환한 값을 가져옵니다.
+초 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asSeconds(): number;
@@ -653,15 +653,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-초를 밀리초로 변환한 값입니다.
+초 수를 밀리초 표현으로 반환합니다.
 
 ### `.getMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-밀리초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+밀리초를 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getMilliseconds(): number;
@@ -669,7 +669,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -677,7 +677,7 @@ console.log(duration.toISOString());
 
 ### `.addMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 밀리초를 추가합니다.
+기간에서 밀리초를 지정된 수만큼 더합니다.
 
 ```ts
 .addMilliseconds(value: number): void;
@@ -687,15 +687,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-밀리초입니다.
+밀리초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 밀리초를 뺍니다.
+기간에서 밀리초를 지정된 수만큼 뺍니다.
 
 ```ts
 .subMilliseconds(value: number): void;
@@ -705,15 +705,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-밀리초입니다.
+밀리초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-밀리초를 밀리초로 변환한 값을 가져옵니다.
+밀리초 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asMilliseconds(): number;
@@ -721,15 +721,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-밀리초를 밀리초로 변환한 값입니다.
+밀리초 수를 밀리초 표현으로 반환합니다.
 
 ### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-마이크로초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+마이크로초를 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getMicroseconds(): number;
@@ -737,7 +737,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -745,7 +745,7 @@ console.log(duration.toISOString());
 
 ### `.addMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 마이크로초를 추가합니다.
+기간에서 마이크로초를 지정된 수만큼 더합니다.
 
 ```ts
 .addMicroseconds(value: number): void;
@@ -755,15 +755,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-마이크로초입니다.
+마이크로초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 마이크로초를 뺍니다.
+기간에서 마이크로초를 지정된 수만큼 뺍니다.
 
 ```ts
 .subMicroseconds(value: number): void;
@@ -773,15 +773,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-마이크로초입니다.
+마이크로초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-마이크로초를 밀리초로 변환한 값을 가져옵니다.
+마이크로초 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asMicroseconds(): number;
@@ -789,15 +789,15 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-마이크로초를 밀리초로 변환한 값입니다.
+마이크로초 수를 밀리초 표현으로 반환합니다.
 
 ### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-나노초를 가져옵니다. 0 이상의 정수가 아니면 0이 반환됩니다.
+나노초를 가져옵니다. 0 이상의 정수가 아닌 경우 0을 반환합니다.
 
 ```ts
 .getNanoseconds(): number;
@@ -805,7 +805,7 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
@@ -813,7 +813,7 @@ console.log(duration.toISOString());
 
 ### `.addNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에 지정된 수만큼 나노초를 추가합니다.
+기간에서 나노초를 지정된 수만큼 더합니다.
 
 ```ts
 .addNanoseconds(value: number): void;
@@ -823,15 +823,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-나노초입니다.
+나노초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.subNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-기간에서 지정된 수만큼 나노초를 뺍니다.
+기간에서 나노초를 지정된 수만큼 뺍니다.
 
 ```ts
 .subNanoseconds(value: number): void;
@@ -841,15 +841,15 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-나노초입니다.
+나노초 수입니다.
 
 #### 반환값
 
-없음.
+없습니다.
 
 ### `.asNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-나노초를 밀리초로 변환한 값을 가져옵니다.
+나노초 수를 밀리초 표현으로 가져옵니다.
 
 ```ts
 .asNanoseconds(): number;
@@ -857,8 +857,8 @@ console.log(duration.toISOString());
 
 #### 인수
 
-없음.
+없습니다.
 
 #### 반환값
 
-나노초를 밀리초로 변환한 값입니다.
+나노초 수를 밀리초 표현으로 반환합니다.

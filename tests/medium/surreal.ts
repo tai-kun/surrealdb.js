@@ -1,10 +1,10 @@
 import { type InitializedSurreal, initSurreal } from "@tai-kun/surrealdb";
-import Client from "@tai-kun/surrealdb/clients/standard";
-import * as dataTypes from "@tai-kun/surrealdb/data-types/standard";
-import HttpEngine from "@tai-kun/surrealdb/engines/http";
-import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
-import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
-import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import CborFormatter from "@tai-kun/surrealdb/cbor-formatter";
+import HttpEngine from "@tai-kun/surrealdb/http-engine";
+import JsonFormatter from "@tai-kun/surrealdb/json-formatter";
+import Client from "@tai-kun/surrealdb/standard-client";
+import * as dataTypes from "@tai-kun/surrealdb/standard-datatypes";
+import WebSocketEngine from "@tai-kun/surrealdb/websocket-engine";
 import { SemVer } from "semver";
 import { afterAll, beforeAll } from "vitest";
 import { WebSocket } from "ws";

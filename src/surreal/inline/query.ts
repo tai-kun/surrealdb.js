@@ -1,5 +1,5 @@
-import type { InferSlotVars } from "@tai-kun/surrealdb/clients/standard";
 import { QueryFailedError } from "@tai-kun/surrealdb/errors";
+import type { InferSlotVars } from "@tai-kun/surrealdb/standard-client";
 import type { PreparedQueryLike, SlotLike } from "@tai-kun/surrealdb/types";
 import type { Simplify } from "type-fest";
 import rpc, { type InlineRpcOptions } from "./rpc";

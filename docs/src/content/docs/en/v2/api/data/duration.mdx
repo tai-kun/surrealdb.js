@@ -5,14 +5,14 @@ slug: en/v2/api/data/duration
 
 import Badge from "~/components/en/Badge.astro";
 
-`Duration` is a class that represents a time duration.
+`Duration` is a class that represents a time period.
 
-### Import
+### Importing
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
-import { Duration } from "@tai-kun/surrealdb/data-types/standard";
+import { Duration } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Duration } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -40,9 +40,9 @@ new Duration(
 
 ##### `source`
 
-A pair of seconds and nanoseconds. If the preset is standard, you can use more values to make a `Duration` object.
+A pair of seconds and nanoseconds. If the preset is standard, more values can be converted to a `Duration` object.
 
-An input of type `number` is calculated in milliseconds. This is intended for use cases where the difference between `Date` objects is to be made into a `Duration` object:
+An input of type `number` is calculated in milliseconds. This is intended for use in converting the difference between `Date` objects into `Duration` objects:
 
 ```ts
 const begin = new Date("2024-06-01T12:00:00.000Z");
@@ -50,7 +50,7 @@ const end = new Date("2024-06-01T21:00:00.000Z");
 new Duration(end - begin);
 ```
 
-An input of type `bigint` is calculated in nanoseconds. This is intended for use cases where, for example, high-precision time, such as nanoseconds returned by [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint), is to be made into a `Duration` object:
+An input of type `bigint` is calculated in nanoseconds. This is intended for use in converting high-precision times, such as nanoseconds returned by [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint), into `Duration` objects:
 
 ```ts
 const begin = process.hrtime.bigint();
@@ -59,7 +59,7 @@ const end = process.hrtime.bigint();
 new Duration(end - begin);
 ```
 
-An input of type `string` must be a string representation of a duration. The string representation of a duration refers to a format in which a set of numbers and units are concatenated. For example, `1h4h30m20s1350ms` is "1 day and 4 hours 30 minutes, 21 seconds 350 milliseconds". The available units are as follows:
+An input of type `string` must be a string representation of the duration. The string representation of a duration is a format where a number and a unit are paired and they are listed consecutively. For example, `1h4h30m20s1350ms` represents "1 day and 4 hours 30 minutes, 21 seconds 350 milliseconds". The available units are as follows:
 
 | Unit | Description | Conversion |
 | --- | --- | --- |
@@ -73,15 +73,15 @@ An input of type `string` must be a string representation of a duration. The str
 | `w`  | week | `1w` -> `7d` |
 | `y`  | year | `1y` -> `365d` |
 
-`us` (`0x75`, `0x73`) can also be written as `µs` (`0xc2`, `0xb5`, `0x73`) or `μs` (`0xce`, `0xbc`, `0x73`) (the hexadecimal numbers in parentheses are the results of UTF-8 encoding of the unit string).
+`us` (`0x75`, `0x73`) can also be written as `µs` (`0xc2`, `0xb5`, `0x73`) or `μs` (`0xce`, `0xbc`, `0x73`) (the hexadecimal numbers in parentheses are the results of encoding the unit string in UTF-8).
 
-#### Returns
+#### Return value
 
-When called via `new`, `Duration` returns its instance.
+When called through `new`, `Duration` returns its instance.
 
 ### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The seconds part of the duration. It is read-only in presets below standard. The value is an integer from 0 to 2<sup>64</sup>-1.
+The seconds part of the duration. Read-only for presets below standard. The value is an integer between 0 and 2<sup>64</sup>-1.
 
 ```ts
 .seconds: bigint;
@@ -89,7 +89,7 @@ The seconds part of the duration. It is read-only in presets below standard. The
 
 ### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The nanoseconds part of the duration. It is read-only in presets below standard. The value is an integer from 0 to 999999999.
+The nanoseconds part of the duration. Read-only for presets below standard. The value is an integer between 0 and 999999999.
 
 ```ts
 .nanoseconds: number;
@@ -97,7 +97,7 @@ The nanoseconds part of the duration. It is read-only in presets below standard.
 
 ### `.parse()` <Badge variant="instance" /><Badge variant="property" /><Badge variant="encodable" />
 
-Maps the duration to each unit. The value of each unit will be greater than or equal to 0 and less than the maximum value of that unit. Note that if the duration is 0, an object with only the `nanoseconds` property set to `0` will be returned.
+Maps the duration to each unit. The value of each unit is between 0 and the maximum value of that unit. Note that if the duration is 0, it returns an object with only `nanoseconds` property that has `0`.
 
 ```ts
 .parse(): {
@@ -117,14 +117,14 @@ Maps the duration to each unit. The value of each unit will be greater than or e
 
 None.
 
-#### Returns
+#### Return value
 
-Returns the result of mapping the duration to each unit. If the value of the unit is 0, the property will be omitted, but if the duration is 0, an object with only `nanoseconds` set to `0` will be returned.
+Returns the result of mapping the duration to each unit. If the value of a unit is 0, the property is omitted, but if the duration is 0, it returns an object with only `nanoseconds` property that has `0`.
 
-#### Example
+#### Examples
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(0);
 console.log(duration.parse());
@@ -132,7 +132,7 @@ console.log(duration.parse());
 ```
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.parse());
@@ -151,12 +151,12 @@ Gets the duration in nanoseconds.
 
 None.
 
-#### Returns
+#### Return value
 
 Returns the duration in nanoseconds.
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.valueOf());
@@ -177,14 +177,14 @@ Gets the string representation of the duration.
 
 None.
 
-#### Returns
+#### Return value
 
-Gets the string representation of the duration in milliseconds precision.
+Returns the string representation of the time in millisecond precision.
 
-#### Example
+#### Examples
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration(12_345_000n);
 console.log(duration.toString());
@@ -203,14 +203,14 @@ Gets the duration string in ISO format.
 
 None.
 
-#### Returns
+#### Return value
 
 Returns the duration string in ISO format.
 
-#### Example
+#### Examples
 
 ```ts
-import { Duration } from "@tai-kun/surrealdb/data-types/encodable";
+import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const duration = new Duration("2m3s456ms");
 console.log(duration.toISOString());
@@ -219,7 +219,7 @@ console.log(duration.toISOString());
 
 ### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets a pair of seconds and nanoseconds.
+Gets the pair of seconds and nanoseconds.
 
 ```ts
 .getCompact(): [seconds: bigint, nanoseconds: number];
@@ -229,9 +229,9 @@ Gets a pair of seconds and nanoseconds.
 
 None.
 
-#### Returns
+#### Return value
 
-Returns a pair of seconds and nanoseconds.
+Returns the pair of seconds and nanoseconds.
 
 ### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
@@ -247,13 +247,13 @@ Sets the date and time with a pair of seconds and nanoseconds.
 
 A pair of seconds and nanoseconds.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.getYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the years. If it does not result in a non-negative integer, 0 will be returned.
+Gets the years. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getYears(): number;
@@ -263,7 +263,7 @@ Gets the years. If it does not result in a non-negative integer, 0 will be retur
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the years.
 
@@ -281,7 +281,7 @@ Adds the specified number of years to the duration.
 
 The number of years.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -299,13 +299,13 @@ Subtracts the specified number of years from the duration.
 
 The number of years.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of years.
+Gets the millisecond representation of the years.
 
 ```ts
 .asYears(): number;
@@ -315,13 +315,13 @@ Gets the millisecond representation of the number of years.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of years.
+The millisecond representation of the years.
 
 ### `.getWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the weeks. If it does not result in a non-negative integer, 0 will be returned.
+Gets the weeks. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getWeeks(): number;
@@ -331,7 +331,7 @@ Gets the weeks. If it does not result in a non-negative integer, 0 will be retur
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the weeks.
 
@@ -349,7 +349,7 @@ Adds the specified number of weeks to the duration.
 
 The number of weeks.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -367,13 +367,13 @@ Subtracts the specified number of weeks from the duration.
 
 The number of weeks.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of weeks.
+Gets the millisecond representation of the weeks.
 
 ```ts
 .asWeeks(): number;
@@ -383,13 +383,13 @@ Gets the millisecond representation of the number of weeks.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of weeks.
+The millisecond representation of the weeks.
 
 ### `.getDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the days. If it does not result in a non-negative integer, 0 will be returned.
+Gets the days. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getDays(): number;
@@ -399,7 +399,7 @@ Gets the days. If it does not result in a non-negative integer, 0 will be return
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the days.
 
@@ -417,7 +417,7 @@ Adds the specified number of days to the duration.
 
 The number of days.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -435,13 +435,13 @@ Subtracts the specified number of days from the duration.
 
 The number of days.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of days.
+Gets the millisecond representation of the days.
 
 ```ts
 .asDays(): number;
@@ -451,13 +451,13 @@ Gets the millisecond representation of the number of days.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of days.
+The millisecond representation of the days.
 
 ### `.getHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the hours. If it does not result in a non-negative integer, 0 will be returned.
+Gets the hours. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getHours(): number;
@@ -467,7 +467,7 @@ Gets the hours. If it does not result in a non-negative integer, 0 will be retur
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the hours.
 
@@ -485,7 +485,7 @@ Adds the specified number of hours to the duration.
 
 The number of hours.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -503,13 +503,13 @@ Subtracts the specified number of hours from the duration.
 
 The number of hours.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of hours.
+Gets the millisecond representation of the hours.
 
 ```ts
 .asHours(): number;
@@ -519,13 +519,13 @@ Gets the millisecond representation of the number of hours.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of hours.
+The millisecond representation of the hours.
 
 ### `.getMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the minutes. If it does not result in a non-negative integer, 0 will be returned.
+Gets the minutes. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getMinutes(): number;
@@ -535,7 +535,7 @@ Gets the minutes. If it does not result in a non-negative integer, 0 will be ret
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the minutes.
 
@@ -553,7 +553,7 @@ Adds the specified number of minutes to the duration.
 
 The number of minutes.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -571,13 +571,13 @@ Subtracts the specified number of minutes from the duration.
 
 The number of minutes.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of minutes.
+Gets the millisecond representation of the minutes.
 
 ```ts
 .asMinutes(): number;
@@ -587,13 +587,13 @@ Gets the millisecond representation of the number of minutes.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of minutes.
+The millisecond representation of the minutes.
 
 ### `.getSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the seconds. If it does not result in a non-negative integer, 0 will be returned.
+Gets the seconds. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getSeconds(): number;
@@ -603,7 +603,7 @@ Gets the seconds. If it does not result in a non-negative integer, 0 will be ret
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the seconds.
 
@@ -621,7 +621,7 @@ Adds the specified number of seconds to the duration.
 
 The number of seconds.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -639,13 +639,13 @@ Subtracts the specified number of seconds from the duration.
 
 The number of seconds.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of seconds.
+Gets the millisecond representation of the seconds.
 
 ```ts
 .asSeconds(): number;
@@ -655,13 +655,13 @@ Gets the millisecond representation of the number of seconds.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of seconds.
+The millisecond representation of the seconds.
 
 ### `.getMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the milliseconds. If it does not result in a non-negative integer, 0 will be returned.
+Gets the milliseconds. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getMilliseconds(): number;
@@ -671,7 +671,7 @@ Gets the milliseconds. If it does not result in a non-negative integer, 0 will b
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the milliseconds.
 
@@ -689,7 +689,7 @@ Adds the specified number of milliseconds to the duration.
 
 The number of milliseconds.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -707,13 +707,13 @@ Subtracts the specified number of milliseconds from the duration.
 
 The number of milliseconds.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of milliseconds.
+Gets the millisecond representation of the milliseconds.
 
 ```ts
 .asMilliseconds(): number;
@@ -723,13 +723,13 @@ Gets the millisecond representation of the number of milliseconds.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of milliseconds.
+The millisecond representation of the milliseconds.
 
 ### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the microseconds. If it does not result in a non-negative integer, 0 will be returned.
+Gets the microseconds. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getMicroseconds(): number;
@@ -739,7 +739,7 @@ Gets the microseconds. If it does not result in a non-negative integer, 0 will b
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the microseconds.
 
@@ -757,7 +757,7 @@ Adds the specified number of microseconds to the duration.
 
 The number of microseconds.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -775,13 +775,13 @@ Subtracts the specified number of microseconds from the duration.
 
 The number of microseconds.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of microseconds.
+Gets the millisecond representation of the microseconds.
 
 ```ts
 .asMicroseconds(): number;
@@ -791,13 +791,13 @@ Gets the millisecond representation of the number of microseconds.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of microseconds.
+The millisecond representation of the microseconds.
 
 ### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the nanoseconds. If it does not result in a non-negative integer, 0 will be returned.
+Gets the nanoseconds. If it is not a non-negative integer, 0 is returned.
 
 ```ts
 .getNanoseconds(): number;
@@ -807,7 +807,7 @@ Gets the nanoseconds. If it does not result in a non-negative integer, 0 will be
 
 None.
 
-#### Returns
+#### Return value
 
 Returns a non-negative integer representing the nanoseconds.
 
@@ -825,7 +825,7 @@ Adds the specified number of nanoseconds to the duration.
 
 The number of nanoseconds.
 
-#### Returns
+#### Return value
 
 None.
 
@@ -843,13 +843,13 @@ Subtracts the specified number of nanoseconds from the duration.
 
 The number of nanoseconds.
 
-#### Returns
+#### Return value
 
 None.
 
 ### `.asNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Gets the millisecond representation of the number of nanoseconds.
+Gets the millisecond representation of the nanoseconds.
 
 ```ts
 .asNanoseconds(): number;
@@ -859,6 +859,6 @@ Gets the millisecond representation of the number of nanoseconds.
 
 None.
 
-#### Returns
+#### Return value
 
-The millisecond representation of the number of nanoseconds.
+The millisecond representation of the nanoseconds.

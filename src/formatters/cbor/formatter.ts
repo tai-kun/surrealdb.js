@@ -24,7 +24,7 @@ import type {
   TableSource,
   ThingSource,
   UuidSource,
-} from "@tai-kun/surrealdb/data-types/decode-only";
+} from "@tai-kun/surrealdb/decodeonly-datatypes";
 import {
   CBOR_TAG_BOUND_EXCLUDED,
   CBOR_TAG_BOUND_INCLUDED,
@@ -44,7 +44,7 @@ import {
   CBOR_TAG_RECORDID,
   CBOR_TAG_TABLE,
   CBOR_TAG_UUID,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import {
   type Data,

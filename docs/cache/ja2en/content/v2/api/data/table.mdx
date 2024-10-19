@@ -5,14 +5,14 @@ slug: en/v2/api/data/table
 
 import Badge from "~/components/en/Badge.astro";
 
-`Table` is a class that represents a table name with a record ID.
+`Table` is a class that represents the name of a table of record IDs.
 
 ### Import
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
-import { Table } from "@tai-kun/surrealdb/data-types/standard";
+import { Table } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Table } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -36,7 +36,7 @@ When called through `new`, `Table` returns its instance.
 
 ### `.name` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The table name. When retrieving this property, the string is not escaped.
+The table name. When getting this property, the string is not escaped.
 
 ```ts
 .name: string;
@@ -44,10 +44,10 @@ The table name. When retrieving this property, the string is not escaped.
 
 #### Example
 
-When retrieving this property, the string is not escaped.
+When getting this property, the string is not escaped.
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Table } from "@tai-kun/surrealdb/decodeonly-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.name);
@@ -56,7 +56,7 @@ console.log(table.name);
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Table` object to a string that can be used in SurrealQL variables.
+Converts the `Table` object to a string that can be used in a SurrealQL variable.
 
 `.valueOf()` and `.toJSON()` return the same result as this method.
 
@@ -75,7 +75,7 @@ Returns the table name.
 #### Example
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.toString());
@@ -84,7 +84,7 @@ console.log(table.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Table` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but the table name is escaped the same way as in the SurrealDB implementation.
+Converts the `Table` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but the table name is escaped as in SurrealDB's implementation.
 
 ```ts
 .toSurql(): string;
@@ -96,12 +96,12 @@ None.
 
 #### Return value
 
-Returns the table name with an escaped string.
+Returns a string with the escaped table name.
 
 #### Example
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.toSurql());
@@ -122,16 +122,16 @@ None.
 
 #### Return value
 
-Returns a new `Table` object. If you inherit the `Table` class, an instance of that class is returned.
+Returns a new `Table` object. If the `Table` class is inherited, an instance of that class is returned.
 
-### Advanced
+### Development
 
 #### Type Guard
 
-You can type-safe the table name of `Table` using a type parameter:
+You can make the table name of a `Table` type-safe using a type parameter:
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/standard";
+import { Table } from "@tai-kun/surrealdb/standard-datatypes";
 
 function isUserTable(table: unknown): table is Table<"user"> {
   return table instanceof Table
@@ -139,9 +139,9 @@ function isUserTable(table: unknown): table is Table<"user"> {
 }
 ```
 
-#### Generic Judgment of `Table` Objects
+#### Generic Determination of `Table` Objects
 
-To determine whether a value is a `Table` object without relying on the preset, it is recommended to use the `isTable` function. This function does not use `instanceof`, which is helpful when the preset of the value to be verified is unknown.
+To determine if a value is a `Table` object without relying on the preset, it is recommended to use the `isTable` function. This function does not use `instanceof`, so it is useful when the preset of the value to be verified is unknown.
 
 ```ts
 import { isTable } from "@tai-kun/surrealdb";

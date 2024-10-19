@@ -10,9 +10,9 @@ import Badge from "~/components/ja/Badge.astro";
 ### インポート
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -92,7 +92,7 @@ new Datetime(
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime("2024-06-01T12:34:56.780123456Z");
 console.log(date.valueOf());
@@ -118,7 +118,7 @@ console.log(date.valueOf());
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime("2024-06-01T12:34:56.780123456Z");
 console.log(date.toString());
@@ -144,7 +144,7 @@ console.log(date.toString());
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -186,7 +186,7 @@ console.log(date.toISOString());
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toSurql());
@@ -230,7 +230,7 @@ console.log(date.toSurql());
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime(0);
 const time = dt.setCompact([1717245296, 780123456]);
@@ -259,7 +259,7 @@ console.log(time);
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -295,7 +295,7 @@ console.log(date.getMicroseconds());
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -329,7 +329,7 @@ console.log(time);
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -365,7 +365,7 @@ console.log(date.getNanoseconds());
 #### 例
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());

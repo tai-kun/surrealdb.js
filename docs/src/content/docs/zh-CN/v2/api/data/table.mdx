@@ -10,9 +10,9 @@ import Badge from "~/components/zh-CN/Badge.astro";
 ### 导入
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
-import { Table } from "@tai-kun/surrealdb/data-types/standard";
+import { Table } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Table } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -47,7 +47,7 @@ new Table(source: string | { name: string }); // standard
 获取此属性时，字符串不会被转义。
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Table } from "@tai-kun/surrealdb/decodeonly-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.name);
@@ -56,9 +56,9 @@ console.log(table.name);
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Table` 对象转换为可在 SurrealQL 中使用的字符串形式。
+将 `Table` 对象转换为可在 SurrealQL 中使用的字符串变量。
 
-`.valueOf()` 和 `.toJSON()` 将返回与该方法相同的结果。
+`.valueOf()` 和 `.toJSON()` 会返回与该方法相同的结果。
 
 ```ts
 .toString(): string;
@@ -75,7 +75,7 @@ console.log(table.name);
 #### 例子
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.toString());
@@ -84,7 +84,7 @@ console.log(table.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Table` 对象转换为可嵌入 SurrealQL 的字符串形式。类似于 `.toString()`，但表格名称将按照 SurrealDB 的实现进行转义。
+将 `Table` 对象转换为可以嵌入 SurrealQL 的字符串。与 `.toString()` 相似，但表格名称会像 SurrealDB 的实现一样被转义。
 
 ```ts
 .toSurql(): string;
@@ -96,12 +96,12 @@ console.log(table.toString());
 
 #### 返回值
 
-返回转义的表格名称字符串。
+返回转义后的表格名称字符串。
 
 #### 例子
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.toSurql());
@@ -110,7 +110,7 @@ console.log(table.toSurql());
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-克隆 `Table` 对象。
+复制 `Table` 对象。
 
 ```ts
 .clone(): this;
@@ -122,7 +122,7 @@ console.log(table.toSurql());
 
 #### 返回值
 
-返回一个新的 `Table` 对象。如果继承了 `Table` 类，则返回该类的实例。
+返回一个新的 `Table` 对象。如果继承了 `Table` 类，则会返回该类的实例。
 
 ### 进阶
 
@@ -131,7 +131,7 @@ console.log(table.toSurql());
 可以使用类型参数来使 `Table` 的表格名称类型安全：
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/standard";
+import { Table } from "@tai-kun/surrealdb/standard-datatypes";
 
 function isUserTable(table: unknown): table is Table<"user"> {
   return table instanceof Table
@@ -139,9 +139,9 @@ function isUserTable(table: unknown): table is Table<"user"> {
 }
 ```
 
-#### 通用 `Table` 对象判定
+#### `Table` 对象的通用判定
 
-建议使用 `isTable` 函数来判定一个值是否是 `Table` 对象，而不依赖于预设。该函数不使用 `instanceof`，因此当验证的值的预设未知时很有用。
+建议使用 `isTable` 函数来判断一个值是否为 `Table` 对象，而无需依赖预设。该函数不使用 `instanceof`，因此当验证值的预设未知时非常有用。
 
 ```ts
 import { isTable } from "@tai-kun/surrealdb";

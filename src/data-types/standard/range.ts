@@ -1,4 +1,4 @@
-import { RangeBase as Base } from "@tai-kun/surrealdb/data-types/encodable";
+import { RangeBase as Base } from "@tai-kun/surrealdb/encodable-datatypes";
 import BoundExcluded from "./bound-excluded";
 import BoundIncluded from "./bound-included";
 import type { Standard } from "./spec";

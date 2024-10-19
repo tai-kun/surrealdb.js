@@ -164,17 +164,17 @@
       "import": "./dist/formatters/json/index.mjs",
       "require": "./dist/formatters/json/index.cjs"
     },
-    "./decode-only-data-types": {
+    "./decodeonly-datatypes": {
       "types": "./dist/data-types/decode-only/index.d.ts",
       "import": "./dist/data-types/decode-only/index.mjs",
       "require": "./dist/data-types/decode-only/index.cjs"
     },
-    "./encodable-data-types": {
+    "./encodable-datatypes": {
       "types": "./dist/data-types/encodable/index.d.ts",
       "import": "./dist/data-types/encodable/index.mjs",
       "require": "./dist/data-types/encodable/index.cjs"
     },
-    "./standard-data-types": {
+    "./standard-datatypes": {
       "types": "./dist/data-types/standard/index.d.ts",
       "import": "./dist/data-types/standard/index.mjs",
       "require": "./dist/data-types/standard/index.cjs"

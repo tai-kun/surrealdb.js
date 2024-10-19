@@ -1,5 +1,5 @@
 ---
-title: 几何集合
+title: GeometryCollection
 slug: zh-CN/v2/api/data/geometry-collection
 ---
 
@@ -10,9 +10,9 @@ import Badge from "~/components/zh-CN/Badge.astro";
 ### 导入
 
 ```ts
-import { GeometryCollection } from "@tai-kun/surrealdb/data-types/decode-only";
-import { GeometryCollection } from "@tai-kun/surrealdb/data-types/encodable";
-import { GeometryCollection } from "@tai-kun/surrealdb/data-types/standard";
+import { GeometryCollection } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { GeometryCollection } from "@tai-kun/surrealdb/encodable-datatypes";
+import { GeometryCollection } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -31,4 +31,4 @@ new GeometryCollection(source);
 
 #### 返回值
 
-当通过 `new` 调用时，`GeometryCollection` 将返回其实例。
+通过 `new` 调用时，`GeometryCollection` 将返回其实例。

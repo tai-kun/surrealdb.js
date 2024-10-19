@@ -1,4 +1,4 @@
-import type { InferSlotVars } from "@tai-kun/surrealdb/clients/standard";
+import type { InferSlotVars } from "@tai-kun/surrealdb/standard-client";
 import type { PreparedQueryLike } from "@tai-kun/surrealdb/types";
 
 export type InferQueryResult<

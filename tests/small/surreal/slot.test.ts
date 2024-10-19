@@ -1,7 +1,7 @@
 import { surql } from "@tai-kun/surrealdb";
 import type { Writer } from "@tai-kun/surrealdb/cbor";
-import type { InferSlotVars } from "@tai-kun/surrealdb/clients/standard";
 import { Encoded, EncodedCBOR } from "@tai-kun/surrealdb/formatter";
+import type { InferSlotVars } from "@tai-kun/surrealdb/standard-client";
 import { expect, expectTypeOf, test, vi } from "vitest";
 
 test("unknown 型の必須スロット", () => {

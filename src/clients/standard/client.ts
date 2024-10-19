@@ -1,4 +1,4 @@
-import Base, { type ClientRpcOptions } from "@tai-kun/surrealdb/clients/basic";
+import Base, { type ClientRpcOptions } from "@tai-kun/surrealdb/basic-client";
 import { QueryFailedError } from "@tai-kun/surrealdb/errors";
 import type {
   Auth,
@@ -18,7 +18,7 @@ import type { DataType } from "../../surreal/data-types";
 import Jwt from "./jwt";
 
 // re-exports
-export type * from "@tai-kun/surrealdb/clients/basic";
+export type * from "@tai-kun/surrealdb/basic-client";
 
 type Override<T, U> = Simplify<Omit<T, keyof U> & U>;
 

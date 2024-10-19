@@ -1,8 +1,8 @@
-import type ClientBase from "@tai-kun/surrealdb/clients/basic";
+import type ClientBase from "@tai-kun/surrealdb/basic-client";
 import type {
   ClientCloseOptions,
   ClientConfig,
-} from "@tai-kun/surrealdb/clients/basic";
+} from "@tai-kun/surrealdb/basic-client";
 import { SurrealValueError } from "../errors";
 import { mutex } from "../utils";
 import createSurql, {

@@ -1,7 +1,7 @@
 import { isDuration } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
-import { CBOR_TAG_DURATION } from "@tai-kun/surrealdb/data-types/encodable";
-import { Duration } from "@tai-kun/surrealdb/data-types/standard";
+import { CBOR_TAG_DURATION } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Duration } from "@tai-kun/surrealdb/standard-datatypes";
 import { describe, expect, test } from "vitest";
 
 const valid = Object.entries({

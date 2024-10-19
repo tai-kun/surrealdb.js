@@ -3,8 +3,8 @@ import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_DATETIME,
   Datetime as EncodableDatetime,
-} from "@tai-kun/surrealdb/data-types/encodable";
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+} from "@tai-kun/surrealdb/encodable-datatypes";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 import { describe, expect, test } from "vitest";
 
 type Suite =

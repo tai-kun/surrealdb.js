@@ -2,7 +2,7 @@ import {
   CBOR_TAG_DATETIME,
   type DatetimeSource,
   type Encodable,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { isSafeNumber, quoteStr } from "@tai-kun/surrealdb/utils";
 import { toISOString } from "../_internals/datetime";

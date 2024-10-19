@@ -3,7 +3,7 @@ import {
   CBOR_TAG_RECORDID,
   Thing,
   Uuid,
-} from "@tai-kun/surrealdb/data-types/standard";
+} from "@tai-kun/surrealdb/standard-datatypes";
 import { expect, test } from "vitest";
 
 test(".table, .id", () => {

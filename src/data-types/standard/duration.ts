@@ -1,7 +1,7 @@
 import {
   Duration as Base,
   type DurationSource,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import {
   NumberRangeError,
   SurrealTypeError,

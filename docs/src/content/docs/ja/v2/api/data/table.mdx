@@ -10,9 +10,9 @@ import Badge from "~/components/ja/Badge.astro";
 ### インポート
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
-import { Table } from "@tai-kun/surrealdb/data-types/standard";
+import { Table } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Table } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -47,7 +47,7 @@ new Table(source: string | { name: string }); // standard
 このプロパティーを取得する場合、文字列はエスケープされません。
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Table } from "@tai-kun/surrealdb/decodeonly-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.name);
@@ -75,7 +75,7 @@ console.log(table.name);
 #### 例
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.toString());
@@ -101,7 +101,7 @@ console.log(table.toString());
 #### 例
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/encodable";
+import { Table } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const table = new Table("foo-bar");
 console.log(table.toSurql());
@@ -131,7 +131,7 @@ console.log(table.toSurql());
 `Table` のテーブル名を型パラメーターを使って型安全にすることができます:
 
 ```ts
-import { Table } from "@tai-kun/surrealdb/data-types/standard";
+import { Table } from "@tai-kun/surrealdb/standard-datatypes";
 
 function isUserTable(table: unknown): table is Table<"user"> {
   return table instanceof Table

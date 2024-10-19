@@ -1,5 +1,5 @@
-import type { InferSlotVars } from "@tai-kun/surrealdb/clients/standard";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
+import type { InferSlotVars } from "@tai-kun/surrealdb/standard-client";
 import type { PreparedQueryLike, SlotLike } from "@tai-kun/surrealdb/types";
 import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 import type { Simplify } from "type-fest";

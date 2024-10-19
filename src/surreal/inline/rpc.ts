@@ -1,10 +1,8 @@
-import type { Jwt } from "@tai-kun/surrealdb/clients/standard";
 import {
   processEndpoint,
   type ProcessEndpointOptions,
   processQueryRequest,
 } from "@tai-kun/surrealdb/engine";
-import type { HttpFetcherRequestInit } from "@tai-kun/surrealdb/engines/http";
 import {
   MissingNamespaceError,
   RpcResponseError,
@@ -12,7 +10,9 @@ import {
   SurrealTypeError,
 } from "@tai-kun/surrealdb/errors";
 import type { Formatter } from "@tai-kun/surrealdb/formatter";
-import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import type { HttpFetcherRequestInit } from "@tai-kun/surrealdb/http-engine";
+import JsonFormatter from "@tai-kun/surrealdb/json-formatter";
+import type { Jwt } from "@tai-kun/surrealdb/standard-client";
 import type { RpcParams, RpcResultMapping } from "@tai-kun/surrealdb/types";
 import {
   getTimeoutSignal,

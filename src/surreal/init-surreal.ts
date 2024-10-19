@@ -1,5 +1,5 @@
-import type ClientBase from "@tai-kun/surrealdb/clients/basic";
-import type { ClientConfig } from "@tai-kun/surrealdb/clients/basic";
+import type ClientBase from "@tai-kun/surrealdb/basic-client";
+import type { ClientConfig } from "@tai-kun/surrealdb/basic-client";
 import createSurql, {
   type CreateSurqlConfig,
   type Surql,

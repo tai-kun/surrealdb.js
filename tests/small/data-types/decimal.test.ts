@@ -3,8 +3,8 @@ import { decode, encode } from "@tai-kun/surrealdb/cbor";
 import {
   CBOR_TAG_DECIMAL,
   Decimal as EncodableDecimal,
-} from "@tai-kun/surrealdb/data-types/encodable";
-import { Decimal } from "@tai-kun/surrealdb/data-types/standard";
+} from "@tai-kun/surrealdb/encodable-datatypes";
+import { Decimal } from "@tai-kun/surrealdb/standard-datatypes";
 import { describe, expect, test } from "vitest";
 
 // -----------------------------------------------------------------------------

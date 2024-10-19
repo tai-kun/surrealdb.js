@@ -51,9 +51,9 @@ try {
 
 ```ts
 import { initSurreal } from "@tai-kun/surrealdb";
-import Client from "@tai-kun/surrealdb/clients/standard";
-import HttpEngine from "@tai-kun/surrealdb/engines/http";
-import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import Client from "@tai-kun/surrealdb/standard-client";
+import HttpEngine from "@tai-kun/surrealdb/http-engine";
+import JsonFormatter from "@tai-kun/surrealdb/json-formatter";
 
 const { Surreal } = initSurreal({
   Client: Client,

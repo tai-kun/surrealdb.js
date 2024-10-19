@@ -1,4 +1,4 @@
-import { Future as Base } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future as Base } from "@tai-kun/surrealdb/encodable-datatypes";
 import { SurrealTypeError, SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { escapeTb, toString } from "../_internals/thing";
@@ -71,7 +71,7 @@ export default class Future extends Base implements Standard {
   }
 }
 
-const THING = /* @__PURE__ */ Symbol.for("@tai-kun/surrealdb/data-types/thing");
+const THING = /* @__PURE__ */ Symbol.for("@tai-kun/surrealdb/thing-datatypes");
 
 function isThing(o: unknown): o is {
   readonly table: string;

@@ -10,9 +10,9 @@ UUID（Universally Unique Identifier）は、特定のエンティティを一�
 ### インポート
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
-import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+import { Uuid } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Uuid } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Uuid } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -109,7 +109,7 @@ UUID のバリアントが `"RFC"` でバージョンが v1、v6、v7 のいず�
 #### 例
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+import { Uuid } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const bytes = new Uint8Array([
   0x26, 0xc8, 0x01, 0x63,
@@ -142,7 +142,7 @@ console.log(uuid.toString());
 #### 例
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/encodable";
+import { Uuid } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const bytes = new Uint8Array([
   0x26, 0xc8, 0x01, 0x63,
@@ -195,7 +195,7 @@ console.log(uuid.toSurql());
 次の例では、異なる UUID のバージョンのタイムスタンプを比較して、昇順に並び替えています:
 
 ```ts
-import { Uuid } from "@tai-kun/surrealdb/data-types/standard";
+import { Uuid } from "@tai-kun/surrealdb/standard-datatypes";
 
 const uuidv1 = new Uuid("0e004000-2073-11ef-8451-eb2a011f8691");
 const uuidv6 = new Uuid("1ef1fa9e-3968-6000-a77e-683eb1a35ebe");

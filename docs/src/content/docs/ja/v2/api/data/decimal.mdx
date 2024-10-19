@@ -10,9 +10,9 @@ import Badge from "~/components/ja/Badge.astro";
 ### インポート
 
 ```ts
-import { Decimal } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Decimal } from "@tai-kun/surrealdb/data-types/encodable";
-import { Decimal } from "@tai-kun/surrealdb/data-types/standard";
+import { Decimal } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Decimal } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Decimal } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -65,7 +65,7 @@ new Decimal(source: string | number | Decimal); // standard
 #### 例
 
 ```ts
-import { Decimal } from "@tai-kun/surrealdb/data-types/encodable";
+import { Decimal } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const decimal = new Decimal("3.14");
 console.log(decimal.toSurql());

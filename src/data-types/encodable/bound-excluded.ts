@@ -1,7 +1,7 @@
 import {
   BoundExcluded as Base,
   type BoundExcludedSource,
-} from "@tai-kun/surrealdb/data-types/decode-only";
+} from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { CBOR_TAG_BOUND_EXCLUDED, type Encodable } from "./spec";
 

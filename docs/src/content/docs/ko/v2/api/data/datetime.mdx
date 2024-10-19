@@ -5,19 +5,19 @@ slug: ko/v2/api/data/datetime
 
 import Badge from "~/components/ko/Badge.astro";
 
-`Datetime`은 날짜와 시간을 나타내는 클래스입니다. SurrealQL의 [`datetime`](https://surrealdb.com/docs/surrealql/datamodel/datetimes) 형식을 지원합니다.
+`Datetime`은 날짜와 시간을 나타내는 클래스입니다. SurrealQL의 [`datetime`](https://surrealdb.com/docs/surrealql/datamodel/datetimes) 유형과 호환됩니다.
 
 ### 가져오기
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
 
-새 `Datetime` 객체를 생성합니다.
+새로운 `Datetime` 객체를 만듭니다.
 
 ```ts
 new Datetime(source: [number, number] | string); // decode-only, encodable
@@ -43,23 +43,23 @@ new Datetime(
 ); // standard
 ```
 
-#### 인수
+#### 매개변수
 
 ##### `source`
 
-초 단위 및 나노초 단위의 쌍 또는 문자열입니다. `standard` 이하의 프리셋에서는 `Date` 객체나 `bigint` 입력도 지원합니다.
+초 단위 및 나노초 단위 쌍 또는 문자열입니다. 프리셋이 standard이면 `Date` 객체나 `bigint` 입력도 지원합니다.
 
 ##### `year`, `monthIndex`, ...
 
-`Date` 클래스의 인수와 동일합니다. 다만 `nanoseconds` 입력도 지원합니다. `undefined`를 제공한 인수 이후에 `number`를 제공할 수 없습니다. 이는 `Date` 클래스와 거의 동일한 사양입니다.
+`Date` 클래스의 매개변수와 동일합니다. 단, `nanoseconds` 입력도 지원합니다. `undefined`를 제공한 매개변수 뒤에 `number`를 제공할 수 없습니다. 이는 `Date` 클래스와 거의 동일한 사양입니다.
 
-#### 반환 값
+#### 반환값
 
-`new`를 통해 호출될 경우 `Datetime`은 해당 인스턴스를 반환합니다. `standard` 이하의 프리셋에서는 `Date` 인스턴스이기도 합니다.
+`new`를 통해 호출된 경우 `Datetime`은 해당 인스턴스를 반환합니다. 프리셋이 standard이면 `Date` 인스턴스이기도 합니다.
 
 ### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-나노초 단위 시간의 초 단위 부분입니다. `standard` 이하의 프리셋에서는 읽기 전용입니다. 값은 -2<sup>53</sup>-1에서 2<sup>53</sup>-1 사이의 정수 또는 `NaN`입니다.
+나노초 단위 시간의 초 단위 부분입니다. standard 미만의 프리셋에서는 읽기 전용입니다. 값은 -2<sup>53</sup>-1에서 2<sup>53</sup>-1까지의 정수 또는 `NaN`입니다.
 
 ```ts
 .seconds: number;
@@ -67,7 +67,7 @@ new Datetime(
 
 ### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-나노초 단위 시간의 나노초 단위 부분입니다. `standard` 이하의 프리셋에서는 읽기 전용입니다. 값은 0에서 999999999 사이의 정수 또는 `NaN`입니다.
+나노초 단위 시간의 나노초 단위 부분입니다. standard 미만의 프리셋에서는 읽기 전용입니다. 값은 0에서 999999999까지의 정수 또는 `NaN`입니다.
 
 ```ts
 .nanoseconds: number;
@@ -81,18 +81,18 @@ new Datetime(
 .valueOf(): number;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 밀리초 단위 시간을 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime("2024-06-01T12:34:56.780123456Z");
 console.log(date.valueOf());
@@ -107,18 +107,18 @@ console.log(date.valueOf());
 .toString(): string;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 밀리초 단위 시간의 문자열 표현을 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime("2024-06-01T12:34:56.780123456Z");
 console.log(date.toString());
@@ -133,18 +133,18 @@ console.log(date.toString());
 .toISOString(): string;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 나노초 단위 시간의 문자열을 ISO 형식으로 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -153,40 +153,40 @@ console.log(date.toISOString());
 
 ### `.toDate()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-런타임 기본 제공 `Date` 객체로 변환합니다. 밀리초 단위로 변환된다는 점에 유의하십시오.
+런타임 내장 `Date` 객체로 변환합니다. 밀리초 단위로 변환된다는 점에 유의하십시오.
 
 ```ts
 .toDate(): Date;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
-런타임 기본 제공 `Date` 객체를 반환합니다.
+런타임 내장 `Date` 객체를 반환합니다.
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-`Datetime` 객체를 SurrealQL에 포함할 수 있는 문자열로 변환합니다. `.toISOString()`과 유사하지만 `d` 접두사를 추가하여 쿼리 파서에 문자열이 UUID임을 알립니다.
+`Datetime` 객체를 SurrealQL에 삽입할 수 있는 문자열로 변환합니다. `.toISOString()`과 유사하지만 `d` 접두사를 추가하여 쿼리 파서에 문자열이 UUID임을 알립니다.
 
 ```ts
 .toSurql(): string;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 `d` 접두사가 붙은 ISO 형식의 날짜 및 시간을 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toSurql());
@@ -195,42 +195,42 @@ console.log(date.toSurql());
 
 ### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-초 단위 및 나노초 단위의 쌍을 가져옵니다.
+초 단위 및 나노초 단위 쌍을 가져옵니다.
 
 ```ts
 .getCompact(): [seconds: number, nanoseconds: number];
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
-초 단위 및 나노초 단위의 쌍을 반환합니다.
+초 단위 및 나노초 단위 쌍을 반환합니다.
 
 ### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-초 단위 및 나노초 단위의 쌍으로 날짜 및 시간을 설정합니다.
+초 단위 및 나노초 단위 쌍으로 날짜 및 시간을 설정합니다.
 
 ```ts
 .setCompact(compact: [seconds: number, nanoseconds: number]): number;
 ```
 
-#### 인수
+#### 매개변수
 
 ##### `compact`
 
-초 단위 및 나노초 단위의 쌍입니다.
+초 단위 및 나노초 단위 쌍입니다.
 
-#### 반환 값
+#### 반환값
 
 밀리초 단위 시간을 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime(0);
 const time = dt.setCompact([1717245296, 780123456]);
@@ -242,24 +242,24 @@ console.log(time);
 
 현지 시간을 사용하여 날짜의 마이크로초를 가져옵니다.
 
-`.getUTCMicroseconds()`는 이 메서드와 동일한 방식으로 동작합니다.
+`.getUTCMicroseconds()`는 이 메서드와 동일하게 동작합니다.
 
 ```ts
 .getMicroseconds(): number;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 마이크로초를 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -276,26 +276,26 @@ console.log(date.getMicroseconds());
 
 마이크로초를 설정합니다.
 
-`.setUTCMicroseconds()`는 이 메서드와 동일한 방식으로 동작합니다.
+`.setUTCMicroseconds()`는 이 메서드와 동일하게 동작합니다.
 
 ```ts
 .setMicroseconds(us: number): number;
 ```
 
-#### 인수
+#### 매개변수
 
 ##### `us`
 
-설정할 마이크로초입니다. 값은 정수로 변환됩니다. 값이 0에서 999 사이가 아니면 전체 시간에 영향을 미칠 수 있습니다.
+설정할 마이크로초입니다. 값은 정수로 변환됩니다. 값이 0에서 999 사이가 아니면 전체 시간에 영향을 미친다는 점에 유의하십시오.
 
-#### 반환 값
+#### 반환값
 
 밀리초 단위 시간을 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -312,24 +312,24 @@ console.log(time);
 
 현지 시간을 사용하여 날짜의 나노초를 가져옵니다.
 
-`.getUTCNanoseconds()`는 이 메서드와 동일한 방식으로 동작합니다.
+`.getUTCNanoseconds()`는 이 메서드와 동일하게 동작합니다.
 
 ```ts
 .getNanoseconds(): number;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 나노초를 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -346,26 +346,26 @@ console.log(date.getNanoseconds());
 
 마이크로초를 설정합니다.
 
-`.setUTCNanoseconds()`는 이 메서드와 동일한 방식으로 동작합니다.
+`.setUTCNanoseconds()`는 이 메서드와 동일하게 동작합니다.
 
 ```ts
 .setNanoseconds(us: number): number;
 ```
 
-#### 인수
+#### 매개변수
 
 ##### `us`
 
-설정할 나노초입니다. 값은 정수로 변환됩니다. 값이 0에서 999 사이가 아니면 전체 시간에 영향을 미칠 수 있습니다.
+설정할 나노초입니다. 값은 정수로 변환됩니다. 값이 0에서 999 사이가 아니면 전체 시간에 영향을 미친다는 점에 유의하십시오.
 
-#### 반환 값
+#### 반환값
 
 밀리초 단위 시간을 반환합니다.
 
 #### 예
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -386,27 +386,27 @@ console.log(time);
 .clone(): this;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
-새 `Datetime` 객체를 반환합니다. `Datetime` 클래스를 상속한 경우 해당 클래스의 인스턴스가 반환됩니다.
+새로운 `Datetime` 객체를 반환합니다. `Datetime` 클래스를 상속하는 경우 해당 클래스의 인스턴스를 반환합니다.
 
-### 개발
+### 확장
 
-#### `Datetime` 객체의 범용적인 판별
+#### `Datetime` 객체의 일반적인 판별
 
-프리셋에 의존하지 않고 값이 `Datetime` 객체인지 판별하려면 `isDatetime` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로 검증할 값의 프리셋을 알 수 없는 경우에 유용합니다.
+프리셋에 의존하지 않고 값이 `Datetime` 객체인지 판별하려면 `isDatetime` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로 검증할 값의 프리셋이 알 수 없는 경우에 유용합니다.
 
 ```ts
 import { isDatetime } from "@tai-kun/surrealdb";
 ```
 
-#### UNIX 에포크 이전의 날짜 및 시간
+#### UNIX 에포크 이전 날짜 및 시간
 
-SurrealDB의 `datetime` 형식은 나노초 단위까지 보관할 수 있습니다. 따라서 JavaScript에서 처리할 때는 주의해야 합니다. SurrealDB가 직렬화한 `datetime` (예: `"1969-12-31T23:59:59.999999999Z"`)을 JavaScript의 `Date.parse`에 전달하면 WebKit에서는 0밀리초가 되지만, 그 외 (Node.js, Deno, Bun, Chromium, Firefox)는 -1밀리초가 됩니다.
+SurrealDB의 `datetime` 유형은 나노초 단위까지 유지할 수 있습니다. 따라서 JavaScript로 처리할 때는 주의해야 합니다. SurrealDB가 직렬화한 `datetime` 예를 들어 `"1969-12-31T23:59:59.999999999Z"`를 JavaScript의 `Date.parse`에 전달하면 WebKit에서는 0밀리초가 되지만 다른 경우(Node.js, Deno, Bun, Chromium, Firefox)에는 -1밀리초가 됩니다.
 
 WebKit:
 

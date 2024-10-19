@@ -3,7 +3,7 @@ import {
   type ThingIdSource,
   type ThingSource,
   type ThingTableSource,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import type { TableLike } from "./table";
 
 export type { ThingIdSource, ThingSource, ThingTableSource };

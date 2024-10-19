@@ -2,7 +2,7 @@ import {
   GeometryPointBase as Base,
   type GeometryPointSource,
   type GeometryPointTypes,
-} from "@tai-kun/surrealdb/data-types/decode-only";
+} from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { type CoordValue, map } from "../_internals/geometry";
 import { CBOR_TAG_GEOMETRY_POINT, type Encodable } from "./spec";

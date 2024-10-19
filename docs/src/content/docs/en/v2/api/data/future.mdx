@@ -7,14 +7,14 @@ banner:
 
 import Badge from "~/components/en/Badge.astro";
 
-The `Future` class represents the [Futures feature](https://surrealdb.com/docs/surrealql/datamodel/futures) of SurrealDB.
+`Future` is a class that represents SurrealDB's [Futures Feature](https://surrealdb.com/docs/surrealql/datamodel/futures).
 
 ### Import
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
-import { Future } from "@tai-kun/surrealdb/data-types/standard";
+import { Future } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Future } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -31,9 +31,9 @@ new Future(source: string);
 
 The value or expression inside the future's block.
 
-#### Return Value
+#### Returns
 
-When called through `new`, `Future` returns its instance.
+When called with `new`, `Future` returns its instance.
 
 ### `.block` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
@@ -45,7 +45,7 @@ The value or expression inside the future's block.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts a `Future` object to a string.
+Converts the `Future` object into a string.
 
 ```ts
 .toString(): string;
@@ -55,14 +55,14 @@ Converts a `Future` object to a string.
 
 None.
 
-#### Return Value
+#### Returns
 
 Returns the value or expression inside the future's block.
 
 #### Example
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const future = new Future(`time::now()`);
 console.log(future.toString());
@@ -71,7 +71,7 @@ console.log(future.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts a `Future` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but the block is enclosed in curly braces (`{}`) and cast with `<future>`.
+Converts the `Future` object into a string that can be embedded in SurrealQL. Similar to `.toString()`, but the block is wrapped in curly braces (`{}`) and cast with `<future>`.
 
 ```ts
 .toSurql(): string;
@@ -81,14 +81,14 @@ Converts a `Future` object to a string that can be embedded in SurrealQL. Simila
 
 None.
 
-#### Return Value
+#### Returns
 
 Returns the future that can be embedded in SurrealQL.
 
 #### Example
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const future = new Future(`time::now()`);
 console.log(future.toSurql());
@@ -97,7 +97,7 @@ console.log(future.toSurql());
 
 ### `.surql()` <Badge variant="static" /><Badge variant="method" /><Badge variant="standard" />
 
-This method helps with writing SurrealQL. You can use template literals to write SurrealQL. Values embedded in template literals are automatically converted to SurrealQL. Also, if you have installed the [SurrealDB official extension](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql) for VSCode, syntax highlighting for template literals will be enabled.
+This method assists in writing SurrealQL. You can write SurrealQL using template literals. Values embedded in the template literal are automatically converted to SurrealQL. Additionally, if you have installed the [SurrealDB official extension](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql) in VSCode, syntax highlighting for template literals will be enabled.
 
 ```ts
 .surql(texts: TemplateStringsArray, ...values: unknown[]): string;
@@ -111,16 +111,16 @@ An array of strings that make up the template literal.
 
 ##### `values`
 
-The values to embed between each element of `texts`.
+Values to be embedded between each element in `texts`.
 
-#### Return Value
+#### Returns
 
 SurrealQL.
 
 #### Example
 
 ```ts
-import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
 
 const foo = "foo";
 const rid = new Thing("person", "tai-kun");
@@ -140,7 +140,7 @@ console.log(future.toSurql());
 Without using `.surql()`, the above example would be:
 
 ```ts
-import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 
 const foo = "foo";
@@ -158,14 +158,14 @@ console.log(future.toSurql());
 //-> }
 ```
 
-- You need to convert strings and objects to SurrealQL using the `toSurql` helper function or `.toSurql()` method.
+- You need to convert strings and objects to SurrealQL using the `toSurql` helper function or the `.toSurql()` method.
 - You can embed strings in SurrealQL without using `Future.raw`.
 
 ### Development
 
-#### Generic Determination of `Future` Objects
+#### Generic Judgment of `Future` Objects
 
-To determine if a value is a `Future` object without relying on presets, it is recommended to use the `isFuture` function. This function does not use `instanceof`, which is useful when the preset of the value to be verified is unknown.
+To determine if a value is a `Future` object without relying on presets, it is recommended to use the `isFuture` function. This function does not use `instanceof`, making it useful when the preset of the value to be verified is unknown.
 
 ```ts
 import { isFuture } from "@tai-kun/surrealdb";

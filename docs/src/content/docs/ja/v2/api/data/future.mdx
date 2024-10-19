@@ -12,9 +12,9 @@ import Badge from "~/components/ja/Badge.astro";
 ### インポート
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
-import { Future } from "@tai-kun/surrealdb/data-types/standard";
+import { Future } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Future } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -62,7 +62,7 @@ future のブロック内の値や式を返します。
 #### 例
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const future = new Future(`time::now()`);
 console.log(future.toString());
@@ -88,7 +88,7 @@ SurrealQL に埋め込める future を返します。
 #### 例
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const future = new Future(`time::now()`);
 console.log(future.toSurql());
@@ -120,7 +120,7 @@ SurrealQL です。
 #### 例
 
 ```ts
-import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
 
 const foo = "foo";
 const rid = new Thing("person", "tai-kun");
@@ -140,7 +140,7 @@ console.log(future.toSurql());
 上記の例を `.surql()` を使わないとすると:
 
 ```ts
-import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 
 const foo = "foo";

@@ -2,7 +2,7 @@ import {
   BoundExcluded,
   BoundIncluded,
   Range,
-} from "@tai-kun/surrealdb/data-types/standard";
+} from "@tai-kun/surrealdb/standard-datatypes";
 import { describe, expect, test } from "vitest";
 
 type Bound = BoundIncluded | BoundExcluded;

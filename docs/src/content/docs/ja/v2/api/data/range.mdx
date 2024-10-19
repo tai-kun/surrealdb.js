@@ -12,9 +12,9 @@ import Badge from "~/components/ja/Badge.astro";
 ### インポート
 
 ```ts
-import { Range } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Range } from "@tai-kun/surrealdb/data-types/encodable";
-import { Range } from "@tai-kun/surrealdb/data-types/standard";
+import { Range } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Range } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Range } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -81,7 +81,7 @@ import {
   Range,
   BoundIncluded,
   BoundExcluded,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 
 const range = new Range([new BoundIncluded(1), new BoundIncluded(3)]);
 console.log(range.toString());

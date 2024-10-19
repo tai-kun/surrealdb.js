@@ -1,7 +1,7 @@
 import {
   Uuid as Base,
   type UuidSource,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import { SurrealValueError, unreachable } from "@tai-kun/surrealdb/errors";
 import { isValidBytes } from "../_internals/uuid";
 

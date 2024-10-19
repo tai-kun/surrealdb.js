@@ -1,4 +1,4 @@
-import { Decimal as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Decimal as Base } from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { CBOR_TAG_DECIMAL, type Encodable } from "./spec";
 
 export type * from "../decode-only/decimal";

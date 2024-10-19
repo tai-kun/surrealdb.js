@@ -1,4 +1,4 @@
-import { Future as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { Future as Base } from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { CBOR_TAG_FUTURE, type Encodable } from "./spec";
 
 export type * from "../decode-only/future";

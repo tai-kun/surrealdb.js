@@ -1,5 +1,5 @@
 ---
-title: 未来值
+title: 未来
 slug: zh-CN/v2/api/data/future
 banner:
   content: 这是一个实验性功能。
@@ -7,19 +7,19 @@ banner:
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Future` 是 SurrealDB [未来值功能](https://surrealdb.com/docs/surrealql/datamodel/futures) 的表示类。
+`Future` 类表示 SurrealDB 的 [Futures 功能](https://surrealdb.com/docs/surrealql/datamodel/futures)。
 
 ### 导入
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
-import { Future } from "@tai-kun/surrealdb/data-types/standard";
+import { Future } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Future } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
 
-创建新的 `Future` 对象。
+创建一个新的 `Future` 对象。
 
 ```ts
 new Future(source: string);
@@ -29,15 +29,15 @@ new Future(source: string);
 
 ##### `source`
 
-future 块内的值或表达式。
+future 块中的值或表达式。
 
 #### 返回值
 
-如果通过 `new` 调用，`Future` 将返回其实例。
+当通过 `new` 调用时，`Future` 将返回其实例。
 
 ### `.block` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-future 块内的值或表达式。
+future 块中的值或表达式。
 
 ```ts
 .block: number;
@@ -57,12 +57,12 @@ future 块内的值或表达式。
 
 #### 返回值
 
-返回 future 块内的值或表达式。
+返回 future 块中的值或表达式。
 
-#### 示例
+#### 例子
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const future = new Future(`time::now()`);
 console.log(future.toString());
@@ -71,7 +71,7 @@ console.log(future.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Future` 对象转换为可嵌入 SurrealQL 的字符串。类似于 `.toString()`，但块被波括号（`{}`）包围，并用 `<future>` 转换。
+将 `Future` 对象转换为可以嵌入 SurrealQL 的字符串。与 `.toString()` 相似，但块将用波括号 (`{}`) 包围并用 `<future>` 强制转换。
 
 ```ts
 .toSurql(): string;
@@ -83,12 +83,12 @@ console.log(future.toString());
 
 #### 返回值
 
-返回可嵌入 SurrealQL 的 future。
+返回可以嵌入 SurrealQL 的 future。
 
-#### 示例
+#### 例子
 
 ```ts
-import { Future } from "@tai-kun/surrealdb/data-types/encodable";
+import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const future = new Future(`time::now()`);
 console.log(future.toSurql());
@@ -97,7 +97,7 @@ console.log(future.toSurql());
 
 ### `.surql()` <Badge variant="static" /><Badge variant="method" /><Badge variant="standard" />
 
-此方法有助于编写 SurrealQL 代码。可以使用模板字面量来编写 SurrealQL 代码。嵌入模板字面量的值将自动转换为 SurrealQL。此外，如果您安装了 [SurrealDB 官方扩展](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql) ，VSCode 中的模板字面量的语法高亮将生效。
+此方法有助于编写 SurrealQL。您可以使用模板字面量来编写 SurrealQL。嵌入到模板字面量中的值将自动转换为 SurrealQL。此外，如果您在 VSCode 中安装了 [SurrealDB 官方扩展](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql)，则模板字面量的语法高亮将生效。
 
 ```ts
 .surql(texts: TemplateStringsArray, ...values: unknown[]): string;
@@ -111,16 +111,16 @@ console.log(future.toSurql());
 
 ##### `values`
 
-在 `texts` 的每个元素之间嵌入的值。
+要嵌入到每个 `texts` 元素之间的值。
 
 #### 返回值
 
-SurrealQL 代码。
+SurrealQL。
 
-#### 示例
+#### 例子
 
 ```ts
-import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
 
 const foo = "foo";
 const rid = new Thing("person", "tai-kun");
@@ -137,10 +137,10 @@ console.log(future.toSurql());
 //-> }
 ```
 
-如果不使用 `.surql()`，上述示例将变为：
+如果不使用 `.surql()`，上面的例子将是：
 
 ```ts
-import { Future, Thing } from "@tai-kun/surrealdb/data-types/standard";
+import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 
 const foo = "foo";
@@ -158,14 +158,14 @@ console.log(future.toSurql());
 //-> }
 ```
 
-- 必须使用 `toSurql` 辅助函数或 `.toSurql()` 方法将字符串或对象转换为 SurrealQL。
-- 可以将字符串直接嵌入 SurrealQL 中，而无需使用 `Future.raw`。
+- 您需要使用 `toSurql` 辅助函数或 `.toSurql()` 方法将字符串或对象转换为 SurrealQL。
+- 您可以将字符串嵌入到 SurrealQL 中，而无需使用 `Future.raw`。
 
-### 扩展
+### 发展
 
-#### `Future` 对象的通用判定
+#### `Future` 对象的通用判断
 
-建议使用 `isFuture` 函数来判定值是否为 `Future` 对象，而无需依赖预设。此函数不使用 `instanceof`，因此在验证值的预设未知的情况下非常有用。
+建议使用 `isFuture` 函数来判断一个值是否为 `Future` 对象，而无需依赖预设。此函数不使用 `instanceof`，因此在验证值预设未知的情况下很有用。
 
 ```ts
 import { isFuture } from "@tai-kun/surrealdb";

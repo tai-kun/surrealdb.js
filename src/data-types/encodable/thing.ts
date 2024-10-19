@@ -3,7 +3,7 @@ import {
   type ThingIdSource,
   type ThingSource,
   type ThingTableSource,
-} from "@tai-kun/surrealdb/data-types/decode-only";
+} from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 import { toString } from "../_internals/thing";
 import { CBOR_TAG_RECORDID, type Encodable } from "./spec";

@@ -1,8 +1,8 @@
 import { autoReconnect, initSurreal } from "@tai-kun/surrealdb";
-import Client from "@tai-kun/surrealdb/clients/standard";
-import WebSocketEngine from "@tai-kun/surrealdb/engines/websocket";
-import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import JsonFormatter from "@tai-kun/surrealdb/json-formatter";
+import Client from "@tai-kun/surrealdb/standard-client";
 import { channel } from "@tai-kun/surrealdb/utils";
+import WebSocketEngine from "@tai-kun/surrealdb/websocket-engine";
 import { WebSocket } from "isows";
 import { afterEach, beforeEach, expect, test, vi } from "vitest";
 import { stopSurrealDb, viWaitForSurrealDb } from "../../surrealdb";

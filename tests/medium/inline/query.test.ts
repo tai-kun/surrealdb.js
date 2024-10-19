@@ -1,5 +1,5 @@
 import { createSurql, query, rpc } from "@tai-kun/surrealdb";
-import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import JsonFormatter from "@tai-kun/surrealdb/json-formatter";
 import { beforeAll, expect, expectTypeOf, test } from "vitest";
 import { host } from "../surreal";
 

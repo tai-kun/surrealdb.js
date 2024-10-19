@@ -3,7 +3,7 @@ import {
   GeometryMultiPointBase as Base,
   type GeometryMultiPointSource as GeometryMultiPointSourceBase,
   type GeometryMultiPointTypes as GeometryMultiPointTypesBase,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import { type Coord, isGeometryMultiPoint, map } from "../_internals/geometry";
 import {
   GeometryPoint,

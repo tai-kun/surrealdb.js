@@ -8,7 +8,7 @@ import {
   CBOR_TAG_GEOMETRY_MULTIPOLYGON,
   CBOR_TAG_GEOMETRY_POINT,
   CBOR_TAG_GEOMETRY_POLYGON,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import {
   GeometryCollection,
   GeometryLine,
@@ -17,7 +17,7 @@ import {
   GeometryMultiPolygon,
   GeometryPoint,
   GeometryPolygon,
-} from "@tai-kun/surrealdb/data-types/standard";
+} from "@tai-kun/surrealdb/standard-datatypes";
 import { expect, test } from "vitest";
 
 test(".collection", () => {

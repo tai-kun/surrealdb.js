@@ -1,4 +1,4 @@
-import type { Encodable } from "@tai-kun/surrealdb/data-types/encodable";
+import type { Encodable } from "@tai-kun/surrealdb/encodable-datatypes";
 import { SurrealValueError } from "@tai-kun/surrealdb/errors";
 import { base64url, quoteStr } from "@tai-kun/surrealdb/utils";
 

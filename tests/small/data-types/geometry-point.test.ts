@@ -1,7 +1,7 @@
 import { isGeometryPoint } from "@tai-kun/surrealdb";
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
-import { CBOR_TAG_GEOMETRY_POINT } from "@tai-kun/surrealdb/data-types/encodable";
-import { GeometryPoint } from "@tai-kun/surrealdb/data-types/standard";
+import { CBOR_TAG_GEOMETRY_POINT } from "@tai-kun/surrealdb/encodable-datatypes";
+import { GeometryPoint } from "@tai-kun/surrealdb/standard-datatypes";
 import { expect, test } from "vitest";
 
 test(".point", () => {

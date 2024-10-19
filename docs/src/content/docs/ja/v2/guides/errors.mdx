@@ -214,7 +214,7 @@ await db.connect("https://localhost:8000"); // throws CircularEngineReferenceErr
 
 ```ts del={6} ins={7-10}
 import { initSurreal } from "@tai-kun/surrealdb";
-import HttpEngine from "@tai-kun/surrealdb/engines/http";
+import HttpEngine from "@tai-kun/surrealdb/http-engine";
 
 const { Surreal } = initSurreal({
   engines: {
@@ -691,7 +691,7 @@ CBOR のエンコードまたはデコード時に JavaScript オブジェクト
 オプションの `.maxDepth` の上限を緩和するか、オブジェクトのネストが浅くなるようにデータ構造を見直します。
 
 ```ts
-import CborFormatter from "@tai-kun/surrealdb/formatters/cbor";
+import CborFormatter from "@tai-kun/surrealdb/cbor-formatter";
 
 const cborFormatter = new CborFormatter({
   encode: {
@@ -724,7 +724,7 @@ CBOR のエンコードまたはデコード時に安全ではないマップキ
 
 継承元: `SurrealError`
 
-これは `@tai-kun/surrealdb/formatters/json` が明示的に投げる、JSON に関連したすべてのエラーが継承するクラスです。これが直接投げられることはありません。
+これは `@tai-kun/surrealdb/json` が明示的に投げる、JSON-formatter。
 
 #### プロパティー
 

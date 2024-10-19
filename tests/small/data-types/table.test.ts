@@ -1,5 +1,5 @@
 import { decode, encode } from "@tai-kun/surrealdb/cbor";
-import { CBOR_TAG_TABLE, Table } from "@tai-kun/surrealdb/data-types/standard";
+import { CBOR_TAG_TABLE, Table } from "@tai-kun/surrealdb/standard-datatypes";
 import { expect, test } from "vitest";
 
 test(".name", () => {

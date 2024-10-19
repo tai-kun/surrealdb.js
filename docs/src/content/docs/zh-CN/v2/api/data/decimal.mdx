@@ -5,19 +5,19 @@ slug: zh-CN/v2/api/data/decimal
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Decimal` 是用于表示任意精度的实数的类。如果预设为 standard，则该类将继承 [`big.js`](https://github.com/MikeMcl/big.js) 类。因此，`.toString()` 方法等的结果在不同预设之间可能不一致。
+`Decimal` 是用于表示任意精度实数的类。当预设为 `standard` 时，它将继承 [`big.js`](https://github.com/MikeMcl/big.js) 的类。这可能会导致 `.toString()` 方法等结果在不同预设之间不一致。
 
 ### 导入
 
 ```ts
-import { Decimal } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Decimal } from "@tai-kun/surrealdb/data-types/encodable";
-import { Decimal } from "@tai-kun/surrealdb/data-types/standard";
+import { Decimal } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Decimal } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Decimal } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
 
-创建新的 `Decimal` 对象。
+创建一个新的 `Decimal` 对象。
 
 ```ts
 new Decimal(source: string); // decode-only, encodable
@@ -28,15 +28,15 @@ new Decimal(source: string | number | Decimal); // standard
 
 ##### `source`
 
-表示实数的字符串。如果预设为 standard，则也可以传入数字。
+以字符串形式表示的实数。当预设为 `standard` 时，也可以传入数字。
 
 #### 返回值
 
-通过 `new` 调用时，`Decimal` 将返回其实例。
+当通过 `new` 调用时，`Decimal` 将返回其实例。
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="decodeonly" />
 
-获取实数的字符串形式。
+获取实数的字符串表示。
 
 #### 参数
 
@@ -48,7 +48,7 @@ new Decimal(source: string | number | Decimal); // standard
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Decimal` 对象转换为可以嵌入 SurrealQL 的字符串。与 `.toString()` 相似，但它通过添加 `dec` 后缀来告知查询解析器该字符串是 `decimal` 类型。
+将 `Decimal` 对象转换为可以嵌入 SurrealQL 的字符串。类似于 `.toString()`，但会添加 `dec` 后缀，以便让查询解析器知道该字符串是 `decimal` 类型。
 
 ```ts
 .toSurql(): string;
@@ -65,7 +65,7 @@ new Decimal(source: string | number | Decimal); // standard
 #### 例子
 
 ```ts
-import { Decimal } from "@tai-kun/surrealdb/data-types/encodable";
+import { Decimal } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const decimal = new Decimal("3.14");
 console.log(decimal.toSurql());
@@ -86,19 +86,19 @@ console.log(decimal.toSurql());
 
 #### 返回值
 
-返回新的 `Decimal` 对象。如果继承了 `Decimal` 类，则返回该类的实例。
+返回一个新的 `Decimal` 对象。如果继承了 `Decimal` 类，则返回该类的实例。
 
 ### 其他方法
 
-如果使用 standard 预设，则 `Decimal` 类继承自 `big.js` 的 `Big` 类，因此实例方法和属性请参考 `big.js` 文档：
+如果使用 `standard` 预设，则 `Decimal` 类将继承 `big.js` 的 `Big` 类，因此实例方法和属性请参考 `big.js` 文档：
 
 [`big.js` 文档](https://mikemcl.github.io/big.js/#prototype-methods)
 
-### 扩展
+### 拓展
 
-#### `Decimal` 对象的通用判定
+#### `Decimal` 对象的通用判断
 
-建议使用 `isDecimal` 函数来判断值是否是 `Decimal` 对象，而不用依赖预设。该函数不使用 `instanceof`，因此在验证值的预设未知时非常有用。
+建议使用 `isDecimal` 函数来判断值是否为 `Decimal` 对象，而无需依赖预设。此函数不使用 `instanceof`，因此在验证值预设未知的情况下非常有用。
 
 ```ts
 import { isDecimal } from "@tai-kun/surrealdb";

@@ -36,7 +36,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { Surreal } from "@tai-kun/surrealdb";
 
 const db = new Surreal();
-await db.connect("<your_surrealdb_server>"); // 例如 ws://localhost:8000
+await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
 
 try {
   await db.signin({ user: "root", pass: "root" });
@@ -52,16 +52,16 @@ try {
 
 ```ts
 import { initSurreal } from "@tai-kun/surrealdb";
-import Client from "@tai-kun/surrealdb/clients/standard";
-import HttpEngine from "@tai-kun/surrealdb/engines/http";
-import JsonFormatter from "@tai-kun/surrealdb/formatters/json";
+import Client from "@tai-kun/surrealdb/standard-client";
+import HttpEngine from "@tai-kun/surrealdb/http-engine";
+import JsonFormatter from "@tai-kun/surrealdb/json-formatter";
 
 const { Surreal } = initSurreal({
   Client: Client,
   engines: {
     http: config => new HttpEngine({
       ...config,
-      // fetch: <您的自定义fetch函数>
+      // fetch: <your custom fetch function>
     }),
     https: "http",
   },

@@ -3,7 +3,7 @@ import {
   GeometryPolygonBase as Base,
   type GeometryPolygonSource as GeometryPolygonSourceBase,
   type GeometryPolygonTypes as GeometryPolygonTypesBase,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import { type Coord, isGeometryPolygon, map } from "../_internals/geometry";
 import {
   GeometryLine,

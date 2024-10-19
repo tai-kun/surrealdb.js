@@ -2,7 +2,7 @@ import {
   GeometryMultiLineBase as Base,
   type GeometryMultiLineSource as GeometryMultiLineSourceBase,
   type GeometryMultiLineTypes as GeometryMultiLineTypesBase,
-} from "@tai-kun/surrealdb/data-types/decode-only";
+} from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { toSurql } from "@tai-kun/surrealdb/utils";
 import { type Coord, map } from "../_internals/geometry";
 import {

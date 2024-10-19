@@ -3,7 +3,7 @@ import {
   GeometryCollectionBase as Base,
   type GeometryCollectionSource as GeometryCollectionSourceBase,
   type GeometryCollectionTypes as GeometryCollectionTypesBase,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 import { type Coord, isGeometryCollection } from "../_internals/geometry";
 import {
   GeometryLine,

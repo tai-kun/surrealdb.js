@@ -1,7 +1,7 @@
 import {
   Table as Base,
   type TableSource,
-} from "@tai-kun/surrealdb/data-types/encodable";
+} from "@tai-kun/surrealdb/encodable-datatypes";
 
 export type * from "../encodable/table";
 

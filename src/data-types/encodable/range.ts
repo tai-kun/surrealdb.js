@@ -1,4 +1,4 @@
-import { RangeBase as Base } from "@tai-kun/surrealdb/data-types/decode-only";
+import { RangeBase as Base } from "@tai-kun/surrealdb/decodeonly-datatypes";
 import { SurrealTypeError } from "@tai-kun/surrealdb/errors";
 import { isBoundExcluded, isBoundIncluded } from "@tai-kun/surrealdb/utils";
 import BoundExcluded from "./bound-excluded";

@@ -5,14 +5,14 @@ slug: zh-CN/v2/api/data/datetime
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Datetime` 是用于表示日期和时间的类，对应 SurrealQL 中的 [`datetime`](https://surrealdb.com/docs/surrealql/datamodel/datetimes) 类型。
+`Datetime` 是一个用于表示日期和时间的类。它对应 SurrealQL 的 [`datetime`](https://surrealdb.com/docs/surrealql/datamodel/datetimes) 类型。
 
 ### 导入
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/decode-only";
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/decodeonly-datatypes";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 ```
 
 ### `.constructor()`
@@ -47,19 +47,19 @@ new Datetime(
 
 ##### `source`
 
-秒数和纳秒数对，或字符串。如果预设是标准的，则还支持 `Date` 对象或 `bigint` 的输入。
+秒数和纳秒数的数组，或者字符串。如果预设为 standard，还可以接受 `Date` 对象或 `bigint` 作为输入。
 
 ##### `year`, `monthIndex`, ...
 
-与 `Date` 类中的参数相同。但它也支持 `nanoseconds` 的输入。在提供 `undefined` 的参数之后不能再提供 `number`。这与 `Date` 类大致相同。
+与 `Date` 类的参数相同。但它也支持 `nanoseconds` 的输入。在提供 `undefined` 的参数之后，不能再提供 `number`。这与 `Date` 类的规范大体相同。
 
 #### 返回值
 
-如果通过 `new` 调用，`Datetime` 会返回其实例。如果预设是标准的，它也是 `Date` 的实例。
+如果通过 `new` 调用，`Datetime` 会返回其实例。如果预设为 standard，它也是 `Date` 的实例。
 
 ### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-纳秒精度时间戳的秒数部分。在低于标准的预设中，它是只读的。该值是一个介于 -2<sup>53</sup>-1 到 2<sup>53</sup>-1 之间的整数或 `NaN`。
+纳秒精度的时间的秒数部分。在 standard 以下的预设中，它是只读的。值是一个 -2<sup>53</sup>-1 到 2<sup>53</sup>-1 之间的整数或 `NaN`。
 
 ```ts
 .seconds: number;
@@ -67,7 +67,7 @@ new Datetime(
 
 ### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-纳秒精度时间戳的纳秒数部分。在低于标准的预设中，它是只读的。该值是一个介于 0 到 999999999 之间的整数或 `NaN`。
+纳秒精度的时间的纳秒数部分。在 standard 以下的预设中，它是只读的。值是一个 0 到 999999999 之间的整数或 `NaN`。
 
 ```ts
 .nanoseconds: number;
@@ -75,7 +75,7 @@ new Datetime(
 
 ### `.valueOf()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-获取毫秒精度时间戳。
+获取毫秒精度的时间。
 
 ```ts
 .valueOf(): number;
@@ -87,12 +87,12 @@ new Datetime(
 
 #### 返回值
 
-返回毫秒精度时间戳。
+返回毫秒精度的时间。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime("2024-06-01T12:34:56.780123456Z");
 console.log(date.valueOf());
@@ -101,7 +101,7 @@ console.log(date.valueOf());
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-获取毫秒精度时间戳的字符串表示。与 `Date` 对象的 `.toString()` 相同。
+获取毫秒精度的时间的字符串表示。与 `Date` 对象的 `.toString()` 相同。
 
 ```ts
 .toString(): string;
@@ -113,21 +113,21 @@ console.log(date.valueOf());
 
 #### 返回值
 
-返回毫秒精度时间戳的字符串表示。
+返回毫秒精度的时间的字符串表示。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime("2024-06-01T12:34:56.780123456Z");
 console.log(date.toString());
-//-> Sat Jun 01 2024 21:34:56 GMT+0900 (日本标准时)
+//-> Sat Jun 01 2024 21:34:56 GMT+0900 (日本標準時)
 ```
 
 ### `.toISOString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-获取纳秒精度时间戳的 ISO 格式字符串。与 `Date` 对象的 `.toISOString()` 类似，但由于是纳秒精度，因此会被序列化到小数点后第九位。
+获取纳秒精度的时间的 ISO 形式字符串。与 `Date` 对象的 `.toISOString()` 相似，但它具有纳秒精度，因此会将字符串化到小数点后第九位。
 
 ```ts
 .toISOString(): string;
@@ -139,12 +139,12 @@ console.log(date.toString());
 
 #### 返回值
 
-返回纳秒精度时间戳的 ISO 格式字符串。
+返回纳秒精度的时间的 ISO 形式字符串。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -169,7 +169,7 @@ console.log(date.toISOString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Datetime` 对象转换为可嵌入 SurrealQL 的字符串。与 `.toISOString()` 类似，但添加 `d` 前缀以告诉查询解析器该字符串是一个 UUID。
+将 `Datetime` 对象转换为可以嵌入 SurrealQL 的字符串。与 `.toISOString()` 相似，但通过添加 `d` 前缀，告知查询解析器该字符串是 UUID。
 
 ```ts
 .toSurql(): string;
@@ -181,12 +181,12 @@ console.log(date.toISOString());
 
 #### 返回值
 
-返回带有 `d` 前缀的 ISO 格式日期时间。
+返回带有 `d` 前缀的 ISO 形式日期时间。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/encodable";
+import { Datetime } from "@tai-kun/surrealdb/encodable-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toSurql());
@@ -225,12 +225,12 @@ console.log(date.toSurql());
 
 #### 返回值
 
-返回毫秒精度时间戳。
+返回毫秒精度的时间。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime(0);
 const time = dt.setCompact([1717245296, 780123456]);
@@ -240,9 +240,9 @@ console.log(time);
 
 ### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-使用本地时间获取日期的微秒。
+使用本地时间获取日期的微秒数。
 
-`.getUTCMicroseconds()` 与该方法的行为相同。
+`.getUTCMicroseconds()` 与此方法的行为相同。
 
 ```ts
 .getMicroseconds(): number;
@@ -254,12 +254,12 @@ console.log(time);
 
 #### 返回值
 
-返回微秒。
+返回微秒数。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -274,9 +274,9 @@ console.log(date.getMicroseconds());
 
 ### `.setMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-设置微秒。
+设置微秒数。
 
-`.setUTCMicroseconds()` 与该方法的行为相同。
+`.setUTCMicroseconds()` 与此方法的行为相同。
 
 ```ts
 .setMicroseconds(us: number): number;
@@ -286,16 +286,16 @@ console.log(date.getMicroseconds());
 
 ##### `us`
 
-要设置的微秒。该值将被转换为整数。请注意，如果值不在 0 到 999 之间，则整个时间戳将受到影响。
+要设置的微秒数。值将被转换为整数。请注意，如果值不在 0 到 999 之间，则整个时间将受到影响。
 
 #### 返回值
 
-返回毫秒精度时间戳。
+返回毫秒精度的时间。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -310,9 +310,9 @@ console.log(time);
 
 ### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-使用本地时间获取日期的纳秒。
+使用本地时间获取日期的纳秒数。
 
-`.getUTCNanoseconds()` 与该方法的行为相同。
+`.getUTCNanoseconds()` 与此方法的行为相同。
 
 ```ts
 .getNanoseconds(): number;
@@ -324,12 +324,12 @@ console.log(time);
 
 #### 返回值
 
-返回纳秒。
+返回纳秒数。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -344,9 +344,9 @@ console.log(date.getNanoseconds());
 
 ### `.setNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-设置纳秒。
+设置纳秒数。
 
-`.setUTCNanoseconds()` 与该方法的行为相同。
+`.setUTCNanoseconds()` 与此方法的行为相同。
 
 ```ts
 .setNanoseconds(us: number): number;
@@ -356,16 +356,16 @@ console.log(date.getNanoseconds());
 
 ##### `us`
 
-要设置的纳秒。该值将被转换为整数。请注意，如果值不在 0 到 999 之间，则整个时间戳将受到影响。
+要设置的纳秒数。值将被转换为整数。请注意，如果值不在 0 到 999 之间，则整个时间将受到影响。
 
 #### 返回值
 
-返回毫秒精度时间戳。
+返回毫秒精度的时间。
 
 #### 例子
 
 ```ts
-import { Datetime } from "@tai-kun/surrealdb/data-types/standard";
+import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
@@ -380,7 +380,7 @@ console.log(time);
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-复制 `Datetime` 对象。
+克隆 `Datetime` 对象。
 
 ```ts
 .clone(): this;
@@ -394,19 +394,19 @@ console.log(time);
 
 返回一个新的 `Datetime` 对象。如果继承了 `Datetime` 类，则返回该类的实例。
 
-### 扩展
+### 发展
 
-#### `Datetime` 对象的通用判断
+#### `Datetime` 对象的通用判定
 
-建议使用 `isDatetime` 函数来判断一个值是否为 `Datetime` 对象，而无需依赖预设。该函数不使用 `instanceof`，因此在验证值的预设未知时很有用。
+建议使用 `isDatetime` 函数来判断值是否是 `Datetime` 对象，而不依赖于预设。该函数不使用 `instanceof`，因此在验证值的预设未知时非常有用。
 
 ```ts
 import { isDatetime } from "@tai-kun/surrealdb";
 ```
 
-#### 早于 UNIX 纪元的日期时间
+#### UNIX 纪元之前的时间
 
-SurrealDB 的 `datetime` 类型可以精确到纳秒。因此，在 JavaScript 中处理它时要小心。如果将 SurrealDB 序列化的 `datetime`，例如 `"1969-12-31T23:59:59.999999999Z"` 传递给 JavaScript 的 `Date.parse`，那么在 WebKit 中它将是 0 毫秒，而在其他环境（Node.js、Deno、Bun、Chromium、Firefox）中则是 -1 毫秒。
+SurrealDB 的 `datetime` 类型可以精确到纳秒。因此在 JavaScript 中处理时需要小心。如果将 SurrealDB 序列化的 `datetime`，例如 `"1969-12-31T23:59:59.999999999Z"`，传递给 JavaScript 的 `Date.parse`，它会在 WebKit 中返回 0 毫秒，但在其他环境（Node.js, Deno, Bun, Chromium, Firefox）中会返回 -1 毫秒。
 
 WebKit:
 
@@ -416,7 +416,7 @@ console.log(date.getTime());
 //-> 0
 ```
 
-Node.js、Deno、Bun、Chromium、Firefox:
+Node.js, Deno, Bun, Chromium, Firefox:
 
 ```ts
 const date = new Date("1969-12-31T23:59:59.999999999Z");

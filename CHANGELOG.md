@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/tai-kun/surrealdb.js/compare/v2.1.0...v2.1.1) (2024-10-19)
+
+
+### Changes
+
+* flat exports に全面移行 ([0f7d114](https://github.com/tai-kun/surrealdb.js/commit/0f7d1145d9b4b343cf045ab976011a8a5b4c7d39))
+
 ## [2.1.0](https://github.com/tai-kun/surrealdb.js/compare/v2.0.3...v2.1.0) (2024-10-17)
 
 

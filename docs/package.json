@@ -16,7 +16,7 @@
     "@astrojs/check": "^0.9.4",
     "@astrojs/starlight": "^0.28.3",
     "@google/generative-ai": "^0.21.0",
-    "astro": "^4.16.6",
+    "astro": "^4.16.7",
     "glob": "^11.0.0",
     "remark-definition-list": "^2.0.0",
     "sharp": "^0.33.5",

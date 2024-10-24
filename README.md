@@ -78,12 +78,12 @@ The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.j
 
 | Env | Version |
 | --- | --- |
-| Node.js | `20.x`,`^22.5.1` *1 |
-| Deno | `1.x`, `2.x` *2 |
-| Bun | `^1.1.13` |
+| Node.js  | `20.x`,`22.x` *1 |
+| Deno     | `1.x`, `2.x` *2 |
+| Bun      | `1.x` |
 | Chromium | `>=104` *3 |
-| Firefox | `>=100` *4 |
-| WebKit | `>=15.4` *5 |
+| Firefox  | `>=100` *4 |
+| WebKit   | `>=15.4` *5 |
 
 *1: Probably works with `18.x`  
 *2: Probably works with `^1.44.3`  
@@ -91,16 +91,22 @@ The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.j
 *4: Probably works with `>=68`  
 *5: Probably works with `>=14`
 
-## Tested
+## Fully Tested
 
 | Env | Version |
 | --- | --- |
-| Node.js | `18.x`,`20.x`,`^22.5.1`,`23.x` |
-| Deno | `1.x`,`2.x` |
-| Bun | `^1.1.13` |
+| Node.js  | `20.x`,`22.x`,`23.x` |
+| Deno     | `1.x`,`2.x` |
+| Bun      | `1.x` |
 | Chromium | `>=104` |
-| Firefox | `>=100` |
-| WebKit | `>=15.4` |
+
+## Partial Tested
+
+| Env | Version |
+| --- | --- |
+| Node.js  | `18.x` |
+| Firefox  | `>=100` |
+| WebKit   | `>=15.4` |
 
 ## License
 

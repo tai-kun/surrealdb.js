@@ -7,13 +7,13 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## JavaScript
 
-该 SDK 使用 `bigint`，因此需要 JavaScript 语言规范 ES2020 及更高版本。此外，考虑到 SDK 在运行时所需的特性，它应该可以在以下运行时环境中运行：
+该 SDK 使用 `bigint`，因此需要 ES2020 或更高版本的 JavaScript 语言规范。此外，考虑到 SDK 在运行时的要求，预计它可以在以下运行时环境中运行：
 
-| 运行时 | 版本 |
+| 运行时环境 | 版本 |
 | --- | --- |
 | Node.js | `18.x`,`20.x`,`^22.5.1` |
-| Deno | `^1.44.3`, `2.x` |
-| Bun | `^1.1.13` |
+| Deno    | `1.x`, `2.x` |
+| Bun     | `1.x` |
 | Chrome  | `>=78` |
 | Edge    | `>=79` |
 | Safari  | `>=14` |
@@ -21,27 +21,26 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## 测试
 
-测试使用 Vitest 和 Playwright。由于我们在测试的运行时环境是最小版本，因此实际上可能在更旧的运行时环境中也能工作。
+我们使用 Vitest 和 Playwright 进行测试。我们使用这些框架能够运行的最低版本运行时环境进行测试，因此实际上它可能在比这里列出的版本更旧的运行时环境中也能正常运行。
 
 ### 服务器
 
-| 运行时 | 版本 | 状态 |
+| 运行时环境 | 版本 | 状态 |
 | --- | --- | --- |
 | SurrealDB | `^2.0.0` | [GitHub](https://github.com/surrealdb/surrealdb) |
-| Node.js   | `18.x`,<br/>`20.x`,<br/>`^22.5.1`,<br/>`23.x` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=main&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml) |
+| Node.js   | `18.x`,<br/>`20.x`,<br/>`22.x`,<br/>`23.x` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=main&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml) |
 | Deno      | `1.x`, `2.x` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/deno.yml?branch=main&logo=Deno&label=Deno)](https://github.com/tai-kun/surrealdb.js/actions/workflows/deno.yml) |
-| Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
+| Bun       | `1.x` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=main&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
 
-- 使用 Node.js v22 时，请注意它还不是 LTS 版本。
-- 建议始终使用 Deno 的最新版本。
-- 建议始终使用 Bun 的最新版本。
+- 建议 Deno 始终使用最新版本。
+- 建议 Bun 始终使用最新版本。
 
 ### 浏览器
 
-| 运行时 | 版本 | 状态 |
+| 运行时环境 | 版本 | 状态 |
 | --- | --- | --- |
 | Chromium  | `>=104` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/chromium.yml?branch=main&logo=googlechrome&label=Chromium)](https://github.com/tai-kun/surrealdb.js/actions/workflows/chromium.yml) |
 | Firefox | `>=100` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=main&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml) |
 | WebKit  | `>=15.4` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/webkit.yml?branch=main&style=flat&logo=safari&label=WebKit)](https://github.com/tai-kun/surrealdb.js/actions/workflows/webkit.yml) |
 
-- 支持的浏览器 (引擎) 与 CI 上 Playwright 工作的最小版本一致。因此，它可能在低于上述版本的版本中也能工作，但尚未测试。
+- 我们支持的浏览器（引擎）与 CI 上 Playwright 能够运行的最低版本一致。因此，虽然它可能在上述版本以下也能运行，但我们没有进行测试。

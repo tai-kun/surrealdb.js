@@ -1,5 +1,18 @@
 # Changelog
 
+## [2.1.2](https://github.com/tai-kun/surrealdb.js/compare/v2.1.1...v2.1.2) (2024-10-24)
+
+
+### Changes
+
+* **surreal:** Pool のセットアップで相リアスを取得できるようにする ([4f54ce9](https://github.com/tai-kun/surrealdb.js/commit/4f54ce93415823262d372864bda9292544e52048))
+
+
+### Miscellaneous Chores
+
+* **deps-dev:** 更新 ([ed37220](https://github.com/tai-kun/surrealdb.js/commit/ed372206bc6fd162fb85fa263cde65d317a1a58c))
+* **deps-dev:** 更新 ([6e0f01a](https://github.com/tai-kun/surrealdb.js/commit/6e0f01aa4aea9f48c0d1382c2c5ae416ad49261b))
+
 ## [2.1.1](https://github.com/tai-kun/surrealdb.js/compare/v2.1.0...v2.1.1) (2024-10-19)
 
 

@@ -31,9 +31,10 @@ export interface PoolInit<
   readonly Client: TClientConstructor;
   readonly alias?: TAlias | undefined;
   readonly setup?: (
-    db: InstanceType<TClientConstructor>,
+    this: InstanceType<TClientConstructor>,
     endpoint: URL,
     options: PoolSetupOptions,
+    alias: keyof TAlias | undefined,
   ) => PromiseLike<void>;
 }
 
@@ -73,11 +74,7 @@ export interface PoolOptions<
   TAlias extends Alias,
 > {
   readonly alias?: TAlias | undefined;
-  readonly setup?: (
-    db: InstanceType<TClientConstructor>,
-    endpoint: URL,
-    options: PoolSetupOptions,
-  ) => PromiseLike<void>;
+  readonly setup?: PoolInit<TClientConstructor, TAlias>["setup"];
   readonly closeDelay?: number | undefined;
 }
 
@@ -108,12 +105,12 @@ export default function initPool<
 ): InitializedPool<TClientConstructor, TAlias> {
   const {
     alias,
-    setup = async (db, endpoint, options) => {
-      if (db.state === "open") {
+    setup = async function(endpoint, options) {
+      if (this.state === "open") {
         return;
       }
 
-      await db.connect(endpoint, options);
+      await this.connect(endpoint, options);
     },
     Client,
     formatter,
@@ -151,11 +148,7 @@ export default function initPool<
       (options: ClientCloseOptions | undefined) => Promise<void>
     >();
 
-    private setup: (
-      db: InstanceType<ClientConstructor>,
-      endpoint: URL,
-      options: PoolSetupOptions,
-    ) => PromiseLike<void>;
+    private setup: NonNullable<PoolInit<ClientConstructor, Alias>["setup"]>;
 
     private alias: Alias;
 
@@ -164,7 +157,9 @@ export default function initPool<
     constructor(
       options: PoolOptions<ClientConstructor, Alias> | undefined = {},
     ) {
-      this.setup = options.setup || (setup as never);
+      this.setup = (options.setup || setup) as NonNullable<
+        PoolInit<ClientConstructor, Alias>["setup"]
+      >;
       this.alias = { ...alias, ...options.alias };
       this.closeDelay = Math.max(0, options.closeDelay ?? 30e3);
     }
@@ -189,11 +184,12 @@ export default function initPool<
       options: PoolSetupOptions | undefined = {},
     ): Promise<PoolSurreal<ClientConstructor>> {
       const url = this.getUrl(endpoint);
+      const alias = typeof endpoint === "string" ? endpoint : undefined;
 
       if (!url) {
         throw new SurrealValueError("predefined endpoint", url, {
           cause: {
-            alias: endpoint,
+            alias,
           },
         });
       }
@@ -205,7 +201,7 @@ export default function initPool<
         clearTimeout(val[2]);
         delete val[2];
         const db = val[1];
-        await this.setup(db, url, options);
+        await this.setup.call(db, url, options, alias);
         val[0] += 1;
 
         return db;
@@ -244,7 +240,7 @@ export default function initPool<
         val[2] = setTimeout(close, this.closeDelay);
         this.closing.add(close);
       }) as unknown as PoolSurreal<ClientConstructor>;
-      await this.setup(db, url, options);
+      await this.setup.call(db, url, options, alias);
       this.map.set(key, [1, db]);
 
       return db;

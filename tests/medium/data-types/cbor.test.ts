@@ -171,7 +171,7 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
 
     test("Range", async c => {
       // >2.0.1 で修正済み。
-      if (!(ver.gt(2, 0, 1) || (ver.eq(2, 0, 1) && ver.nightly()))) {
+      if (!(ver.gt("2.0.1") || (ver.eq("2.0.1") && ver.nightly()))) {
         c.skip();
       }
 
@@ -198,7 +198,7 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
 
     test("IdRange", async c => {
       // >2.0.1 で修正済み。
-      if (!(ver.gt(2, 0, 1) || (ver.eq(2, 0, 1) && ver.nightly()))) {
+      if (!(ver.gt("2.0.1") || (ver.eq("2.0.1") && ver.nightly()))) {
         c.skip();
       }
 

@@ -1,6 +1,5 @@
 import { type DataType, type Patch, Table, Thing } from "@tai-kun/surrealdb";
 import {
-  afterAll,
   afterEach,
   beforeEach,
   describe,

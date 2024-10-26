@@ -6,6 +6,7 @@ import Client from "@tai-kun/surrealdb/standard-client";
 import * as dataTypes from "@tai-kun/surrealdb/standard-datatypes";
 import WebSocketEngine from "@tai-kun/surrealdb/websocket-engine";
 import { SemVer } from "semver";
+import * as semver from "semver";
 import { afterAll, beforeAll } from "vitest";
 import { WebSocket } from "ws";
 import { stopSurrealDb, viWaitForSurrealDb } from "./surrealdb";
@@ -43,11 +44,11 @@ function define(
   url(): `${"http" | "ws"}://127.0.0.1:${number}`;
   ver: {
     (): SemVer;
-    gt(major: number, minor?: number, patch?: number): boolean;
-    ge(major: number, minor?: number, patch?: number): boolean;
-    lt(major: number, minor?: number, patch?: number): boolean;
-    le(major: number, minor?: number, patch?: number): boolean;
-    eq(major: number, minor?: number, patch?: number): boolean;
+    gt(version: `${number}.${number}.${number}`): boolean;
+    ge(version: `${number}.${number}.${number}`): boolean;
+    lt(version: `${number}.${number}.${number}`): boolean;
+    le(version: `${number}.${number}.${number}`): boolean;
+    eq(version: `${number}.${number}.${number}`): boolean;
     beta: {
       (): boolean;
       gt(version: number): boolean;
@@ -140,11 +141,11 @@ function define(
     },
     // dprint-ignore
     ver: Object.assign(() => v(), {
-      gt: (a: number, b = 0, c = 0) => v().major >  a && v().minor >  b && v().patch >  c,
-      ge: (a: number, b = 0, c = 0) => v().major >= a && v().minor >= b && v().patch >= c,
-      lt: (a: number, b = 0, c = 0) => v().major <  a && v().minor <  b && v().patch <  c,
-      le: (a: number, b = 0, c = 0) => v().major <= a && v().minor <= b && v().patch <= c,
-      eq: (a: number, b = 0, c = 0) => v().major == a && v().minor == b && v().patch == c,
+      gt: (ver: string) => semver.gt (`${v().major}.${v().minor}.${v().patch}`, ver),
+      ge: (ver: string) => semver.gte(`${v().major}.${v().minor}.${v().patch}`, ver),
+      lt: (ver: string) => semver.lt (`${v().major}.${v().minor}.${v().patch}`, ver),
+      le: (ver: string) => semver.lte(`${v().major}.${v().minor}.${v().patch}`, ver),
+      eq: (ver: string) => semver.eq (`${v().major}.${v().minor}.${v().patch}`, ver),
       beta: Object.assign(() => v().prerelease[0] === "beta", {
         gt: (ver: number, x?: any) => (x = v().prerelease)[0] === "beta" && typeof (x = x[1]) === "number" && x >  ver,
         ge: (ver: number, x?: any) => (x = v().prerelease)[0] === "beta" && typeof (x = x[1]) === "number" && x >= ver,

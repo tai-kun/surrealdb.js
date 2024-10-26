@@ -9,7 +9,7 @@ import {
 } from "vitest";
 import surreal from "../surreal.js";
 
-for (const { suite, fmt, url, Surreal } of surreal) {
+for (const { suite, fmt, url, Surreal, ver } of surreal) {
   describe(suite, { skip: fmt === "json" }, () => {
     let db: InstanceType<typeof Surreal>;
 
@@ -26,6 +26,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("create", () => {
       beforeEach(async () => {
+        await db.query("REMOVE TABLE IF EXISTS user");
         await db.query("DEFINE TABLE user SCHEMALESS");
       });
 
@@ -103,6 +104,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("insert", () => {
       beforeEach(async () => {
+        await db.query("REMOVE TABLE IF EXISTS user");
         await db.query("DEFINE TABLE user SCHEMALESS");
       });
 
@@ -191,6 +193,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("select", () => {
       beforeEach(async () => {
+        await db.query("REMOVE TABLE IF EXISTS user");
         await db.query("DEFINE TABLE user SCHEMALESS");
         await db.query(`
           CREATE user:1 SET name = "ichiro";
@@ -279,6 +282,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("update", () => {
       beforeEach(async () => {
+        await db.query("REMOVE TABLE IF EXISTS user");
         await db.query("DEFINE TABLE user SCHEMALESS");
         await db.query(`
           CREATE user:1 SET name = "ichiro";
@@ -370,14 +374,20 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("upsert", () => {
       beforeEach(async () => {
-        await db.query("DEFINE TABLE user SCHEMALESS");
+        await db.query("REMOVE TABLE IF EXISTS user");
+        await db.query("DEFINE TABLE IF NOT EXISTS user SCHEMALESS");
       });
 
       afterEach(async () => {
         await db.query("REMOVE TABLE user");
       });
 
-      test("テーブル名でレコードを UPSERT する", async () => {
+      test("テーブル名でレコードを UPSERT すると何も作成されない", async c => {
+        // 2.0.4 以前の仕様
+        if (!(ver.le("2.0.4") && !(ver.eq("2.0.4") && ver.nightly()))) {
+          c.skip();
+        }
+
         const records = await db.upsert<{ name: string }>("user", {
           name: "ichiro",
         });
@@ -396,7 +406,12 @@ for (const { suite, fmt, url, Surreal } of surreal) {
         ]);
       });
 
-      test("テーブルオブジェクトでレコードを UPSERT する", async () => {
+      test("テーブルオブジェクトでレコードを UPSERT すると UPDATE になる", async c => {
+        // 2.0.4 以前の仕様
+        if (!(ver.le("2.0.4") && !(ver.eq("2.0.4") && ver.nightly()))) {
+          c.skip();
+        }
+
         await db.query("CREATE user:1 SET name = 'ichiro'");
 
         const records = await db.upsert<{ name: string }>(new Table("user"), {
@@ -414,6 +429,71 @@ for (const { suite, fmt, url, Surreal } of surreal) {
             id: expect.objectContaining({
               table: "user",
               id: 1,
+            }),
+            name: "jiro",
+          },
+        ]);
+      });
+
+      test("テーブル名でレコードを UPSERT するとレコードが返ってくる", async c => {
+        // 2.0.5 以降の仕様
+        if (!(ver.gt("2.0.5") || (ver.eq("2.0.4") && ver.nightly()))) {
+          c.skip();
+        }
+
+        const records = await db.upsert<{ name: string }>("user", {
+          name: "ichiro",
+        });
+
+        expectTypeOf<typeof records>().toEqualTypeOf<
+          ({ id: string | DataType.Thing } & {
+            name: string;
+          })[]
+        >();
+
+        expect(records).toStrictEqual([
+          {
+            id: expect.objectContaining({
+              table: "user",
+              id: expect.stringMatching(/^[0-9A-Za-z]{20}$/),
+            }),
+            name: "ichiro",
+          },
+        ]);
+        await expect(db.query("SELECT * FROM user")).resolves.toStrictEqual([
+          [{
+            id: expect.objectContaining({
+              table: "user",
+              id: expect.stringMatching(/^[0-9A-Za-z]{20}$/),
+            }),
+            name: "ichiro",
+          }],
+        ]);
+      });
+
+      test("テーブルオブジェクトでレコードを UPSERT すると INSERT になる", async c => {
+        // 2.0.5 以降の仕様
+        if (!(ver.gt("2.0.5") || (ver.eq("2.0.4") && ver.nightly()))) {
+          c.skip();
+        }
+
+        await db.query("CREATE user:1 SET name = 'ichiro'");
+
+        const records = await db.upsert<{ name: string }>(new Table("user"), {
+          name: "jiro",
+        });
+
+        expectTypeOf<typeof records>().toEqualTypeOf<
+          ({ id: string | DataType.Thing } & {
+            name: string;
+          })[]
+        >();
+
+        expect(records).toStrictEqual([
+          {
+            id: expect.objectContaining({
+              table: "user",
+              id: expect.stringMatching(/^[0-9A-Za-z]{20}$/),
             }),
             name: "jiro",
           },
@@ -443,6 +523,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("merge", () => {
       beforeEach(async () => {
+        await db.query("REMOVE TABLE IF EXISTS user");
         await db.query("DEFINE TABLE user SCHEMALESS");
         await db.query(`
           CREATE user:1 SET name = "ichiro";
@@ -554,6 +635,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("patch", () => {
       beforeEach(async () => {
+        await db.query("REMOVE TABLE IF EXISTS user");
         await db.query("DEFINE TABLE user SCHEMALESS");
         await db.query(`
           CREATE user:1 SET name = "ichiro";
@@ -664,6 +746,7 @@ for (const { suite, fmt, url, Surreal } of surreal) {
 
     describe("delete", () => {
       beforeEach(async () => {
+        await db.query("REMOVE TABLE IF EXISTS user");
         await db.query("DEFINE TABLE user SCHEMALESS");
         await db.query(`
           CREATE user:1 SET name = "ichiro";

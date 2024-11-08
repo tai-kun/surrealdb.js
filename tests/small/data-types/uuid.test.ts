@@ -148,16 +148,15 @@ test("UUID v6 の文字列を解析できる", () => {
   expect(uuid.timestamp).toBe(1_717_200_000_000);
 });
 
-// TODO(tai-kun): uuid v10.0.0 では `msecs` オプションのみの指定でバグあり。
-// test("UUID v7 の文字列を解析できる", () => {
-//   const uuidString = uuids.v7({
-//     msecs: new Date("2024-06-01").getTime(),
-//   });
-//   const uuid = new Uuid(uuidString);
+test("UUID v7 の文字列を解析できる", () => {
+  const uuidString = uuids.v7({
+    msecs: new Date("2024-06-01").getTime(),
+  });
+  const uuid = new Uuid(uuidString);
 
-//   expect(uuid.version).toBe(7);
-//   expect(uuid.timestamp).toBe(1_717_200_000_000);
-// });
+  expect(uuid.version).toBe(7);
+  expect(uuid.timestamp).toBe(1_717_200_000_000);
+});
 
 test("v1 と v6 のタイムスタンプを比較できる", () => {
   {

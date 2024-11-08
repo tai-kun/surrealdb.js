@@ -1,0 +1,116 @@
+name: Translate Documents
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/translate-docs.yml"
+      - "docs/**"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/translate-docs.yml"
+      - "docs/**"
+  workflow_dispatch:
+
+jobs:
+  run:
+    defaults:
+      run:
+        working-directory: docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "translate-docs ブランチが存在するか確認"
+        id: check_branch
+        run: |
+          if git ls-remote --heads origin translate-docs | grep translate-docs; then
+            echo 'exists=true' >>"$GITHUB_OUTPUT"
+          else
+            echo 'exists=false' >>"$GITHUB_OUTPUT"
+          fi
+
+      - name: "translate-docs ブランチに移動"
+        if: ${{ steps.check_branch.outputs.exists == 'true' }}
+        run: git checkout -b translate-docs
+
+      - name: "translate-docs ブランチを作成して移動"
+        if: ${{ steps.check_branch.outputs.exists == 'false' }}
+        run: |
+          git checkout -b translate-docs
+          git push -u origin translate-docs
+
+      - uses: actions/cache@v4
+        with:
+          path: cache
+          key: translate-docs
+
+      - name: "依存関係をインストール"
+        run: npm ci
+
+      - name: "日本語から英語"
+        run: node scripts/ja2en.js
+        env:
+          API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: "日本語から韓国語"
+        run: node scripts/ja2ko.js
+        env:
+          API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: "日本語から简体中文"
+        run: node scripts/ja2zh-CN.js
+        env:
+          API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+      - name: "変更が存在するか確認"
+        id: check_diff
+        run: |
+          if git diff --quiet; then
+            echo 'exists=false' >>"$GITHUB_OUTPUT"
+          else
+            echo 'exists=true' >>"$GITHUB_OUTPUT"
+          fi
+
+      - name: "変更をコミット&プッシュ"
+        if: ${{ steps.check_diff.outputs.exists == 'true' }}
+        run: |
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git commit -m 'docs: 翻訳'
+          git push origin translate-docs --force
+
+      - name: "プルリクエストが存在するか確認"
+        if: ${{ steps.check_diff.outputs.exists == 'true' }}
+        id: check_pr
+        run: |
+          prs=$(
+            gh pr list \
+              --repo "${{ github.repository }}" \
+              --head translate-docs \
+              --base main \
+              --json title \
+              --jq length
+          )
+          if ((prs > 0)); then
+            echo 'exists=true' >>"$GITHUB_OUTPUT"
+          else
+            echo 'exists=false' >>"$GITHUB_OUTPUT"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "プルリクエストを作成"
+        if: ${{ steps.check_diff.outputs.exists == 'true' && steps.check_pr.outputs.exists == 'false' }}
+        run: |
+          gh pr create \
+            --title 'docs: 翻訳' \
+            --body '自動翻訳' \
+            --base main \
+            --head translate-docs
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}

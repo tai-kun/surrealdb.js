@@ -7,10 +7,7 @@
     "start": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "astro": "astro",
-    "ja2cn": "node scripts/ja2cn.js",
-    "ja2en": "node scripts/ja2en.js",
-    "ja2ko": "node scripts/ja2ko.js"
+    "astro": "astro"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

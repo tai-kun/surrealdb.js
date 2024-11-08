@@ -3,7 +3,7 @@ title: isSafeNumber
 slug: en/v1/reference/utils/is-safe-number
 ---
 
-`isSafeNumber` checks if the provided number is a safe number in terms of arithmetic operations.
+`isSafeNumber` checks if a given number is a safe number for arithmetic operations.
 
 ### Import
 
@@ -21,12 +21,12 @@ function isSafeNumber(value: number): boolean;
 
 ##### `value`
 
-The number to be checked.
+The number to be validated.
 
-#### Returns
+#### Return Value
 
 Returns `false` if `value` is:
 
 - `NaN`
-- Infinity
-- Beyond the range of ±2^53-1
+- Infinite
+- Out of range ±2^53-1

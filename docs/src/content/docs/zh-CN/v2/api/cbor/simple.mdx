@@ -1,11 +1,11 @@
 ---
-title: 简单值
+title: 简单类型
 slug: zh-CN/v2/api/cbor/simple
 ---
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Simple` 是一个简单的值，由 0 到 255 之间的整数标识。
+`Simple` 类型代表一个简单的值，用 0 到 255 之间的整数标识。
 
 ### 导入
 
@@ -15,7 +15,7 @@ import { Simple } from "@tai-kun/surrealdb/cbor";
 
 ### `.constructor()`
 
-创建一个新的 `Simple` 对象。
+创建新的 `Simple` 对象。
 
 ```ts
 new Simple(value: number);
@@ -25,19 +25,19 @@ new Simple(value: number);
 
 ##### `value`
 
-0 到 255 之间的整数。
+一个 0 到 255 之间的整数。
 
 #### 返回值
 
-通过 `new` 调用时，`Simple` 会返回其实例。
+当通过 `new` 调用时，`Simple` 将返回它的实例。
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-标识 `Simple` 对象的 0 到 255 之间的整数。
+`Simple` 对象的标识，一个 0 到 255 之间的整数。
 
 ### 备注
 
-参考以下资料：
+请参考以下资料：
 
 - [https://datatracker.ietf.org/doc/html/rfc8949#name-simple-values](https://datatracker.ietf.org/doc/html/rfc8949#name-simple-values)
 - [https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml](https://www.iana.org/assignments/cbor-simple-values/cbor-simple-values.xhtml)

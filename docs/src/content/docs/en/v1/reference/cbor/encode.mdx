@@ -1,9 +1,9 @@
 ---
-title: Encode
+title: encode
 slug: en/v1/reference/cbor/encode
 ---
 
-The `encode` function encodes a JavaScript value into a CBOR-formatted `Uint8Array`.
+The `encode` function converts a JavaScript value to a CBOR-formatted `Uint8Array`.
 
 ### Import
 
@@ -35,31 +35,31 @@ The JavaScript value to be encoded into a CBOR-formatted `Uint8Array`. The follo
 - Plain objects or `Map`s
 - `Uint8Array`s
 - `Simple` objects
-- Values that can be replaced by an optional `replacer`
+- Values that can be replaced with an optional `replacer`
 
-If the value is not a primitive value and has a `toCBOR` property that is a function, it will be called preferentially.
+If the value is not a primitive and has a `toCBOR` property that is a function, it will be called first.
 
 ##### `options`
 
 The encoding options.
 
 `replacer?: Replacer | Replacer[]`
-:   The encoder encodes most values into CBOR by default. However, special values can be replaced by encodable values. This option implements the replacement by providing a function or an array of functions. If the function returns the `CONTINUE` symbol obtained by `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, subsequent functions will be called. If no replacement is possible, `SurrealTypeError` will be thrown.
+:   The encoder encodes most values to CBOR by default, but some special values may not be encodable. This option allows you to replace these values with encodable ones. This option can be implemented by passing a function or an array of functions. If the function returns the `CONTINUE` symbol which is available with `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, subsequent functions will be called. If no replacement is found, a `SurrealTypeError` will be thrown.
 
 `isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
-:   This option is a function that verifies whether a key of a `Map` object is safe. The function accepts two arguments: `key` and `map`. `key` is the value of the key and `map` is the `Map` object being validated. If the function returns `false`, `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that specifying this option completely overrides the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
+:   This option is a function that validates whether the keys of `Map` objects are safe. The function receives two arguments: `key` and `map`. `key` is the value of the key and `map` is the `Map` object being validated. If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that this option completely overwrites the default validation. If you want to add your own validation to the default validation, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
 
 `isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
-:   This option is a function that verifies whether a key of a plain object is safe. The function accepts two arguments: `key` and `obj`. `key` is the value of the key and `obj` is the plain object being validated. If the function returns `false`, `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that specifying this option completely overrides the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
+:   This option is a function that validates whether the keys of plain objects are safe. The function receives two arguments: `key` and `obj`. `key` is the value of the key and `obj` is the plain object being validated. If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that this option completely overwrites the default validation. If you want to add your own validation to the default validation, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
 
 `maxDepth?: number`
-:   Specifies the maximum depth of an object. The depth increases by 1 each time you enter an object or array. The default value is `64`. Encoding does not use recursion, so there is no upper limit on the depth, but it is recommended to keep it small.
+:   Specifies the maximum depth of objects. Depth increases by 1 every time you enter an object or array. The default value is `64`. The encoding uses a recursive process, so there is no upper limit on the depth, but it is recommended to keep it small.
 
-#### Return value
+#### Return Value
 
 A `Uint8Array` with the JavaScript value encoded in CBOR format.
 
-### Example
+### Examples
 
 #### Protecting object keys with `isSafeObjectKey`
 
@@ -96,7 +96,7 @@ const bytes = encode(Symbol.for("ID"), {
 console.log(bytes); // Uint8Array(3) [ 98, 73, 68 ]
 ```
 
-#### Limiting the maximum depth with `maxDepth`
+#### Limiting maximum depth with `maxDepth`
 
 ```ts
 import { encode } from "@tai-kun/surrealdb/cbor";

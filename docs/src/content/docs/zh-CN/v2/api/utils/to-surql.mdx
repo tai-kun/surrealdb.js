@@ -11,7 +11,7 @@ slug: zh-CN/v2/api/utils/to-surql
 import { toSurql } from "@tai-kun/surrealdb/utils";
 ```
 
-### 使用方法
+### 用法
 
 ```ts
 function toSurql(value: unlnown): string;
@@ -21,7 +21,7 @@ function toSurql(value: unlnown): string;
 
 ##### `value`
 
-JavaScript 值，可以是以下类型之一：
+JavaScript 值。可以接受以下值：
 
 - `string`
 - `number`
@@ -39,15 +39,15 @@ JavaScript 值，可以是以下类型之一：
 
 `unknown` 表示上述类型组成的值。
 
-转换时，上述类型顺序代表优先级，即如果一个普通对象同时拥有 `.toJSON` 和 `.toSurql` 方法，则优先使用 `.toSurql` 方法。
+在转换过程中，上述类型顺序代表优先级。也就是说，即使普通对象拥有 `.toJSON` 函数，但如果也拥有 `.toSurql` 函数，则优先使用 `.toSurql` 函数。
 
-判断普通对象使用 [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) 库。因此，如果一个普通对象既没有 `.toSurql` 和 `.toJSON` 方法，又没有 `Symbol.toStringTag` 和 `Symbol.iterator` 属性，则不会被识别为对象，并抛出错误。
+判断普通对象使用的是 [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) 库。因此，如果普通对象没有 `.toSurql` 或 `.toJSON` 函数，并且拥有 `Symbol.toStringTag` 或 `Symbol.iterator` 函数，则不会被识别为对象，并抛出错误。
 
 #### 返回值
 
 SurrealQL 字符串。
 
-#### 示例
+#### 例子
 
 ```ts
 import { toSurql } from "@tai-kun/surrealdb/utils";
@@ -73,7 +73,7 @@ const surql = toSurql({
 console.log(surql);
 ```
 
-输出:
+输出：
 
 ```text
 {bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'字符串',undefined:NONE}

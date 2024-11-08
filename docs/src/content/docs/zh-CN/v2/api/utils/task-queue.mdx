@@ -6,7 +6,7 @@ slug: zh-CN/v2/api/utils/task-queue
 import { Aside } from "@astrojs/starlight/components";
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`TaskQueue` 是一个用于管理异步任务的类。它不提供任何控制并发性的方法。所有任务运行器都是异步执行的。
+`TaskQueue` 是一个用于管理异步任务的类。它不提供控制并发性的方法，所有任务运行器都会异步执行。
 
 ### 导入
 
@@ -26,11 +26,11 @@ new TaskQueue();
 
 #### 返回值
 
-当通过 `new` 调用时，`TaskQueue` 返回其实例。
+当通过 `new` 调用时，`TaskQueue` 会返回它的实例。
 
 ### `.count` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
-表示当前添加到队列中的任务运行器的数量。
+表示当前队列中添加的任务运行器数量。
 
 ### `.add()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -44,24 +44,24 @@ add<T>(
 ```
 
 <Aside type="caution">
-  如果任务运行器可能需要很长时间才能执行，建议在任务运行器接收到中止事件时，立即中止任务，以确保任务运行器能够处理传递给它的中止信号。
+  如果任务运行器可能需要很长时间才能执行，建议在任务运行器接收到的中止信号中添加中止事件时，立即中断任务。
 </Aside>
 
 #### 参数
 
 ##### `runner`
 
-任务运行器。它将接收包含中止信号 `signal` 的 `TaskRunnerArgs` 作为参数。
+任务运行器。任务运行器的参数包括一个包含中止信号 `signal` 的 `TaskRunnerArgs`。
 
 ##### `options`
 
-任务运行器的选项。可以通过它传递中止信号。
+任务运行器的选项。可以传递此任务运行器的中止信号。
 
 #### 返回值
 
-返回一个将使用任务运行器返回值进行解析的 `StatefulPromise`。
+返回一个以任务运行器返回值解析的 `StatefulPromise`。
 
-#### 例子
+#### 示例
 
 ```ts
 import { TaskQueue } from "@tai-kun/surrealdb/utils";
@@ -78,14 +78,14 @@ console.log(text);
 
 ### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
-`.idle` 用于等待队列为空。任务运行器在完成（无论成功还是失败）后立即从队列中删除。因此，队列为空意味着所有任务运行器都已完成执行。
+`.idle` 是一个用于等待队列为空的函数。任务运行器只有在完成（无论成功或失败）后才会从队列中删除。因此，队列为空意味着所有任务运行器都已完成执行。
 
 ```ts
 idle(): StatefulPromise<void>;
 ```
 
 <Aside type="caution">
-  `.idle` 不会捕获在 `.add` 方法中添加的任务运行器抛出的错误。由于任务运行器是在 `StatefulPromise` 中执行的，因此无法在没有错误处理的情况下检测到任务运行器的错误。
+  `.idle` 不会捕获在 `.add` 方法中添加的任务运行器抛出的错误。由于任务运行器是在 `StatefulPromise` 内执行的，因此无法在没有错误处理的情况下注意到任务运行器的错误。
 </Aside>
 
 #### 参数
@@ -94,11 +94,11 @@ idle(): StatefulPromise<void>;
 
 #### 返回值
 
-返回一个将使用 `void` 进行解析的 `StatefulPromise`。
+返回一个以 `void` 解析的 `StatefulPromise`。
 
-#### 例子
+#### 示例
 
-下面的示例将等待添加到队列中的所有任务运行器完成，无论它们是否成功或失败：
+以下示例等待队列中添加的所有任务运行器完成，无论成功或失败：
 
 ```ts
 import { TaskQueue } from "@tai-kun/surrealdb/utils";
@@ -120,7 +120,7 @@ console.log(queue.count);
 console.log(results);
 ```
 
-输出：
+输出:
 
 ```js
 2
@@ -128,11 +128,11 @@ console.log(results);
 [ 'Hello' ]
 ```
 
-在上面的示例中，`throw null` 没有被任何地方捕获，脚本正常退出。如果需要了解任务运行器的错误，需要单独处理错误。
+在上面的示例中，`throw null` 没有被任何地方捕获，并且脚本成功地结束了。如果要注意到任务运行器的错误，则需要分别进行错误处理。
 
 ### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 
-`.abort` 用于向所有任务运行器的 `signal` 发送中止事件。
+`.abort` 是一个向所有任务运行器的 `signal` 发送中止事件的函数。
 
 ```ts
 abort(reason?: unknown): void;

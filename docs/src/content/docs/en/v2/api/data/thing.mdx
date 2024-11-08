@@ -5,7 +5,7 @@ slug: en/v2/api/data/thing
 
 import Badge from "~/components/en/Badge.astro";
 
-The `Thing` class represents a [record ID](https://surrealdb.com/docs/surrealql/datamodel/ids).
+`Thing` is a class that represents a [record ID](https://surrealdb.com/docs/surrealql/datamodel/ids).
 
 ### Import
 
@@ -28,7 +28,7 @@ new Thing(table: string, id: string | number | bigint | object);
 
 ##### `source`
 
-A pair of the table and ID parts of the record ID.
+The table and ID part of the record ID as a pair.
 
 ##### `table`
 
@@ -40,11 +40,11 @@ The ID part of the record ID.
 
 #### Returns
 
-When called via `new`, the `Thing` returns its instance.
+When called via `new`, `Thing` returns its instance.
 
 ### `.table` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The table part of the record ID. When getting this property, the string is not escaped.
+The table part of the record ID. When retrieving this property, the string will not be escaped.
 
 ```ts
 .table: string;
@@ -52,7 +52,7 @@ The table part of the record ID. When getting this property, the string is not e
 
 #### Example
 
-When getting this property, the string is not escaped.
+When retrieving this property, the string will not be escaped.
 
 ```ts
 import { Thing } from "@tai-kun/surrealdb/decodeonly-datatypes";
@@ -72,7 +72,7 @@ The ID part of the record ID.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Thing` object into a string usable as a SurrealQL variable. The table and ID parts are escaped and formatted in the same way as the SurrealDB implementation. Also, the object's properties are sorted in ascending order.
+Converts the `Thing` object to a string that can be used as a SurrealQL variable. The table and ID parts are escaped and formatted in the same way as SurrealDB implementation. Also, the object's properties are sorted in ascending order.
 
 `.valueOf()` and `.toJSON()` return the same result as this method.
 
@@ -86,7 +86,7 @@ None.
 
 #### Returns
 
-Returns a string formatted as a record ID.
+Returns the string formatted as a record ID.
 
 #### Example
 
@@ -103,7 +103,7 @@ console.log(thing.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Thing` object into a string embeddable in SurrealQL. Similar to `.toString()`, but it adds the `r` prefix to tell the query parser that the string is a record ID.
+Converts the `Thing` object to a string that can be embedded in SurrealQL. Similar to `.toString()`, but adds an `r` prefix to let the query parser know that the string is a record ID.
 
 ```ts
 .toSurql(): string;
@@ -115,7 +115,7 @@ None.
 
 #### Returns
 
-Returns a string formatted as a record ID.
+Returns the string formatted as a record ID.
 
 #### Example
 
@@ -129,7 +129,7 @@ console.log(thing.toSurql());
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Clones the `Thing` object. However, the ID part is referenced, not cloned.
+Clones the `Thing` object. However, the ID part is not cloned and is referenced.
 
 ```ts
 .clone(): this;
@@ -141,13 +141,13 @@ None.
 
 #### Returns
 
-Returns a new `Thing` object. If the `Thing` class is inherited, it returns an instance of that class.
+Returns a new `Thing` object. If the `Thing` class is inherited, an instance of that class will be returned.
 
 ### Development
 
 #### Type Guard
 
-You can use type parameters for type safety for both the table and ID parts of the `Thing`.
+You can make the table and ID parts of the `Thing` type safe using type parameters:
 
 ```ts
 import { Thing, Uuid } from "@tai-kun/surrealdb/standard-datatypes";
@@ -159,9 +159,9 @@ function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
 }
 ```
 
-#### General Purpose Judgement of `Thing` Objects
+#### Generic Determination of `Thing` Objects
 
-It is recommended to use the `isThing` function to determine if a value is a `Thing` object without relying on presets. This function does not use `instanceof`, so it is helpful when the preset of the value to be validated is unknown.
+It is recommended to use the `isThing` function to determine if a value is a `Thing` object without relying on presets. This function does not use `instanceof`, so it is helpful when the preset of the value to be verified is unknown.
 
 ```ts
 import { isThing } from "@tai-kun/surrealdb";

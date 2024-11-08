@@ -1,5 +1,5 @@
 ---
-title: 지원 환경
+title: 지원되는 환경
 slug: ko/v1/supports
 ---
 
@@ -7,7 +7,7 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## JavaScript
 
-이 SDK는 `bigint`를 사용하므로 JavaScript 언어 사양으로 ES2020 이상이 필요합니다. 다음 브라우저에서 작동할 것으로 예상됩니다.
+이 SDK는 `bigint`를 사용하기 때문에 ES2020 이상의 JavaScript 언어 사양이 필요합니다. 다음 브라우저에서 작동할 것으로 예상됩니다.
 
 | 브라우저 | 버전 |
 | --- | --- |
@@ -24,11 +24,11 @@ import { Aside } from "@astrojs/starlight/components"
 | --- | --- | --- |
 | SurrealDB | `^1.5.4` | [GitHub](https://github.com/surrealdb/surrealdb) |
 | Node.js   | `18.x`,<br/>`20.x`,<br/>`^22.5.1` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=v1&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml) |
-| Deno      | `^1.44.3` | 미테스트 |
+| Deno      | `^1.44.3` | 테스트되지 않음 |
 | Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=v1&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
 
-- Node.js v22를 사용하는 경우, 아직 LTS가 아니라는 점에 유의하세요.
-- Deno에서는 테스트되지 않았지만, 아마도 작동할 것입니다. 단, v1.44.3 이상 버전을 권장합니다. 그 이전 버전에서는 `AbortSignal.timeout()`을 리소스 누출로 오탐하는 버그가 있습니다.
+- Node.js v22를 사용하는 경우, 아직 LTS가 아니라는 점에 유의하십시오.
+- Deno에서는 테스트되지 않았지만, 아마도 작동할 것입니다. 다만, v1.44.3 이상의 버전을 권장합니다. 이전 버전에서는 `AbortSignal.timeout()`을 리소스 누수로 잘못 감지하는 버그가 있습니다.
 - Bun은 항상 최신 버전을 사용하는 것이 좋습니다.
 
 ### 브라우저
@@ -39,4 +39,4 @@ import { Aside } from "@astrojs/starlight/components"
 | Firefox | `>=100` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=v1&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml) |
 | WebKit  | `>=15.4` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/webkit.yml?branch=v1&style=flat&logo=safari&label=WebKit)](https://github.com/tai-kun/surrealdb.js/actions/workflows/webkit.yml) |
 
-- 지원하는 브라우저 (엔진)는 CI에서 Playwright가 작동하는 최소 버전과 일치합니다. 따라서, 위 버전 미만에서도 작동할 가능성은 있지만, 테스트하지 않았습니다.
+- 지원하는 브라우저(엔진)는 CI에서 Playwright가 작동하는 최소 버전과 일치합니다. 따라서, 위 버전보다 낮더라도 작동할 가능성이 있지만, 테스트하지 않았습니다.

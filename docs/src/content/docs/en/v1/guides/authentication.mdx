@@ -5,11 +5,11 @@ slug: en/v1/guides/authentication
 
 import Badge from "~/components/en/Badge.astro";
 
-There are two types of authentication methods. One is to authenticate with a username and password. This requires a username and password defined using the [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) statement. The other is custom authentication defined with the [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement. Here, we will call the former "user authentication" and the latter "access authentication".
+There are two ways to authenticate with SurrealDB. One way is to use a username and password. This requires a username and password defined using the [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) statement. The other way is to use custom authentication defined using the [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) statement. We will refer to the former as "user authentication" and the latter as "access authentication".
 
 ### `.signin()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs you in to SurrealDB with user authentication or access authentication.
+Sign in to SurrealDB using either user authentication or access authentication.
 
 ```ts
 signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -19,26 +19,26 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-The information required for user authentication or access authentication. The parameters required for each authentication type are as follows:
+Information required for user authentication or access authentication. The required parameters for each authentication type are as follows:
 
-| Authentication type | Parameters |
+| Authentication Type | Parameters |
 | --- | ---|
-| Root user | `{ user: string, pass: string }` |
-| Namespace user | `{ user: string, pass: string, ns: string }` |
-| Database user | `{ user: string, pass: string, ns: string, db: string }` |
-| Scope user | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
+| Root User | `{ user: string, pass: string }` |
+| Namespace User | `{ user: string, pass: string, ns: string }` |
+| Database User | `{ user: string, pass: string, ns: string, db: string }` |
+| Scope User | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
 
 ##### `options`
 
-Options for the RPC request.
+Options for PRC requests.
 
 #### Return Value
 
-Returns a `Promise` object that resolves with a `Jwt`.
+Returns a `Promise` object that resolves to a `Jwt`.
 
 #### Examples
 
-The following example signs in to SurrealDB as the root user:
+The following example signs in to SurrealDB using the root user:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -64,7 +64,7 @@ console.log(JSON.stringify(jwt)); // '"[REDACTED]"'
 await db.disconnect();
 ```
 
-The following example signs in to SurrealDB as a namespace user:
+The following example signs in to SurrealDB using a namespace user:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -86,7 +86,7 @@ console.log(jwt.user);      // 'ns_user'
 await db.disconnect();
 ```
 
-The following example signs in to SurrealDB as a database user:
+The following example signs in to SurrealDB using a database user:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -109,7 +109,7 @@ console.log(jwt.user);      // 'db_user'
 await db.disconnect();
 ```
 
-The following example signs in to SurrealDB as a scope user. The `.user` field will be set to the record ID:
+The following example signs in to SurrealDB using a scope user. The `.user` will be set to the record ID:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -134,7 +134,7 @@ await db.disconnect();
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-Signs you up to SurrealDB as a scope user.
+Sign up for SurrealDB as a scope user.
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -144,15 +144,15 @@ signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-The information required for a scope user.
+Information required for a scope user.
 
 ##### `options`
 
-Options for the RPC request.
+Options for PRC requests.
 
 #### Return Value
 
-Returns a `Promise` object that resolves with a `Jwt`.
+Returns a `Promise` object that resolves to a `Jwt`.
 
 #### Examples
 
@@ -193,11 +193,11 @@ The JWT to authenticate with.
 
 ##### `options`
 
-Options for the RPC request.
+Options for RPC requests.
 
 #### Return Value
 
-Returns a `Promise` object that resolves with `undefined`.
+Returns a `Promise` object that resolves to `undefined`.
 
 ### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -211,11 +211,11 @@ invalidate(options?: ClientRpcOptions): Promise<void>
 
 ##### `options`
 
-Options for the RPC request.
+Options for RPC requests.
 
 #### Return Value
 
-Returns a `Promise` object that resolves with `undefined`.
+Returns a `Promise` object that resolves to `undefined`.
 
 {/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
 

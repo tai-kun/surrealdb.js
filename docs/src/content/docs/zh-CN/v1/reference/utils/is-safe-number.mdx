@@ -3,7 +3,7 @@ title: isSafeNumber
 slug: zh-CN/v1/reference/utils/is-safe-number
 ---
 
-`isSafeNumber` 用于检查传递给它的数字是否在运算上是安全的数字。
+`isSafeNumber` 用于验证传入的数字是否在运算上是安全的。
 
 ### 导入
 
@@ -11,7 +11,7 @@ slug: zh-CN/v1/reference/utils/is-safe-number
 import { isSafeNumber } from "@tai-kun/surrealdb/utils";
 ```
 
-### 使用方法
+### 用法
 
 ```ts
 function isSafeNumber(value: number): boolean;
@@ -25,8 +25,8 @@ function isSafeNumber(value: number): boolean;
 
 #### 返回值
 
-如果 `value` 为以下情况，则返回 `false`：
+如果 `value` 满足以下条件，则返回 `false`：
 
 - `NaN`
-- 无限
-- 超出 ±2^53-1 范围
+- 无穷大
+- 超出 ±2^53-1 的范围

@@ -5,7 +5,7 @@ slug: ko/v2/api/utils/is-safe-number
 
 `isSafeNumber`는 입력으로 받은 숫자가 연산상 안전한 숫자인지 확인합니다.
 
-### 가져오기
+### 임포트
 
 ```ts
 import { isSafeNumber } from "@tai-kun/surrealdb/utils";
@@ -23,10 +23,10 @@ function isSafeNumber(value: number): boolean;
 
 검증할 숫자입니다.
 
-#### 반환 값
+#### 반환값
 
 `value`가 다음과 같은 경우 `false`를 반환합니다.
 
 - `NaN`
 - 무한대
-- ±2^53-1 범위를 벗어나는 값
+- ±2^53-1 범위를 벗어나는 경우

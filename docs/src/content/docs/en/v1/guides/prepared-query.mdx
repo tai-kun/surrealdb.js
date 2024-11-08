@@ -5,7 +5,7 @@ slug: en/v1/guides/prepared-query
 
 ## Basic Usage
 
-A basic example of using prepared queries is shown below:
+The following is a basic example of using prepared queries:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -24,11 +24,11 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-Preparing the query enables type inference. However, the inferred type must be manually specified.
+Preparing queries enables type inference. However, the inferred type must be manually set.
 
 ## Validating Query Results
 
-The query can be made safer by passing a validator for the query results to `.returns`. The following example uses Zod to validate that the query results are as expected:
+Making queries safer by passing a validator for the query result to `.returns`. The following example uses zod to validate whether the query results are as intended:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -57,11 +57,11 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-The library is not dependent on Zod, so you can use Valibot or a general-purpose function to validate the response.
+There is no dependency on zod, so you can use valibot or a general-purpose function to validate the response.
 
-## Interpolate Variables into Queries
+## Embedding Variables in Queries
 
-`surql` allows queries to be written with template literals, enabling the visual interpolation of values:
+`surql` allows you to write queries in template literals, enabling you to visually embed values:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -97,7 +97,7 @@ CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
 }
 ```
 
-## Define Arguments in Queries
+## Defining Arguments in Queries
 
 To define arguments for a prepared query, use `surql.slot`:
 
@@ -130,13 +130,13 @@ const results = await db.query(CreateUserQuery, {
 await db.disconnect();
 ```
 
-Slots must have a variable name. You can constrain a variable at the type level with the `.type()` method. Similar to `.returns()`, you can pass a function that validates the value to `.type()`. In the example above, the slot with variable name `id` must be a record ID with table name `"user"`.
+Slots require a variable name. You can use the `.type()` method to restrict the variable at the type level. Similar to `.returns()`, you can pass a function that validates the value to the `.type()` argument. In the above example, the slot with the variable name `id` must be a record ID whose table name is `"user"`.
 
-A slot can have a default value after the variable name. This default value will be used if the slot's variable name is omitted at runtime. In the example above, the slot with variable name `age` has a default value of `42`.
+The slot's argument can be set with a default value following the variable name. This default value is used if the slot's variable name is omitted at runtime. In the above example, the slot with the variable name `age` has a default value of `42`.
 
-Slots have other methods such as `.rename()`, `.default()`, `.optional()`, and `.required()`.
+Besides `.type()`, `.rename()`, `.default()`, `.optional()`, and `.required()` are available for slots.
 
-If a prepared query contains a slot that requires a variable to be specified at runtime and it is not specified, the query will be rejected at runtime with a `SurrealTypeError`.  If the types are correctly inferred in TypeScript, an error will be displayed at the type level even before running the query. For example, if you omit the required variable and check the types with `tsc`, you will see an error like this:
+If a prepared query includes a slot that requires the specification of a variable at runtime, the query will be rejected at runtime with `SurrealTypeError` if it is unspecified. If type inference is correct in TypeScript, an error will be displayed at the type level without execution. For example, if you omit a required variable and run type checking with `tsc`, you will get an error as follows:
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";

@@ -21,12 +21,12 @@ function isArrayBuffer(value: unknown): value is ArrayBuffer;
 
 ##### `value`
 
-期望传入的 `ArrayBuffer` 对象。
+期望为 `ArrayBuffer` 对象的值。
 
 #### 返回值
 
-如果 `value` 是 `ArrayBuffer` 对象，则返回 `true`，否则返回 `false`。
+如果 `value` 为 `ArrayBuffer` 对象，则返回 `true`，否则返回 `false`。
 
-### 说明
+### 解释
 
-在某些版本的 Firefox 中，当 `fetch` 的响应主体为 `ArrayBuffer` 对象时，虽然该对象具备一些方法，但无法通过 `instanceof` 进行判断。因此，本函数通过标签名进行判断，类似于 lodash 的行为。
+在某些版本的 Firefox 中，将 `fetch` 的响应体设置为 `ArrayBuffer` 对象时，虽然它具备了 `ArrayBuffer` 的方法，但 `instanceof` 判定可能会失效。因此，我们使用标签名进行判定。这种方法类似于 Lodash 的行为。

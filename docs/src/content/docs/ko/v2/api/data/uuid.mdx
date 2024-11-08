@@ -5,7 +5,7 @@ slug: ko/v2/api/data/uuid
 
 import Badge from "~/components/ko/Badge.astro";
 
-UUID(Universally Unique Identifier)는 특정 엔터티를 고유하게 식별하는 데 사용되는 128비트 식별자입니다. `Uuid`는 이를 표현하기 위한 클래스입니다. UUID v1부터 v7까지 지원합니다. UUID를 생성하려면 별도의 라이브러리 또는 런타임에 내장된 기능(`node:crypto` 등)을 사용해야 합니다.
+UUID(Universally Unique Identifier)는 특정 엔티티를 고유하게 식별하는 데 사용되는 128비트 식별자입니다. `Uuid`는 이를 나타내는 클래스입니다. UUID v1부터 v7까지 지원합니다. UUID를 생성하려면 별도의 라이브러리 또는 런타임에 내장된 기능(`node:crypto` 등)을 사용해야 합니다.
 
 ### 가져오기
 
@@ -17,7 +17,7 @@ import { Uuid } from "@tai-kun/surrealdb/standard-datatypes";
 
 ### `.constructor()`
 
-새로운 `Uuid` 객체를 생성합니다.
+새로운 `Uuid` 객체를 만듭니다.
 
 ```ts
 new Uuid(source: Uint8Array); // decode-only, encodable
@@ -44,23 +44,23 @@ UUID의 바이트 배열입니다.
 
 ### `.variant` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-UUID의 변형입니다. 이는 UUID의 13번째 비트의 상위 비트로 정의되며, 다음과 같은 3가지 주요 변형과 미래를 위한 예약된 변형이 하나 있습니다.
+UUID의 변형입니다. 이는 UUID의 13번째 비트의 상위 비트로 정의되며 다음과 같은 3가지 주요 변형과 미래를 위해 1가지 예약된 변형이 있습니다.
 
 1. NCS 호환
     - `0b0xxx`
     - UUID가 NCS(Network Computing System)와 호환됨을 나타냅니다.
-    - 일반적으로 사용되지 않습니다.
+    - 일반적으로 많이 사용되지 않습니다.
 2. RFC 4122 호환
     - `0b10xx`
-    - RFC 4122(UUID 표준 사양)에 따른 UUID입니다.
-    - 일반적으로 사용되는 UUID 형식입니다. v1(시간 기반) 또는 v4(랜덤)와 같은 형식이 포함됩니다.
+    - RFC 4122(UUID의 표준 사양)를 기반으로 하는 UUID입니다.
+    - 일반적으로 사용되는 UUID 형식입니다. v1(시간 기반) 및 v4(랜덤)와 같은 형식이 포함됩니다.
 3. Microsoft GUID 호환
     - `0b110x`
-    - Microsoft에서 사용하는 GUID(Globally Unique Identifier)의 형식입니다.
+    - Microsoft에서 사용하는 GUID(Globally Unique Identifier) 형식입니다.
 4. 미래를 위해 예약됨
     - `0b111x`
 
-이 속성은 위의 변형 외에도 NIL UUID와 MAX UUID도 표현합니다.
+이 프로퍼티는 위의 변형 외에도 NIL UUID와 MAX UUID를 표현합니다.
 
 ```ts
 .variant:
@@ -74,7 +74,7 @@ UUID의 변형입니다. 이는 UUID의 13번째 비트의 상위 비트로 정�
 
 ### `.version` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-UUID의 변형이 `"RFC"`이면 UUID 버전 번호입니다. 그렇지 않으면 `null`입니다.
+UUID의 변형이 `"RFC"`인 경우 UUID 버전 번호입니다. 그렇지 않으면 `null`입니다.
 
 ```ts
 .version: 1 | 2 | 3 | 4 | 5 | 6 | 7 | null;
@@ -82,7 +82,7 @@ UUID의 변형이 `"RFC"`이면 UUID 버전 번호입니다. 그렇지 않으면
 
 ### `.timestamp` <Badge variant="instance" /><Badge variant="property" /><Badge variant="standard" />
 
-UUID의 변형이 `"RFC"`이고 버전이 v1, v6, v7 중 하나이면 타임스탬프 부분입니다. 그렇지 않으면 `null`입니다. 편의상 타임스탬프는 모두 UNIX 에포크부터 밀리초로 계산됩니다.
+UUID의 변형이 `"RFC"`이고 버전이 v1, v6, v7 중 하나인 경우 타임스탬프 부분입니다. 그렇지 않으면 `null`입니다. 편의상 모든 타임스탬프는 UNIX 에포크부터의 밀리초 수로 계산됩니다.
 
 ```ts
 .timestamp: number | null;
@@ -90,9 +90,9 @@ UUID의 변형이 `"RFC"`이고 버전이 v1, v6, v7 중 하나이면 타임스�
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-`Uuid` 객체를 SurrealQL 변수에서 사용할 수 있는 문자열로 변환합니다.
+`Uuid` 객체를 SurrealQL 변수에서 사용 가능한 문자열로 변환합니다.
 
-`.valueOf()`와 `.toJSON()`은 이 메서드와 같은 결과를 반환합니다.
+`.valueOf()` 및 `.toJSON()`은 이 메소드와 동일한 결과를 반환합니다.
 
 ```ts
 .toString(): string;
@@ -125,7 +125,7 @@ console.log(uuid.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-`Uuid` 객체를 SurrealQL에 삽입할 수 있는 문자열로 변환합니다. `.toString()`과 비슷하지만 `u` 접두사를 추가하여 쿼리 파서에 문자열이 UUID임을 알립니다.
+`Uuid` 객체를 SurrealQL에 포함 가능한 문자열로 변환합니다. `.toString()`과 유사하지만 `u` 접두사를 추가하여 쿼리 파서에 문자열이 UUID임을 알립니다.
 
 ```ts
 .toSurql(): string;
@@ -188,7 +188,7 @@ console.log(uuid.toSurql());
 
 #### 반환 값
 
-둘 중 하나에 타임스탬프 부분이 없거나 타임스탬프가 같으면 `0`을 반환합니다. 비교 대상 UUID의 타임스탬프가 더 이후 시간이면 `-1`, 더 이전 시간이면 `1`을 반환합니다.
+양쪽 모두 타임스탬프 부분이 없거나 타임스탬프가 동일하면 `0`을 반환합니다. 비교 대상 UUID의 타임스탬프가 더 진행된 시간이면 `-1`, 더 늦은 시간이면 `1`을 반환합니다.
 
 #### 예
 
@@ -219,11 +219,11 @@ console.log(uuidList);
 //-> ]
 ```
 
-### 개발
+### 추가 정보
 
-#### `Uuid` 객체의 범용적인 판별
+#### `Uuid` 객체의 일반적인 판별
 
-프리셋에 의존하지 않고 값이 `Uuid` 객체인지 판별하려면 `isUuid` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로 확인할 값의 프리셋이 불분명한 경우 유용합니다.
+프리셋에 의존하지 않고 값이 `Uuid` 객체인지 판별하려면 `isUuid` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로 검증할 값의 프리셋이 알 수 없는 경우에 유용합니다.
 
 ```ts
 import { isUuid } from "@tai-kun/surrealdb";

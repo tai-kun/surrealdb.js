@@ -25,8 +25,8 @@ The value expected to be an `ArrayBuffer` object.
 
 #### Return Value
 
-Returns `true` if `value` is an `ArrayBuffer` object, otherwise `false`.
+Returns `true` if `value` is an `ArrayBuffer` object, `false` otherwise.
 
 ### Explanation
 
-In some versions of Firefox, `fetch` responses with an `ArrayBuffer` object might have methods but fail `instanceof` checks. Therefore, the function utilizes tag name verification for determination. This approach is similar to the behavior of lodash.
+In some versions of Firefox, the response body of `fetch` becomes an `ArrayBuffer` object that, despite having methods, cannot be determined using `instanceof`. Therefore, it is determined by tag name. This behavior is similar to that of lodash.

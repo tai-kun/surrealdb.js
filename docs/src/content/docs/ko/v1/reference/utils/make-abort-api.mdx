@@ -24,7 +24,7 @@ function makeAbortApi(signal?: AbortSignal): [
 
 ##### `signal`
 
-관련시킬 취소 신호입니다.
+연결할 취소 신호입니다.
 
 #### 반환 값
 
@@ -32,15 +32,15 @@ function makeAbortApi(signal?: AbortSignal): [
 
 ##### `signal`
 
-취소 신호입니다. 초기 상태에서는 중단되지 않습니다.
+취소 신호입니다. 초기 상태에서는 취소되지 않았습니다.
 
 ##### `abort`
 
-취소 신호에 `"abort"` 이벤트를 전송합니다. 선택적으로 하나의 인수 `reason`을 받아 `"abort"` 이벤트를 통해 취소 이유를 전달할 수 있습니다.
+취소 신호에 `"abort"` 이벤트를 전송합니다. 옵션으로 `reason` 인수를 하나 받을 수 있으며, `"abort"` 이벤트를 통해 취소 사유를 전달할 수 있습니다.
 
-#### 예
+#### 예시
 
-다음 예에서는 인수 없이 Abort API를 만듭니다.
+다음 예시는 인수 없이 Abort API를 만듭니다.
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
@@ -49,9 +49,9 @@ const [signal, abort] = makeAbortApi();
 abort();
 ```
 
-위의 예는 `new AbortController()`와 거의 동일한 의미를 갖습니다. `AbortController`와 다른 점은 `makeAbortApi`가 객체가 아니라 배열을 반환한다는 것입니다.
+위 예시는 `new AbortController()`와 거의 동일한 의미를 가집니다. `AbortController`와 다른 점은 `makeAbortApi`가 객체가 아니라 배열을 반환한다는 것입니다.
 
-다음 예에서는 관련시킬 취소 신호를 지정하여 Abort API를 만듭니다.
+다음 예시는 연결할 취소 신호를 지정하여 Abort API를 만듭니다.
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
@@ -76,7 +76,7 @@ controller.signal test
 signal test
 ```
 
-취소 이벤트는 Abort API에서 취소해도 관련된 취소 신호로 전파됩니다.
+취소 이벤트는 Abort API에서 취소해도 연결된 취소 신호로 전파됩니다.
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";

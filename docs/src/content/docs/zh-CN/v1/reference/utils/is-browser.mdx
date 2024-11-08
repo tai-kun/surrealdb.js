@@ -3,7 +3,7 @@ title: isBrowser
 slug: zh-CN/v1/reference/utils/is-browser
 ---
 
-`isBrowser` 函数用于判断当前运行的 JavaScript 运行时环境是否为浏览器环境。
+`isBrowser` 函数用于判断当前运行的 JavaScript 环境是否为浏览器环境。
 
 ### 导入
 
@@ -11,7 +11,7 @@ slug: zh-CN/v1/reference/utils/is-browser
 import { isBrowser } from "@tai-kun/surrealdb/utils";
 ```
 
-### 用法
+### 使用方法
 
 ```ts
 function isBrowser(): boolean;
@@ -23,11 +23,11 @@ function isBrowser(): boolean;
 
 #### 返回值
 
-如果当前环境为浏览器，则返回 `true`，否则返回 `false`。
+如果当前环境为浏览器环境，则返回 `true`，否则返回 `false`。
 
-#### 示例
+#### 例子
 
-以下示例演示了如何判断当前环境是否为浏览器：
+以下示例演示了如何判断当前环境是否为浏览器环境：
 
 ```ts
 import { isBrowser } from "@tai-kun/surrealdb/utils";
@@ -37,6 +37,6 @@ if (isBrowser()) {
 }
 ```
 
-### 解释
+### 说明
 
-如果全局变量 `document` 不为 `undefined`，则判定为浏览器环境。例如，Deno 通过将 `window` 对象添加到全局环境来模拟浏览器环境，因此如果使用 `window` 对象的存在来判断，则会错误地将服务器运行时环境识别为浏览器环境。Web 框架 Remix 将这种机制称为 [Document Guard](https://remix.run/docs/en/main/guides/constraints#document-guard)。
+如果全局变量 `document` 不为 `undefined`，则判定为浏览器环境。例如 Deno 会将 `window` 对象添加到全局环境中，因此如果使用 `window` 对象的存在来判断，则会导致在服务器运行时也判定为浏览器环境。Web 框架 Remix 将这种机制称为 [Document Guard](https://remix.run/docs/en/main/guides/constraints#document-guard)。

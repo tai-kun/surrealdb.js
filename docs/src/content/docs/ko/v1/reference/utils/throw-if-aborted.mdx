@@ -3,7 +3,7 @@ title: throwIfAborted
 slug: ko/v1/reference/utils/throw-if-aborted
 ---
 
-`throwIfAborted`는 전달된 중단 신호가 중단되었을 때, 그 이유를 던지는 함수입니다. `new AbortSignal().throwIfAborted()`가 구현되지 않은 환경을 위해 제공됩니다.
+`throwIfAborted` 함수는 전달된 취소 신호가 취소된 경우 그 이유를 던지는 함수입니다. `new AbortSignal().throwIfAborted()` 가 구현되지 않은 환경을 위해 제공됩니다.
 
 ## 임포트
 
@@ -11,7 +11,7 @@ slug: ko/v1/reference/utils/throw-if-aborted
 import { throwIfAborted } from "@tai-kun/surrealdb/utils";
 ```
 
-## 사용 방법
+## 사용법
 
 ```ts
 function throwIfAborted(signal: AbortSignal | null | undefined): void;
@@ -20,7 +20,7 @@ function throwIfAborted(signal: AbortSignal | null | undefined): void;
 #### 인수
 
 `signal`
-:   중단 신호입니다.
+:   취소 신호입니다.
 
 #### 반환 값
 

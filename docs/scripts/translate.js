@@ -163,6 +163,8 @@ export async function translate(args) {
 
         break;
       }
+
+      break;
     }
   } finally {
     cache = Object.fromEntries(

@@ -27,7 +27,7 @@ export default class Future extends Base implements Encodable {
   }
 
   toSurql(): string {
-    return "<future>{" + this.block + "}";
+    return "<future>" + this.block;
   }
 
   toPlainObject(): {

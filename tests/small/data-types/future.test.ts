@@ -3,45 +3,45 @@ import { toSurql } from "@tai-kun/surrealdb/utils";
 import { expect, test } from "vitest";
 
 test(".block", () => {
-  const f = new Future("time::now()");
+  const f = new Future("{ time::now() }");
 
-  expect(f.block).toBe("time::now()");
+  expect(f.block).toBe("{ time::now() }");
 });
 
 test(".toString()", () => {
-  const f = new Future("time::now()");
+  const f = new Future("{ time::now() }");
 
-  expect(f.toString()).toBe("time::now()");
+  expect(f.toString()).toBe("{ time::now() }");
 });
 
 test(".toJSON()", () => {
-  const f = new Future("time::now()");
+  const f = new Future("{ time::now() }");
 
-  expect(f.toJSON()).toBe("time::now()");
+  expect(f.toJSON()).toBe("{ time::now() }");
 });
 
 test(".toSurql()", () => {
-  const f = new Future("time::now()");
+  const f = new Future("{ time::now() }");
 
-  expect(f.toSurql()).toBe("<future>{time::now()}");
+  expect(f.toSurql()).toBe("<future>{ time::now() }");
 });
 
 test(".toPlainObject()", () => {
-  const f = new Future("time::now()");
+  const f = new Future("{ time::now() }");
 
   expect(f.toPlainObject()).toStrictEqual({
-    block: "time::now()",
+    block: "{ time::now() }",
   });
 });
 
 test(".surql()", () => {
   const foo = "foo";
   const rid = new Thing("person", "tai-kun");
-  const future = new Future(Future.surql`
+  const future = new Future(Future.surql`{
     LET $a = ${foo} + ${Future.raw("'-'")};
     LET $b = type::string(${rid});
     string::concat($a, $b)
-  `);
+  }`);
 
   expect(future.toSurql()).toBe(`<future>{
     LET $a = 'foo' + '-';
@@ -53,11 +53,11 @@ test(".surql()", () => {
 test(".surql() なし", () => {
   const foo = "foo";
   const rid = new Thing("person", "tai-kun");
-  const future = new Future(/*surql*/ `
+  const future = new Future(/*surql*/ `{
     LET $a = ${toSurql(foo)} + ${"'-'"};
     LET $b = type::string(${rid.toSurql()});
     string::concat($a, $b)
-  `);
+  }`);
 
   expect(future.toSurql()).toBe(`<future>{
     LET $a = 'foo' + '-';
@@ -69,7 +69,7 @@ test(".surql() なし", () => {
 test(".clone()", () => {
   class MyFuture extends Future {}
 
-  const object = new MyFuture("time::now()");
+  const object = new MyFuture("{ time::now() }");
   const cloned = object.clone();
 
   expect(cloned).not.toBe(object);

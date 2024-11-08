@@ -116,7 +116,6 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
         ]),
         decimal: new Decimal("3.1415926"),
         duration: new Duration("1y2w3d4h5m6s7ms8us9ns"),
-        future: new Future("string::concat('Hello', ' ', 'World')"),
         geometryPoint,
         geometryLine,
         geometryPolygon,
@@ -147,7 +146,6 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
       };
       const expected = {
         ...input,
-        future: "Hello World",
       };
 
       {
@@ -223,6 +221,33 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
           new Thing("foo", new Range([new BoundIncluded(1), null])),
           new Thing("foo", new Range([null, new BoundExcluded(3)])),
           new Thing("foo", new Range([null, null])),
+        ]);
+    });
+
+    // https://github.com/surrealdb/surrealdb/pull/5050
+    // >2.0.4 で変更予定。
+    test("Futrue", async c => {
+      if (!(ver.gt("2.0.4") || (ver.eq("2.0.4") && ver.nightly()))) {
+        c.skip();
+      }
+
+      await using db = new Surreal();
+      await db.connect(url());
+      await db.signin({ user: "root", pass: "root" });
+
+      await expect(
+        db.query(
+          /* surql */ `
+          RETURN $future;
+        `,
+          {
+            future: new Future("{ string::concat('Hello', ' ', 'World') }"),
+          },
+        ),
+      )
+        .resolves
+        .toStrictEqual([
+          "Hello World",
         ]);
     });
   });

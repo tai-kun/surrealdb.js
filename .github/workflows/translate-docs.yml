@@ -31,7 +31,9 @@ jobs:
 
       - name: "translate-docs ブランチに移動"
         if: ${{ steps.check_branch.outputs.exists == 'true' }}
-        run: git checkout -b translate-docs
+        run: |
+          git checkout -b translate-docs
+          git pull
 
       - name: "translate-docs ブランチを作成して移動"
         if: ${{ steps.check_branch.outputs.exists == 'false' }}

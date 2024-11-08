@@ -23,11 +23,11 @@ new Surreal();
 
 #### 返回值
 
-通过 `new` 调用时，`Surreal` 会返回其实例。
+当通过 `new` 调用时，`Surreal` 将返回其实例。
 
 ### `.connect()` <Badge variant="instance" /><Badge variant="method" />
 
-连接到 SurrealDB 终结点。该方法异步执行，但如果在同一个实例内，则不会与其他 `.connect()` 或 `.close()` 重复执行。
+连接到 SurrealDB 终结点。该方法是异步执行的，但在同一个实例中，不会与其他 `.connect()` 或 `.close()` 重复执行。
 
 ```ts
 connect(
@@ -40,18 +40,18 @@ connect(
 
 ##### `endpoint`
 
-使用 URL 指定 SurrealDB 的终结点。如果 URL 路径的末尾不是 `/rpc`，则会自动添加。因此，如果将 `http://localhost:8000` 传递给参数，则会连接到 `http://localhost:8000/rpc`。
+以 URL 的形式指定 SurrealDB 的终结点。如果 URL 路径的末尾不是 `/rpc`，则会自动添加。因此，如果您传递 `http://localhost:8000` 作为参数，它将连接到 `http://localhost:8000/rpc`。
 
 ##### `options`
 
 连接时的选项。
 
 `signal?: AbortSignal`
-:   用于中断连接的取消信号。默认情况下，将设置一个在 15 秒内超时的取消信号。
+:   用于中断连接的终止信号。默认情况下，将设置一个在 15 秒后超时终止的信号。
 
 #### 返回值
 
-返回一个解析为 `undefined` 的 `Promise` 对象。
+返回一个以 `undefined` 解决的 `Promise` 对象。
 
 #### 示例
 
@@ -65,7 +65,7 @@ const db = new Surreal();
 await db.connect("ws://localhost:8000");
 ```
 
-无法在没有 `.close()` 断开连接的情况下连接到不同的终结点。此外，先前建立的终结点的连接将保持：
+无法在没有 `.close()` 断开连接的情况下连接到不同的终结点。注意，与先前建立连接的终结点的连接将被保留：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -76,7 +76,7 @@ await db.connect("ws://localhost:8000");
 await db.connect("ws://localhost:1129"); // throws ConnectionConflictError: An attempt was made to connect to ws://localhost:1129/rpc while ws://localhost:8000/rpc was already connected.
 ```
 
-`.connect()` 不会在异步处理的上下文中同时执行，因此以下示例也会连接失败。通常无法确定哪个终结点首先建立连接，因此错误消息可能会因情况而异：
+`.connect()` 不会在异步处理的上下文中同时执行，因此以下示例也将导致连接失败。通常情况下，无法确定哪个终结点先建立连接，因此错误消息可能因情况而异：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -91,7 +91,7 @@ await Promise.all([
 
 ### `.close()` <Badge variant="instance" /><Badge variant="method" />
 
-断开与 SurrealDB 的连接。如果尚未连接或已断开连接，则不会抛出错误。该方法异步执行，但如果在同一个实例内，则不会与 `.connect()` 或其他 `.close()` 重复执行。
+断开与 SurrealDB 的连接。如果尚未连接或已经断开连接，则不会抛出错误。该方法是异步执行的，但在同一个实例中，不会与 `.connect()` 或其他 `.close()` 重复执行。
 
 ```ts
 close(options?: ClientCloseOptions): Promise<void>
@@ -104,14 +104,14 @@ close(options?: ClientCloseOptions): Promise<void>
 断开连接时的选项。
 
 `force?: boolean`
-:   如果设置为 `true`，则会向 `Surreal` 对象的事件监听器传递取消信号。预计事件监听器会立即中断，即使处理尚未完成。
+:   如果设置为 `true`，则将向 `Surreal` 对象的事件监听器发送终止信号。预期事件监听器即使处理不完整也会立即中止。
 
 `signal?: AbortSignal`
-:   用于中断连接的取消信号。默认情况下，将设置一个在 15 秒内超时的取消信号。
+:   用于中断连接的终止信号。默认情况下，将设置一个在 15 秒后超时终止的信号。
 
 #### 返回值
 
-返回一个解析为 `undefined` 的 `Promise` 对象。
+返回一个以 `undefined` 解决的 `Promise` 对象。
 
 #### 示例
 
@@ -128,7 +128,7 @@ await db.close();
 
 ### `.getConnectionInfo()` <Badge variant="instance" /><Badge variant="method" />
 
-获取连接信息。连接信息始终包含内部信息的副本值。因此，连接信息包含 `URL` 对象，但直接修改该对象不会改变 `Surreal` 对象内部的终结点信息。如果尚未请求连接，则为 `undefined`。
+获取连接信息。连接信息始终包含内部信息的副本。因此，连接信息包含 `URL` 对象，但直接修改它不会更改 `Surreal` 对象内部存储的终结点信息。如果尚未请求连接，则为 `undefined`。
 
 ```ts
 getConnectionInfo(): ConnectionInfo | undefined;
@@ -140,7 +140,7 @@ getConnectionInfo(): ConnectionInfo | undefined;
 
 #### 返回值
 
-如果连接已建立，则返回连接信息。否则，返回 `undefined`。连接信息包含以下项目：
+如果已建立连接，则返回连接信息。否则，返回 `undefined`。连接信息包含以下项目：
 
 `state: "connecting" | "open" | "closing" | "closed"`
 :   表示当前连接状态的数字。每个数字表示以下含义：
@@ -149,7 +149,7 @@ getConnectionInfo(): ConnectionInfo | undefined;
 :   连接到的终结点。仅在断开连接状态下为 `null`。
 
 `namespace: string | null`
-:   当前选择的命名空间。如果未选择命名空间，则为 `null`。
+:   当前选择的名空间。如果未选择名空间，则为 `null`。
 
 `database: string | null`
 :   当前选择的数据库名称。如果未选择数据库，则为 `null`。
@@ -157,7 +157,7 @@ getConnectionInfo(): ConnectionInfo | undefined;
 `token: string | null`
 :   当前已认证的令牌。如果未注册或登录，则为 `null`。
 
-每个连接状态下的连接信息可能的值如以下表格所示：
+每个连接状态下连接信息可以取的值如下表所示：
 
 | state          | endpoint | namespace      | database       | token          |
 | -------------- | -------- | -------------- | -------------- | -------------- |
@@ -174,13 +174,13 @@ getConnectionInfo(): ConnectionInfo | undefined;
 state: "connecting" | "open" | "closing" | "closed"
 ```
 
-为方便起见，即使连接未建立，也会为 `"closed"`（不是 `undefined`）。
+为了方便起见，即使尚未建立连接，它也是 `"closed"`（不是 `undefined`）。
 
 相关：另请参阅 [`.getConnectionInfo()`](#getconnectioninfo)。
 
 ### `.endpoint` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
-连接到的终结点。仅在断开连接状态下为 `null`。如果连接未建立，则为 `undefined`。
+连接到的终结点。仅在断开连接状态下为 `null`。如果尚未建立连接，则为 `undefined`。
 
 ```ts
 endpoint: string | null | undefined
@@ -190,7 +190,7 @@ endpoint: string | null | undefined
 
 ### `.namespace` <Badge variant="instance" /><Badge variant="property" />
 
-当前选择的命名空间。如果未选择命名空间，则为 `null`。如果连接未建立，则为 `undefined`。
+当前选择的名空间。如果未选择名空间，则为 `null`。如果尚未建立连接，则为 `undefined`。
 
 ```ts
 namespace: string | null | undefined
@@ -200,7 +200,7 @@ namespace: string | null | undefined
 
 ### `.database` <Badge variant="instance" /><Badge variant="property" />
 
-当前选择的数据库名称。如果未选择数据库，则为 `null`。如果连接未建立，则为 `undefined`。
+当前选择的数据库名称。如果未选择数据库，则为 `null`。如果尚未建立连接，则为 `undefined`。
 
 ```ts
 database: string | null | undefined
@@ -210,7 +210,7 @@ database: string | null | undefined
 
 ### `.token` <Badge variant="instance" /><Badge variant="property" />
 
-当前已认证的令牌。如果未注册或登录，则为 `null`。如果连接未建立，则为 `undefined`。
+当前已认证的令牌。如果未注册或登录，则为 `null`。如果尚未建立连接，则为 `undefined`。
 
 ```ts
 token: string | null | undefined
@@ -240,20 +240,20 @@ off(
 要监视的事件名称。
 
 `"connecting" | "open" | "closing" | "closed"`
-:   连接信息发生变化时或发生变化失败时发生的事件。
+:   当连接信息发生更改时，或更改失败时发生的事件。
 
 `rpc_${RpcMethod}_${number}`
-:   双向通信中发生 RPC 响应时的事件。`RpcMethod` 例如 `ping` 或 `use` などの PRC 方法名。`number` 是双向通信中用于将请求/响应关联起来的标识符，取值范围为 1 到 2^53-1 之间的整数。HTTP 中固定为 0。
+:   双向通信中发生 RPC 响应时的事件。`RpcMethod` 例如 `ping` 或 `use` 等 PRC 方法名称。`number` 是双向通信中用于将请求/响应关联起来的标识符，它可以是 1 到 2^53-1 之间的整数。在 HTTP 中，它固定为 0。
 
 `live_${string}`
-:   收到实时查询事件时发生的事件。目前仅在 WebSocket 协议中使用，HTTP 协议不使用此事件。`string` 是实时查询的 UUID。
+:   当接收到实时查询的事件时发生的事件。目前仅在 WebSocket 协议中使用，在 HTTP 协议中不使用此事件。`string` 是实时查询的 UUID。
 
 `error`
-:   错误事件。目前仅在 WebSocket 协议中使用，HTTP 协议不使用此事件。
+:   错误事件。目前仅在 WebSocket 协议中使用，在 HTTP 协议中不使用此事件。
 
 ##### `listener`
 
-事件发生时执行的函数。另请参阅 [任务发射器](/v2/api/utils/task-emitter#on)。传递给 `eventArgs` 的值因事件而异。
+当事件发生时执行的函数。另请参阅 [任务发射器](/v2/api/utils/task-emitter#on)。传递给 `eventArgs` 的值因事件而异。
 
 `"connecting" | "open" | "closing" | "closed"`
 :   以下之一：
@@ -266,7 +266,7 @@ off(
     - `{ id: string, error: { code: number, message: string } }`
 
 `live_${string}`
-:   通常模式的实时查询：
+:   普通模式的实时查询：
 :   - `{ action: "CREATE" | "UPDATE" | "DELETE", result: object, record: string | object }`
 :   差异获取模式的实时查询：
 :   - `{ action: "CREATE" | "UPDATE", result: object[], record: string | object }`
@@ -283,7 +283,7 @@ off(
 
 ### `.once()` <Badge variant="instance" /><Badge variant="method" />
 
-类似于 `.on()`，但只捕获一次事件。
+与 `.on()` 相似，但仅捕获一次事件。
 
 ```ts
 once(
@@ -304,15 +304,15 @@ once(
 
 ##### `options`
 
-任务监听器的选项。参阅 [任务发射器](/v2/api/utils/task-emitter#once)。
+任务监听器的选项。请参阅 [任务发射器](/v2/api/utils/task-emitter#once)。
 
 #### 返回值
 
-返回一个由 `.on()` 的任务监听器的 `eventArgs` 解析的 `StatefulPromise`。
+返回一个以 `.on()` 的任务监听器的 `eventArgs` 解决的 `StatefulPromise`。
 
 ### `.off()` <Badge variant="instance" /><Badge variant="method" />
 
-取消 `.on()` 注册的事件监听器。
+取消在 `.on()` 中注册的事件监听器。
 
 ```ts
 off(

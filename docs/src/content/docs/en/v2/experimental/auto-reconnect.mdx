@@ -1,13 +1,13 @@
 ---
-title: Auto Reconnect
+title: Automatic Reconnection
 slug: en/v2/experimental/auto-reconnect
 banner:
   content: This is an experimental feature and the API is subject to change.
 ---
 
-This feature provides automatic reconnection attempts for connection disruptions that occur in real-time communication, such as with WebSockets. It implements reconnections based on a defined logic and emits events for both successful and failed attempts.
+This functionality provides automatic reconnection attempts in response to connection interruptions that may occur in real-time communication using technologies like WebSockets. It reconnects based on a specific logic and emits success and failure events.
 
-The `autoReconnect` function creates an instance of the `AutoReconnect` class, enabling the use of the reconnection functionality.
+The `autoReconnect` function creates an instance of the `AutoReconnect` class, allowing you to utilize the reconnection feature.
 
 ### Import
 
@@ -32,37 +32,37 @@ An instance object of the `Surreal` class.
 
 ##### `options`
 
-Options for specifying the reconnection settings. You can define parameters like reconnection interval, maximum delay time, and reconnection conditions. These options are optional, and default values will be used if omitted.
+Options for specifying reconnection settings. You can configure reconnection intervals, maximum delay durations, reconnection conditions, etc. This argument can be omitted if you want to use the default settings.
 
 `backoffLimit?: number`
 :   Specifies the maximum number of reconnection attempts. The default value is `Infinity`.
 
 `initialDelay?: number`
-:   The delay time (in milliseconds) before attempting the first reconnection. The default value is `500`.
+:   The delay duration (in milliseconds) before the first reconnection attempt. The default value is `500`.
 
 `maxDelay?: number`
-:   The maximum value for the reconnection delay time (in milliseconds). As the backoff progresses, the delay increases but is capped by this value. The default value is `30_000` (30 seconds).
+:   The maximum value for the reconnection delay duration (in milliseconds). The delay increases as the backoff progresses, but this value acts as an upper limit. The default value is `30_000` (30 seconds).
 
 `shouldReconnect?: { ping?: { threshold: number; perMillis: number }} | (error) => boolean`
-:   Specifies the conditions under which reconnection should occur. If specified as a function, it will determine whether to attempt reconnection based on the arguments of the error event.
+:   Specifies the conditions for triggering reconnection. If specified as a function, the function determines whether to perform reconnection based on the error event arguments.
 
 #### Return Value
 
-Returns an instance of the `AutoReconnect` class. This instance can be used to control reconnections, obtain status information, and monitor events.
+Returns an instance of the `AutoReconnect` class. This instance can be used for controlling reconnections, retrieving status information, and monitoring events.
 
 `.getReconnectionInfo(): ReconnectionInfo`
-:   Gets the current reconnection information (`.state` and `.phase`). Each property has the following meaning:
+:   Retrieves the current reconnection information (`.state` and `.phase`). Each property has the following meaning:
 :   `.state`:
     - `"waiting"` ... Initial state. No reconnection attempts have been made yet.
-    - `"running"` ... Reconnection in progress.
-    - `"success"` ... Reconnection was successful.
+    - `"running"` ... Currently reconnecting.
+    - `"success"` ... Reconnection successful.
     - `"failure"` ... Reconnection failed.
 :   `.phase`:
     - `"waiting"`    ... Initial state. No reconnection attempts have been made yet.
-    - `"pending"`    ... Reconnection is requested and awaiting execution after a defined delay.
-    - `"closing"`    ... Disconnect in progress. 
-    - `"connecting"` ... Connection in progress. Will attempt connection even if disconnection failed.
-    - `"succeeded"`  ... Reconnection was successful.
+    - `"pending"`    ... Reconnection has been requested and is waiting for a certain period of time before execution.
+    - `"closing"`    ... Disconnecting.
+    - `"connecting"` ... Connecting. Attempts to connect even if disconnection fails.
+    - `"succeeded"`  ... Reconnection successful.
     - `"failed"`     ... Reconnection failed.
 
 | state       | phase                     |
@@ -73,16 +73,16 @@ Returns an instance of the `AutoReconnect` class. This instance can be used to c
 | `"failure"` | `"pending"\|"failed"`     |
 
 `.enable(): void`
-:   Enables the reconnection feature. This method will enable reconnection attempts. It is enabled by default.
+:   Enables the reconnection feature. Calling this method enables reconnection attempts. Enabled by default.
 
 `.disable(): void`
-:   Disables the reconnection feature. Calling this method will disable reconnections.
+:   Disables the reconnection feature. Calling this method disables reconnection attempts.
 
 `.reset(): void`
-:   Resets the reconnection counter. This will reset the backoff logic for reconnections.
+:   Resets the reconnection counter. This resets the backoff logic for reconnections.
 
 `.enabled: boolean`
-:   A boolean value indicating whether the reconnection feature is enabled. If `true`, reconnection is active.
+:   A boolean value indicating whether the reconnection feature is enabled. If `true`, reconnection is enabled.
 
 ### Example
 
@@ -97,28 +97,28 @@ const ar = autoReconnect(db, {
   shouldReconnect: {
     ping: {
       perMillis: 60000, // Within 1 minute,
-      threshold: 3,     // If ping fails 3 or more times, reconnect.
+      threshold: 3,     // If more than 3 pings fail, reconnect.
     },
   },
 });
 
 ar.on("pending", (endpoint, duration) => {
-  console.log(`${duration / 1000} seconds until reconnecting to ${endpoint}...`);
+  console.log(`${duration / 1000} seconds later, reconnecting to ${endpoint}...`);
 });
 
 ar.on("success", (endpoint) => {
-  console.log(`Successfully reconnected to ${endpoint} 🎉`);
+  console.log(`Reconnection to ${endpoint} successful 🎉`);
 });
 
 ar.on("failure", (endpoint, cause) => {
-  console.error(`Failed to reconnect to ${endpoint} 🤯`);
-  console.error("Cause:", cause);
+  console.error(`Reconnection to ${endpoint} failed 🤯`);
+  console.error("Reason:", cause);
 });
 
 try {
   await db.connect("ws://127.0.0.1:8000");
 
-  // Various long-running processes
+  // Various processes that run for an extended period of time
 
 } finally {
   await db.close();
@@ -127,5 +127,5 @@ try {
 
 ### Notes
 
-- The reconnection logic is crucial for ensuring the stability and frequency of WebSocket connection recovery. Adjusting the options according to system requirements and use cases is essential.
-- `autoReconnect` attempts to recover from connection loss, but complete recovery is not guaranteed in all cases.
+- Reconnection logic is crucial for appropriately adjusting the stability of WebSocket connections and the frequency of connection recovery. Option settings should be adjusted based on system requirements and use cases.
+- `autoReconnect` is an attempt to recover from connection loss, but it does not guarantee complete recovery in all cases.

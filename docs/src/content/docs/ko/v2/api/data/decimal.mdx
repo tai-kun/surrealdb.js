@@ -1,13 +1,13 @@
 ---
-title: 소수
+title: Decimal
 slug: ko/v2/api/data/decimal
 ---
 
 import Badge from "~/components/ko/Badge.astro";
 
-`Decimal`은 임의 정밀도 실수를 나타내는 클래스입니다. 프리셋이 `standard`인 경우 [`big.js`](https://github.com/MikeMcl/big.js)를 상속받은 클래스입니다. 이로 인해 `.toString()` 메서드와 같은 결과가 프리셋 간에 일치하지 않을 수 있습니다.
+`Decimal`은 임의 정밀도 실수를 표현하는 클래스입니다. 프리셋이 standard인 경우 [`big.js`](https://github.com/MikeMcl/big.js)를 상속받은 클래스가 됩니다. 따라서 `.toString()` 메소드 등의 결과가 프리셋 간에 일치하지 않을 수 있습니다.
 
-### 가져오기
+### 임포트
 
 ```ts
 import { Decimal } from "@tai-kun/surrealdb/decodeonly-datatypes";
@@ -28,11 +28,11 @@ new Decimal(source: string | number | Decimal); // standard
 
 ##### `source`
 
-문자열로 표현된 실수입니다. 프리셋이 `standard`인 경우 숫자도 전달할 수 있습니다.
+문자열로 표현된 실수입니다. 프리셋이 standard인 경우 숫자도 전달할 수 있습니다.
 
-#### 반환 값
+#### 반환값
 
-`new`를 통해 호출된 경우 `Decimal`은 해당 인스턴스를 반환합니다.
+`new`를 통해 호출된 경우, `Decimal`은 해당 인스턴스를 반환합니다.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="decodeonly" />
 
@@ -42,13 +42,13 @@ new Decimal(source: string | number | Decimal); // standard
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 실수의 문자열 표현을 반환합니다.
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-`Decimal` 객체를 SurrealQL에 삽입할 수 있는 문자열로 변환합니다. `.toString()`과 비슷하지만 `dec` 접미사를 추가하여 쿼리 파서에 문자열이 `decimal` 형식임을 알립니다.
+`Decimal` 객체를 SurrealQL에 삽입할 수 있는 문자열로 변환합니다. `.toString()`과 유사하지만, `dec` 접미사를 추가하여 쿼리 파서에 문자열이 `decimal` 타입임을 알립니다.
 
 ```ts
 .toSurql(): string;
@@ -58,11 +58,11 @@ new Decimal(source: string | number | Decimal); // standard
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 `dec` 접미사가 붙은 실수를 반환합니다.
 
-#### 예
+#### 예시
 
 ```ts
 import { Decimal } from "@tai-kun/surrealdb/encodable-datatypes";
@@ -84,13 +84,13 @@ console.log(decimal.toSurql());
 
 없음.
 
-#### 반환 값
+#### 반환값
 
-새로운 `Decimal` 객체를 반환합니다. `Decimal` 클래스를 상속받은 경우 해당 클래스의 인스턴스가 반환됩니다.
+새로운 `Decimal` 객체를 반환합니다. `Decimal` 클래스를 상속받은 경우, 해당 클래스의 인스턴스가 반환됩니다.
 
-### 기타 메서드
+### 기타 메소드
 
-`standard` 프리셋을 사용하는 경우 `Decimal` 클래스는 `big.js`의 `Big` 클래스를 상속받으므로 인스턴스 메서드와 프로퍼티는 `big.js`의 문서를 참조하십시오:
+standard 프리셋을 사용하는 경우, `Decimal` 클래스는 `big.js`의 `Big` 클래스를 상속받으므로, 인스턴스 메소드 및 프로퍼티는 `big.js` 문서를 참조하십시오.
 
 [`big.js` 문서](https://mikemcl.github.io/big.js/#prototype-methods)
 
@@ -98,7 +98,7 @@ console.log(decimal.toSurql());
 
 #### `Decimal` 객체의 범용적인 판별
 
-프리셋에 의존하지 않고 값이 `Decimal` 객체인지 판별하려면 `isDecimal` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로 검증할 값의 프리셋이 알 수 없는 경우에 유용합니다.
+프리셋에 의존하지 않고 값이 `Decimal` 객체인지 판별하려면 `isDecimal` 함수를 사용하는 것을 권장합니다. 이 함수는 `instanceof`를 사용하지 않으므로, 검증할 값의 프리셋이 알려지지 않은 경우에도 유용합니다.
 
 ```ts
 import { isDecimal } from "@tai-kun/surrealdb";

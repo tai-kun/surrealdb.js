@@ -7,7 +7,7 @@ import Badge from "~/components/zh-CN/Badge.astro";
 
 ### `.query()` <Badge variant="instance" /><Badge variant="method" />
 
-执行自定义 SurrealQL 语句。
+执行自定义 SurrealQL。
 
 ```ts
 query(
@@ -21,11 +21,11 @@ query(
 
 ##### `surql`
 
-SurrealQL 语句字符串或预先准备好的查询。
+SurrealQL 字符串或预先准备好的查询。
 
 ##### `vars`
 
-在执行 SurrealQL 时传递的变量。注意，变量名不要以美元符号开头。
+在执行 SurrealQL 时传递的变量。请注意，变量名不要以美元符号开头。
 
 ##### `options`
 
@@ -33,13 +33,13 @@ PRC 请求的选项。
 
 #### 返回值
 
-返回一个 `Promise` 对象，该对象将解析为 SurrealQL 执行结果的数组。如果语句失败，则将被 `QueryFailedError` 拒绝，其中包含相应的错误消息。
+返回一个以 SurrealQL 执行结果的数组为解析结果的 `Promise` 对象。如果语句出现一个或多个失败，则会以包含这些错误消息的 `QueryFailedError` 拒绝。
 
-如果此方法被拒绝，则无法获取执行结果。如果需要手动进行错误处理，可以使用 [`.queryRaw()`](#queryraw)。
+如果此方法被拒绝，则无法获得执行结果。如果需要手动进行错误处理，可以使用 [`.queryRaw()`](#queryraw)。
 
-#### 示例
+#### 例子
 
-以下示例演示了成功执行查询：
+以下示例成功执行了查询：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -59,7 +59,7 @@ console.log(results);
 await db.disconnect();
 ```
 
-以下示例演示了其中一个语句失败，导致查询被 `QueryFailedError` 拒绝：
+以下示例中，其中一个语句失败，因此查询将以 `QueryFailedError` 拒绝：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -73,7 +73,7 @@ const results = await db.query(`
 `); // throws QueryFailedError: Query failed with 1 error(s)
 ```
 
-以下示例演示了执行预先准备好的查询：
+以下示例执行预先准备好的查询：
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -93,7 +93,7 @@ await db.disconnect();
 
 ### `.queryRaw()` <Badge variant="instance" /><Badge variant="method" />
 
-执行自定义 SurrealQL 语句。
+执行自定义 SurrealQL。
 
 ```ts
 queryRaw(
@@ -107,11 +107,11 @@ queryRaw(
 
 ##### `surql`
 
-SurrealQL 语句字符串或预先准备好的查询。
+SurrealQL 字符串或预先准备好的查询。
 
 ##### `vars`
 
-在执行 SurrealQL 时传递的变量。注意，变量名不要以 `$` 开头。
+在执行 SurrealQL 时传递的变量。变量名不要以 `$` 开头。
 
 ##### `options`
 
@@ -119,7 +119,7 @@ PRC 请求的选项。
 
 #### 返回值
 
-返回一个 `Promise` 对象，该对象将解析为 SurrealQL 执行结果的数组。
+返回一个以 SurrealQL 执行结果的数组为解析结果的 `Promise` 对象。
 
 ```ts
 type QueryResult = {

@@ -3,7 +3,7 @@ title: getTimeoutSignal
 slug: ko/v1/reference/utils/get-timeout-signal
 ---
 
-`getTimeoutSignal`은 지정된 밀리초 후에 타임아웃되는 `AbortSignal` 객체를 반환하는 함수입니다. `AbortSignal.timeout()`이 구현되지 않은 환경을 위해 제공됩니다.
+`getTimeoutSignal` 은 지정된 밀리초 후에 타임아웃되는 `AbortSignal` 객체를 반환하는 함수입니다. `AbortSignal.timeout()` 이 구현되지 않은 환경을 위해 제공됩니다.
 
 ### 가져오기
 
@@ -17,7 +17,7 @@ import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";
 function getTimeoutSignal(milliseconds: number): AbortSignal;
 ```
 
-#### 매개변수
+#### 인수
 
 ##### `milliseconds`
 
@@ -29,11 +29,11 @@ function getTimeoutSignal(milliseconds: number): AbortSignal;
 
 #### 예외
 
-서버 측 런타임에서 `AbortSignal.timeout` 함수가 없는 경우 오류를 던집니다. 이는 폴리필 구현 비용이 높기 때문입니다. 브라우저에서는 다소 강제적으로 구현되어 있습니다.
+서버 측 런타임에서 `AbortSignal.timeout` 함수가 없는 경우 오류를 발생시킵니다. 이는 폴리필 구현 비용이 높기 때문입니다. 브라우저에서는 다소 강제적으로 구현되어 있습니다.
 
-#### 예
+#### 예제
 
-다음 예에서는 `fetch`가 5초 만에 타임아웃되도록 합니다.
+다음 예에서는 `fetch` 가 5초 후에 타임아웃되도록 설정합니다.
 
 ```ts
 import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";

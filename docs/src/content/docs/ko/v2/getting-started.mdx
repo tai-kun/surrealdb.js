@@ -30,13 +30,13 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
   </TabItem>
 </Tabs>
 
-## 사용 방법
+## 사용해 보기
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
 
 const db = new Surreal();
-await db.connect("<your_surrealdb_server>"); // 예: ws://localhost:8000
+await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
 
 try {
   await db.signin({ user: "root", pass: "root" });
@@ -61,7 +61,7 @@ const { Surreal } = initSurreal({
   engines: {
     http: config => new HttpEngine({
       ...config,
-      // fetch: <사용자 지정 fetch 함수>
+      // fetch: <your custom fetch function>
     }),
     https: "http",
   },

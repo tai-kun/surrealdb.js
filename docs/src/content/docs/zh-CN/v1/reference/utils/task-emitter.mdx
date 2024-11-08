@@ -23,15 +23,15 @@ new TaskEmitter<T>();
 
 ##### `T`
 
-事件名与事件参数（数组）的键值对类型。
+一个包含事件名称和事件参数（数组）类型的键值对。
 
 #### 返回值
 
-通过 `new` 调用时，`TaskEmitter` 会返回其实例。
+当通过 `new` 调用时，`TaskEmitter` 会返回它的实例。
 
 ### `.on()` <Badge variant="instance" /><Badge variant="method" />
 
-`.on` 是一个用于在事件发射器中注册事件监听器的函数。如果尝试多次为同一个事件注册同一个函数，除了第一次以外，其他注册都会被忽略。
+`.on` 是一个将事件监听器注册到事件发射器上的函数。如果尝试多次将同一个函数注册到同一个事件，除了第一次之外，其余注册操作都会被忽略。
 
 ```ts
 on(event: string | number, listener: TaskListener): void;
@@ -45,15 +45,15 @@ on(event: string | number, listener: TaskListener): void;
 
 ##### `listener`
 
-要注册的事件监听器。该函数将与 `TaskQueue` 的任务运行器接收相同的参数，随后是 `.emit` 传递的可变长度参数。
+要注册的事件监听器。该函数将接收与 `TaskQueue` 的任务运行器相同的参数，之后还会接收通过 `.emit` 传递的可变长度参数。
 
 #### 返回值
 
 无。
 
-#### 示例
+#### 例子
 
-以下示例将捕获 "log" 事件，并将传递给发射器的值输出到标准输出：
+以下示例会捕捉 "log" 事件，并将传递给发射器的值输出到标准输出：
 
 ```ts
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";
@@ -83,7 +83,7 @@ World !!!
 
 ### `.off()` <Badge variant="instance" /><Badge variant="method" />
 
-`.off` 是一个用于从事件发射器中取消注册事件监听器的函数。如果省略事件监听器，则会取消注册目标事件名称下注册的所有事件监听器。
+`.off` 是一个从事件发射器中注销事件监听器的函数。如果省略事件监听器，则会注销目标事件名称上注册的所有事件监听器。
 
 ```ts
 off(event: string | number, listener?: TaskListener): void;
@@ -93,11 +93,11 @@ off(event: string | number, listener?: TaskListener): void;
 
 ##### `event`
 
-要取消注册事件监听器的事件名称。
+要注销事件监听器的事件名称。
 
 ##### `listener`
 
-要取消注册的事件监听器。如果省略该参数，则会取消注册目标 `event` 下注册的所有事件监听器。
+要注销的事件监听器。如果省略该参数，则会注销目标 `event` 上注册的所有事件监听器。
 
 #### 返回值
 
@@ -105,7 +105,7 @@ off(event: string | number, listener?: TaskListener): void;
 
 ### `.once()` <Badge variant="instance" /><Badge variant="method" />
 
-`.once` 与 `.on` 类似，但它只会捕获一次事件。它还返回一个 `StatefulPromise`，而不是回调函数，用于接收返回值。
+`.once` 与 `.on` 类似，但它只捕捉一次事件。它返回的是 `StatefulPromise`，而不是回调函数，可以通过它接收返回值。
 
 ```ts
 once(
@@ -114,9 +114,9 @@ once(
 ): StatefulPromise<unknown[]>;
 ```
 
-#### 示例
+#### 例子
 
-以下示例将只捕获一次 "log" 事件，并将传递给发射器的值输出到标准输出：
+以下示例会捕捉一次 "log" 事件，并将传递给发射器的值输出到标准输出：
 
 ```ts
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";
@@ -156,11 +156,11 @@ await emitter.idle();
 
 #### 返回值
 
-返回一个使用 `.emit` 参数（数组）解析的 `StatefulPromise`。
+返回一个以 `.emit` 的参数（数组）解析的 `StatefulPromise`。
 
 ### `.emit()` <Badge variant="instance" /><Badge variant="method" />
 
-`.emit` 是一个用于向事件监听器发送值的函数。
+`.emit` 是一个向事件监听器发送值的函数。
 
 ```ts
 emit(
@@ -173,7 +173,7 @@ emit(
 
 ##### `event`
 
-要发送的目标事件名称。
+要发送到的事件名称。
 
 ##### `args`
 
@@ -181,11 +181,11 @@ emit(
 
 #### 返回值
 
-如果事件监听器不存在，则返回 `undefined`。如果事件监听器存在，则返回一个包含 `StatefulPromise` 的数组，该数组将等待其解析/拒绝。通常不需要处理此 `StatefulPromise`。当需要在当前上下文中等待事件引发的副作用，或者对事件监听器的解析/拒绝感兴趣时，可以使用它。
+如果没有事件监听器，则返回 `undefined`。如果有事件监听器，则返回一个 `StatefulPromise` 数组，这些 `StatefulPromise` 会一直等待它们被解析或拒绝。通常情况下，不需要处理这些 `StatefulPromise`。只有在需要在当前上下文等待由事件触发的副作用、或对事件监听器的解析或拒绝感兴趣时，才需要使用它们。
 
 ### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
-`.idle` 是一个用于等待所有当前正在运行的事件监听器完成的函数。
+`.idle` 是一个等待所有当前运行的事件监听器完成的函数。
 
 ```ts
 idle(): StatefulPromise<void>;
@@ -201,7 +201,7 @@ idle(): StatefulPromise<void>;
 
 ### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 
-`.abort` 是一个用于向所有事件监听器的 `signal` 发送中止事件的函数。
+`.abort` 是一个向所有事件监听器的 `signal` 发送中止事件的函数。
 
 ```ts
 abort(reason?: unknown): void;
@@ -211,7 +211,7 @@ abort(reason?: unknown): void;
 
 ##### `reason`
 
-中止原因。
+中止的原因。
 
 #### 返回值
 

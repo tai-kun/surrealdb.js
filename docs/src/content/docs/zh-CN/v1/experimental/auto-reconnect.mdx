@@ -2,12 +2,12 @@
 title: 自动重连
 slug: zh-CN/v1/experimental/auto-reconnect
 banner:
-  content: 这是一个实验性功能，API 可能经常发生变化。
+  content: 这是一个实验性功能，API 可能频繁变更。
 ---
 
-当使用 WebSocket 等实时通信时，可能会出现连接断开的情况。自动重连功能可以帮助你自动尝试重新连接，并根据一定的逻辑进行重连，并发出成功或失败的事件。
+在使用 WebSocket 等实时通信时，可能会出现连接断开的情况。自动重连功能可以尝试自动重新连接，并在连接成功或失败时发出事件通知。
 
-`autoReconnect` 函数用于创建 `AutoReconnect` 类的实例，以便你可以使用重连功能。
+`autoReconnect` 函数用于创建 `AutoReconnect` 类实例，并使用其提供的重连功能。
 
 ### 导入
 
@@ -32,36 +32,36 @@ function autoReconnect(
 
 ##### `options`
 
-指定重连设置的选项。你可以指定重连间隔、最大延迟时间、重连条件等。如果你想使用默认设置，则可以省略此参数。
+用于指定重连配置的选项。可以通过该选项指定重连间隔、最大延迟时间、重连条件等。如果使用默认配置，可以省略此参数。
 
 `backoffLimit?: number`
-:   指定最大重试次数。默认值为 `Infinity`。
+:   指定尝试重连的最大次数。默认值为 `Infinity`。
 
 `initialDelay?: number`
-:   第一次重试之前的延迟时间（毫秒）。默认值为 `500`。
+:   第一次尝试重连的延迟时间（毫秒）。默认值为 `500`。
 
 `maxDelay?: number`
-:   重连延迟时间（毫秒）的最大值。随着重试次数的增加，延迟时间会逐渐增加，但不会超过这个值。默认值为 `30_000` (30 秒)。
+:   重连延迟时间（毫秒）的最大值。随着重连次数增多，延迟时间会逐渐增加，但不会超过此值。默认值为 `30_000`（30 秒）。
 
 `shouldReconnect?: { ping?: { threshold: number; perMillis: number }} | (error) => boolean`
-:   指定是否进行重连的条件。如果该参数是函数，则可以使用错误事件的参数来判断是否进行重连。
+:   指定重连条件。如果使用函数作为参数，则根据错误事件的引数来判断是否进行重连。
 
 #### 返回值
 
-返回 `AutoReconnect` 类的实例。这个实例可以用于控制重连、获取重连状态、监控事件等。
+返回 `AutoReconnect` 类的实例对象。该实例可以用于控制重连、获取状态信息、监听事件等。
 
 `.getReconnectionInfo(): ReconnectionInfo`
-:   获取当前的重连信息（`.state` 和 `.phase`）。它们分别表示：
+:   获取当前重连信息（`.state` 和 `.phase`）。分别表示：
 :   `.state`:
-    - `"waiting"` ... 初始状态。尚未进行过重连。
-    - `"running"` ... 正在重连。
+    - `"waiting"` ... 初始状态。尚未进行任何重连尝试。
+    - `"running"` ... 正在尝试重连。
     - `"success"` ... 重连成功。
     - `"failure"` ... 重连失败。
 :   `.phase`:
-    - `"waiting"`       ... 初始状态。尚未进行过重连。
-    - `"pending"`       ... 重连请求已发出，正在等待一定时间后执行。
+    - `"waiting"`       ... 初始状态。尚未进行任何重连尝试。
+    - `"pending"`       ... 已经请求重连，正在等待一定时间后执行。
     - `"disconnecting"` ... 正在断开连接。
-    - `"connecting"`    ... 正在连接。即使断开连接失败，也会尝试继续连接。
+    - `"connecting"`    ... 正在连接。即使断开连接失败，也会尝试连接。
     - `"succeeded"`     ... 重连成功。
     - `"failed"`        ... 重连失败。
 
@@ -73,16 +73,16 @@ function autoReconnect(
 | `"failure"` | `"pending"\|"failed"`           |
 
 `.enable(): void`
-:   启用重连功能。调用此方法后，会开始进行重连。默认情况下，此功能是启用的。
+:   启用重连功能。调用此方法后，将开始进行重连尝试。默认情况下，重连功能已启用。
 
 `.disable(): void`
-:   禁用重连功能。调用此方法后，重连功能将被禁用。
+:   禁用重连功能。调用此方法后，将停止重连尝试。
 
 `.reset(): void`
-:   重置重连计数器。这将重置重连的回退逻辑。
+:   重置重连计数器。这将重新初始化重连的回退逻辑。
 
 `.enabled: boolean`
-:   表示重连功能是否启用的布尔值。如果为 `true`，则表示重连功能已启用。
+:   指示重连功能是否启用的布尔值。如果为 `true`，则表示重连功能已启用。
 
 ### 示例
 
@@ -97,28 +97,28 @@ const ar = autoReconnect(db, {
   shouldReconnect: {
     ping: {
       perMillis: 60000, // 在 1 分钟内，
-      threshold: 3,     // 如果 ping 失败超过 3 次，则重连。
+      threshold: 3,     // 如果 ping 失败次数超过 3 次，则进行重连。
     },
   },
 });
 
 ar.on("pending", (endpoint, duration) => {
-  console.log(`${duration / 1000} 秒后将重连至 ${endpoint}...`);
+  console.log(`${duration / 1000} 秒后将尝试重新连接到 ${endpoint}...`);
 });
 
 ar.on("success", (endpoint) => {
-  console.log(`已成功重连至 ${endpoint} 🎉`);
+  console.log(`成功重新连接到 ${endpoint} 🎉`);
 });
 
 ar.on("failure", (endpoint, cause) => {
-  console.error(`重连至 ${endpoint} 失败 🤯`);
+  console.error(`尝试重新连接到 ${endpoint} 失败 🤯`);
   console.error("原因:", cause);
 });
 
 try {
   await db.connect("ws://127.0.0.1:8000");
 
-  // 长时间运行的各种处理
+  // 各种长时间运行的处理
 
 } finally {
   await db.disconnect();
@@ -127,5 +127,5 @@ try {
 
 ### 注意
 
-- 重连逻辑对于调整 WebSocket 连接的稳定性和连接恢复频率至关重要。你需要根据系统的需求和使用场景调整选项设置。
-- `autoReconnect` 旨在尝试恢复连接丢失的情况，但并非所有情况下都保证能够完全恢复。
+- 重连逻辑对于确保 WebSocket 连接稳定性和连接恢复频率至关重要。应根据系统需求和使用场景调整选项配置。
+- `autoReconnect` 旨在尝试恢复连接丢失的情况，但不能保证在所有情况下都能完全恢复连接。

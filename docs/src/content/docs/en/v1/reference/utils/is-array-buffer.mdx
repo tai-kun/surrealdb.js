@@ -1,9 +1,9 @@
 ---
-title: isBrowser
+title: isArrayBuffer
 slug: en/v1/reference/utils/is-array-buffer
 ---
 
-`isArrayBuffer` is a function that checks if the given value is an `ArrayBuffer` object.
+`isArrayBuffer` is a function that determines whether the given value is an `ArrayBuffer` object.
 
 ### Import
 
@@ -25,8 +25,8 @@ The value expected to be an `ArrayBuffer` object.
 
 #### Return value
 
-Returns `true` if `value` is an `ArrayBuffer` object, otherwise `false`.
+Returns `true` if `value` is an `ArrayBuffer` object, otherwise returns `false`.
 
 ### Explanation
 
-In some versions of Firefox, when the response body of `fetch` is an `ArrayBuffer` object, it may have methods but cannot be checked with `instanceof`. Therefore, the tag name is used for checking. This is similar to lodash's behavior.
+In some versions of Firefox, when the response body of `fetch` is an `ArrayBuffer` object, it may have methods but cannot be judged by `instanceof`. Therefore, it is judged by the tag name. This is similar to the behavior of lodash.

@@ -23,11 +23,11 @@ new Surreal();
 
 #### 반환 값
 
-`new`를 통해 호출될 경우, `Surreal`은 해당 인스턴스를 반환합니다.
+`new` 를 통해 호출될 때, `Surreal` 은 해당 인스턴스를 반환합니다.
 
 ### `.connect()` <Badge variant="instance" /><Badge variant="method" />
 
-SurrealDB 엔드포인트에 연결합니다. 이 메서드는 비동기적으로 실행되지만, 동일한 인스턴스 내에서 다른 `.connect()` 또는 `.close()`와 중복되어 실행되지는 않습니다.
+SurrealDB 엔드포인트에 연결합니다. 이 메서드는 비동기적으로 실행되지만, 동일한 인스턴스 내에서 다른 `.connect()` 나 `.close()` 와 중복으로 실행될 수 없습니다.
 
 ```ts
 connect(
@@ -40,22 +40,22 @@ connect(
 
 ##### `endpoint`
 
-SurrealDB 엔드포인트를 URL로 지정합니다. URL 경로의 끝이 `/rpc`가 아니면 자동으로 추가됩니다. 따라서 `http://localhost:8000`을 인수로 전달하면 `http://localhost:8000/rpc`에 연결됩니다.
+SurrealDB 의 엔드포인트를 URL 로 지정합니다. URL 경로의 끝이 `/rpc` 가 아닌 경우 자동으로 추가됩니다. 따라서 `http://localhost:8000` 을 인수로 전달하면 `http://localhost:8000/rpc` 에 연결합니다.
 
 ##### `options`
 
 연결 시 옵션입니다.
 
 `signal?: AbortSignal`
-:   연결을 중단하기 위한 중단 신호입니다. 기본적으로 15초 후에 타임아웃되는 중단 신호가 설정됩니다.
+:   연결을 중단하기 위한 중단 신호입니다. 기본값은 15초 후 타임아웃되는 중단 신호가 설정됩니다.
 
 #### 반환 값
 
-`undefined`로 해결되는 `Promise` 객체를 반환합니다.
+`undefined` 로 해결되는 `Promise` 객체를 반환합니다.
 
 #### 예
 
-다음 예제에서는 WebSocket 프로토콜을 통해 SurrealDB에 연결합니다:
+다음 예에서는 WebSocket 프로토콜로 SurrealDB 에 연결합니다:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -65,7 +65,7 @@ const db = new Surreal();
 await db.connect("ws://localhost:8000");
 ```
 
-`.close()`를 통한 연결 해제 없이 다른 엔드포인트에 연결하는 것은 불가능합니다. 이전에 연결된 엔드포인트와의 연결은 유지됩니다:
+`.close()` 를 통한 연결 해제 없이 다른 엔드포인트에 연결할 수 없습니다. 이전에 연결이 설정된 엔드포인트와의 연결은 유지됩니다:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -76,7 +76,7 @@ await db.connect("ws://localhost:8000");
 await db.connect("ws://localhost:1129"); // throws ConnectionConflictError: An attempt was made to connect to ws://localhost:1129/rpc while ws://localhost:8000/rpc was already connected.
 ```
 
-`.connect()`는 비동기 처리 컨텍스트에서 동시에 실행되지 않으므로, 다음 예제 또한 연결에 실패합니다. 일반적으로 어떤 엔드포인트가 먼저 연결을 확립할지 알 수 없으므로, 에러 메시지는 매번 다를 수 있습니다:
+`.connect()` 는 비동기 처리 컨텍스트에서 동시에 실행되지 않으므로, 다음 예에서도 마찬가지로 연결에 실패합니다. 일반적으로 어떤 엔드포인트가 먼저 연결을 설정하는지 알 수 없으므로, 오류 메시지는 매번 다를 수 있습니다:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -91,7 +91,7 @@ await Promise.all([
 
 ### `.close()` <Badge variant="instance" /><Badge variant="method" />
 
-SurrealDB와의 연결을 끊습니다. 아직 연결되지 않았거나 이미 끊어진 경우에도 에러를 발생시키지 않습니다. 이 메서드는 비동기적으로 실행되지만, 동일한 인스턴스 내에서 `.connect()` 또는 다른 `.close()`와 중복되어 실행되지는 않습니다.
+SurrealDB 와의 연결을 끊습니다. 아직 연결되지 않았거나 이미 끊어진 경우에도 오류를 발생시키지 않습니다. 이 메서드는 비동기적으로 실행되지만, 동일한 인스턴스 내에서 `.connect()` 나 다른 `.close()` 와 중복으로 실행될 수 없습니다.
 
 ```ts
 close(options?: ClientCloseOptions): Promise<void>
@@ -101,21 +101,21 @@ close(options?: ClientCloseOptions): Promise<void>
 
 ##### `options`
 
-연결 해제 시 옵션입니다.
+끊기 시 옵션입니다.
 
 `force?: boolean`
-:   `true`로 설정하면 `Surreal` 객체의 이벤트 리스너에 전달되는 중단 신호에 중단 신호를 전송합니다. 이벤트 리스너는 처리가 완료되지 않더라도 즉시 중단될 것으로 예상됩니다.
+:   `true` 로 설정하면 `Surreal` 객체의 이벤트 리스너에 전달되는 중단 신호에 중단 신호를 전송합니다. 이벤트 리스너는 처리가 완료되지 않더라도 즉시 중단될 것으로 예상됩니다.
 
 `signal?: AbortSignal`
-:   연결을 중단하기 위한 중단 신호입니다. 기본적으로 15초 후에 타임아웃되는 중단 신호가 설정됩니다.
+:   연결을 중단하기 위한 중단 신호입니다. 기본값은 15초 후 타임아웃되는 중단 신호가 설정됩니다.
 
 #### 반환 값
 
-`undefined`로 해결되는 `Promise` 객체를 반환합니다.
+`undefined` 로 해결되는 `Promise` 객체를 반환합니다.
 
 #### 예
 
-다음 예제에서는 WebSocket 프로토콜을 통해 SurrealDB에 연결한 후, 해당 연결을 끊습니다:
+다음 예에서는 WebSocket 프로토콜로 SurrealDB 에 연결한 후, 해당 연결을 끊습니다:
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -128,7 +128,7 @@ await db.close();
 
 ### `.getConnectionInfo()` <Badge variant="instance" /><Badge variant="method" />
 
-연결 정보를 가져옵니다. 연결 정보는 항상 내부 정보를 복사한 값을 가지고 있습니다. 따라서 연결 정보에는 `URL` 객체가 포함되어 있지만, 이를 직접 수정해도 `Surreal` 객체가 내부에 가지고 있는 엔드포인트 정보는 변경되지 않습니다. 아직 연결이 요청되지 않았다면 `undefined`입니다.
+연결 정보를 가져옵니다. 연결 정보는 항상 내부 정보가 복사된 값을 갖습니다. 따라서 연결 정보에는 `URL` 객체가 포함되지만, 이를 직접 변경해도 `Surreal` 객체가 내부적으로 갖는 엔드포인트 정보는 변경되지 않습니다. 아직 연결 요청이 이루어지지 않은 경우 `undefined` 입니다.
 
 ```ts
 getConnectionInfo(): ConnectionInfo | undefined;
@@ -140,22 +140,22 @@ getConnectionInfo(): ConnectionInfo | undefined;
 
 #### 반환 값
 
-연결이 확립된 경우 연결 정보를 반환합니다. 그렇지 않으면 `undefined`를 반환합니다. 연결 정보에는 다음 항목이 포함되어 있습니다.
+연결이 설정된 경우 연결 정보를 반환합니다. 그렇지 않으면 `undefined` 를 반환합니다. 연결 정보에는 다음 항목이 포함됩니다.
 
 `state: "connecting" | "open" | "closing" | "closed"`
-:   현재 연결 상태를 나타내는 값입니다. 각 값은 다음과 같은 의미를 나타냅니다:
+:   현재 연결 상태를 나타내는 값입니다. 각 값은 다음 의미를 나타냅니다:
 
 `endpoint: URL | null`
-:   연결할 엔드포인트입니다. 연결 해제 상태에서만 `null`입니다.
+:   연결 대상 엔드포인트입니다. 연결 해제 상태에서만 `null` 입니다.
 
 `namespace: string | null`
-:   현재 선택된 네임스페이스입니다. 네임스페이스를 선택하지 않았으면 `null`입니다.
+:   현재 선택된 네임스페이스입니다. 네임스페이스를 선택하지 않은 경우 `null` 입니다.
 
 `database: string | null`
-:   현재 선택된 데이터베이스 이름입니다. 데이터베이스를 선택하지 않았으면 `null`입니다.
+:   현재 선택된 데이터베이스 이름입니다. 데이터베이스를 선택하지 않은 경우 `null` 입니다.
 
 `token: string | null`
-:   현재 인증된 토큰입니다. 회원가입 또는 로그인하지 않았으면 `null`입니다.
+:   현재 인증된 토큰입니다. 가입 또는 로그인하지 않은 경우 `null` 입니다.
 
 각 연결 상태에서 연결 정보가 가질 수 있는 값은 다음 표와 같습니다:
 
@@ -174,49 +174,49 @@ getConnectionInfo(): ConnectionInfo | undefined;
 state: "connecting" | "open" | "closing" | "closed"
 ```
 
-편의상, 연결이 확립되지 않은 경우에도 `"closed"`입니다 (`undefined`가 아닙니다).
+편의상, 연결이 설정되지 않은 경우에도 `"closed"` 입니다 (`undefined` 가 아닙니다.)
 
-관련: [`.getConnectionInfo()`](#getconnectioninfo)도 참조하세요.
+관련: [`.getConnectionInfo()`](#getconnectioninfo) 도 참조하십시오.
 
 ### `.endpoint` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
-연결할 엔드포인트입니다. 연결 해제 상태에서만 `null`입니다. 연결이 확립되지 않은 경우 `undefined`입니다.
+연결 대상 엔드포인트입니다. 연결 해제 상태에서만 `null` 입니다. 연결이 설정되지 않은 경우 `undefined` 입니다.
 
 ```ts
 endpoint: string | null | undefined
 ```
 
-관련: [`.getConnectionInfo()`](#getconnectioninfo)도 참조하세요.
+관련: [`.getConnectionInfo()`](#getconnectioninfo) 도 참조하십시오.
 
 ### `.namespace` <Badge variant="instance" /><Badge variant="property" />
 
-현재 선택된 네임스페이스입니다. 네임스페이스를 선택하지 않았으면 `null`입니다. 연결이 확립되지 않은 경우 `undefined`입니다.
+현재 선택된 네임스페이스입니다. 네임스페이스를 선택하지 않은 경우 `null` 입니다. 연결이 설정되지 않은 경우 `undefined` 입니다.
 
 ```ts
 namespace: string | null | undefined
 ```
 
-관련: [`.getConnectionInfo()`](#getconnectioninfo)도 참조하세요.
+관련: [`.getConnectionInfo()`](#getconnectioninfo) 도 참조하십시오.
 
 ### `.database` <Badge variant="instance" /><Badge variant="property" />
 
-현재 선택된 데이터베이스 이름입니다. 데이터베이스를 선택하지 않았으면 `null`입니다. 연결이 확립되지 않은 경우 `undefined`입니다.
+현재 선택된 데이터베이스 이름입니다. 접 데이터베이스를 선택하지 않은 경우 `null` 입니다. 연결이 설정되지 않은 경우 `undefined` 입니다.
 
 ```ts
 database: string | null | undefined
 ```
 
-관련: [`.getConnectionInfo()`](#getconnectioninfo)도 참조하세요.
+관련: [`.getConnectionInfo()`](#getconnectioninfo) 도 참조하십시오.
 
 ### `.token` <Badge variant="instance" /><Badge variant="property" />
 
-현재 인증된 토큰입니다. 회원가입 또는 로그인하지 않았으면 `null`입니다. 연결이 확립되지 않은 경우 `undefined`입니다.
+현재 인증된 토큰입니다. 가입 또는 로그인하지 않은 경우 `null` 입니다. 연결이 설정되지 않은 경우 `undefined` 입니다.
 
 ```ts
 token: string | null | undefined
 ```
 
-관련: [`.getConnectionInfo()`](#getconnectioninfo)도 참조하세요.
+관련: [`.getConnectionInfo()`](#getconnectioninfo) 도 참조하십시오.
 
 ### `.on()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -240,20 +240,20 @@ off(
 감시할 이벤트 이름입니다.
 
 `"connecting" | "open" | "closing" | "closed"`
-:   연결 정보가 전환될 때 또는 전환에 실패할 때 발생하는 이벤트입니다.
+:   연결 정보가 전환될 때, 또는 전환에 실패했을 때 발생하는 이벤트입니다.
 
 `rpc_${RpcMethod}_${number}`
-:   양방향 통신에서 RPC 응답이 발생할 때 발생하는 이벤트입니다. `RpcMethod`는 예를 들어 `ping` 또는 `use`와 같은 PRC 메서드 이름입니다. `number`는 양방향 통신에서 요청/응답을 연결하기 위한 식별자이며, 1에서 2^53-1까지의 정수를 취합니다. HTTP에서는 0으로 고정됩니다.
+:   양방향 통신에서 RPC 응답이 발생하는 이벤트입니다. `RpcMethod` 는 예를 들어 `ping` 이나 `use` 와 같은 PRC 메서드 이름입니다. `number` 는 양방향 통신에서 요청/응답을 연결하기 위한 식별자이며, 1 부터 2^53-1 까지의 정수를 취합니다. HTTP 에서는 0 으로 고정됩니다.
 
 `live_${string}`
-:   라이브 쿼리의 이벤트를 수신했을 때 발생하는 이벤트입니다. 현재 WebSocket 프로토콜에서만 사용되며, HTTP 프로토콜에서는 이 이벤트를 사용하지 않습니다. `string`은 라이브 쿼리의 UUID입니다.
+:   라이브 쿼리의 이벤트를 수신했을 때 발생하는 이벤트입니다. 현재 WebSocket 프로토콜에서만 사용되며, HTTP 프로토콜에서는 이 이벤트는 사용되지 않습니다. `string` 은 라이브 쿼리의 UUID 입니다.
 
 `error`
-:   에러 이벤트입니다. 현재 WebSocket 프로토콜에서만 사용되며, HTTP 프로토콜에서는 이 이벤트를 사용하지 않습니다.
+:   오류 이벤트입니다. 현재 WebSocket 프로토콜에서만 사용되며, HTTP 프로토콜에서는 이 이벤트는 사용되지 않습니다.
 
 ##### `listener`
 
-이벤트가 발생했을 때 실행될 함수입니다. [태스크 에미터](/v2/api/utils/task-emitter#on)도 참조하세요. `eventArgs`에 전달되는 값은 이벤트에 따라 다릅니다.
+이벤트가 발생했을 때 실행될 함수입니다. [작업 에미터](/v2/api/utils/task-emitter#on)도 참조하십시오. `eventArgs` 에 전달되는 값은 이벤트에 따라 다릅니다.
 
 `"connecting" | "open" | "closing" | "closed"`
 :   다음 중 하나입니다:
@@ -266,9 +266,9 @@ off(
     - `{ id: string, error: { code: number, message: string } }`
 
 `live_${string}`
-:   일반 모드 라이브 쿼리:
+:   일반 모드의 라이브 쿼리:
 :   - `{ action: "CREATE" | "UPDATE" | "DELETE", result: object, record: string | object }`
-:   차이점 가져오기 모드 라이브 쿼리:
+:   차이점 가져오기 모드의 라이브 쿼리:
 :   - `{ action: "CREATE" | "UPDATE", result: object[], record: string | object }`
     - `{ action: "DELETE", result: object, record: string | object }`
 
@@ -283,7 +283,7 @@ off(
 
 ### `.once()` <Badge variant="instance" /><Badge variant="method" />
 
-`.on()`과 유사하지만, 이벤트를 한 번만 포착합니다.
+`.on()` 과 유사하지만, 이벤트를 한 번만 포착합니다.
 
 ```ts
 once(
@@ -300,19 +300,19 @@ once(
 
 ##### `event`
 
-`.on()`의 `event`와 같습니다.
+`.on()` 의 `event` 와 동일합니다.
 
 ##### `options`
 
-태스크 리스너 옵션입니다. [태스크 에미터](/v2/api/utils/task-emitter#once)를 참조하세요.
+작업 리스너의 옵션입니다. [작업 에미터](/v2/api/utils/task-emitter#once)를 참조하십시오.
 
 #### 반환 값
 
-`.on()`의 태스크 리스너 `eventArgs`로 해결되는 `StatefulPromise`를 반환합니다.
+`.on()` 의 작업 리스너의 `eventArgs` 로 해결되는 `StatefulPromise` 를 반환합니다.
 
 ### `.off()` <Badge variant="instance" /><Badge variant="method" />
 
-`.on()`에서 등록한 이벤트 리스너를 해제합니다.
+`.on()` 으로 등록된 이벤트 리스너를 해제합니다.
 
 ```ts
 off(
@@ -329,11 +329,11 @@ off(
 
 ##### `event`
 
-이벤트 리스너를 등록 해제할 이벤트 이름입니다.
+이벤트 리스너를 해제할 이벤트 이름입니다.
 
 ##### `listener`
 
-등록 해제할 이벤트 리스너입니다.
+해제할 이벤트 리스너입니다.
 
 #### 반환 값
 

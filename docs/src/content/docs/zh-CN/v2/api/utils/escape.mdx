@@ -5,7 +5,7 @@ slug: zh-CN/v2/api/utils/escape
 
 ## quoteStr
 
-`quoteStr` 函数用于将字符串用引号括起来。为了方便起见，空字符串也会用引号括起来。
+`quoteStr` 函数用于将字符串用引号包围。为了方便，空字符串也会用引号包围。
 
 ### 导入
 
@@ -13,37 +13,37 @@ slug: zh-CN/v2/api/utils/escape
 import { quoteStr } from "@tai-kun/surrealdb/utils";
 ```
 
-### 使用方法
+### 用法
 
 ```ts
 function quoteStr(str: string): string;
 ```
 
-用引号 (`"` 或 `'`) 括起字符串。
+用引号 (`"` 或 `'`) 包围字符串。
 
 #### 参数
 
 ##### `str`
 
-要括起的字符串。
+要包围的字符串。
 
 #### 返回值
 
-返回用引号括起的字符串。用于括起的引号取决于给定字符串中是否包含单引号 (`'`)：
+返回用引号包围的字符串。包围使用的引号取决于给定字符串是否包含单引号 (`'`)：
 
 - 如果给定字符串为空
   - 返回 `''`。
-- 如果给定字符串**不**包含单引号
-  - 用单引号括起来。
-- 如果给定字符串**包含**单引号
-  - 用双引号括起来。
+- 如果给定字符串不包含单引号
+  - 用单引号包围。
+- 如果给定字符串包含单引号
+  - 用双引号包围。
 - 如果给定字符串同时包含单引号和双引号
-  - 用双引号括起来。
-  - 双引号用反斜杠 (`\`) 转义。
+  - 用双引号包围。
+  - 用反斜杠 (`\`) 对双引号进行转义。
 
 #### 例子
 
-以下例子展示了如何用单引号括起**不包含**单引号的字符串：
+以下示例将用单引号包围**不包含**单引号的字符串：
 
 ```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
@@ -65,7 +65,7 @@ console.log(quoteStr(`パ`));
 'パ'
 ```
 
-以下例子展示了如何用双引号括起**包含**单引号的字符串：
+以下示例将用双引号包围**包含**单引号的字符串：
 
 ```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
@@ -85,7 +85,7 @@ console.log(quoteStr(`'パ`));
 "'パ"
 ```
 
-以下例子展示了如何用双引号括起同时包含单引号和双引号的字符串，并在需要时进行转义：
+以下示例将用双引号包围包含单引号和双引号的字符串，并在需要时进行转义：
 
 ```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
@@ -109,7 +109,7 @@ console.log(quoteStr(`'パ"`));
 
 ## escapeKey
 
-`escapeKey` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于对象键。为了方便起见，空字符串也会用引号括起来。
+`escapeKey` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于对象键。为了方便，空字符串也会用引号包围。
 
 ### 导入
 
@@ -117,7 +117,7 @@ console.log(quoteStr(`'パ"`));
 import { escapeKey } from "@tai-kun/surrealdb/utils";
 ```
 
-### 使用方法
+### 用法
 
 ```ts
 function escapeKey(key: string): string;
@@ -131,22 +131,22 @@ function escapeKey(key: string): string;
 
 #### 返回值
 
-返回转义后的字符串。根据需要用双引号括起来：
+返回转义后的字符串。如果需要，用双引号包围：
 
 - 如果给定字符串为空
   - 返回 `""`。
-- 如果给定字符串不以数字开头，并且只包含字母数字和下划线
+- 如果给定字符串不以数字开头，并且仅包含字母数字和下划线
   - 直接返回。
 - 如果给定字符串包含双引号
   - 对其进行转义。
 - 如果给定字符串包含反斜杠 (`\`)
   - 对其进行转义。
-- 如果给定字符串以数字开头，或者包含非字母数字和下划线的字符
-  - 用双引号括起来。
+- 如果给定字符串以数字开头，或者包含非字母数字和下划线字符
+  - 用双引号包围。
 
 #### 例子
 
-以下例子展示了如何直接获得字符串，因为该字符串只包含字母数字和下划线：
+以下示例中，由于字符串仅包含字母数字和下划线，因此得到原始字符串：
 
 ```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
@@ -160,7 +160,7 @@ console.log(escapeKey(`foo_bar`));
 foo_bar
 ```
 
-以下例子展示了如何用双引号括起字符串，并在需要时进行转义：
+以下示例将用双引号包围字符串，并在需要时进行转义：
 
 ```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
@@ -180,7 +180,7 @@ console.log(escapeKey(`'パ"`));
 ""
 "123"
 "foo-bar"
-"'\\\"\\"
+"'\\"\"
 "𩸽's \"feed\""
 "'👍🏽\""
 "'パ\""
@@ -188,7 +188,7 @@ console.log(escapeKey(`'パ"`));
 
 ## escapeRid
 
-`escapeRid` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于记录 ID。为了方便起见，空字符串也会用引号括起来。
+`escapeRid` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于记录 ID。为了方便，空字符串也会用引号包围。
 
 ### 导入
 
@@ -196,7 +196,7 @@ console.log(escapeKey(`'パ"`));
 import { escapeRid } from "@tai-kun/surrealdb/utils";
 ```
 
-### 使用方法
+### 用法
 
 ```ts
 function escapeRid(rid: string): string;
@@ -210,20 +210,20 @@ function escapeRid(rid: string): string;
 
 #### 返回值
 
-返回转义后的字符串。根据需要用尖括号 (`⟨⟩`) 括起来：
+返回转义后的字符串。如果需要，用尖括号 (`⟨⟩`) 包围：
 
 - 如果给定字符串为空
   - 返回 `⟨⟩`。
-- 如果给定字符串不以数字开头，并且只包含字母数字和下划线
+- 如果给定字符串不以数字开头，并且仅包含字母数字和下划线
   - 直接返回。
 - 如果给定字符串包含尖括号 (`⟩`)
   - 对其进行转义。
-- 如果给定字符串全部由数字组成，或者包含非字母数字和下划线的字符
-  - 用尖括号 (`⟨⟩`) 括起来。
+- 如果给定字符串全部由数字组成，或者包含非字母数字和下划线字符
+  - 用尖括号 (`⟨⟩`) 包围。
 
 #### 例子
 
-以下例子展示了如何直接获得字符串，因为该字符串不以数字开头，并且只包含字母数字和下划线：
+以下示例中，由于字符串不以数字开头，并且仅包含字母数字和下划线，因此得到原始字符串：
 
 ```ts
 import { escapeRid } from "@tai-kun/surrealdb/utils";
@@ -237,7 +237,7 @@ console.log(escapeRid(`foo_123`));
 foo_123
 ```
 
-以下例子展示了如何用尖括号 (`⟨⟩`) 括起字符串，并在需要时进行转义：
+以下示例将用尖括号 (`⟨⟩`) 包围字符串，并在需要时进行转义：
 
 ```ts
 import { escapeRid } from "@tai-kun/surrealdb/utils";
@@ -263,7 +263,7 @@ console.log(escapeRid(`'パ⟩`));
 
 ## escapeIdent
 
-`escapeIdent` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于命名空间、数据库、表和字段的名称。为了方便起见，空字符串也会用引号括起来。
+`escapeIdent` 与 [`quoteStr`](/v2/api/utils/quote-str/) 类似，但用于命名空间、数据库、表和字段的名称。为了方便，空字符串也会用引号包围。
 
 ### 导入
 
@@ -271,7 +271,7 @@ console.log(escapeRid(`'パ⟩`));
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
 ```
 
-### 使用方法
+### 用法
 
 ```ts
 function escapeIdent(ident: string): string;
@@ -285,20 +285,20 @@ function escapeIdent(ident: string): string;
 
 #### 返回值
 
-返回转义后的字符串。根据需要用反引号 (<code>`</code>) 括起来：
+返回转义后的字符串。如果需要，用反引号 (<code>`</code>) 包围：
 
 - 如果给定字符串为空
   - 返回 <code>``</code>。{/* TODO(tai-kun): " になる問題解決する */}
-- 如果给定字符串不以数字开头，并且只包含字母数字和下划线
+- 如果给定字符串不以数字开头，并且仅包含字母数字和下划线
   - 直接返回。
 - 如果给定字符串包含反引号 (<code>`</code>)
   - 对其进行转义。
-- 如果给定字符串以数字开头，或者包含非字母数字和下划线的字符
-  - 用反引号 (<code>`</code>) 括起来。
+- 如果给定字符串以数字开头，或者包含非字母数字和下划线字符
+  - 用反引号 (<code>`</code>) 包围。
 
 #### 例子
 
-以下例子展示了如何直接获得字符串，因为该字符串不以数字开头，并且只包含字母数字和下划线：
+以下示例中，由于字符串不以数字开头，并且仅包含字母数字和下划线，因此得到原始字符串：
 
 ```ts
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
@@ -312,7 +312,7 @@ console.log(escapeIdent(`foo_123`));
 foo_123
 ```
 
-以下例子展示了如何用反引号 (<code>`</code>) 括起字符串，并在需要时进行转义：
+以下示例将用反引号 (<code>`</code>) 包围字符串，并在需要时进行转义：
 
 ```ts
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
@@ -336,11 +336,11 @@ console.log(escapeIdent("'パ`"));
 `'パ\``
 ```
 
-## 栏目
+## 补充说明
 
 ### 字符串长度
 
-前面例子中使用的字符串包含一些在 JavaScript 中的字符串长度与人类感知的字符串长度不同的字符：
+前面的示例中使用的字符串包含了在 JavaScript 中的字符串长度与人类感知的字符串长度不同的字符：
 
 | 类型 | 显示 | `.length` | `Uint8Array` |
 | --- | --- | --- | --- |
@@ -349,4 +349,4 @@ console.log(escapeIdent("'パ`"));
 | 变体选择器 | 👍🏽 | 4 | `[ 0xF0, 0x9F, 0x91, 0x8D, 0xF0, 0x9F, 0x8F, 0xBD ]` |
 | 组合字符 | パ | 2 | `[ 0xE3, 0x83, 0x8F, 0xE3, 0x82, 0x9A ]` |
 
-当 `.length` 的值与直觉不符时，需要谨慎考虑对字符串的操作。
+如果 `.length` 的值与直觉不符，则需要谨慎考虑对字符串的操作。

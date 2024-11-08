@@ -5,7 +5,7 @@ slug: zh-CN/v1/reference/errors
 
 ## SurrealError
 
-`SurrealError` 是该 SDK 显式抛出的绝大多数错误对象的基类。该类继承自 JavaScript 的 `Error` 类。很少单独抛出该错误对象，通常会抛出具有特殊含义的继承类错误对象。推荐在 `try-catch` 语句中捕获这些错误，以便轻松地将它们分类为 SDK 显式抛出的错误。
+`SurrealError` 是这个 SDK 抛出的绝大多数显式错误对象的基类。该类继承自 JavaScript 的 `Error` 类。很少单独抛出此错误对象，通常是继承的具有特殊意义的错误对象被抛出。建议使用 `try-catch` 语句等捕获此错误，以便轻松分类此 SDK 抛出的显式错误。
 
 `.name: "SurrealError"`
 :   错误名称。
@@ -17,7 +17,7 @@ slug: zh-CN/v1/reference/errors
 :   可能会记录堆栈跟踪。
 
 `.cause`
-:   可能会设置发生错误的原因或上下文。
+:   可能会设置导致错误的原因或上下文。
 
 ## SurrealTypeError
 
@@ -29,7 +29,7 @@ slug: zh-CN/v1/reference/errors
 :   错误名称。
 
 `.expected`
-:   期望的数据类型。
+:   预期的数据格式。
 
 `.actual`
 :   实际值的字符串表示形式。
@@ -50,7 +50,7 @@ slug: zh-CN/v1/reference/errors
 
 继承自: `SurrealError`
 
-当检测到循环引用时抛出此错误。主要在将 JavaScript 值转换为其他格式的过程中，如果检测到父对象与相同对象，则会抛出此错误。
+当检测到循环引用时抛出此错误。主要发生在将 JavaScript 值转换为其他形式的过程中，当检测到与父对象相同的对象时。
 
 `.name: "CircularReferenceError"`
 :   错误名称。
@@ -72,25 +72,25 @@ toSurql(a); // throws CircularReferenceError
 
 继承自: `SurrealError`
 
-当数字超出范围时抛出此错误。
+当数值超出范围时抛出此错误。
 
 `.name: "NumberRangeError"`
 :   错误名称。
 
 `.range`
-:   期望的范围。
+:   预期的范围。
 
 `.actual`
 :   实际值。
 
 `.integer`
-:   如果为 `true`，则期望整数。
+:   如果为 `true`，则表示期望整数。
 
 ## UnsupportedRuntimeError
 
 继承自: `SurrealError`
 
-当检测到使用不支持的运行时时抛出此错误。
+当判断使用的是不支持的运行时环境时抛出此错误。
 
 `.name: "UnsupportedRuntimeError"`
 :   错误名称。
@@ -99,7 +99,7 @@ toSurql(a); // throws CircularReferenceError
 
 继承自: `SurrealError`
 
-当到达不可到达的代码时抛出此错误。如果抛出此错误，则可能遇到了 SDK 的错误。
+当到达无法到达的代码时抛出此错误。如果抛出了此错误，则可能遇到了此 SDK 的错误。
 
 `.name: "UnreachableError"`
 :   错误名称。
@@ -108,7 +108,7 @@ toSurql(a); // throws CircularReferenceError
 
 继承自: `CircularReferenceError`
 
-当在连接数据库时发生引擎之间的循环引用时抛出此错误。
+当在连接到数据库时，引擎之间发生循环引用时抛出此错误。
 
 `.name: "CircularEngineReferenceError"`
 :   错误名称。
@@ -131,13 +131,13 @@ await using db = new Surreal();
 await db.connect("https://localhost:8000"); // throws CircularEngineReferenceError: Circular engine reference: http,https
 ```
 
-上面的例子中，https 协议的引擎配置使用 http 引擎，但 http 协议的引擎又尝试使用 https 引擎，从而导致循环引用错误。
+上面的例子中，虽然 https 协议引擎指明使用 http 设置的引擎，但是 http 协议引擎又尝试使用 https 设置的引擎，因此抛出循环引用错误。
 
 ## EngineNotFoundError
 
 继承自: `SurrealError`
 
-当尝试使用未配置引擎的协议连接时抛出此错误。
+当尝试使用未设置引擎的协议进行连接时抛出此错误。
 
 `.name: "EngineNotFoundError"`
 :   错误名称。
@@ -169,7 +169,7 @@ await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No ht
 :   错误名称。
 
 `.endpoint1: string`
-:   一个端点。
+:   其中一个端点。
 
 `.endpoint2: string`
 :   另一个端点。
@@ -181,7 +181,7 @@ await db.connect("http://localhost:8000");
 await db.connect("http://localhost:11298"); // throws ConnectionConflictError: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
 ```
 
-`.connect` 方法会将传入的 URL 的路径添加 `/rpc` 作为后缀（如果路径不是以 `/rpc` 结尾）。因此，如果其中一个端点的 URL 路径以 `/rpc` 结尾，则可能不会抛出错误，尽管看起来它应该抛出：
+`.connect` 方法会将传递的 URL 的路径末尾追加 `/rpc`，除非该路径以 `/rpc` 结尾。因此，如果其中一个端点的 URL 路径以 `/rpc` 结尾，则可能会出现错误，即使它看起来不像。
 
 ```ts
 await using db = new Surreal();
@@ -207,7 +207,7 @@ await db.connect("http://localhost:8000"); // OK!
 :   错误名称。
 
 `.namespace1: string`
-:   一个命名空间。
+:   其中一个命名空间。
 
 `.namespace2: string`
 :   另一个命名空间。
@@ -235,7 +235,7 @@ await Promise.all([
 :   错误名称。
 
 `.database1: string`
-:   一个数据库。
+:   其中一个数据库。
 
 `.database2: string`
 :   另一个数据库。
@@ -257,7 +257,7 @@ await Promise.all([
 
 继承自: `SurrealError`
 
-当在选择数据库之前没有选择命名空间时抛出此错误。或者，即使选择数据库后，也尝试将命名空间设置为未选择状态时抛出此错误。
+当在选择数据库之前未选择命名空间时抛出此错误。或者，即使选择了数据库，也尝试将命名空间恢复为未选择状态时也会抛出此错误。
 
 `.name: "MissingNamespaceError"`
 :   错误名称。
@@ -278,7 +278,7 @@ await db.use({ database: "example" }); // throws MissingNamespaceError: The name
 
 继承自: `SurrealError`
 
-当 RPC 响应指示错误时抛出此错误。连接到的协议的通信或响应主体的解码没有问题，但这意味着 SurrealDB 无法处理 RPC 请求。
+当 RPC 响应指示错误时抛出此错误。连接的协议以及响应主体的解码都没有问题，但这意味着 SurrealDB 无法处理 RPC 请求。
 
 `.name: "RpcResponseError"`
 :   错误名称。
@@ -287,7 +287,7 @@ await db.use({ database: "example" }); // throws MissingNamespaceError: The name
 :   用于识别 RPC 请求的 ID。ID 始终以 `<方法名>_` 开头。
 
 `.code: number`
-:   SurrealDB 文档中没有明确说明，但可能是 JSON-RPC 的错误代码。
+:   SurrealDB 文档中没有明确说明，但它可能代表 JSON-RPC 错误代码。
 
 ## QueryFailedError
 
@@ -314,7 +314,7 @@ await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 
 
 继承自: `SurrealError`
 
-此错误表示连接已强制终止。
+这是一个指示连接已强制终止的错误。
 
 `.name: "Disconnected"`
 :   错误名称。
@@ -342,19 +342,19 @@ await db.disconnect({ force: true });
 
 继承自: `SurrealError`
 
-此错误表示该错误是由引擎引起的。通过事件监听器发送。
+这表示这是一个与引擎相关的错误。通过事件监听器发送。
 
 `.name: "EngineError"`
 :   错误名称。
 
 `.fatal: boolean | undefined`
-:   指示该错误是否致命。
+:   指示此错误是否为致命错误。
 
 ## HttpEngineError
 
 继承自: `EngineError`
 
-此错误表示该错误是由 HTTP 引擎引起的。目前只有定义，没有使用。
+这表示这是一个与 HTTP 引擎相关的错误。目前只是定义了，并未使用。
 
 `.name: "HttpEngineError"`
 :   错误名称。
@@ -363,46 +363,46 @@ await db.disconnect({ force: true });
 
 继承自: `EngineError`
 
-此错误表示该错误是由 WebSocket 引擎引起的。当在找到识别 RPC 请求的 ID 之前解析响应主体失败时，或从 WebSocket 对象接收错误事件时，或断开 WebSocket 连接时使用。
+这表示这是一个与 WebSocket 引擎相关的错误。当在找到用于识别 RPC 请求的 ID 之前解析响应主体失败时，或从 WebSocket 对象接收错误事件时，或者断开 WebSocket 连接时使用。
 
 `.name: "WebSocketEngineError"`
 :   错误名称。
 
 `.code: number`
-:   以下状态代码之一：
-    - `1000`~`1015`: [MDN 参考](https://developer.mozilla.org/docs/Web/API/CloseEvent/code)
-    - `3150`: 表示从 `WebSocket`[^1] 实例接收到 "error" 事件。
-    - `3151`: 表示 WebSocket 引擎在注册的 "open" 事件处理程序中发生错误。这通常是 `StateTransitionError` 在连接状态转换过程中发生的错误。
-    - `3152`: 表示 WebSocket 引擎在注册的 "message" 事件处理程序中发生错误。可能有多种原因，但很可能是事件处理程序中抛出了 `ResponseError` 或 `RpcResponseError`。追溯到根源，可能是请求了语法错误的 SurrealQL 自定义查询或使用无效的 RPC 参数进行了请求。在这种情况下，RPC 的调用方方法（默认情况下）将在 5 秒后超时并失败。
-    - `3153`: 表示 ping 的发送或接收失败。这可能是一个暂时性的错误，但如果持续收到此错误，则可能无法保持连接。
-    - `3154`: 表示 WebSocket 引擎在注册的 "close" 事件处理程序中发生错误。这通常是 `StateTransitionError` 在断开连接状态转换过程中发生的错误。
-:   此外，不包括以下状态代码。该 SDK 不将其视为错误：
+:   以下状态码之一：
+    - `1000`~`1015`: [MDN Reference](https://developer.mozilla.org/docs/Web/API/CloseEvent/code)
+    - `3150`: 表示从 `WebSocket`[^1] 实例中接收到 "error" 事件。
+    - `3151`: 表示 WebSocket 引擎注册的 "open" 事件处理程序中发生错误。大多数情况下，在连接状态转换为连接状态的过程中，`StateTransitionError` 发生了错误。
+    - `3152`: 表示 WebSocket 引擎注册的 "message" 事件处理程序中发生错误。可能有很多原因，但最有可能的是，事件处理程序中抛出了 `ResponseError` 或 `RpcResponseError`。如果追溯根源，可能是由于 `.query()` 方法请求了语法错误的 SurrealQL 自定义查询，或者使用了无效的 RPC 参数进行请求。在这种情况下，RPC 的调用方方法（默认情况下）会在 5 秒后超时并失败。
+    - `3153`: 表示 ping 的发送或接收失败。这可能是临时错误，但如果持续收到，则可能无法维持连接。
+    - `3154`: 表示 WebSocket 引擎注册的 "close" 事件处理程序中发生错误。大多数情况下，在断开连接状态转换为断开连接状态的过程中，`StateTransitionError` 发生了错误。
+:   此外，除了以下状态码，此 SDK 不会将它们视为错误：
     - `1000`: 正常断开连接。
     - `1001`: 提前断开连接很常见。
-    - `1004`: 保留。
-    - `1005`: 保留。
-    - `1006`: 保留。
-    - `1015`: 保留。
+    - `1004`: 预留。
+    - `1005`: 预留。
+    - `1006`: 预留。
+    - `1015`: 预留。
 
-^1: `WebSocket` 可以是运行时在全局变量中定义的类，也可以是 `ws` SDK 的类。
+^1: `WebSocket` 可能是运行时环境定义在全局变量中的类，也可能是 `ws` SDK 的类。
 
 ## StateTransitionError
 
 继承自: `SurrealAggregateError`
 
-当状态转换期间执行事件监听器失败时抛出此错误。
+当在状态转换过程中执行事件监听器失败时抛出此错误。
 
 `.name: "StateTransitionError"`
 :   错误名称。
 
 `.from: number`
-:   开始状态转换时的状态。
+:   状态转换开始时的状态。
 
 `.to: number`
 :   目标状态。
 
 `.fallback: number`
-:   状态转换失败时的替代目标。如果与 `.to` 相同，则表示强制转换成功。
+:   状态转换失败时的备用目标状态。如果它与 `.to` 相同，则表示已强制转换。
 
 例如，在以下情况下会抛出此错误：
 
@@ -433,7 +433,7 @@ await db.connect("http://localhost:8000"); // throws ...
 
 继承自: `SurrealError`
 
-当尝试在未连接状态下发送 RPC 请求时抛出此错误。
+当尝试在未连接的情况下发送 RPC 请求时抛出此错误。
 
 `.name: "ConnectionUnavailableError"`
 :   错误名称。
@@ -442,7 +442,7 @@ await db.connect("http://localhost:8000"); // throws ...
 
 继承自: `SurrealError`
 
-当无法将响应解析为 PRC 响应时抛出此错误。与 `RpcResponseError` 不同。
+当无法将响应解析为 PRC 响应时抛出此错误。这与 `RpcResponseError` 不同。
 
 `.name: "ResponseError"`
 :   错误名称。
@@ -451,7 +451,7 @@ await db.connect("http://localhost:8000"); // throws ...
 
 继承自: `SurrealError`
 
-这是 `@tai-kun/surrealdb/cbor` 显式抛出的所有与 CBOR 相关的错误的基类。它不会直接被抛出。
+这是 `@tai-kun/surrealdb/cbor` 明确抛出的与 CBOR 相关的所有错误的基类。它不会直接抛出。
 
 `.name: "CborError"`
 :   错误名称。
@@ -460,9 +460,9 @@ await db.connect("http://localhost:8000"); // throws ...
 
 继承自: `CborError`
 
-这是 `@tai-kun/surrealdb/cbor` 显式抛出的所有与 CBOR 解码相关的错误的基类。它不会直接被抛出。
+这是 `@tai-kun/surrealdb/cbor` 明确抛出的与 CBOR 解码相关的所有错误的基类。它不会直接抛出。
 
-请参阅 RFC8949 附录 F 中的 “[Well-Formedness Errors and Examples](https://datatracker.ietf.org/doc/html/rfc8949#name-well-formedness-errors-and-)”。
+请参阅 RFC8949 附录 F 中的“[Well-Formedness Errors and Examples](https://datatracker.ietf.org/doc/html/rfc8949#name-well-formedness-errors-and-)”。
 
 `.name: "CborWellFormednessError"`
 :   错误名称。
@@ -471,7 +471,7 @@ await db.connect("http://localhost:8000"); // throws ...
 
 继承自: `CborWellFormednessError`
 
-这表示存在未被消耗的输入字节。
+这表示存在未消耗的输入字节。
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.2)
 
@@ -504,7 +504,7 @@ await db.connect("http://localhost:8000"); // throws ...
 
 继承自: `CborError`
 
-当 CBOR 编码或解码时 JavaScript 对象的深度达到最大值时抛出此错误。每进入一个对象或数组，深度就会增加 1。
+当在 CBOR 编码或解码期间 JavaScript 对象的深度达到最大值时抛出此错误。每次进入对象或数组时，深度都会增加 1。
 
 `.name: "CborMaxDepthReachedError"`
 :   错误名称。
@@ -516,7 +516,7 @@ await db.connect("http://localhost:8000"); // throws ...
 
 继承自: `CborError`
 
-当 CBOR 编码或解码时遇到不安全的映射键时抛出此错误。
+当在 CBOR 编码或解码期间遇到不安全的映射键时抛出此错误。
 
 `.name: "CborUnsafeMapKeyError"`
 :   错误名称。

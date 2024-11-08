@@ -1,11 +1,11 @@
 ---
-title: 序列号
+title: 序列化
 slug: zh-CN/v2/api/utils/serial
 ---
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Serial` 是一个用于生成递增 ID 的类。它用于在双向通信中生成 RPC 请求的 ID。ID 是循环生成的，以确保 ID 不超过安全整数值。如果 ID 超过该值，它将重置为 1。
+`Serial` 是一个用于生成递增 ID 的类。它用于在双向通信中的 RPC 请求生成 ID。ID 以循环方式生成，以确保 ID 不超过安全整数。如果 ID 超过了该值，则会重置为 1。
 
 ### 导入
 
@@ -27,28 +27,40 @@ new Serial(max?: number);
 
 #### 返回值
 
-当通过 `new` 调用时，`Serial` 将返回其实例。
+通过 `new` 调用时，`Serial` 会返回其实例。
 
 #### 示例
 
-以下示例展示了基本用法：
+以下示例演示了基本用法：
 
 ```ts
 import { Serial } from "@tai-kun/surrealdb/utils";
 
 const id = new Serial(3);
 
-console.log(id.next()); // 1
-console.log(id.next()); // 2
-console.log(id.next()); // 3
+console.log(id.next());
+console.log(id.next());
+console.log(id.next());
 
-console.log(id.next()); // 1
-console.log(id.next()); // 2
+console.log(id.next());
+console.log(id.next());
 
 id.reset();
 
-console.log(id.next()); // 1
-console.log(id.next()); // 2
+console.log(id.next());
+console.log(id.next());
+```
+
+输出：
+
+```js
+1
+2
+3
+1
+2
+1
+2
 ```
 
 ### `.next()` <Badge variant="instance" /><Badge variant="method" />
@@ -65,7 +77,7 @@ next(): number;
 
 #### 返回值
 
-返回 1 到 `max` 之间的整数。如果该值为最大值，则下一个获取的值将为 1。
+返回 1 到 `max` 之间的整数。如果该值达到最大值，则下一个获取的值将为 1。
 
 ### `.reset()` <Badge variant="instance" /><Badge variant="method" />
 

@@ -1,15 +1,15 @@
 ---
-title: 身份验证
+title: 认证
 slug: zh-CN/v2/guides/authentication
 ---
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-SurrealDB 提供两种身份验证方式：用户名和密码验证以及自定义访问验证。用户名和密码验证需要使用 [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) 语句定义的用户。自定义访问验证则使用 [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) 语句定义。本文将前者称为“用户验证”，后者称为“访问验证”。
+SurrealDB 支持两种认证方式：用户名和密码认证以及自定义认证。用户名和密码认证需要使用 [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) 语句定义的用户名和密码。自定义认证使用 [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) 语句定义。在本指南中，我们将前者称为“用户认证”，后者称为“访问认证”。
 
 ### `.signin()` <Badge variant="instance" /><Badge variant="method" />
 
-使用用户验证或访问验证登录 SurrealDB。
+使用用户认证或访问认证登录 SurrealDB。
 
 ```ts
 signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -19,7 +19,7 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-包含用户验证或访问验证所需信息的认证对象。不同验证类型所需的认证对象参数如下所示：
+用户认证或访问认证所需的信息。每种认证类型所需的参数如下：
 
 | 认证类型 | 参数 |
 | --- | ---|
@@ -28,7 +28,7 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 | 数据库用户 | `{ user: string, pass: string, ns: string, db: string }` |
 | 访问 | `{ ac: string, ns: string, db: string, [param: string]: unknown }` |
 
-访问验证通常需要定义的访问 (`ac`) 及其额外参数。
+访问认证通常需要定义的访问 (`ac`) 以及其他参数。
 
 ##### `options`
 
@@ -36,7 +36,7 @@ PRC 请求的选项。
 
 #### 返回值
 
-返回一个解析为 `Jwt` 对象的 `Promise` 对象。
+返回一个 `Jwt` 类型的值，并通过 `Promise` 对象进行解析。
 
 #### 示例
 
@@ -111,7 +111,7 @@ console.log(jwt.user);      // 'db_user'
 await db.close();
 ```
 
-以下示例使用记录访问登录 SurrealDB。`.user` 属性中存储的是记录 ID：
+以下示例使用记录访问登录 SurrealDB。`.user` 属性将设置为记录 ID：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -136,7 +136,7 @@ await db.close();
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-使用访问验证注册 SurrealDB 账户。
+使用访问认证注册 SurrealDB。
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -146,7 +146,7 @@ signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-包含访问验证所需信息的认证对象。
+访问认证所需的信息。
 
 ##### `options`
 
@@ -154,7 +154,7 @@ PRC 请求的选项。
 
 #### 返回值
 
-返回一个解析为 `Jwt` 对象的 `Promise` 对象。
+返回一个 `Jwt` 类型的值，并通过 `Promise` 对象进行解析。
 
 #### 示例
 
@@ -181,7 +181,7 @@ await db.close();
 
 ### `.authenticate()` <Badge variant="instance" /><Badge variant="method" />
 
-使用 JWT 验证当前连接。
+使用 JWT 认证当前连接。
 
 ```ts
 authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
@@ -191,7 +191,7 @@ authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
 
 ##### `token`
 
-用于验证的 JWT。
+要认证的 JWT。
 
 ##### `options`
 
@@ -199,7 +199,7 @@ RPC 请求的选项。
 
 #### 返回值
 
-返回一个解析为 `undefined` 的 `Promise` 对象。
+返回一个 `undefined` 类型的值，并通过 `Promise` 对象进行解析。
 
 ### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -217,7 +217,7 @@ RPC 请求的选项。
 
 #### 返回值
 
-返回一个解析为 `undefined` 的 `Promise` 对象。
+返回一个 `undefined` 类型的值，并通过 `Promise` 对象进行解析。
 
 {/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
 

@@ -1,13 +1,13 @@
 ---
-title: Inline Queries
+title: Inline Query
 slug: en/v1/experimental/inline-query
 banner:
   content: This is an experimental feature, and the API may change frequently.
 ---
 
-Inline queries are functions that allow you to execute one-off custom queries on the fly, without needing to create an instance of the `Surreal` class. The usage is almost identical to the [`.query()`](/en/guides/querying#query) method. However, note that by default, the `JsonFormatter` is used.
+Inline queries are functions that allow you to execute one-off custom queries on the fly without the need to create an instance of the `Surreal` class. The usage is very similar to the [`.query()`](/en/guides/querying#query) method. However, be aware that `JsonFormatter` is used by default.
 
-### Import
+### Importing
 
 ```ts
 import { query } from "@tai-kun/surrealdb";

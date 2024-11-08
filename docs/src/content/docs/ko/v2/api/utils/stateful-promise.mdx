@@ -5,9 +5,9 @@ slug: ko/v2/api/utils/stateful-promise
 
 import Badge from "~/components/ko/Badge.astro";
 
-`StatefulPromise`는 처리되지 않은 상태로 거부되어도 오류를 던지지 않는 `PromiseLike`를 구현하는 클래스입니다.
+`StatefulPromise`는 처리되지 않은 상태로 거부되더라도 오류를 던지지 않는 `PromiseLike`를 구현하는 클래스입니다.
 
-### 가져오기
+### import
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -27,13 +27,13 @@ new StatefulPromise<T>(executor: StatefulPromiseExecutor<T>);
 
 #### 반환 값
 
-`new`를 통해 호출된 경우 `StatefulPromise`는 해당 인스턴스를 반환합니다.
+`new`를 통해 호출된 경우, `StatefulPromise`는 자신의 인스턴스를 반환합니다.
 
 #### 예
 
 ##### 해결
 
-다음 예에서는 `StatefulPromise`가 해결될 때까지 대기하고 결과를 받습니다.
+다음 예제에서는 `StatefulPromise`가 해결될 때까지 대기하고 결과를 받습니다:
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -49,7 +49,7 @@ console.log(result); // "test"
 
 ##### 거부
 
-다음 예에서는 `StatefulPromise`가 거부될 때까지 대기하고 처리하면 오류를 던질 것으로 예상합니다.
+다음 예제에서는 `StatefulPromise`가 거부될 때까지 대기하고 처리하면 오류가 발생할 것으로 예상됩니다:
 
 ```ts
 const promise = new StatefulPromise((_, reject) => {
@@ -67,19 +67,19 @@ try {
 }
 ```
 
-일반 `Promise`는 처리되지 않은 상태로 거부되는 경우(즉, `reject`가 호출되는 경우) `unhandledrejection`이 발생하지만, `StatefulPromise`는 명시적으로 처리될 때까지 오류를 던지지 않는다는 것을 알 수 있습니다.
+일반 `Promise`의 경우 처리되지 않은 상태로 거부되면(즉, `reject`가 호출되면) `unhandledrejection`이 발생하지만, `StatefulPromise`는 명시적으로 처리할 때까지 오류를 던지지 않습니다.
 
 ### `.state` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
 현재 `StatefulPromise`의 상태를 나타냅니다. 상태는 다음 세 가지가 있습니다.
 
-- `pending`: 대기 중임을 나타냅니다. 아직 해결도 거부도 되지 않았습니다.
+- `pending`: 보류 중임을 나타냅니다. 아직 해결도 거부도 되지 않았습니다.
 - `fulfilled`: 해결되었음을 나타냅니다.
 - `rejected`: 거부되었음을 나타냅니다.
 
 ### `.then()` <Badge variant="instance" /><Badge variant="method" />
 
-`.then`은 `StatefulPromise`가 성공하거나 실패하는 경우의 콜백 함수를 가져와 `StatefulPromise` 객체를 반환합니다.
+`.then`은 `StatefulPromise`가 성공하거나 실패할 경우의 콜백 함수를 받아 `StatefulPromise` 객체를 반환합니다.
 
 ```ts
 then<R1, R2>(
@@ -112,7 +112,7 @@ resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
 
 #### 반환 값
 
-인수 `value`로 해결된 `StatefulPromise` 객체를 반환합니다. 값이 `StatefulPromise` 객체이면 해당 값을 반환합니다.
+인수의 `value`로 해결된 `StatefulPromise` 객체를 반환합니다. 값이 `StatefulPromise` 객체이면 해당 값을 반환합니다.
 
 ### `.reject()` <Badge variant="static" /><Badge variant="method" />
 
@@ -130,11 +130,11 @@ reject<T>(reason?: unknown): StatefulPromise<T>;
 
 #### 반환 값
 
-인수 `reason`으로 거부된 `StatefulPromise`를 반환합니다.
+인수의 `reason`으로 거부된 `StatefulPromise`를 반환합니다.
 
 ### `.withResolvers()` <Badge variant="static" /><Badge variant="method" />
 
-`.withResolvers`는 새 `StatefulPromise` 객체와 해당 객체를 해결하거나 거부하는 함수가 포함된 객체를 반환하는 함수입니다.
+`.withResolvers`는 새로운 `StatefulPromise` 객체와 해당 객체를 해결하거나 거부하는 함수를 포함하는 객체를 반환하는 함수입니다.
 
 ```ts
 withResolvers<T>(): {
@@ -154,7 +154,7 @@ withResolvers<T>(): {
 
 ##### `promise`
 
-새 `StatefulPromise` 객체입니다.
+새로운 `StatefulPromise` 객체입니다.
 
 ##### `resolve`
 
@@ -179,17 +179,17 @@ try<T, A extends readonly unknown[]>(
 
 ##### `func`
 
-호출할 함수입니다. 이 함수는 `StatefulPromise` 이외의 값을 반환할 수 있습니다. 또한 함수 내에서 동기적으로 오류를 던질 수도 있습니다.
+호출될 함수입니다. 이 함수는 `StatefulPromise` 이외의 값을 반환할 수 있습니다. 또한 함수 내에서 동기적으로 오류를 던질 수 있습니다.
 
 #### 반환 값
 
-- `func`가 동기적으로 값을 반환하는 경우 해결된 상태의 `StatefulPromise`를 반환합니다.
-- `func`가 동기적으로 오류를 던지는 경우 거부된 상태의 `StatefulPromise`를 반환합니다.
-- `func`가 비동기적으로 해결되거나 거부되는 경우 보류 상태의 `StatefulPromise`를 반환합니다.
+- `func`가 동기적으로 값을 반환하는 경우, 해결된 상태의 `StatefulPromise`를 반환합니다.
+- `func`가 동기적으로 오류를 던지는 경우, 거부된 상태의 `StatefulPromise`를 반환합니다.
+- `func`가 비동기적으로 해결하거나 거부하는 경우, 보류 상태의 `StatefulPromise`를 반환합니다.
 
 #### 예
 
-다음 예는 동기적으로 던져진 오류가 `StatefulPromise`에 의해 처리되는 것을 보여줍니다.
+다음 예제는 동기적으로 던져진 오류가 `StatefulPromise`에 의해 포착되는 것을 보여줍니다:
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -205,7 +205,7 @@ await promise.then(null, e => {
 
 ### `.allRejected()` <Badge variant="static" /><Badge variant="method" />
 
-`.allRejected`는 거부된 `StatefulPromise`의 이유만을 수집하는 함수입니다.
+`.allRejected`는 거부된 `StatefulPromise`의 이유만 수집하는 함수입니다.
 
 ```ts
 allRejected(promises: Iterable<unknown>): StatefulPromise<unknown[]>;
@@ -219,7 +219,7 @@ allRejected<T>(
 
 ##### `promises`
 
-반복 가능한 객체입니다. `StatefulPromise` 객체 이외의 객체를 포함할 수도 있지만, 해당 객체는 오류로 간주되지 않습니다. 일반 `Promise`도 마찬가지로 무시됩니다.
+반복 가능한 객체입니다. `StatefulPromise` 객체 이외의 것을 포함할 수도 있지만, 오류로 간주되지 않습니다. 또한 일반 `Promise`도 마찬가지로 무시됩니다.
 
 ##### `extract`
 
@@ -227,4 +227,4 @@ allRejected<T>(
 
 #### 반환 값
 
-`StatefulPromise` 객체가 거부한 이유의 배열로 해결된 `StatefulPromise` 객체를 반환합니다.
+`StatefulPromise` 객체가 거부한 이유 배열로 해결된 `StatefulPromise` 객체를 반환합니다.

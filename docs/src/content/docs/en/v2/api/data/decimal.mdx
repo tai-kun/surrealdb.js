@@ -5,9 +5,9 @@ slug: en/v2/api/data/decimal
 
 import Badge from "~/components/en/Badge.astro";
 
-`Decimal` is a class for representing arbitrary-precision real numbers. When the preset is `standard`, the class inherits from [`big.js`](https://github.com/MikeMcl/big.js). This may lead to inconsistencies in the results of methods like `.toString()`, depending on the preset.
+`Decimal` is a class that represents arbitrary precision real numbers. When using the standard preset, this class inherits from [`big.js`](https://github.com/MikeMcl/big.js). This can lead to differences in the results of methods like `.toString()` across presets.
 
-### Importing
+### Import
 
 ```ts
 import { Decimal } from "@tai-kun/surrealdb/decodeonly-datatypes";
@@ -28,15 +28,15 @@ new Decimal(source: string | number | Decimal); // standard
 
 ##### `source`
 
-A real number represented as a string. If the preset is `standard`, a number can also be passed.
+A real number represented as a string. If the preset is standard, a number can also be provided.
 
 #### Return Value
 
-When called through `new`, `Decimal` returns its instance.
+When called via `new`, `Decimal` returns its instance.
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="decodeonly" />
 
-Retrieves the real number as a string.
+Gets the real number as a string.
 
 #### Arguments
 
@@ -44,11 +44,11 @@ None.
 
 #### Return Value
 
-Returns the string representation of the real number.
+Returns a string representation of the real number.
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts the `Decimal` object to a string that can be embedded into SurrealQL. It is similar to `.toString()`, but it adds a `dec` suffix to inform the query parser that the string is of `decimal` type.
+Converts a `Decimal` object into a string that can be embedded in SurrealQL. Similar to `.toString()` but adds a `dec` suffix to inform the query parser that the string is of type `decimal`.
 
 ```ts
 .toSurql(): string;
@@ -60,7 +60,7 @@ None.
 
 #### Return Value
 
-Returns the real number with the `dec` suffix.
+Returns the real number with a `dec` suffix.
 
 #### Example
 
@@ -74,7 +74,7 @@ console.log(decimal.toSurql());
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Clones the `Decimal` object.
+Clones a `Decimal` object.
 
 ```ts
 .clone(): this;
@@ -90,15 +90,15 @@ Returns a new `Decimal` object. If the `Decimal` class is inherited, an instance
 
 ### Other Methods
 
-If you are using the `standard` preset, the `Decimal` class inherits from the `Big` class of `big.js`, so refer to the `big.js` documentation for instance methods and properties:
+If the standard preset is used, the `Decimal` class inherits from the `big.js` `Big` class, so instance methods and properties should refer to the `big.js` documentation:
 
 [`big.js` Documentation](https://mikemcl.github.io/big.js/#prototype-methods)
 
 ### Development
 
-#### Generic Determination of `Decimal` Objects
+#### Generic `Decimal` Object Detection
 
-It is recommended to use the `isDecimal` function to determine if a value is a `Decimal` object without depending on the preset. This function does not use `instanceof`, making it helpful when the preset of the value to be verified is unknown.
+To determine if a value is a `Decimal` object without relying on the preset, it is recommended to use the `isDecimal` function. This function does not use `instanceof`, making it useful when the preset of the value being validated is unknown.
 
 ```ts
 import { isDecimal } from "@tai-kun/surrealdb";

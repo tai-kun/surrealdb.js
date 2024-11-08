@@ -1,4 +1,4 @@
-name: Translate docs
+name: Translate Documents
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
 
       - name: "translate-docs ブランチに移動"
         if: ${{ steps.check_branch.outputs.exists == 'true' }}
-        run: git checkout translate-docs
+        run: git checkout -b translate-docs
 
       - name: "translate-docs ブランチを作成して移動"
         if: ${{ steps.check_branch.outputs.exists == 'false' }}

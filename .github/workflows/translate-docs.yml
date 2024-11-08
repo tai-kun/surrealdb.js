@@ -98,6 +98,8 @@ jobs:
           else
             echo 'exists=false' >>"$GITHUB_OUTPUT"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "プルリクエストを作成"
         if: ${{ steps.check_diff.outputs.exists == 'true' && steps.check_pr.outputs.exists == 'false' }}

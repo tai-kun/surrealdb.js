@@ -40,7 +40,7 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: docs/cache
-          key: translate-docs
+          key: translate-docs-${{ hashFiles('docs/src/content/docs/ja/**') }}
 
       - name: "依存関係をインストール"
         run: npm ci

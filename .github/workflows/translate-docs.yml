@@ -33,7 +33,6 @@ jobs:
         if: ${{ steps.check_branch.outputs.exists == 'true' }}
         run: |
           git checkout -b translate-docs
-          git pull
 
       - name: "translate-docs ブランチを作成して移動"
         if: ${{ steps.check_branch.outputs.exists == 'false' }}
@@ -76,11 +75,9 @@ jobs:
       - name: "変更をコミット&プッシュ"
         if: ${{ steps.check_diff.outputs.exists == 'true' }}
         run: |
-          git config user.name  'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add .
           git commit -m 'docs: 翻訳'
-          git push origin translate-docs
+          git push origin translate-docs --force
 
       - name: "プルリクエストが存在するか確認"
         if: ${{ steps.check_diff.outputs.exists == 'true' }}

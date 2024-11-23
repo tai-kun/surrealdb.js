@@ -10,7 +10,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 <Tabs>
   <TabItem label="npm">
     ```bash
-    npm i @tai-kun/surrealdb
+    npm install @tai-kun/surrealdb
     ```
   </TabItem>
   <TabItem label="yarn">
@@ -30,13 +30,13 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
   </TabItem>
 </Tabs>
 
-## Getting Started
+## Quick Start
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
 
 const db = new Surreal();
-await db.connect("<your_surrealdb_server>"); // e.g. ws://localhost:8000
+await db.connect("<your_surrealdb_server>"); // e.g., ws://localhost:8000
 
 try {
   await db.signin({ user: "root", pass: "root" });

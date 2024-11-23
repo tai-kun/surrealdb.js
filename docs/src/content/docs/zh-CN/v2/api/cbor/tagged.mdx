@@ -5,7 +5,7 @@ slug: zh-CN/v2/api/cbor/tagged
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Tagged` 是一个自定义值，使用从 0 到 2^64-1 的整数值进行标识。
+`Tagged` 是由 0 到 2^64-1 之间的整数标识的自定义值。
 
 ### 导入
 
@@ -23,7 +23,7 @@ new Tagged<T>(tag: number | BigInt, value: T);
 
 ##### `tag`
 
-用于标识带标签数据项的从 0 到 2^64-1 的整数值。请注意，在 JavaScript 中，使用 `BigInt` 来表示大于 2^53-1 的数字。
+用于标识带标签数据项的 0 到 2^64-1 之间的整数。需要注意的是，在 JavaScript 中，如果使用超过 2^53-1 的数值，则需要使用 BigInt。
 
 ##### `value`
 
@@ -31,19 +31,19 @@ new Tagged<T>(tag: number | BigInt, value: T);
 
 #### 返回值
 
-如果通过 `new` 调用，`Tagged` 将返回其实例。
+当通过 `new` 调用时，`Tagged` 将返回其实例。
 
 ### `.tag` <Badge variant="instance" /><Badge variant="property" />
 
-`.tag` 是一个属性，它保存用于标识带标签数据项的从 0 到 2^64-1 的整数值。
+`.tag` 是一个属性，包含用于标识带标签数据项的 0 到 2^64-1 之间的整数。
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-`.value` 是一个属性，它存储带标签数据项的值。
+`.value` 是一个属性，用于存储带标签数据项的值。
 
 ### `.toCBOR()` <Badge variant="instance" /><Badge variant="method" />
 
-`.toCBOR` 是一个函数，用于返回用于 CBOR 编码的信息。
+`.toCBOR` 是一个函数，用于返回 CBOR 编码所需的信息。
 
 ```ts
 toCBOR(): [tag: number | bigint, value: unknown];
@@ -55,10 +55,10 @@ toCBOR(): [tag: number | bigint, value: unknown];
 
 #### 返回值
 
-返回用于 CBOR 编码的信息。
+返回 CBOR 编码所需的信息。
 
 ### 备注
 
-您也可以参考以下资料：
+请参考以下资料：
 
 - [https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml)

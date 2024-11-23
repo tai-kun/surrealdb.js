@@ -5,7 +5,7 @@ slug: en/v1/reference/utils/task-emitter
 
 import Badge from "~/components/en/Badge.astro";
 
-`TaskEmitter` is an event emitter class for asynchronous tasks managed by the `TaskQueue`.
+`TaskEmitter` is an event emitter class for asynchronous tasks managed by `TaskQueue`.
 
 ### Import
 
@@ -23,7 +23,7 @@ new TaskEmitter<T>();
 
 ##### `T`
 
-The type that defines the event names and the arguments (array) that each event takes in a key-value format.
+A type representing event names and their corresponding argument types (arrays) as key-value pairs.
 
 #### Return Value
 
@@ -31,7 +31,7 @@ When called with `new`, `TaskEmitter` returns its instance.
 
 ### `.on()` <Badge variant="instance" /><Badge variant="method" />
 
-`.on` is a function that registers an event listener to the event emitter. If you try to register the same function multiple times for the same event, all registrations except the first one will be ignored.
+`.on` is a function that registers an event listener to the event emitter.  Attempting to register the same function multiple times for the same event will result in only the first registration being effective; subsequent attempts will be ignored.
 
 ```ts
 on(event: string | number, listener: TaskListener): void;
@@ -41,11 +41,11 @@ on(event: string | number, listener: TaskListener): void;
 
 ##### `event`
 
-The name of the event to which the event listener is registered.
+The name of the event to register the listener for.
 
 ##### `listener`
 
-The event listener to be registered. This function receives the same arguments as the task runner of `TaskQueue`, followed by the arguments passed to `.emit` as a variable-length argument.
+The event listener to register. This function receives the same arguments as the `TaskQueue` task runner, followed by a variable number of arguments passed from `.emit`.
 
 #### Return Value
 
@@ -53,7 +53,7 @@ None.
 
 #### Example
 
-The following example captures the "log" event and prints the value passed to the emitter to standard output:
+The following example captures the "log" event and prints the values passed to the emitter to standard output:
 
 ```ts
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";
@@ -83,7 +83,7 @@ World !!!
 
 ### `.off()` <Badge variant="instance" /><Badge variant="method" />
 
-`.off` is a function that unregisters an event listener from the event emitter. If the event listener is omitted, all event listeners registered to the target event name will be unregistered.
+`.off` is a function that removes an event listener from the event emitter. If the listener is omitted, all event listeners registered for the specified event name will be removed.
 
 ```ts
 off(event: string | number, listener?: TaskListener): void;
@@ -93,11 +93,11 @@ off(event: string | number, listener?: TaskListener): void;
 
 ##### `event`
 
-The name of the event to which the event listener is unregistered.
+The name of the event to remove the listener from.
 
 ##### `listener`
 
-The event listener to be unregistered. If this is omitted, all event listeners registered to the target `event` will be unregistered.
+The event listener to remove. If omitted, all event listeners registered for the specified `event` will be removed.
 
 #### Return Value
 
@@ -105,7 +105,7 @@ None.
 
 ### `.once()` <Badge variant="instance" /><Badge variant="method" />
 
-`.once` is similar to `.on` but captures the event only once. It also receives the value with the returned `StatefulPromise` instead of a callback function.
+`.once` is similar to `.on`, but it only captures the event once.  Instead of a callback function, it receives the value via the returned `StatefulPromise`.
 
 ```ts
 once(
@@ -116,7 +116,7 @@ once(
 
 #### Example
 
-The following example captures the "log" event only once and prints the value passed to the emitter to standard output:
+The following example captures the "log" event only once and prints the values passed to the emitter to standard output:
 
 ```ts
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";
@@ -132,8 +132,8 @@ const promise = emitter.once("log");
 emitter.emit("log", "Hello");
 emitter.emit("log", "World", "!!!");
 
-const recived = await promise;
-console.log(recived);
+const received = await promise;
+console.log(received);
 
 await emitter.idle();
 ```
@@ -152,11 +152,12 @@ The name of the event to wait for.
 
 ##### `options`
 
-Options for the event listener. You can pass the abort signal.
+Options for the event listener.  An abort signal can be passed.
 
 #### Return Value
 
-Returns a `StatefulPromise` that resolves with the argument (array) of `.emit`.
+Returns a `StatefulPromise` that resolves with the arguments (array) of `.emit`.
+
 
 ### `.emit()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -173,19 +174,19 @@ emit(
 
 ##### `event`
 
-The name of the event to send to.
+The name of the event to send the values to.
 
 ##### `args`
 
-The value to be sent to the event listener.
+The values to send to the event listener.
 
 #### Return Value
 
-Returns `undefined` if there are no event listeners. If there are event listeners, it returns an array of `StatefulPromise` that wait until they are resolved/rejected. You usually don't need to handle this `StatefulPromise`. You can use it when you need to wait for the side effects caused by the event in the current context, or when you are interested in the resolution/rejection of the event listener.
+Returns `undefined` if no event listeners are present. If event listeners exist, it returns an array of `StatefulPromise`s that wait until they resolve/reject.  Normally, there's no need to handle this `StatefulPromise`; use it when you need to wait for side effects triggered by the event within the current context, or if you are interested in the resolution/rejection of the event listeners.
 
 ### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
-`.idle` is a function that waits for the completion of all currently running event listeners.
+`.idle` is a function that waits for all currently running event listeners to complete.
 
 ```ts
 idle(): StatefulPromise<void>;
@@ -201,7 +202,7 @@ Returns a `StatefulPromise` that resolves with `void`.
 
 ### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 
-`.abort` is a function that sends an abort event to the `signal` of all event listeners.
+`.abort` is a function that sends an abort signal to the `signal` of all event listeners.
 
 ```ts
 abort(reason?: unknown): void;

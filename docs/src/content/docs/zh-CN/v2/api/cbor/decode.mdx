@@ -30,23 +30,24 @@ function decode(input: Uint8Array, options?: DecodeOptions): unknown;
 解码选项。
 
 `mapType?: "Object" | "Map"`
-:   该选项用于选择将键值对形式的数组解码为 JavaScript 的普通对象或 `Map`。选择 `"Object"` 将解码为普通对象，选择 `"Map"` 将解码为 `Map` 类实例。默认值为 `"Object"`。普通对象的键只能接受字符串或数字（即 `string | number`），但如果将此选项设置为 `"Map"` 进行解码，则键可以接收任何解码后的值。
+:   此选项用于选择是否将键值对对象解码为 JavaScript 的普通对象或 `Map`。选择 `"Object"` 将解码为普通对象，选择 `"Map"` 将解码为 `Map` 类实例。默认为 `"Object"`。普通对象的键只能接收字符串或数字（即 `string | number`），但如果将此选项设置为 `"Map"` 进行解码，则键可以接收所有解码后的值。
 
 `reviver?: Reviver | ReviverObject | (Reviver | ReviverObject)[]`
-:   该选项用于将 CBOR 的简单数据项或带标签的数据项转换为 JavaScript 值。简单数据项仅限于 0 到 19 和 32 到 255 的值。带标签的数据项的标签是 0 到 2^64-1 之间的 `number` 或 `bigint`。如果函数返回 `Symbol.for("@tai-kun/surrealdb/cbor/continue")` 获取的 `CONTINUE` 符号，则会调用后续函数。如果无法转换为任何值，则会抛出 `SurrealTypeError`。
+:   此选项用于将 CBOR 的简单数据项或带标签的数据项转换为 JavaScript 值。简单数据项限于 0 到 19 和 32 到 255 的值。带标签的数据项的标签是 0 到 2^64-1 之间的 `number` 或 `bigint`。如果函数返回 `Symbol.for("@tai-kun/surrealdb/cbor/continue")` 获得的 `CONTINUE` 符号，则会调用后续函数。如果无法转换任何内容，则会抛出 `SurrealTypeError`。
 
 `isSafeMapKey?: (key: unknown, map: Map<unknown, unknown>) => boolean`
-:   该选项是用于验证 `Map` 对象的键是否安全的函数。函数接收两个参数：`key` 和 `map`。`key` 是键的值，`map` 是正在验证的 `Map` 对象。如果该函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，它会将 `"__proto__"` 或 `"constructor"` 判断为不安全的键。请注意，如果指定此选项，则会完全覆盖默认验证。如果要将自己的验证添加到默认验证中，则也应将 `"__proto__"` 或 `"constructor"` 判断为不安全的键。
+:   此选项是一个函数，用于验证 `Map` 对象的键是否安全。该函数接收两个参数 `key` 和 `map`。`key` 是键的值，`map` 是正在验证的 `Map` 对象。如果此函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，它会将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。请注意，指定此选项会完全覆盖默认验证。如果要对默认验证进行补充，则也应该将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。
 
 `isSafeObjectKey?: (key: unknown, obj: Record<string | number, unknown>) => boolean`
-:   该选项是用于验证普通对象的键是否安全的函数。函数接收两个参数：`key` 和 `obj`。`key` 是键的值，`obj` 是正在验证的普通对象。如果该函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，它会将 `"__proto__"` 或 `"constructor"` 判断为不安全的键。请注意，如果指定此选项，则会完全覆盖默认验证。如果要将自己的验证添加到默认验证中，则也应将 `"__proto__"` 或 `"constructor"` 判断为不安全的键。
+:   此选项是一个函数，用于验证普通对象的键是否安全。该函数接收两个参数 `key` 和 `obj`。`key` 是键的值，`obj` 是正在验证的普通对象。如果此函数返回 `false`，则会抛出 `CborUnsafeMapKeyError`。默认情况下，它会将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。请注意，指定此选项会完全覆盖默认验证。如果要对默认验证进行补充，则也应该将 `"__proto__"` 或 `"constructor"` 判定为不安全的键。
 
 `maxDepth?: number`
-:   指定对象的最大深度。每进入一个对象或数组，深度就会增加 1。默认值为 `64`。解码使用的是递归处理，因此深度没有上限，但建议不要设置过大。
+:   指定对象的最大深度。每次进入对象或数组时，深度都会增加 1。默认值为 `64`。解码没有使用递归处理，因此深度没有上限，但不建议设置过大的值。
+
 
 #### 返回值
 
-从 CBOR 格式的 `Uint8Array` 解码得到的 JavaScript 值。
+从 CBOR 格式的 `Uint8Array` 解码后的 JavaScript 值。
 
 ### 例子
 
@@ -91,18 +92,18 @@ function decodeStream(
 
 ##### `input`
 
-`Uint8Array` 的可读流。Fetch API 可能会根据请求提供 `Response` 对象的 `body` 属性中的该流。
+`Uint8Array` 的可读流。Fetch API 可能会根据请求在 `Response` 对象的 `body` 属性中提供此流。
 
 ##### `options`
 
 除了同步解码的选项外，还可以指定以下选项：
 
 `signal?: AbortSignal`
-:   用于中断流的中止信号。
+:   用于中断流的终止信号。
 
 #### 返回值
 
-解析为 JavaScript 值的 `StatefulPromise`。
+一个以 JavaScript 值解析的 `StatefulPromise`。
 
 ### 例子
 

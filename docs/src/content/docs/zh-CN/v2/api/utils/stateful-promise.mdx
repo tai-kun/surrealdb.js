@@ -5,7 +5,7 @@ slug: zh-CN/v2/api/utils/stateful-promise
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`StatefulPromise` 是一个实现了 `PromiseLike` 接口的类，即使在未处理的情况下被拒绝，它也不会抛出错误。
+`StatefulPromise` 是一个实现了 `PromiseLike` 的类，即使在未处理的情况下被拒绝也不会抛出错误。
 
 ### 导入
 
@@ -27,13 +27,13 @@ new StatefulPromise<T>(executor: StatefulPromiseExecutor<T>);
 
 #### 返回值
 
-当通过 `new` 调用时，`StatefulPromise` 会返回它的实例。
+如果通过 `new` 调用，`StatefulPromise` 将返回其实例。
 
 #### 例子
 
-##### 解决
+##### 解析
 
-以下示例展示了如何等待 `StatefulPromise` 解决并接收其结果：
+以下示例演示了等待 `StatefulPromise` 解析并接收其结果：
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -49,7 +49,7 @@ console.log(result); // "test"
 
 ##### 拒绝
 
-以下示例展示了如何等待 `StatefulPromise` 被拒绝，并期望在处理时抛出错误：
+以下示例演示了等待 `StatefulPromise` 被拒绝，并期望在处理时抛出错误：
 
 ```ts
 const promise = new StatefulPromise((_, reject) => {
@@ -67,19 +67,19 @@ try {
 }
 ```
 
-可以看出，普通的 `Promise` 在未处理的情况下被拒绝（即调用 `reject`）会导致 `unhandledrejection`，而 `StatefulPromise` 不会在明确处理之前抛出错误。
+普通的 `Promise` 在未处理的情况下被拒绝（即调用 `reject`）时会发生 `unhandledrejection`，但 `StatefulPromise` 则不会，直到显式处理才会抛出错误。
 
 ### `.state` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
-表示当前 `StatefulPromise` 的状态。状态有以下三种：
+表示当前 `StatefulPromise` 的状态。状态共有三种：
 
-- `pending`: 表示处于挂起状态。尚未解决或拒绝。
-- `fulfilled`: 表示已解决。
+- `pending`: 表示处于挂起状态。尚未解析或拒绝。
+- `fulfilled`: 表示已解析。
 - `rejected`: 表示已拒绝。
 
 ### `.then()` <Badge variant="instance" /><Badge variant="method" />
 
-`.then` 接收成功和失败时的回调函数，并返回一个 `StatefulPromise` 对象。
+`.then` 接受 `StatefulPromise` 成功和失败时的回调函数，并返回一个 `StatefulPromise` 对象。
 
 ```ts
 then<R1, R2>(
@@ -98,7 +98,7 @@ then<R1, R2>(
 
 ### `.resolve()` <Badge variant="static" /><Badge variant="method" />
 
-`.resolve` 返回一个使用给定值解决的 `StatefulPromise`。
+`.resolve` 返回一个用给定值解析的 `StatefulPromise`。
 
 ```ts
 resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
@@ -108,15 +108,15 @@ resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
 
 ##### `value`
 
-要解决的值。默认值为 `undefined`。
+要解析的值。默认值为 `undefined`。
 
 #### 返回值
 
-返回一个使用参数 `value` 解决的 `StatefulPromise` 对象。如果值本身是 `StatefulPromise` 对象，则返回该值。
+返回一个用参数 `value` 解析的 `StatefulPromise` 对象。如果值为 `StatefulPromise` 对象，则返回该值。
 
 ### `.reject()` <Badge variant="static" /><Badge variant="method" />
 
-`.reject` 返回一个使用给定原因拒绝的 `StatefulPromise` 对象。
+`.reject` 返回一个用给定原因拒绝的 `StatefulPromise` 对象。
 
 ```ts
 reject<T>(reason?: unknown): StatefulPromise<T>;
@@ -130,11 +130,11 @@ reject<T>(reason?: unknown): StatefulPromise<T>;
 
 #### 返回值
 
-返回一个使用参数 `reason` 拒绝的 `StatefulPromise`。
+返回一个用参数 `reason` 拒绝的 `StatefulPromise`。
 
 ### `.withResolvers()` <Badge variant="static" /><Badge variant="method" />
 
-`.withResolvers` 是一个返回新的 `StatefulPromise` 对象以及一个包含解决或拒绝该对象的函数的对象的函数。
+`.withResolvers` 返回一个包含新的 `StatefulPromise` 对象以及用于解析或拒绝它的函数的对象。
 
 ```ts
 withResolvers<T>(): {
@@ -150,15 +150,15 @@ withResolvers<T>(): {
 
 #### 返回值
 
-包含以下属性的普通对象：
+一个包含以下属性的普通对象：
 
 ##### `promise`
 
-一个新的 `StatefulPromise` 对象。
+新的 `StatefulPromise` 对象。
 
 ##### `resolve`
 
-解决 `promise` 的函数。
+解析 `promise` 的函数。
 
 ##### `reject`
 
@@ -179,17 +179,18 @@ try<T, A extends readonly unknown[]>(
 
 ##### `func`
 
-要调用的函数。该函数可以返回除 `StatefulPromise` 以外的值。它也可以在函数内部同步抛出错误。
+要调用的函数。此函数可以返回 `StatefulPromise` 以外的值。它也可以在函数内同步抛出错误。
+
 
 #### 返回值
 
-- 如果 `func` 同步返回一个值，则返回一个已解决状态的 `StatefulPromise`。
-- 如果 `func` 同步抛出错误，则返回一个已拒绝状态的 `StatefulPromise`。
-- 如果 `func` 异步解决或拒绝，则返回一个挂起状态的 `StatefulPromise`。
+- 如果 `func` 同步返回一个值，则返回一个已解析状态的 `StatefulPromise`。
+- 如果 `func` 同步抛出一个错误，则返回一个已拒绝状态的 `StatefulPromise`。
+- 如果 `func` 异步解析或拒绝，则返回一个挂起状态的 `StatefulPromise`。
 
 #### 例子
 
-以下示例展示了同步抛出的错误是如何被 `StatefulPromise` 捕获的：
+以下示例显示了同步抛出的错误是如何被 `StatefulPromise` 捕获的：
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -205,7 +206,7 @@ await promise.then(null, e => {
 
 ### `.allRejected()` <Badge variant="static" /><Badge variant="method" />
 
-`.allRejected` 是一个仅收集拒绝的 `StatefulPromise` 的原因的函数。
+`.allRejected` 是一个仅收集被拒绝的 `StatefulPromise` 的原因的函数。
 
 ```ts
 allRejected(promises: Iterable<unknown>): StatefulPromise<unknown[]>;
@@ -219,7 +220,7 @@ allRejected<T>(
 
 ##### `promises`
 
-可迭代对象。它可以包含非 `StatefulPromise` 对象，但它们不会被视为错误。普通的 `Promise` 同样会被忽略。
+可迭代对象。可以包含 `StatefulPromise` 对象以外的对象，但它们不会被视为错误。普通的 `Promise` 同样会被忽略。
 
 ##### `extract`
 
@@ -227,4 +228,4 @@ allRejected<T>(
 
 #### 返回值
 
-返回一个已解决的 `StatefulPromise` 对象，其中包含拒绝的 `StatefulPromise` 对象的原因数组。
+返回一个用被拒绝的 `StatefulPromise` 对象的原因数组解析的 `StatefulPromise` 对象。

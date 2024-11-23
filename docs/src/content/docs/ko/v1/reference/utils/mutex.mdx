@@ -5,13 +5,13 @@ slug: ko/v1/reference/utils/mutex
 
 import { Aside } from "@astrojs/starlight/components"
 
-`mutex` 는 하나 이상의 클래스 메서드를 동시 실행성 1로 비동기 처리하는 데코레이터입니다.
+`mutex`는 하나 이상의 클래스 메서드를 동시 실행성 1로 비동기 처리하는 데코레이터입니다.
 
 <Aside type="caution">
-  빌드된 SDK를 JavaScript로 사용하는 경우에는 문제가 없지만, 이 SDK의 소스 코드(TypeScript)를 직접 사용하는 경우에는 Stage 3 데코레이터 지원이 필요합니다.
+  빌드된 JavaScript SDK를 사용하는 경우에는 문제가 없지만, 이 SDK의 소스 코드(TypeScript)를 직접 사용하는 경우에는 Stage 3 데코레이터 지원이 필요합니다.
 </Aside>
 
-### 가져오기
+### import
 
 ```ts
 import { mutex } from "@tai-kun/surrealdb/utils";
@@ -36,13 +36,13 @@ function mutex(
 
 Stage 3 클래스 메서드용 데코레이터 컨텍스트입니다.
 
-#### 반환 값
+#### 반환값
 
 동시 실행성이 1로 제한된 비동기 함수입니다.
 
-#### 예제
+#### 예시
 
-다음 예제는 `mutex` 유무에 따라 비동기 처리의 실행 순서가 다르게 나타나는 것을 보여줍니다.
+다음 예시는 `mutex`의 유무에 따라 비동기 처리의 실행 순서가 달라지는 것을 보여줍니다.
 
 ```ts
 import { mutex } from "@tai-kun/surrealdb/utils";

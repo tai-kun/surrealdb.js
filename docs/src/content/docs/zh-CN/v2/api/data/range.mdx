@@ -7,7 +7,7 @@ banner:
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-## 描述
+说明
 
 ### 导入
 
@@ -34,15 +34,15 @@ new Range(
 
 ##### `source`
 
-范围的最小值和最大值的组合，使用数组表示。如果无限则为 `null`。
+范围的最小值和最大值的配对。如果是无限的，则为 `null`。
 
 #### 返回值
 
-当通过 `new` 调用时，`Range` 会返回其实例。
+如果通过 `new` 调用，`Range` 将返回其实例。
 
 ### `.begin` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-范围的最小值，如果无下限则为 `null`。
+范围的最小值。如果没有下限，则为 `null`。
 
 ```ts
 .begin: BoundIncluded | BoundExcluded | null;
@@ -50,7 +50,7 @@ new Range(
 
 ### `.end` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-范围的最大值，如果无上限则为 `null`。
+范围的最大值。如果没有上限，则为 `null`。
 
 ```ts
 .end: BoundIncluded | BoundExcluded | null;
@@ -58,9 +58,9 @@ new Range(
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Range` 对象转换为 SurrealQL 可用的字符串形式。
+将 `Range` 对象转换为 SurrealQL 可用的字符串。
 
-`.toJSON()` 和 `.toSurql()` 方法返回与该方法相同的结果。
+`.toJSON()` 和 `.toSurql()` 将返回与该方法相同的结果。
 
 ```ts
 .toString(): string;
@@ -72,7 +72,7 @@ new Range(
 
 #### 返回值
 
-返回范围的字符串表示形式。
+返回范围的字符串表示。
 
 #### 例子
 
@@ -122,9 +122,9 @@ console.log(range.toString());
 
 ### 进阶
 
-#### `Range` 对象的通用判断
+#### `Range` 对象的通用判定
 
-建议使用 `isRange` 函数来判断一个值是否为 `Range` 对象，而无需依赖预设。该函数不使用 `instanceof`，因此当验证的值的预设未知时，它会非常有用。
+建议使用 `isRange` 函数来判断值是否为 `Range` 对象，而无需依赖预设。由于此函数不使用 `instanceof`，因此在验证值的预设不明确的情况下非常有用。
 
 ```ts
 import { isRange } from "@tai-kun/surrealdb";

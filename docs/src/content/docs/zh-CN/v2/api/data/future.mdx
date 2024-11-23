@@ -1,5 +1,5 @@
 ---
-title: 未来
+title: Future
 slug: zh-CN/v2/api/data/future
 banner:
   content: 这是一个实验性功能。
@@ -7,7 +7,7 @@ banner:
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Future` 是一个表示 SurrealDB [Futures 功能](https://surrealdb.com/docs/surrealql/datamodel/futures) 的类。
+`Future` 类表示 SurrealDB 的 [Futures 功能](https://surrealdb.com/docs/surrealql/datamodel/futures)。
 
 ### 导入
 
@@ -33,7 +33,7 @@ future 块中的值或表达式。
 
 #### 返回值
 
-当通过 `new` 调用时，`Future` 会返回它的实例。
+如果通过 `new` 调用，`Future` 将返回其实例。
 
 ### `.block` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
@@ -71,7 +71,7 @@ console.log(future.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Future` 对象转换为可以嵌入 SurrealQL 的字符串。类似于 `.toString()`，但块用波括号 (`{}`) 括起来，并用 `<future>` 转换。
+将 `Future` 对象转换为可嵌入 SurrealQL 的字符串。与 `.toString()` 类似，但块用波括号 (`{}`) 括起来，并用 `<future>` 进行转换。
 
 ```ts
 .toSurql(): string;
@@ -83,7 +83,7 @@ console.log(future.toString());
 
 #### 返回值
 
-返回可以嵌入 SurrealQL 的 future。
+返回可嵌入 SurrealQL 的 future。
 
 #### 示例
 
@@ -97,7 +97,7 @@ console.log(future.toSurql());
 
 ### `.surql()` <Badge variant="static" /><Badge variant="method" /><Badge variant="standard" />
 
-此方法可以帮助你编写 SurrealQL 代码。你可以使用模板字面量来编写 SurrealQL 代码。嵌入模板字面量的值会自动转换为 SurrealQL。另外，如果你在 VSCode 中安装了 [SurrealDB 官方扩展](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql)，则模板字面量的语法高亮会生效。
+此方法有助于编写 SurrealQL。可以使用模板字面量来编写 SurrealQL。嵌入到模板字面量中的值将自动转换为 SurrealQL。此外，如果您安装了 [SurrealDB 官方扩展](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql) ，则 VSCode 中的模板字面量语法高亮将生效。
 
 ```ts
 .surql(texts: TemplateStringsArray, ...values: unknown[]): string;
@@ -111,11 +111,11 @@ console.log(future.toSurql());
 
 ##### `values`
 
-要嵌入到 `texts` 中每个元素之间的值。
+要嵌入到 `texts` 各元素之间的值。
 
 #### 返回值
 
-SurrealQL 代码。
+SurrealQL 字符串。
 
 #### 示例
 
@@ -137,7 +137,7 @@ console.log(future.toSurql());
 //-> }
 ```
 
-如果不用 `.surql()` 的话，上面的例子就需要这样写：
+如果不使用 `.surql()`，则上面的示例将如下所示：
 
 ```ts
 import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
@@ -158,14 +158,14 @@ console.log(future.toSurql());
 //-> }
 ```
 
-- 你需要使用 `toSurql` 辅助函数或 `.toSurql()` 方法将字符串或对象转换为 SurrealQL 代码。
-- 你可以使用 `Future.raw` 来嵌入不需要转换为 SurrealQL 代码的字符串。
+- 需要使用 `toSurql` 辅助函数或 `.toSurql()` 方法将字符串或对象转换为 SurrealQL。
+- 可以不使用 `Future.raw` 将字符串嵌入到 SurrealQL 中。
 
-### 发展
+### 进阶
 
 #### `Future` 对象的通用判断
 
-建议使用 `isFuture` 函数来判断一个值是否是 `Future` 对象，而不要依赖预设。该函数不使用 `instanceof`，因此在验证值的预设未知时很有用。
+建议使用 `isFuture` 函数来判断值是否为 `Future` 对象，而无需依赖预设。此函数不使用 `instanceof`，因此在验证值的预设未知时非常有用。
 
 ```ts
 import { isFuture } from "@tai-kun/surrealdb";

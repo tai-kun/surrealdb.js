@@ -2,14 +2,14 @@
 title: 자동 재연결
 slug: ko/v1/experimental/auto-reconnect
 banner:
-  content: 이 기능은 실험적인 기능이며 API는 자주 변경될 수 있습니다.
+  content: 이 기능은 실험적인 기능이며, API는 자주 변경될 수 있습니다.
 ---
 
-WebSocket과 같은 실시간 통신에서 발생하는 연결 끊김에 대해 자동으로 재연결을 시도하는 기능을 제공합니다. 특정 로직에 따라 재연결을 수행하고 성공 및 실패 이벤트를 발행합니다.
+WebSocket과 같은 실시간 통신에서 발생하는 연결 끊김에 대해 자동으로 재연결을 시도하는 기능을 제공합니다. 특정 로직에 따라 재연결을 수행하고, 성공 및 실패 이벤트를 발생시킵니다.
 
 `autoReconnect` 함수는 `AutoReconnect` 클래스의 인스턴스를 생성하여 재연결 기능을 사용할 수 있도록 합니다.
 
-### 가져오기
+### import
 
 ```ts
 import { autoReconnect } from "@tai-kun/surrealdb";
@@ -19,7 +19,7 @@ import { autoReconnect } from "@tai-kun/surrealdb";
 
 ```ts
 function autoReconnect(
-  db: Client,
+  db: Client, 
   options?: AutoReconnectOptions
 ): AutoReconnect;
 ```
@@ -32,26 +32,26 @@ function autoReconnect(
 
 ##### `options`
 
-재연결 설정을 지정하는 옵션입니다. 재연결 간격, 최대 지연 시간, 재연결 조건 등을 지정할 수 있습니다. 기본 설정을 사용하려면 생략할 수 있습니다.
+재연결 설정을 지정하는 옵션입니다. 재연결 간격, 최대 지연 시간, 재연결 조건 등을 지정할 수 있습니다. 기본 설정을 사용하는 경우 생략할 수 있습니다.
 
 `backoffLimit?: number`
 :   재연결을 시도하는 최대 횟수를 지정합니다. 기본값은 `Infinity`입니다.
 
 `initialDelay?: number`
-:   처음 재연결을 시도할 때까지의 지연 시간(밀리초)입니다. 기본값은 `500`입니다.
+:   최초 재연결을 시도하기까지의 지연 시간(밀리초)입니다. 기본값은 `500`입니다.
 
 `maxDelay?: number`
-:   재연결 지연 시간(밀리초)의 최대값입니다. 백오프가 진행될수록 지연 시간이 증가하지만 이 값이 상한선이 됩니다. 기본값은 `30_000`(30초)입니다.
+:   재연결 지연 시간(밀리초)의 최대값입니다. 백오프가 진행됨에 따라 지연 시간이 증가하지만, 이 값이 상한선이 됩니다. 기본값은 `30_000`(30초)입니다.
 
 `shouldReconnect?: { ping?: { threshold: number; perMillis: number }} | (error) => boolean`
-:   재연결을 수행할 조건을 지정합니다. 함수로 지정하면 에러 이벤트의 인수를 기반으로 재연결을 수행할지 여부를 판단합니다.
+:   재연결을 수행할 조건을 지정합니다. 함수로 지정한 경우, 에러 이벤트의 인수를 기반으로 재연결을 수행할지 여부를 판단합니다.
 
-#### 반환 값
+#### 반환값
 
 `AutoReconnect` 클래스의 인스턴스를 반환합니다. 이 인스턴스는 재연결 제어, 상태 가져오기, 이벤트 모니터링 등에 사용할 수 있습니다.
 
 `.getReconnectionInfo(): ReconnectionInfo`
-:   현재 재연결 정보(`.state` 및 `.phase`)를 가져옵니다. 각각 다음 의미를 나타냅니다:
+:   현재 재연결 정보(`.state` 및 `.phase`)를 가져옵니다. 각각 다음과 같은 의미를 나타냅니다.
 :   `.state`:
     - `"waiting"` ... 초기 상태입니다. 재연결은 한 번도 수행되지 않았습니다.
     - `"running"` ... 재연결 중입니다.
@@ -59,9 +59,9 @@ function autoReconnect(
     - `"failure"` ... 재연결에 실패했습니다.
 :   `.phase`:
     - `"waiting"`       ... 초기 상태입니다. 재연결은 한 번도 수행되지 않았습니다.
-    - `"pending"`       ... 재연결이 요청되었으며, 실행될 때까지 일정 시간 대기 중입니다.
+    - `"pending"`       ... 재연결이 요청되었고, 실행될 때까지 일정 시간 대기 중입니다.
     - `"disconnecting"` ... 연결 해제 중입니다.
-    - `"connecting"`    ... 연결 중입니다. 연결 해제에 실패해도 연결을 시도합니다.
+    - `"connecting"`    ... 연결 중입니다. 연결 해제에 실패하더라도 연결을 시도합니다.
     - `"succeeded"`     ... 재연결에 성공했습니다.
     - `"failed"`        ... 재연결에 실패했습니다.
 
@@ -79,10 +79,10 @@ function autoReconnect(
 :   재연결 기능을 비활성화합니다. 이 메서드를 호출하면 재연결이 비활성화됩니다.
 
 `.reset(): void`
-:   재연결 카운터를 재설정합니다. 이렇게 하면 재연결 백오프 로직이 초기화됩니다.
+:   재연결 카운터를 리셋합니다. 이를 통해 재연결 백오프 로직이 초기화됩니다.
 
 `.enabled: boolean`
-:   재연결 기능이 활성화되었는지 여부를 나타내는 불리언 값입니다. `true`이면 재연결이 활성화되어 있습니다.
+:   재연결 기능이 활성화되었는지 여부를 나타내는 불리언 값입니다. `true`인 경우 재연결이 활성화되어 있습니다.
 
 ### 예
 
@@ -97,35 +97,35 @@ const ar = autoReconnect(db, {
   shouldReconnect: {
     ping: {
       perMillis: 60000, // 1분 이내에,
-      threshold: 3,     // 3회 이상 ping에 실패하면 재연결합니다.
+      threshold: 3,     // 3회 이상 ping에 실패한 경우, 재연결합니다.
     },
   },
 });
 
 ar.on("pending", (endpoint, duration) => {
-  console.log(`${duration / 1000}초 후에 ${endpoint}로 재연결합니다...`);
+  console.log(`${duration / 1000}초 후에 ${endpoint}에 재연결합니다...`);
 });
 
 ar.on("success", (endpoint) => {
-  console.log(`${endpoint}로의 재연결이 성공했습니다 🎉`);
+  console.log(`${endpoint}에 대한 재연결이 성공했습니다 🎉`);
 });
 
 ar.on("failure", (endpoint, cause) => {
-  console.error(`${endpoint}로의 재연결에 실패했습니다 🤯`);
+  console.error(`${endpoint}에 대한 재연결이 실패했습니다 🤯`);
   console.error("원인:", cause);
 });
 
 try {
   await db.connect("ws://127.0.0.1:8000");
 
-  // 장시간 동안 실행되는 다양한 처리
+  // 장시간에 걸쳐 실행되는 다양한 처리
 
 } finally {
   await db.disconnect();
 }
 ```
 
-### 주의
+### 주의 사항
 
-- 재연결 로직은 WebSocket 연결의 안정성과 연결 복구 빈도를 적절히 조정하는 데 중요합니다. 옵션 설정은 시스템 요구 사항 및 사용 사례에 따라 조정해야 합니다.
-- `autoReconnect`는 연결이 끊어졌을 때 복구를 시도하는 것이며, 모든 경우에 완벽한 복구가 보장되는 것은 아닙니다.
+- 재연결 로직은 WebSocket 연결의 안정성 및 연결 복구 빈도를 적절히 조정하기 위해 중요합니다. 옵션 설정은 시스템 요구 사항 및 사용 사례에 따라 조정해야 합니다.
+- `autoReconnect`는 연결이 손실되었을 때 복구를 시도하는 것이며, 모든 경우에 완벽한 복구를 보장하는 것은 아닙니다.

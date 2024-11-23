@@ -21,9 +21,9 @@ function encode(value: unknown, options?: EncodeOptions): Uint8Array;
 
 ##### `value`
 
-The JavaScript value to encode into a CBOR-formatted `Uint8Array`. The following JavaScript values can be passed to `value`:
+The JavaScript value to encode into a CBOR-formatted `Uint8Array`.  Acceptable JavaScript values for `value` include:
 
-- Primitive values
+- Primitive values:
   - `number`
   - `bigint`
   - `string`
@@ -31,37 +31,38 @@ The JavaScript value to encode into a CBOR-formatted `Uint8Array`. The following
   - `null`
   - `undefined`
 - Objects with a `.toCBOR()` method
-- Arrays or `Set`
-- Plain objects or `Map`
+- Arrays or `Set`s
+- Plain objects or `Map`s
 - `Uint8Array`
 - `Simple` objects
-- Values that can be replaced with an optional `replacer`
+- Values replaceable with the optional `replacer`
 
-If the value is not a primitive value and has a `toCBOR` property that is a function, it will be called preferentially.
+If a value is not primitive and has a `toCBOR` property that is a function, that function will be called preferentially.
 
 ##### `options`
 
 Encoding options.
 
 `replacer?: Replacer | Replacer[]`
-:   The encoder encodes most values into CBOR by default. However, some special values may not fall into that category. You can replace those values with values that can be encoded. This option allows you to implement a replacement process by specifying a function or an array of functions. If the function returns the `CONTINUE` symbol obtained from `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, the subsequent function is called. If no replacement is possible, a `SurrealTypeError` is thrown.
+:   While the encoder handles most values to CBOR by default, special values that don't fit this category can be replaced with encodable ones. This option allows implementing replacement logic by providing a function or an array of functions. If a function returns the `CONTINUE` symbol obtained via `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, subsequent functions are called. If no replacement is possible, a `SurrealTypeError` is thrown.
 
 `isSafeMapKey?: (key: unknown, map: ReadonlyMap<unknown, unknown>) => boolean`
-:   This option is a function that verifies whether the keys of a `Map` object are safe. The function takes two arguments: `key` and `map`. `key` is the value of the key, and `map` is the `Map` object being verified. If this function returns `false`, a `CborUnsafeMapKeyError` is thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that specifying this option completely overwrites the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` to be unsafe keys.
+:   This option is a function that validates whether a key in a `Map` object is safe. The function accepts two arguments: `key` (the key value) and `map` (the `Map` object being validated). If this function returns `false`, a `CborUnsafeMapKeyError` is thrown. By default, it considers keys `"__proto__"` or `"constructor"` as unsafe. Note that specifying this option completely overrides the default validation. If you want to add your own validation to the default, you should still consider `"__proto__"` or `"constructor"` unsafe.
 
 `isSafeObjectKey?: (key: unknown, obj: { readonly [p: string]: unknown }) => boolean`
-:   This option is a function that verifies whether the keys of a plain object are safe. The function takes two arguments: `key` and `obj`. `key` is the value of the key, and `obj` is the plain object being verified. If this function returns `false`, a `CborUnsafeMapKeyError` is thrown. By default, `"__proto__"` or `"constructor"` are considered unsafe keys. Note that specifying this option completely overwrites the default verification. If you want to add your own verification to the default verification, you should also consider `"__proto__"` or `"constructor"` to be unsafe keys.
+:   This option is a function that validates whether a key in a plain object is safe. The function accepts two arguments: `key` (the key value) and `obj` (the plain object being validated). If this function returns `false`, a `CborUnsafeMapKeyError` is thrown. By default, it considers keys `"__proto__"` or `"constructor"` as unsafe. Note that specifying this option completely overrides the default validation. If you want to add your own validation to the default, you should still consider `"__proto__"` or `"constructor"` unsafe.
+
 
 `maxDepth?: number`
-:   Specifies the maximum depth of an object. The depth increases by 1 for each object or array entered. The default value is `64`. Encoding does not use recursion, so there is no upper limit on depth, but it is recommended that you do not make it too large.
+:   Specifies the maximum depth of objects. The depth increases by 1 each time an object or array is entered. The default value is `64`.  While the encoding doesn't use recursion, there's no hard limit on depth, but it's recommended not to make it excessively large.
 
-#### Return value
+#### Return Value
 
-A `Uint8Array` containing the JavaScript value encoded in CBOR format.
+A `Uint8Array` containing the CBOR-encoded JavaScript value.
 
 ### Examples
 
-#### Protecting object keys with `isSafeObjectKey`
+#### Protecting Object Keys with `isSafeObjectKey`
 
 ```ts
 import { encode } from "@tai-kun/surrealdb/cbor";
@@ -76,7 +77,7 @@ encode(
 ); // throws CborUnsafeMapKeyError
 ```
 
-#### Replacing symbols with `replacer`
+#### Replacing Symbols with `replacer`
 
 ```ts
 import { CONTINUE, encode } from "@tai-kun/surrealdb/cbor";
@@ -96,7 +97,7 @@ const bytes = encode(Symbol.for("ID"), {
 console.log(bytes); // Uint8Array(3) [ 98, 73, 68 ]
 ```
 
-#### Limiting the maximum depth with `maxDepth`
+#### Limiting Maximum Depth with `maxDepth`
 
 ```ts
 import { encode } from "@tai-kun/surrealdb/cbor";

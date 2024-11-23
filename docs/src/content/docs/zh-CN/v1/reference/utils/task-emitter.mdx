@@ -5,7 +5,7 @@ slug: zh-CN/v1/reference/utils/task-emitter
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`TaskEmitter` 是一个用于 `TaskQueue` 管理的异步任务的事件发射器类。
+`TaskEmitter` 是由 `TaskQueue` 管理的异步任务的事件发射器类。
 
 ### 导入
 
@@ -23,15 +23,15 @@ new TaskEmitter<T>();
 
 ##### `T`
 
-一个包含事件名称和事件参数（数组）类型的键值对。
+用键值对表示事件名称和事件所接受的参数（数组）的类型。
 
 #### 返回值
 
-当通过 `new` 调用时，`TaskEmitter` 会返回它的实例。
+如果通过 `new` 调用，`TaskEmitter` 将返回其实例。
 
 ### `.on()` <Badge variant="instance" /><Badge variant="method" />
 
-`.on` 是一个将事件监听器注册到事件发射器上的函数。如果尝试多次将同一个函数注册到同一个事件，除了第一次之外，其余注册操作都会被忽略。
+`.on` 是一个用于向事件发射器注册事件监听器的函数。如果尝试多次向同一个事件注册同一个函数，除了第一次之外，其余注册操作都将被忽略。
 
 ```ts
 on(event: string | number, listener: TaskListener): void;
@@ -45,7 +45,7 @@ on(event: string | number, listener: TaskListener): void;
 
 ##### `listener`
 
-要注册的事件监听器。该函数将接收与 `TaskQueue` 的任务运行器相同的参数，之后还会接收通过 `.emit` 传递的可变长度参数。
+要注册的事件监听器。此函数将接收与 `TaskQueue` 的任务运行器相同的参数，之后将接收通过 `.emit` 传递的可变数量的参数。
 
 #### 返回值
 
@@ -53,7 +53,7 @@ on(event: string | number, listener: TaskListener): void;
 
 #### 例子
 
-以下示例会捕捉 "log" 事件，并将传递给发射器的值输出到标准输出：
+下面的例子捕获 "log" 事件，并将传递给发射器的值输出到标准输出：
 
 ```ts
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";
@@ -83,7 +83,7 @@ World !!!
 
 ### `.off()` <Badge variant="instance" /><Badge variant="method" />
 
-`.off` 是一个从事件发射器中注销事件监听器的函数。如果省略事件监听器，则会注销目标事件名称上注册的所有事件监听器。
+`.off` 是一个用于从事件发射器注销事件监听器的函数。如果省略事件监听器，则将注销与目标事件名称关联的所有事件监听器。
 
 ```ts
 off(event: string | number, listener?: TaskListener): void;
@@ -97,7 +97,7 @@ off(event: string | number, listener?: TaskListener): void;
 
 ##### `listener`
 
-要注销的事件监听器。如果省略该参数，则会注销目标 `event` 上注册的所有事件监听器。
+要注销的事件监听器。如果省略此参数，则将注销与目标 `event` 关联的所有事件监听器。
 
 #### 返回值
 
@@ -105,7 +105,7 @@ off(event: string | number, listener?: TaskListener): void;
 
 ### `.once()` <Badge variant="instance" /><Badge variant="method" />
 
-`.once` 与 `.on` 类似，但它只捕捉一次事件。它返回的是 `StatefulPromise`，而不是回调函数，可以通过它接收返回值。
+`.once` 与 `.on` 类似，但它只捕获一次事件。并且它不使用回调函数，而是通过返回值 `StatefulPromise` 接收值。
 
 ```ts
 once(
@@ -116,7 +116,7 @@ once(
 
 #### 例子
 
-以下示例会捕捉一次 "log" 事件，并将传递给发射器的值输出到标准输出：
+下面的例子只捕获一次 "log" 事件，并将传递给发射器的值输出到标准输出：
 
 ```ts
 import { TaskEmitter } from "@tai-kun/surrealdb/utils";
@@ -156,11 +156,11 @@ await emitter.idle();
 
 #### 返回值
 
-返回一个以 `.emit` 的参数（数组）解析的 `StatefulPromise`。
+返回一个 `StatefulPromise`，该 `StatefulPromise` 将通过 `.emit` 的参数（数组）来解析。
 
 ### `.emit()` <Badge variant="instance" /><Badge variant="method" />
 
-`.emit` 是一个向事件监听器发送值的函数。
+`.emit` 是一个用于向事件监听器发送值的函数。
 
 ```ts
 emit(
@@ -177,15 +177,15 @@ emit(
 
 ##### `args`
 
-要发送给目标事件监听器的值。
+要发送到目标事件监听器的值。
 
 #### 返回值
 
-如果没有事件监听器，则返回 `undefined`。如果有事件监听器，则返回一个 `StatefulPromise` 数组，这些 `StatefulPromise` 会一直等待它们被解析或拒绝。通常情况下，不需要处理这些 `StatefulPromise`。只有在需要在当前上下文等待由事件触发的副作用、或对事件监听器的解析或拒绝感兴趣时，才需要使用它们。
+如果没有事件监听器，则返回 `undefined`。如果有事件监听器，则返回一个 `StatefulPromise` 数组，该数组将等待事件监听器解析/拒绝。通常不需要处理此 `StatefulPromise`。当需要在当前上下文中等待事件引起的副作用，或者关心事件监听器的解析/拒绝时，可以使用它。
 
 ### `.idle()` <Badge variant="instance" /><Badge variant="method" />
 
-`.idle` 是一个等待所有当前运行的事件监听器完成的函数。
+`.idle` 是一个用于等待所有当前正在运行的事件监听器完成的函数。
 
 ```ts
 idle(): StatefulPromise<void>;
@@ -197,11 +197,11 @@ idle(): StatefulPromise<void>;
 
 #### 返回值
 
-返回一个以 `void` 解析的 `StatefulPromise`。
+返回一个 `void` 解析的 `StatefulPromise`。
 
 ### `.abort()` <Badge variant="instance" /><Badge variant="method" />
 
-`.abort` 是一个向所有事件监听器的 `signal` 发送中止事件的函数。
+`.abort` 是一个用于向所有事件监听器的 `signal` 发送中止事件的函数。
 
 ```ts
 abort(reason?: unknown): void;

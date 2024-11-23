@@ -5,9 +5,9 @@ slug: ko/v1/reference/utils/serial
 
 import Badge from "~/components/ko/Badge.astro";
 
-`Serial`은 증분 ID를 생성하는 클래스입니다. 양방향 통신에서 RPC 요청의 ID를 생성하는 데 사용됩니다. ID는 순환적으로 생성되며 ID가 안전한 정수 값을 초과하지 않도록 합니다. ID가 해당 값을 초과하면 1로 재설정됩니다.
+`Serial`은 증분 ID를 생성하는 클래스입니다. 양방향 통신에서 RPC 요청의 ID를 생성하는 데 사용됩니다. ID는 순환적으로 생성되며, ID가 안전한 정수값을 초과하지 않도록 합니다. ID가 해당 값을 초과하면 1로 재설정됩니다.
 
-### 임포트
+### import
 
 ```ts
 import { Serial } from "@tai-kun/surrealdb/utils";
@@ -23,15 +23,15 @@ new Serial(max?: number);
 
 ##### `max`
 
-증분 ID의 최대값을 설정합니다. 1에서 2^53-1까지의 정수가 유효합니다. 기본값은 2^53-1입니다.
+증분 ID의 최대값을 설정합니다. 1부터 2^53-1까지의 정수가 유효합니다. 기본값은 2^53-1입니다.
 
 #### 반환값
 
-`new`를 통해 호출되면 `Serial`은 해당 인스턴스를 반환합니다.
+`new`를 통해 호출된 경우, `Serial`은 해당 인스턴스를 반환합니다.
 
-#### 예제
+#### 예
 
-다음 예제는 기본적인 사용법을 보여줍니다.
+다음 예는 기본적인 사용법을 보여줍니다:
 
 ```ts
 import { Serial } from "@tai-kun/surrealdb/utils";
@@ -77,7 +77,8 @@ next(): number;
 
 #### 반환값
 
-1 이상 `max` 이하의 정수를 반환합니다. 이 값이 최대값인 경우 다음에 가져올 값은 1입니다.
+1 이상 `max` 이하의 정수를 반환합니다. 이 값이 최대값인 경우, 다음에 가져올 값은 1입니다.
+
 
 ### `.reset()` <Badge variant="instance" /><Badge variant="method" />
 

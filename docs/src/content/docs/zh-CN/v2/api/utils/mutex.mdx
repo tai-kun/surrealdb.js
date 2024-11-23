@@ -5,10 +5,10 @@ slug: zh-CN/v2/api/utils/mutex
 
 import { Aside } from "@astrojs/starlight/components"
 
-`mutex` 是一个装饰器，它可以将一个或多个类方法的并发性限制为 1，并异步执行。
+`mutex` 是一个装饰器，用于将一个或多个类方法的并发执行限制为1个。
 
 <Aside type="caution">
-  如果您使用的是构建好的 SDK（针对 JavaScript），那么这将不会成为问题，但是，如果您直接使用 SDK 源代码（TypeScript），那么您需要使用 Stage 3 装饰器支持。
+  如果您使用的是已编译到 JavaScript 的 SDK，则不会有任何问题。但是，如果您直接使用此 SDK 的源代码 (TypeScript)，则需要 Stage 3 装饰器支持。
 </Aside>
 
 ### 导入
@@ -17,7 +17,7 @@ import { Aside } from "@astrojs/starlight/components"
 import { mutex } from "@tai-kun/surrealdb/utils";
 ```
 
-### 用法
+### 使用方法
 
 ```ts
 function mutex(
@@ -38,11 +38,11 @@ Stage 3 类方法装饰器上下文。
 
 #### 返回值
 
-一个并发性限制为 1 的异步函数。
+并发执行限制为 1 的异步函数。
 
-#### 例子
+#### 示例
 
-以下示例展示了在使用和不使用 `mutex` 时异步处理的狩猎时间差异：
+下面的例子展示了使用和不使用 `mutex` 装饰器时异步操作执行顺序的不同：
 
 ```ts
 import { mutex } from "@tai-kun/surrealdb/utils";

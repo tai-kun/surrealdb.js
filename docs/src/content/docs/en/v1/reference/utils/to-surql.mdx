@@ -3,17 +3,17 @@ title: toSurql
 slug: en/v1/reference/utils/to-surql
 ---
 
-`toSurql` is a function that converts JavaScript values to SurrealQL strings.
+The `toSurql` function converts JavaScript values into SurrealQL strings.
 
 ### Import
 
-```ts
+```typescript
 import { toSurql } from "@tai-kun/surrealdb/utils";
 ```
 
 ### Usage
 
-```ts
+```typescript
 function toSurql(value: unknown): string;
 ```
 
@@ -21,7 +21,7 @@ function toSurql(value: unknown): string;
 
 ##### `value`
 
-A JavaScript value. It accepts one of the following values:
+A JavaScript value.  It accepts one of the following types:
 
 - `string`
 - `number`
@@ -37,19 +37,20 @@ A JavaScript value. It accepts one of the following values:
 - `Set<unknown>`
 - `Map<unknown, unknown>`
 
-`unknown` represents a value that can be any of the types listed above.
+`unknown` represents a value composed of the types listed above.
 
-The order of the types listed above indicates the priority of conversion. This means that if a plain object has both `.toJSON` and `.toSurql` functions, the `.toSurql` function will be used.
+The conversion prioritizes the types in the order listed.  That is, even if a plain object has a `.toJSON` function, if it also has a `.toSurql` function, the latter will take precedence.
 
-The [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) package is used to identify plain objects. Therefore, if a plain object does not have `.toSurql` or `.toJSON` functions and has `Symbol.toStringTag` or `Symbol.iterator`, it will not be treated as an object and an error will be thrown.
+The [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) library is used to determine if an object is a plain object. Therefore, if a plain object does not have `.toSurql` or `.toJSON` methods, and it has a `Symbol.toStringTag` or `Symbol.iterator` property, it will not be treated as a plain object and will throw an error.
 
-#### Return value
+
+#### Return Value
 
 A SurrealQL string.
 
 #### Example
 
-```ts
+```typescript
 import { toSurql } from "@tai-kun/surrealdb/utils";
 
 const surql = toSurql({
@@ -66,7 +67,7 @@ const surql = toSurql({
   set: new Set([{
     toSurql: () => `<bytes>"hello"`,
   }]),
-  string: "文字列",
+  string: "String",
   undefined: undefined,
 });
 
@@ -76,5 +77,5 @@ console.log(surql);
 Output:
 
 ```text
-{bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'文字列',undefined:NONE}
+{bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'String',undefined:NONE}
 ```

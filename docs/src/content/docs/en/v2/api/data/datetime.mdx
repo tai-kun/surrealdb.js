@@ -5,9 +5,9 @@ slug: en/v2/api/data/datetime
 
 import Badge from "~/components/en/Badge.astro";
 
-The `Datetime` class represents a date and time, corresponding to the SurrealQL [`datetime`](https://surrealdb.com/docs/surrealql/datamodel/datetimes) type.
+The `Datetime` class represents dates and times. It corresponds to the SurrealQL [`datetime`](https://surrealdb.com/docs/surrealql/datamodel/datetimes) type.
 
-### Import
+### Importing
 
 ```ts
 import { Datetime } from "@tai-kun/surrealdb/decodeonly-datatypes";
@@ -47,19 +47,20 @@ new Datetime(
 
 ##### `source`
 
-A pair of seconds and nanoseconds, or a string. For the standard preset, it also supports `Date` objects and `bigint` inputs.
+A pair of seconds and nanoseconds, or a string.  If the preset is `standard`, it also supports inputs such as `Date` objects and `bigint`.
 
 ##### `year`, `monthIndex`, ...
 
-Same as the arguments for the `Date` class. However, it also supports `nanoseconds` input. Providing a `number` after a `undefined` argument is not allowed. This is roughly the same specification as the `Date` class.
+These arguments are the same as those for the `Date` class. However, it also supports `nanoseconds` input.  A `number` cannot be provided after an argument where `undefined` is provided. This is roughly the same specification as the `Date` class.
 
-#### Returns
 
-When called via `new`, `Datetime` returns its instance. If the preset is standard, it is also an instance of `Date`.
+#### Return Value
+
+When called via `new`, `Datetime` returns its instance. If the preset is `standard`, it is also a `Date` instance.
 
 ### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The seconds part of the nanosecond-precision timestamp. It is read-only for presets below standard. The value is an integer between -2<sup>53</sup>-1 and 2<sup>53</sup>-1, or `NaN`.
+The seconds part of the nanosecond-precision time.  Read-only for presets below `standard`. The value is an integer between -2<sup>53</sup>-1 and 2<sup>53</sup>-1, or `NaN`.
 
 ```ts
 .seconds: number;
@@ -67,7 +68,7 @@ The seconds part of the nanosecond-precision timestamp. It is read-only for pres
 
 ### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-The nanoseconds part of the nanosecond-precision timestamp. It is read-only for presets below standard. The value is an integer between 0 and 999999999, or `NaN`.
+The nanoseconds part of the nanosecond-precision time. Read-only for presets below `standard`. The value is an integer between 0 and 999999999, or `NaN`.
 
 ```ts
 .nanoseconds: number;
@@ -75,7 +76,7 @@ The nanoseconds part of the nanosecond-precision timestamp. It is read-only for 
 
 ### `.valueOf()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Retrieves the millisecond-precision timestamp.
+Gets the millisecond-precision time.
 
 ```ts
 .valueOf(): number;
@@ -85,9 +86,9 @@ Retrieves the millisecond-precision timestamp.
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns the millisecond-precision timestamp.
+Returns the millisecond-precision time.
 
 #### Example
 
@@ -101,7 +102,7 @@ console.log(date.valueOf());
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Retrieves the string representation of the millisecond-precision timestamp. The same as the `.toString()` method of the `Date` object.
+Gets the string representation of the millisecond-precision time.  Same as the `.toString()` method of the `Date` object.
 
 ```ts
 .toString(): string;
@@ -111,9 +112,9 @@ Retrieves the string representation of the millisecond-precision timestamp. The 
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns the string representation of the millisecond-precision timestamp.
+Returns the string representation of the millisecond-precision time.
 
 #### Example
 
@@ -127,7 +128,7 @@ console.log(date.toString());
 
 ### `.toISOString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Retrieves the string representation of the nanosecond-precision timestamp in ISO format. Similar to the `.toISOString()` method of the `Date` object, but it serializes to the ninth decimal place because of the nanosecond precision.
+Gets the nanosecond-precision time string in ISO format. Similar to the `.toISOString()` method of the `Date` object, but with nanosecond precision (up to the ninth decimal place).
 
 ```ts
 .toISOString(): string;
@@ -137,9 +138,9 @@ Retrieves the string representation of the nanosecond-precision timestamp in ISO
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns the string representation of the nanosecond-precision timestamp in ISO format.
+Returns the nanosecond-precision time string in ISO format.
 
 #### Example
 
@@ -153,7 +154,7 @@ console.log(date.toISOString());
 
 ### `.toDate()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts to a runtime built-in `Date` object. Note that it will be millisecond-precision.
+Converts to a runtime-built-in `Date` object. Note that this results in millisecond precision.
 
 ```ts
 .toDate(): Date;
@@ -163,13 +164,13 @@ Converts to a runtime built-in `Date` object. Note that it will be millisecond-p
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns a runtime built-in `Date` object.
+Returns a runtime-built-in `Date` object.
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-Converts a `Datetime` object to a string that can be embedded in SurrealQL. Similar to `.toISOString()`, but it adds a `d` prefix to tell the query parser that the string is a UUID.
+Converts the `Datetime` object into a string embeddable in SurrealQL. Similar to `.toISOString()`, but adds a `d` prefix to inform the query parser that the string is a datetime.
 
 ```ts
 .toSurql(): string;
@@ -179,9 +180,9 @@ Converts a `Datetime` object to a string that can be embedded in SurrealQL. Simi
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns the ISO-formatted date and time with a `d` prefix.
+Returns the ISO-formatted datetime with a `d` prefix.
 
 #### Example
 
@@ -195,7 +196,7 @@ console.log(date.toSurql());
 
 ### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Retrieves the pair of seconds and nanoseconds.
+Gets the pair of seconds and nanoseconds.
 
 ```ts
 .getCompact(): [seconds: number, nanoseconds: number];
@@ -205,9 +206,9 @@ Retrieves the pair of seconds and nanoseconds.
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns the pair of seconds and nanoseconds.
+Returns a pair of seconds and nanoseconds.
 
 ### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
@@ -221,11 +222,11 @@ Sets the date and time with a pair of seconds and nanoseconds.
 
 ##### `compact`
 
-The pair of seconds and nanoseconds.
+A pair of seconds and nanoseconds.
 
-#### Returns
+#### Return Value
 
-Returns the millisecond-precision timestamp.
+Returns the millisecond-precision time.
 
 #### Example
 
@@ -233,16 +234,16 @@ Returns the millisecond-precision timestamp.
 import { Datetime } from "@tai-kun/surrealdb/standard-datatypes";
 
 const date = new Datetime(0);
-const time = dt.setCompact([1717245296, 780123456]);
+const time = date.setCompact([1717245296, 780123456]);
 console.log(time);
 //-> 1717245296780
 ```
 
 ### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Retrieves the microseconds of the date using local time.
+Gets the microseconds of the date using the local time.
 
-`.getUTCMicroseconds()` behaves the same way as this method.
+`.getUTCMicroseconds()` behaves the same as this method.
 
 ```ts
 .getMicroseconds(): number;
@@ -252,7 +253,7 @@ Retrieves the microseconds of the date using local time.
 
 None.
 
-#### Returns
+#### Return Value
 
 Returns the microseconds.
 
@@ -269,14 +270,14 @@ console.log(date.toISOString());
 //                       +---+
 //                       v
 console.log(date.getMicroseconds());
-//-> 123
+//-> 780
 ```
 
 ### `.setMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
 Sets the microseconds.
 
-`.setUTCMicroseconds()` behaves the same way as this method.
+`.setUTCMicroseconds()` behaves the same as this method.
 
 ```ts
 .setMicroseconds(us: number): number;
@@ -286,11 +287,11 @@ Sets the microseconds.
 
 ##### `us`
 
-The microseconds to set. The value will be converted to an integer. Note that if the value is not between 0 and 999, the entire timestamp will be affected.
+The microseconds to set. The value is converted to an integer. Note that if the value is not between 0 and 999, the entire time will be affected.
 
-#### Returns
+#### Return Value
 
-Returns the millisecond-precision timestamp.
+Returns the millisecond-precision time.
 
 #### Example
 
@@ -301,18 +302,18 @@ const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
 //-> 2024-06-01T12:34:56.780123456Z
 
-const time = date.setMicroseconds(1_000);
+const time = date.setMicroseconds(1000);
 console.log(date.toISOString());
-//-> 2024-06-01T12:34:56.781000456Z
+//-> 2024-06-01T12:34:57.000123456Z
 console.log(time);
-//-> 1717245296781
+//-> 1717245300123
 ```
 
 ### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Retrieves the nanoseconds of the date using local time.
+Gets the nanoseconds of the date using the local time.
 
-`.getUTCNanoseconds()` behaves the same way as this method.
+`.getUTCNanoseconds()` behaves the same as this method.
 
 ```ts
 .getNanoseconds(): number;
@@ -322,7 +323,7 @@ Retrieves the nanoseconds of the date using local time.
 
 None.
 
-#### Returns
+#### Return Value
 
 Returns the nanoseconds.
 
@@ -344,23 +345,23 @@ console.log(date.getNanoseconds());
 
 ### `.setNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Sets the microseconds.
+Sets the nanoseconds.
 
-`.setUTCNanoseconds()` behaves the same way as this method.
+`.setUTCNanoseconds()` behaves the same as this method.
 
 ```ts
-.setNanoseconds(us: number): number;
+.setNanoseconds(ns: number): number;
 ```
 
 #### Arguments
 
-##### `us`
+##### `ns`
 
-The nanoseconds to set. The value will be converted to an integer. Note that if the value is not between 0 and 999, the entire timestamp will be affected.
+The nanoseconds to set. The value is converted to an integer. Note that if the value is not between 0 and 999,999,999, the entire time will be affected.
 
-#### Returns
+#### Return Value
 
-Returns the millisecond-precision timestamp.
+Returns the millisecond-precision time.
 
 #### Example
 
@@ -371,16 +372,16 @@ const date = new Datetime([1717245296, 780123456]);
 console.log(date.toISOString());
 //-> 2024-06-01T12:34:56.780123456Z
 
-const time = date.setNanoseconds(-1);
+const time = date.setNanoseconds(1000000000);
 console.log(date.toISOString());
-//-> 2024-06-01T12:34:56.780122999Z
+//-> 2024-06-01T12:34:57.000123456Z
 console.log(time);
-//-> 1717245296780
+//-> 1717245300123
 ```
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-Clones a `Datetime` object.
+Clones the `Datetime` object.
 
 ```ts
 .clone(): this;
@@ -390,23 +391,23 @@ Clones a `Datetime` object.
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns a new `Datetime` object. If the `Datetime` class is inherited, an instance of that class will be returned.
+Returns a new `Datetime` object. If inheriting the `Datetime` class, an instance of that class is returned.
 
-### Further Development
+### Advanced Usage
 
-#### Generic Determination of `Datetime` Objects
+#### Generic `Datetime` Object Check
 
-To determine if a value is a `Datetime` object without relying on the preset, it is recommended to use the `isDatetime` function. This function does not use `instanceof`, so it is helpful when the preset of the value to be checked is unknown.
+To check if a value is a `Datetime` object regardless of the preset, it is recommended to use the `isDatetime` function. This function does not use `instanceof`, so it is useful when the preset of the value to be checked is unknown.
 
 ```ts
 import { isDatetime } from "@tai-kun/surrealdb";
 ```
 
-#### Dates Before UNIX Epoch
+#### Dates Before the UNIX Epoch
 
-The `datetime` type in SurrealDB can hold nanosecond precision. Therefore, care must be taken when handling them in JavaScript. If you pass a SurrealDB-serialized `datetime`, such as `"1969-12-31T23:59:59.999999999Z"`, to JavaScript's `Date.parse`, it will be 0 milliseconds in WebKit, but -1 millisecond in other browsers (Node.js, Deno, Bun, Chromium, Firefox).
+The SurrealDB `datetime` type can store nanosecond precision.  Therefore, care must be taken when handling it in JavaScript.  When passing a SurrealDB serialized `datetime`, for example `"1969-12-31T23:59:59.999999999Z"`, to JavaScript's `Date.parse`, WebKit will return 0 milliseconds, while others (Node.js, Deno, Bun, Chromium, Firefox) will return -1 milliseconds.
 
 WebKit:
 

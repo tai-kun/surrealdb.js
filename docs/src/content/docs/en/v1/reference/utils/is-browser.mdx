@@ -3,7 +3,7 @@ title: isBrowser
 slug: en/v1/reference/utils/is-browser
 ---
 
-The `isBrowser` function checks whether the current JavaScript runtime environment is a browser environment.
+The `isBrowser` function determines whether the current JavaScript runtime environment is a browser.
 
 ### Import
 
@@ -23,11 +23,11 @@ None.
 
 #### Return Value
 
-Returns `true` if the current environment is a browser, otherwise `false`.
+Returns `true` if the environment is a browser, `false` otherwise.
 
 #### Example
 
-The following example checks if the current environment is a browser:
+The following example demonstrates how to determine whether the environment is a browser:
 
 ```ts
 import { isBrowser } from "@tai-kun/surrealdb/utils";
@@ -39,4 +39,4 @@ if (isBrowser()) {
 
 ### Explanation
 
-The function determines whether the current environment is a browser by checking if the global variable `document` is defined. For example, Deno adds the `window` object globally, so checking for the presence of the `window` object would incorrectly identify a server-side runtime as a browser. Remix, a web framework, calls this [Document Guard](https://remix.run/docs/en/main/guides/constraints#document-guard).
+This function checks if the global variable `document` is defined.  If it is, the environment is considered a browser.  Using `window` for detection is unreliable because some server-side runtimes, such as Deno, add a `window` object to the global scope. This would lead to a false positive.  The Remix web framework refers to this concept as a [Document Guard](https://remix.run/docs/en/main/guides/constraints#document-guard).

@@ -3,33 +3,33 @@ title: isBrowser
 slug: ko/v1/reference/utils/is-browser
 ---
 
-`isBrowser` 는 현재 실행 중인 JavaScript 런타임이 브라우저 환경인지 판별하는 함수입니다.
+`isBrowser` 함수는 현재 JavaScript 런타임 환경이 브라우저 환경인지 판별하는 함수입니다.
 
-### 가져오기
+### import
 
-```ts
+```typescript
 import { isBrowser } from "@tai-kun/surrealdb/utils";
 ```
 
 ### 사용법
 
-```ts
+```typescript
 function isBrowser(): boolean;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
 브라우저 환경이면 `true`를, 그렇지 않으면 `false`를 반환합니다.
 
-#### 예
+#### 예시
 
-다음 예에서는 브라우저 환경인지 판별합니다.
+다음 예시는 브라우저 환경인지 판별하는 방법을 보여줍니다.
 
-```ts
+```typescript
 import { isBrowser } from "@tai-kun/surrealdb/utils";
 
 if (isBrowser()) {
@@ -39,4 +39,4 @@ if (isBrowser()) {
 
 ### 설명
 
-전역 변수 `document`가 `undefined`가 아니면 브라우저로 판별합니다. 예를 들어 Deno에서는 `window` 객체를 전역에 추가하기 때문에, `window` 객체의 유무로 판별하면 서버 런타임에서도 브라우저로 잘못 판별할 수 있습니다. 웹 프레임워크 Remix는 이를 [Document Guard](https://remix.run/docs/en/main/guides/constraints#document-guard)라고 부릅니다.
+전역 변수 `document`가 `undefined`가 아니면 브라우저 환경으로 판별합니다. 예를 들어 Deno에서는 `window` 객체를 전역에 추가하기 때문에, `window` 객체의 유무로 판별하면 서버 런타임 환경에서도 브라우저 환경으로 잘못 판별될 수 있습니다. Remix와 같은 웹 프레임워크는 이를 [Document Guard](https://remix.run/docs/en/main/guides/constraints#document-guard)라고 부릅니다.

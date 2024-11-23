@@ -3,7 +3,7 @@ title: isBrowser
 slug: zh-CN/v1/reference/utils/is-array-buffer
 ---
 
-`isArrayBuffer` 函数用于判断传入的值是否为 `ArrayBuffer` 对象。
+`isArrayBuffer` 函数用于判断传入的参数是否为 `ArrayBuffer` 对象。
 
 ### 导入
 
@@ -21,12 +21,12 @@ function isArrayBuffer(value: unknown): value is ArrayBuffer;
 
 ##### `value`
 
-期望为 `ArrayBuffer` 对象的值。
+预期为 `ArrayBuffer` 对象的值。
 
 #### 返回值
 
-如果 `value` 为 `ArrayBuffer` 对象，则返回 `true`，否则返回 `false`。
+如果 `value` 是 `ArrayBuffer` 对象，则返回 `true`；否则返回 `false`。
 
-### 解释
+### 说明
 
-在某些版本的 Firefox 中，将 `fetch` 的响应体设置为 `ArrayBuffer` 对象时，虽然它具备了 `ArrayBuffer` 的方法，但 `instanceof` 判定可能会失效。因此，我们使用标签名进行判定。这种方法类似于 Lodash 的行为。
+在某些版本的 Firefox 中，如果将 `fetch` 的响应体设置为 `ArrayBuffer` 对象，即使该对象拥有相应的方法，也可能无法通过 `instanceof` 进行判断。因此，本函数采用标签名进行判断，这与 lodash 的行为类似。

@@ -1,13 +1,13 @@
 ---
-title: 预备查询
+title: 预准备查询
 slug: zh-CN/v2/guides/prepared-query
 ---
 
 ## 基本用法
 
-以下是使用预备查询的基本示例：
+使用预准备查询的基本示例如下：
 
-```ts
+```typescript
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
 const CreateUserQuery = surql`CREATE ONLY user:foo CONTENT { age: 42 };`
@@ -24,13 +24,14 @@ const results = await db.query(CreateUserQuery);
 await db.close();
 ```
 
-预备查询可以使类型推断生效，但需要手动设置推断的类型。
+预准备查询可以启用类型推断。但是，推断的类型需要手动设置。
+
 
 ## 验证查询结果
 
-将查询结果的验证器传递给 `.as` 的参数，可以使查询更加安全。以下示例使用 zod 来验证查询结果是否为预期值：
+通过向 `.as` 的参数传递查询结果验证器，可以使查询更安全。在下面的示例中，我们使用 zod 来验证查询结果是否符合预期值：
 
-```ts
+```typescript
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 import { z } from "zod";
 
@@ -57,13 +58,14 @@ const results = await db.query(CreateUserQuery);
 await db.close();
 ```
 
-不依赖于 zod，可以使用 valibot 或通用函数来验证响应。
+我们并不依赖于 zod，您可以使用 valibot 或通用函数来验证响应。
 
-## 在查询中嵌入变量
 
-`surql` 允许使用模板字符串编写查询，以便在代码中直观地嵌入值：
+## 嵌入变量到查询中
 
-```ts
+`surql` 允许使用模板字符串编写查询，因此可以直观地嵌入值：
+
+```typescript
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
 const USERNAME = "baz";
@@ -84,24 +86,25 @@ const results = await db.query(CreateUserQuery);
 await db.close();
 ```
 
-上述示例发送的 RPC 请求参数如下：
+上述示例中发送的 RPC 请求参数如下：
 
 ```text
 CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
 ```
 
-```ts
+```typescript
 {
   _jst_0: "baz",
   _jst_1: 42
 }
 ```
 
-## 为查询定义参数
 
-可以使用 `surql.slot` 为预定义的查询定义参数：
+## 定义查询参数
 
-```ts
+要为预准备的查询定义参数，请使用 `surql.slot`：
+
+```typescript
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 import { z } from "zod";
 
@@ -130,15 +133,15 @@ const results = await db.query(CreateUserQuery, {
 await db.close();
 ```
 
-槽位必须包含变量名，并且可以使用 `.as()` 方法在类型级别上对变量进行约束。与 `.as()` 相似，可以将验证函数作为 `.as()` 的参数传递，用于验证传入的值。在上面的示例中，变量名 `id` 的槽位必须是表名为 `"user"` 的记录 ID。
+插槽必须具有变量名。可以使用 `.as()` 方法在类型级别上约束变量。与 `.as()` 类似，可以将验证值的函数作为 `.as()` 的参数传递。在上面的示例中，变量名为 `id` 的插槽必须是表名为 `"user"` 的记录 ID。
 
-槽位参数可以包含变量名，并使用默认值进行初始化。如果在执行时省略了槽位的变量名，将使用该默认值。在上面的示例中，变量名 `age` 的槽位使用默认值 `42` 进行初始化。
+插槽的参数可以跟随变量名设置默认值。如果在运行时省略了插槽的变量名，则将使用此默认值。在上面的示例中，变量名为 `age` 的插槽的默认值为 `42`。
 
-除了 `.as()` 之外，槽位还可以使用 `.rename()`、`.default()`、`.optional()`、`.required()` 等方法。
+除了 `.as()` 之外，还可以使用 `.rename()`、`.default()`、`.optional()` 和 `.required()`。
 
-如果预定义的查询包含在执行时必须指定变量的槽位，但没有指定，则查询将在执行时被 `SurrealTypeError` 拒绝。如果在 TypeScript 中正确进行了类型推断，则可以在执行之前通过类型级别检查发现错误。例如，如果省略了必须的变量并使用 `tsc` 进行类型检查，则会显示以下错误：
+如果预准备的查询包含在运行时必须指定变量的插槽，并且未指定该变量，则查询将在运行时被 `SurrealTypeError` 拒绝。如果 TypeScript 类型推断正确，则无需运行即可在类型级别显示错误。例如，如果省略必需的变量并使用 `tsc` 进行类型检查，则会出现错误：
 
-```ts
+```typescript
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
 
 const UserIdSlot = surql.slot("id").as<Thing<"user">>();

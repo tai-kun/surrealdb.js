@@ -1,11 +1,11 @@
 ---
-title: 预先准备好的查询
+title: 预准备查询
 slug: zh-CN/v1/guides/prepared-query
 ---
 
 ## 基本用法
 
-使用预先准备好的查询的基本示例如下：
+使用预准备查询的基本示例如下：
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -24,11 +24,12 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-预先准备查询可以使类型推断生效。但是，推断的类型需要手动设置。
+预准备查询可以启用类型推断。但是，推断的类型需要手动设置。
+
 
 ## 验证查询结果
 
-通过在 `.returns` 的参数中传递查询结果的验证器，可以使查询更加安全。在以下示例中，使用 zod 来验证查询结果是否符合预期值：
+通过向`.returns`方法传入查询结果验证器，可以使查询更安全。以下示例使用zod来验证查询结果是否为预期值：
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -57,11 +58,12 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-并非一定要依赖 zod，可以使用 valibot 或通用函数来验证响应。
+本例并非依赖于zod，您可以使用valibot或通用函数来验证响应。
 
-## 在查询中嵌入变量
 
-`surql` 允许在模板字符串中编写查询，因此可以直观地嵌入值：
+## 将变量嵌入查询
+
+`surql`允许使用模板字符串编写查询，因此可以直观地嵌入值：
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -84,7 +86,7 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-上述示例中发送的 RPC 请求参数如下：
+上述示例发送的RPC请求参数如下：
 
 ```text
 CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
@@ -97,9 +99,10 @@ CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
 }
 ```
 
-## 在查询中定义参数
 
-要为预先定义的查询定义参数，可以使用 `surql.slot`：
+## 定义查询参数
+
+要为预准备查询定义参数，请使用`surql.slot`：
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -130,13 +133,13 @@ const results = await db.query(CreateUserQuery, {
 await db.disconnect();
 ```
 
-插槽必须具有变量名。可以通过 `.type()` 方法在类型级别上对变量进行约束。与 `.returns()` 类似，可以在 `.type()` 的参数中传递验证值的函数。在上述示例中，变量名 `id` 的插槽必须是表名为 `"user"` 的记录 ID。
+槽必须有变量名。可以使用`.type()`方法在类型级别上限制变量。与`.returns()`类似，可以将验证值的函数作为`.type()`的参数传入。在上述示例中，变量名为`id`的槽必须是表名为`"user"`的记录ID。
 
-插槽的参数可以紧接变量名设置默认值。如果在运行时省略了插槽的变量名，则使用此默认值。在上述示例中，变量名 `age` 的插槽设置了默认值 `42`。
+槽的参数可以跟随变量名设置默认值。如果在运行时省略槽的变量名，则使用此默认值。在上述示例中，变量名为`age`的槽设置了默认值`42`。
 
-插槽除了 `.type()` 之外，还可以使用 `.rename()`、`.default()`、`.optional()`、`.required()`。
+除了`.type()`之外，槽还可以使用`.rename()`、`.default()`、`.optional()`和`.required()`。
 
-如果预先定义的查询包含在运行时必须指定变量的插槽，而该变量未被指定，则查询将在运行时被 `SurrealTypeError` 拒绝。如果在 TypeScript 中正确进行类型推断，则可以在不运行的情况下在类型级别上看到错误。例如，如果省略必需的变量并使用 `tsc` 进行类型检查，则会显示错误：
+如果预准备查询包含在运行时必须指定变量的槽，并且未指定该变量，则查询将在运行时被`SurrealTypeError`拒绝。如果TypeScript类型推断正确，则无需运行即可在类型级别显示错误。例如，如果省略必需的变量并使用`tsc`进行类型检查，则会发生错误：
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";

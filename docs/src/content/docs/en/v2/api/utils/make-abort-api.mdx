@@ -3,17 +3,17 @@ title: makeAbortApi
 slug: en/v2/api/utils/make-abort-api
 ---
 
-The `makeAbortApi` function creates an abort signal and an associated abort function.
+`makeAbortApi` is a function that creates an abort signal and its associated abort function.
 
 ### Import
 
-```ts
+```typescript
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 ```
 
 ### Usage
 
-```ts
+```typescript
 function makeAbortApi(signal?: AbortSignal): [
   signal: AbortSignal,
   abort: (reason?: unknown) => void,
@@ -24,36 +24,36 @@ function makeAbortApi(signal?: AbortSignal): [
 
 ##### `signal`
 
-The abort signal to associate with the abort API.
+The abort signal to associate.
 
 #### Return Value
 
-The function returns an array with the following elements in order:
+Returns an array containing the following, in order:
 
 ##### `signal`
 
-The abort signal. The signal is not initially aborted.
+An abort signal. It is not aborted initially.
 
 ##### `abort`
 
-Dispatches an `"abort"` event to the abort signal. Optionally accepts a single argument, `reason`, which is sent as the reason for the abort via the `"abort"` event.
+Dispatches an `"abort"` event to the abort signal. Optionally, it accepts a single argument `reason`, which can be used to convey the reason for the abort via the `"abort"` event.
 
 #### Examples
 
-The following example shows how to create an Abort API without arguments:
+The following example creates an Abort API without any arguments:
 
-```ts
+```typescript
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 
 const [signal, abort] = makeAbortApi();
 abort();
 ```
 
-The above example is functionally equivalent to `new AbortController()`, except that `makeAbortApi` returns an array instead of an object.
+The above example is almost equivalent to `new AbortController()`. The difference is that `makeAbortApi` returns an array instead of an object.
 
-The following example shows how to create an Abort API with an associated abort signal:
+The following example creates an Abort API specifying an abort signal to associate:
 
-```ts
+```typescript
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 
 const controller = new AbortController();
@@ -71,14 +71,14 @@ controller.abort("test");
 
 Output:
 
-```js
+```javascript
 controller.signal test
 signal test
 ```
 
 Abort events propagate from the Abort API to the associated abort signal:
 
-```ts
+```typescript
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 
 const controller = new AbortController();
@@ -96,7 +96,7 @@ abort("test");
 
 Output:
 
-```js
+```javascript
 controller.signal test
 signal test
 ```

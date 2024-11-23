@@ -5,7 +5,7 @@ slug: zh-CN/v2/api/data/decimal
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Decimal` 是一个用于表示任意精度实数的类。当预设为 `standard` 时，它继承自 [`big.js`](https://github.com/MikeMcl/big.js) 类。因此，`.toString()` 等方法的结果在不同预设之间可能会不一致。
+`Decimal` 类用于表示任意精度的实数。如果预设为 standard，则该类继承自 [`big.js`](https://github.com/MikeMcl/big.js)。因此，`.toString()` 方法等的结果在不同预设之间可能不一致。
 
 ### 导入
 
@@ -28,11 +28,11 @@ new Decimal(source: string | number | Decimal); // standard
 
 ##### `source`
 
-以字符串形式表示的实数。如果预设为 `standard`，则也可以传递数值。
+表示实数的字符串。如果预设为 standard，则也可以传入数值。
 
 #### 返回值
 
-如果通过 `new` 方式调用，`Decimal` 将返回其实例。
+如果通过 `new` 调用，`Decimal` 将返回其实例。
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="decodeonly" />
 
@@ -48,7 +48,7 @@ new Decimal(source: string | number | Decimal); // standard
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Decimal` 对象转换为可以在 SurrealQL 中嵌入的字符串。与 `.toString()` 类似，但添加 `dec` 后缀，以告知查询解析器该字符串为 `decimal` 类型。
+将 `Decimal` 对象转换为可嵌入 SurrealQL 的字符串。类似于 `.toString()`，但通过添加 `dec` 后缀来告知查询解析器该字符串为 `decimal` 类型。
 
 ```ts
 .toSurql(): string;
@@ -62,7 +62,7 @@ new Decimal(source: string | number | Decimal); // standard
 
 返回带有 `dec` 后缀的实数。
 
-#### 示例
+#### 例子
 
 ```ts
 import { Decimal } from "@tai-kun/surrealdb/encodable-datatypes";
@@ -74,7 +74,7 @@ console.log(decimal.toSurql());
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-克隆 `Decimal` 对象。
+复制 `Decimal` 对象。
 
 ```ts
 .clone(): this;
@@ -90,15 +90,15 @@ console.log(decimal.toSurql());
 
 ### 其他方法
 
-如果使用 `standard` 预设，则 `Decimal` 类继承自 `big.js` 的 `Big` 类，因此实例方法和属性请参考 `big.js` 的文档：
+如果使用 standard 预设，`Decimal` 类继承自 `big.js` 的 `Big` 类，因此实例方法和属性请参考 `big.js` 文档：
 
 [`big.js` 文档](https://mikemcl.github.io/big.js/#prototype-methods)
 
-### 扩展
+### 进阶
 
-#### `Decimal` 对象的通用判定
+#### `Decimal` 对象的通用判断
 
-建议使用 `isDecimal` 函数来判定值是否为 `Decimal` 对象，而与预设无关。该函数不使用 `instanceof`，因此在验证值的预设未知的情况下很有用。
+建议使用 `isDecimal` 函数来判断值是否为 `Decimal` 对象，而无需依赖预设。由于该函数不使用 `instanceof`，因此在验证值的预设未知时非常有用。
 
 ```ts
 import { isDecimal } from "@tai-kun/surrealdb";

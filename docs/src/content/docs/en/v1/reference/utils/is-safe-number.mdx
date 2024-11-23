@@ -3,7 +3,7 @@ title: isSafeNumber
 slug: en/v1/reference/utils/is-safe-number
 ---
 
-`isSafeNumber` checks if a given number is a safe number for arithmetic operations.
+`isSafeNumber` verifies if a given number is safe for arithmetic operations.
 
 ### Import
 
@@ -17,16 +17,16 @@ import { isSafeNumber } from "@tai-kun/surrealdb/utils";
 function isSafeNumber(value: number): boolean;
 ```
 
-#### Arguments
+#### Argument
 
 ##### `value`
 
-The number to be validated.
+The number to verify.
 
 #### Return Value
 
 Returns `false` if `value` is:
 
 - `NaN`
-- Infinite
-- Out of range ±2^53-1
+- Infinity
+- Outside the range of ±2^53-1

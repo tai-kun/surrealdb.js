@@ -1,5 +1,5 @@
 ---
-title: 入门
+title: 开始使用
 slug: zh-CN/v1/getting-started
 ---
 
@@ -30,13 +30,13 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
   </TabItem>
 </Tabs>
 
-## 开始使用
+## 使用示例
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
 
 const db = new Surreal();
-await db.connect("<your_surrealdb_server>"); // 例如：ws://localhost:8000
+await db.connect("<your_surrealdb_server>"); // 例如 ws://localhost:8000
 
 try {
   await db.signin({ user: "root", pass: "root" });
@@ -48,7 +48,7 @@ try {
 }
 ```
 
-## 自定义
+## 自定义配置
 
 ```ts
 import { initSurreal } from "@tai-kun/surrealdb";
@@ -61,7 +61,7 @@ const { Surreal } = initSurreal({
   engines: {
     http: config => new HttpEngine({
       ...config,
-      // fetch: <您的自定义 fetch 函数>
+      // fetch: <你的自定义fetch函数>
     }),
     https: "http",
   },

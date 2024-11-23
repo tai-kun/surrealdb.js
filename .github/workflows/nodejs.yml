@@ -100,7 +100,7 @@ jobs:
           - "22.x"
           - "23.x"
         surrealdb-version:
-          - "v2.0.0"
+          - "v2.1.0"
           - "latest"
     steps:
       - uses: actions/checkout@v4
@@ -142,7 +142,7 @@ jobs:
           # - "18.x"
           - "20.x"
         surrealdb-version:
-          - "v2.0.0"
+          - "v2.1.0"
           - "latest"
     steps:
       - uses: actions/checkout@v4

@@ -382,65 +382,7 @@ for (const { suite, fmt, url, Surreal, ver } of surreal) {
         await db.query("REMOVE TABLE user");
       });
 
-      test("テーブル名でレコードを UPSERT すると何も作成されない", async c => {
-        // 2.0.4 以前の仕様
-        if (!(ver.le("2.0.4") && !(ver.eq("2.0.4") && ver.nightly()))) {
-          c.skip();
-        }
-
-        const records = await db.upsert<{ name: string }>("user", {
-          name: "ichiro",
-        });
-
-        expectTypeOf<typeof records>().toEqualTypeOf<
-          ({ id: string | DataType.Thing } & {
-            name: string;
-          })[]
-        >();
-
-        expect(records).toStrictEqual([
-          // Empty
-        ]);
-        await expect(db.query("SELECT * FROM user")).resolves.toStrictEqual([
-          [/* Empty */],
-        ]);
-      });
-
-      test("テーブルオブジェクトでレコードを UPSERT すると UPDATE になる", async c => {
-        // 2.0.4 以前の仕様
-        if (!(ver.le("2.0.4") && !(ver.eq("2.0.4") && ver.nightly()))) {
-          c.skip();
-        }
-
-        await db.query("CREATE user:1 SET name = 'ichiro'");
-
-        const records = await db.upsert<{ name: string }>(new Table("user"), {
-          name: "jiro",
-        });
-
-        expectTypeOf<typeof records>().toEqualTypeOf<
-          ({ id: string | DataType.Thing } & {
-            name: string;
-          })[]
-        >();
-
-        expect(records).toStrictEqual([
-          {
-            id: expect.objectContaining({
-              table: "user",
-              id: 1,
-            }),
-            name: "jiro",
-          },
-        ]);
-      });
-
-      test("テーブル名でレコードを UPSERT するとレコードが返ってくる", async c => {
-        // 2.0.5 以降の仕様
-        if (!(ver.gt("2.0.5") || (ver.eq("2.0.4") && ver.nightly()))) {
-          c.skip();
-        }
-
+      test("テーブル名でレコードを UPSERT するとレコードが返ってくる", async () => {
         const records = await db.upsert<{ name: string }>("user", {
           name: "ichiro",
         });
@@ -471,12 +413,7 @@ for (const { suite, fmt, url, Surreal, ver } of surreal) {
         ]);
       });
 
-      test("テーブルオブジェクトでレコードを UPSERT すると INSERT になる", async c => {
-        // 2.0.5 以降の仕様
-        if (!(ver.gt("2.0.5") || (ver.eq("2.0.4") && ver.nightly()))) {
-          c.skip();
-        }
-
+      test("テーブルオブジェクトでレコードを UPSERT すると INSERT になる", async () => {
         await db.query("CREATE user:1 SET name = 'ichiro'");
 
         const records = await db.upsert<{ name: string }>(new Table("user"), {

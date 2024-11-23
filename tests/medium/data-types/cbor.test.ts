@@ -167,12 +167,7 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
       }
     });
 
-    test("Range", async c => {
-      // >2.0.1 で修正済み。
-      if (!(ver.gt("2.0.1") || (ver.eq("2.0.1") && ver.nightly()))) {
-        c.skip();
-      }
-
+    test("Range", async () => {
       await using db = new Surreal();
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
@@ -194,12 +189,7 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
         ]);
     });
 
-    test("IdRange", async c => {
-      // >2.0.1 で修正済み。
-      if (!(ver.gt("2.0.1") || (ver.eq("2.0.1") && ver.nightly()))) {
-        c.skip();
-      }
-
+    test("IdRange", async () => {
       await using db = new Surreal();
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });
@@ -224,13 +214,7 @@ for (const { suite, fmt, url, ver, Surreal } of surreal) {
         ]);
     });
 
-    // https://github.com/surrealdb/surrealdb/pull/5050
-    // >2.0.4 で変更予定。
-    test("Futrue", async c => {
-      if (!(ver.gt("2.0.4") || (ver.eq("2.0.4") && ver.nightly()))) {
-        c.skip();
-      }
-
+    test("Futrue", async () => {
       await using db = new Surreal();
       await db.connect(url());
       await db.signin({ user: "root", pass: "root" });

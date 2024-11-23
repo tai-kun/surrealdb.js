@@ -70,7 +70,7 @@ const { Surreal } = initSurreal({
 
 ## Requirements
 
-SurrealDB v2
+SurrealDB >=2.1.0
 
 The repository for SurrealDB v1 is [here](https://github.com/tai-kun/surrealdb.js/tree/v1).
 

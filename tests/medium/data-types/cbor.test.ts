@@ -21,7 +21,7 @@ import { toSurql } from "@tai-kun/surrealdb/utils";
 import { describe, expect, test } from "vitest";
 import surreal from "../surreal";
 
-for (const { suite, fmt, url, ver, Surreal } of surreal) {
+for (const { suite, fmt, url, Surreal } of surreal) {
   describe.runIf(fmt === "cbor")(suite, () => {
     test("JavaScript ネイティブ", async () => {
       await using db = new Surreal();

@@ -9,7 +9,7 @@ import {
 } from "vitest";
 import surreal from "../surreal.js";
 
-for (const { suite, fmt, url, Surreal, ver } of surreal) {
+for (const { suite, fmt, url, Surreal } of surreal) {
   describe(suite, { skip: fmt === "json" }, () => {
     let db: InstanceType<typeof Surreal>;
 

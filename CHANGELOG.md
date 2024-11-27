@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.2.0](https://github.com/tai-kun/surrealdb.js/compare/v2.1.2...v2.2.0) (2024-11-27)
+
+
+### Changes
+
+* **data-types/encodable:** `Future` が自動で中括弧 `{}` を付けない ([#59](https://github.com/tai-kun/surrealdb.js/issues/59)) ([81236f3](https://github.com/tai-kun/surrealdb.js/commit/81236f38fc2c741e34972437521df27c741f6d2b))
+
+
+### Features
+
+* &gt;=2.1.0 ([663a6a3](https://github.com/tai-kun/surrealdb.js/commit/663a6a37a654c94ccc37bff97324ad23d19aa7c6))
+
+
+### Miscellaneous Chores
+
+* **deps:** 更新 ([#61](https://github.com/tai-kun/surrealdb.js/issues/61)) ([75c46e3](https://github.com/tai-kun/surrealdb.js/commit/75c46e33ae08703728f3cc51364a362aef4c6893))
+
 ## [2.1.2](https://github.com/tai-kun/surrealdb.js/compare/v2.1.1...v2.1.2) (2024-10-24)
 
 

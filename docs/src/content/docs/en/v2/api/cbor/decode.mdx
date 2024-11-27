@@ -1,11 +1,11 @@
 ---
-title: Decode
+title: Synchronous and Asynchronous CBOR Decoding
 slug: en/v2/api/cbor/decode
 ---
 
 ## Synchronous Decoding
 
-The `decode` function decodes a CBOR formatted `Uint8Array` into a JavaScript value.
+The `decode` function decodes a CBOR-formatted `Uint8Array` into a JavaScript value.
 
 ### Import
 
@@ -23,34 +23,36 @@ function decode(input: Uint8Array, options?: DecodeOptions): unknown;
 
 ##### `input`
 
-A CBOR formatted `Uint8Array` to be decoded into a JavaScript value.
+A CBOR-formatted `Uint8Array` to be decoded into a JavaScript value.
 
 ##### `options`
 
 Decoding options.
 
 `mapType?: "Object" | "Map"`
-:   This option can be used to choose whether to decode key-value formatted objects into JavaScript plain objects or `Map`s. Choosing `"Object"` will decode into plain objects, `"Map"` will decode into an instance of the `Map` class. The default is `"Object"`. Plain object keys can only accept strings or numbers (i.e. `string | number`), but when this option is set to `"Map"` for decoding, keys can accept all decoded values.
+:   This option allows you to choose whether to decode key-value formatted objects as JavaScript plain objects or `Map` objects.  Selecting `"Object"` will decode to a plain object, while `"Map"` will decode to a `Map` instance. The default is `"Object"`.  Plain object keys can only accept strings or numbers (i.e., `string | number`), but when using `"Map"`, keys can accept any decoded value.
 
 `reviver?: Reviver | ReviverObject | (Reviver | ReviverObject)[]`
-:   This option is used to transform CBOR simple data items or tagged data items to JavaScript values. Simple data items are limited to values from 0 to 19 and 32 to 255. Tagged data items have a tag which is a `number` or `bigint` from 0 to 2^64-1. If the function returns the `CONTINUE` symbol obtained with `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, the subsequent functions will be invoked. If it cannot be converted, a `SurrealTypeError` will be thrown.
+:   This option is used to transform simple or tagged CBOR data items into JavaScript values. Simple data items are limited to values between 0 and 19 and 32 and 255. Tagged data item tags are `number` or `bigint` from 0 to 2^64-1. If the function returns the `CONTINUE` symbol obtained with `Symbol.for("@tai-kun/surrealdb/cbor/continue")`, subsequent functions will be called.  A `SurrealTypeError` will be thrown if no transformation could be performed.
 
 `isSafeMapKey?: (key: unknown, map: Map<unknown, unknown>) => boolean`
-:   This option is a function that verifies if the keys of the `Map` object are safe. The function accepts two arguments: `key` and `map`. `key` is the value of the key and `map` is the `Map` object being validated. If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, it considers `"__proto__"` or `"constructor"` unsafe keys. Note that specifying this option will completely override the default verification. If you want to add your own verification to the default verification, you should also judge `"__proto__"` or `"constructor"` as unsafe keys.
+:   This option is a function to validate whether a key in a `Map` object is safe. The function receives two arguments, `key` and `map`. `key` is the value of the key, and `map` is the `Map` object being validated.  If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, it considers `"__proto__"` or `"constructor"` as unsafe keys. Note that specifying this option completely overwrites the default validation. If you want to add your own validation to the default validation, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
+
 
 `isSafeObjectKey?: (key: unknown, obj: Record<string | number, unknown>) => boolean`
-:   This option is a function that verifies if the keys of the plain object are safe. The function accepts two arguments: `key` and `obj`. `key` is the value of the key and `obj` is the plain object being validated. If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, it considers `"__proto__"` or `"constructor"` unsafe keys. Note that specifying this option will completely override the default verification. If you want to add your own verification to the default verification, you should also judge `"__proto__"` or `"constructor"` as unsafe keys.
+:   This option is a function to validate whether a key in a plain object is safe. The function receives two arguments, `key` and `obj`. `key` is the value of the key, and `obj` is the plain object being validated. If this function returns `false`, a `CborUnsafeMapKeyError` will be thrown. By default, it considers `"__proto__"` or `"constructor"` as unsafe keys. Note that specifying this option completely overwrites the default validation. If you want to add your own validation to the default validation, you should also consider `"__proto__"` or `"constructor"` as unsafe keys.
 
 `maxDepth?: number`
-:   Specifies the maximum depth of the object. The depth increases by 1 every time an object or array is entered. The default value is `64`. Since recursion is not used for decoding, there is no upper limit on the depth, but it is recommended that it not be too large.
+:   Specifies the maximum depth of objects. The depth increases by 1 each time an object or array is entered. The default value is `64`.  While decoding doesn't use recursion and therefore has no inherent depth limit, it's recommended to avoid excessively large values.
+
 
 #### Return Value
 
-The JavaScript value decoded from the CBOR formatted `Uint8Array`.
+The JavaScript value decoded from the CBOR-formatted `Uint8Array`.
 
 ### Example
 
-#### Decoding with a `Map` object
+#### Decoding to a `Map` Object
 
 ```ts
 import { decode } from "@tai-kun/surrealdb/cbor";
@@ -63,14 +65,14 @@ const cbor = new Uint8Array([
   0x00, // mt: 0, ai: 0
 ]);
 
-const value = decode(bytes, { mapType: "Map" });
+const value = decode(cbor, { mapType: "Map" });
 
 console.log(value); // Map(1) { [ 0 ] => 0 }
 ```
 
 ## Asynchronous Decoding
 
-The `decodeStream` function decodes a CBOR formatted `Uint8Array` into a JavaScript value.
+The `decodeStream` function decodes a CBOR-formatted `Uint8Array` stream into a JavaScript value.
 
 ### Import
 
@@ -95,14 +97,14 @@ A readable stream of `Uint8Array`. The Fetch API may provide this stream in the 
 
 ##### `options`
 
-In addition to synchronous decode options, you can specify the following options:
+In addition to the synchronous decoding options, the following option can be specified:
 
 `signal?: AbortSignal`
-:   An abort signal to abort the stream.
+:   An abort signal to interrupt the stream.
 
 #### Return Value
 
-A `StatefulPromise` that resolves to a JavaScript value.
+A `StatefulPromise` that resolves to the JavaScript value.
 
 ### Example
 
@@ -118,7 +120,7 @@ const response = await fetch("http://localhost:8000/rpc", {
     // ... more headers
   },
   // ... more properties
-})
+});
 
-const result = await decodeStream(resp.body);
+const result = await decodeStream(response.body);
 ```

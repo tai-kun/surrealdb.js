@@ -1,11 +1,11 @@
 ---
-title: 持续时间
+title: 时间段
 slug: zh-CN/v2/api/data/duration
 ---
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Duration` 是表示时间段的类。
+`Duration` 类用于表示时间段。
 
 ### 导入
 
@@ -40,9 +40,9 @@ new Duration(
 
 ##### `source`
 
-秒数和纳秒数的组合。在 standard 预设中，可以将更多值转换为 `Duration` 对象。
+秒和纳秒对。如果预设为 standard，则可以将更多值转换为 `Duration` 对象。
 
-`number` 类型的输入将以毫秒为单位计算。这适用于将两个 `Date` 对象之间的差转换为 `Duration` 对象：
+`number` 类型的输入将以毫秒为单位计算。这旨在用于将 `Date` 对象之间的差值转换为 `Duration` 对象：
 
 ```ts
 const begin = new Date("2024-06-01T12:00:00.000Z");
@@ -50,7 +50,7 @@ const end = new Date("2024-06-01T21:00:00.000Z");
 new Duration(end - begin);
 ```
 
-`bigint` 类型的输入将以纳秒为单位计算。这适用于将例如 [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint) 返回的纳秒等高精度时间转换为 `Duration` 对象：
+`bigint` 类型的输入将以纳秒为单位计算。这旨在用于将例如 [`process.hrtime.bigint()`](https://nodejs.org/api/process.html#processhrtimebigint) 返回的纳秒等高精度时间转换为 `Duration` 对象：
 
 ```ts
 const begin = process.hrtime.bigint();
@@ -59,21 +59,21 @@ const end = process.hrtime.bigint();
 new Duration(end - begin);
 ```
 
-`string` 类型的输入必须是时间段的字符串表示形式。时间段的字符串表示形式是指由数字和单位组成的连续字符串。例如 `1h4h30m20s1350ms` 代表“1 天 4 小时 30 分钟 21 秒 350 毫秒”。可用的单位如下：
+`string` 类型的输入必须是时间段的字符串表示形式。时间段的字符串表示形式是指数字和单位成对出现，连续排列的格式。例如 `1h4h30m20s1350ms` 表示“1 天 4 小时 30 分 21 秒 350 毫秒”。可用的单位如下：
 
 | 单位 | 说明 | 转换 |
-| --- | --- | --- |
-| `ns` | 纳秒 |
+|---|---|---|
+| `ns` | 纳秒 |  |
 | `us` | 微秒 | `1us` -> `1000ns` |
 | `ms` | 毫秒 | `1ms` -> `1000us` |
 | `s`  | 秒 | `1s` -> `1000ms` |
 | `m`  | 分 | `1m` -> `60s` |
 | `h`  | 时 | `1h` -> `60m` |
-| `d`  | 日 | `1d` -> `24h` |
+| `d`  | 天 | `1d` -> `24h` |
 | `w`  | 周 | `1w` -> `7d` |
 | `y`  | 年 | `1y` -> `365d` |
 
-`us` (`0x75`, `0x73`) 也可以使用 `µs` (`0xc2`, `0xb5`, `0x73`) 或 `μs` (`0xce`, `0xbc`, `0x73`) 来表示（括号中的十六进制数是单位字符串使用 UTF-8 编码的结果）。
+`us` (`0x75`, `0x73`) 也可以是 `µs` (`0xc2`, `0xb5`, `0x73`) 或 `μs` (`0xce`, `0xbc`, `0x73`)（括号中十六进制数是单位字符串的 UTF-8 编码结果）。
 
 #### 返回值
 
@@ -81,7 +81,7 @@ new Duration(end - begin);
 
 ### `.seconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-时间段的秒数部分。在低于 standard 的预设中，该属性为只读。值为 0 到 2<sup>64</sup>-1 之间的整数。
+时间段的秒部分。在低于 standard 的预设中，它是只读的。值是 0 到 2<sup>64</sup>-1 之间的整数。
 
 ```ts
 .seconds: bigint;
@@ -89,7 +89,7 @@ new Duration(end - begin);
 
 ### `.nanoseconds` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-时间段的纳秒数部分。在低于 standard 的预设中，该属性为只读。值为 0 到 999999999 之间的整数。
+时间段的纳秒部分。在低于 standard 的预设中，它是只读的。值是 0 到 999999999 之间的整数。
 
 ```ts
 .nanoseconds: number;
@@ -97,7 +97,7 @@ new Duration(end - begin);
 
 ### `.parse()` <Badge variant="instance" /><Badge variant="property" /><Badge variant="encodable" />
 
-将时间段映射到各个单位。每个单位的值都大于等于 0，小于该单位的最大值。如果时间段为 0，则只返回纳秒数，即只有 `nanoseconds` 属性值为 `0` 的对象。
+将时间段映射到各个单位。每个单位的值都大于等于 0，小于该单位的最大值。如果时间段为 0，则返回仅具有 `nanoseconds` 属性为 `0` 的对象。
 
 ```ts
 .parse(): {
@@ -119,7 +119,7 @@ new Duration(end - begin);
 
 #### 返回值
 
-返回将时间段映射到各个单位的结果。如果单位值为 0，则该属性将被省略，但如果时间段为 0，则将返回只有 `nanoseconds` 为 `0` 的对象。
+返回将时间段映射到各个单位的结果。如果单位的值为 0，则省略属性，但如果时间段为 0，则返回仅具有 `nanoseconds` 属性为 `0` 的对象。
 
 #### 例子
 
@@ -141,7 +141,7 @@ console.log(duration.parse());
 
 ### `.valueOf()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-获取时间段以纳秒为单位的值。
+以纳秒为单位获取时间段。
 
 ```ts
 .valueOf(): bigint;
@@ -153,7 +153,7 @@ console.log(duration.parse());
 
 #### 返回值
 
-返回以纳秒为单位的时间段。
+以纳秒为单位返回时间段。
 
 ```ts
 import { Duration } from "@tai-kun/surrealdb/encodable-datatypes";
@@ -167,7 +167,7 @@ console.log(duration.valueOf());
 
 获取时间段的字符串表示形式。
 
-`.toJSON()` 和 `.toSurql()` 方法返回与该方法相同的结果。
+`.toJSON()` 和 `.toSurql()` 返回与该方法相同的结果。
 
 ```ts
 .toString(): string;
@@ -179,7 +179,7 @@ console.log(duration.valueOf());
 
 #### 返回值
 
-获取以毫秒精度表示的时间段的字符串。
+获取毫秒精度时间的字符串表示形式。
 
 #### 例子
 
@@ -193,7 +193,7 @@ console.log(duration.toString());
 
 ### `.toISOString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-获取时间段的 ISO 格式字符串。
+以 ISO 格式获取时间段的字符串。
 
 ```ts
 .toISOString(): string;
@@ -205,7 +205,7 @@ console.log(duration.toString());
 
 #### 返回值
 
-返回时间段的 ISO 格式字符串。
+以 ISO 格式返回时间段的字符串。
 
 #### 例子
 
@@ -219,7 +219,7 @@ console.log(duration.toISOString());
 
 ### `.getCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取秒数和纳秒数的组合。
+获取秒和纳秒对。
 
 ```ts
 .getCompact(): [seconds: bigint, nanoseconds: number];
@@ -231,11 +231,11 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回秒数和纳秒数的组合。
+返回秒和纳秒对。
 
 ### `.setCompact()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-使用秒数和纳秒数的组合设置时间段。
+使用秒和纳秒对设置日期时间。
 
 ```ts
 .setCompact(compact: [seconds: bigint, nanoseconds: number]): void;
@@ -245,7 +245,7 @@ console.log(duration.toISOString());
 
 ##### `compact`
 
-秒数和纳秒数的组合。
+秒和纳秒对。
 
 #### 返回值
 
@@ -253,7 +253,7 @@ console.log(duration.toISOString());
 
 ### `.getYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取年数。如果不能转换为 0 或更大的整数，则返回 0。
+获取年数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getYears(): number;
@@ -265,11 +265,11 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回表示年数的 0 或更大的整数。
+返回表示年份的 0 或更大的整数。
 
 ### `.addYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的年数。
+从时间段中添加指定数量的年份。
 
 ```ts
 .addYears(value: number): void;
@@ -279,7 +279,7 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-年数。
+年份数。
 
 #### 返回值
 
@@ -287,7 +287,7 @@ console.log(duration.toISOString());
 
 ### `.subYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的年数。
+从时间段中减去指定数量的年份。
 
 ```ts
 .subYears(value: number): void;
@@ -297,7 +297,7 @@ console.log(duration.toISOString());
 
 ##### `value`
 
-年数。
+年份数。
 
 #### 返回值
 
@@ -305,7 +305,7 @@ console.log(duration.toISOString());
 
 ### `.asYears()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取年数的毫秒表示形式。
+获取年份的毫秒表示。
 
 ```ts
 .asYears(): number;
@@ -317,11 +317,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回年数的毫秒表示形式。
+年份的毫秒表示。
+
 
 ### `.getWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取周数。如果不能转换为 0 或更大的整数，则返回 0。
+获取周数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getWeeks(): number;
@@ -337,7 +338,7 @@ console.log(duration.toISOString());
 
 ### `.addWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的周数。
+从时间段中添加指定数量的周数。
 
 ```ts
 .addWeeks(value: number): void;
@@ -355,7 +356,7 @@ console.log(duration.toISOString());
 
 ### `.subWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的周数。
+从时间段中减去指定数量的周数。
 
 ```ts
 .subWeeks(value: number): void;
@@ -373,7 +374,7 @@ console.log(duration.toISOString());
 
 ### `.asWeeks()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取周数的毫秒表示形式。
+获取周数的毫秒表示。
 
 ```ts
 .asWeeks(): number;
@@ -385,11 +386,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回周数的毫秒表示形式。
+周数的毫秒表示。
+
 
 ### `.getDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取天数。如果不能转换为 0 或更大的整数，则返回 0。
+获取天数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getDays(): number;
@@ -405,7 +407,7 @@ console.log(duration.toISOString());
 
 ### `.addDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的天数。
+从时间段中添加指定数量的天数。
 
 ```ts
 .addDays(value: number): void;
@@ -423,7 +425,7 @@ console.log(duration.toISOString());
 
 ### `.subDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的天数。
+从时间段中减去指定数量的天数。
 
 ```ts
 .subDays(value: number): void;
@@ -441,7 +443,7 @@ console.log(duration.toISOString());
 
 ### `.asDays()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取天数的毫秒表示形式。
+获取天数的毫秒表示。
 
 ```ts
 .asDays(): number;
@@ -453,11 +455,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回天数的毫秒表示形式。
+天数的毫秒表示。
+
 
 ### `.getHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取小时数。如果不能转换为 0 或更大的整数，则返回 0。
+获取小时数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getHours(): number;
@@ -473,7 +476,7 @@ console.log(duration.toISOString());
 
 ### `.addHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的小时数。
+从时间段中添加指定数量的小时数。
 
 ```ts
 .addHours(value: number): void;
@@ -491,7 +494,7 @@ console.log(duration.toISOString());
 
 ### `.subHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的小时数。
+从时间段中减去指定数量的小时数。
 
 ```ts
 .subHours(value: number): void;
@@ -509,7 +512,7 @@ console.log(duration.toISOString());
 
 ### `.asHours()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取小时数的毫秒表示形式。
+获取小时数的毫秒表示。
 
 ```ts
 .asHours(): number;
@@ -521,11 +524,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回小时数的毫秒表示形式。
+小时数的毫秒表示。
+
 
 ### `.getMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取分钟数。如果不能转换为 0 或更大的整数，则返回 0。
+获取分钟数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getMinutes(): number;
@@ -541,7 +545,7 @@ console.log(duration.toISOString());
 
 ### `.addMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的分钟数。
+从时间段中添加指定数量的分钟数。
 
 ```ts
 .addMinutes(value: number): void;
@@ -559,7 +563,7 @@ console.log(duration.toISOString());
 
 ### `.subMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的分钟数。
+从时间段中减去指定数量的分钟数。
 
 ```ts
 .subMinutes(value: number): void;
@@ -577,7 +581,7 @@ console.log(duration.toISOString());
 
 ### `.asMinutes()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取分钟数的毫秒表示形式。
+获取分钟数的毫秒表示。
 
 ```ts
 .asMinutes(): number;
@@ -589,11 +593,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回分钟数的毫秒表示形式。
+分钟数的毫秒表示。
+
 
 ### `.getSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取秒数。如果不能转换为 0 或更大的整数，则返回 0。
+获取秒数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getSeconds(): number;
@@ -609,7 +614,7 @@ console.log(duration.toISOString());
 
 ### `.addSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的秒数。
+从时间段中添加指定数量的秒数。
 
 ```ts
 .addSeconds(value: number): void;
@@ -627,7 +632,7 @@ console.log(duration.toISOString());
 
 ### `.subSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的秒数。
+从时间段中减去指定数量的秒数。
 
 ```ts
 .subSeconds(value: number): void;
@@ -645,7 +650,7 @@ console.log(duration.toISOString());
 
 ### `.asSeconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取秒数的毫秒表示形式。
+获取秒数的毫秒表示。
 
 ```ts
 .asSeconds(): number;
@@ -657,11 +662,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回秒数的毫秒表示形式。
+秒数的毫秒表示。
+
 
 ### `.getMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取毫秒数。如果不能转换为 0 或更大的整数，则返回 0。
+获取毫秒数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getMilliseconds(): number;
@@ -677,7 +683,7 @@ console.log(duration.toISOString());
 
 ### `.addMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的毫秒数。
+从时间段中添加指定数量的毫秒数。
 
 ```ts
 .addMilliseconds(value: number): void;
@@ -695,7 +701,7 @@ console.log(duration.toISOString());
 
 ### `.subMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的毫秒数。
+从时间段中减去指定数量的毫秒数。
 
 ```ts
 .subMilliseconds(value: number): void;
@@ -713,7 +719,7 @@ console.log(duration.toISOString());
 
 ### `.asMilliseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取毫秒数的毫秒表示形式。
+获取毫秒数的毫秒表示。
 
 ```ts
 .asMilliseconds(): number;
@@ -725,11 +731,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回毫秒数的毫秒表示形式。
+毫秒数的毫秒表示。
+
 
 ### `.getMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取微秒数。如果不能转换为 0 或更大的整数，则返回 0。
+获取微秒数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getMicroseconds(): number;
@@ -745,7 +752,7 @@ console.log(duration.toISOString());
 
 ### `.addMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的微秒数。
+从时间段中添加指定数量的微秒数。
 
 ```ts
 .addMicroseconds(value: number): void;
@@ -763,7 +770,7 @@ console.log(duration.toISOString());
 
 ### `.subMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的微秒数。
+从时间段中减去指定数量的微秒数。
 
 ```ts
 .subMicroseconds(value: number): void;
@@ -781,7 +788,7 @@ console.log(duration.toISOString());
 
 ### `.asMicroseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取微秒数的毫秒表示形式。
+获取微秒数的毫秒表示。
 
 ```ts
 .asMicroseconds(): number;
@@ -793,11 +800,12 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回微秒数的毫秒表示形式。
+微秒数的毫秒表示。
+
 
 ### `.getNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取纳秒数。如果不能转换为 0 或更大的整数，则返回 0。
+获取纳秒数。如果结果不是 0 或更大的整数，则返回 0。
 
 ```ts
 .getNanoseconds(): number;
@@ -813,7 +821,7 @@ console.log(duration.toISOString());
 
 ### `.addNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段加上指定的纳秒数。
+从时间段中添加指定数量的纳秒数。
 
 ```ts
 .addNanoseconds(value: number): void;
@@ -831,7 +839,7 @@ console.log(duration.toISOString());
 
 ### `.subNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-将时间段减去指定的纳秒数。
+从时间段中减去指定数量的纳秒数。
 
 ```ts
 .subNanoseconds(value: number): void;
@@ -849,7 +857,7 @@ console.log(duration.toISOString());
 
 ### `.asNanoseconds()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-获取纳秒数的毫秒表示形式。
+获取纳秒数的毫秒表示。
 
 ```ts
 .asNanoseconds(): number;
@@ -861,4 +869,4 @@ console.log(duration.toISOString());
 
 #### 返回值
 
-返回纳秒数的毫秒表示形式。
+纳秒数的毫秒表示。

@@ -5,9 +5,9 @@ slug: ko/v1/reference/cbor/simple
 
 import Badge from "~/components/ko/Badge.astro";
 
-`Simple` 는 0에서 255까지의 정수 값으로 식별되는 간단한 값입니다.
+`Simple`는 0부터 255까지의 정수 값으로 식별되는 단순한 값입니다.
 
-### 가져오기
+### import
 
 ```ts
 import { Simple } from "@tai-kun/surrealdb/cbor";
@@ -21,21 +21,22 @@ import { Simple } from "@tai-kun/surrealdb/cbor";
 new Simple(value: number);
 ```
 
-#### 인수
+#### 매개변수
 
 ##### `value`
 
-0에서 255까지의 정수 값입니다.
+0부터 255까지의 정수 값입니다.
 
-#### 반환값
+#### 반환 값
 
-`new`를 통해 호출될 경우, `Simple`은 해당 인스턴스를 반환합니다.
+`new`를 통해 호출될 경우, `Simple`은 자신의 인스턴스를 반환합니다.
+
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-`Simple` 객체를 식별하는 0에서 255까지의 정수 값입니다.
+`Simple` 객체를 식별하는 0부터 255까지의 정수 값입니다.
 
-### 참고
+### 참고 자료
 
 다음 자료를 참조하십시오.
 

@@ -5,7 +5,7 @@ slug: en/v2/api/utils/escape
 
 ## quoteStr
 
-`quoteStr` is a function that encloses a string with quotation marks. For convenience, even an empty string is enclosed in quotation marks.
+`quoteStr` is a function that wraps a string in quotes. For convenience, it also wraps empty strings in quotes.
 
 ### Import
 
@@ -19,31 +19,31 @@ import { quoteStr } from "@tai-kun/surrealdb/utils";
 function quoteStr(str: string): string;
 ```
 
-Encloses a string with quotation marks (`"` or `'`).
+Wraps a string in either double quotes (`"`) or single quotes (`'`).
 
 #### Arguments
 
 ##### `str`
 
-The string to be enclosed in quotation marks.
+The string to be wrapped in quotes.
 
 #### Return Value
 
-Returns the string enclosed in quotation marks. The quotation marks used for enclosing depend on whether the given string contains a single quotation mark (`'`) or not:
+Returns the string wrapped in quotes. The type of quote used depends on whether the provided string contains single quotes (`'`):
 
-- If the given string is empty
+- If the given string is empty:
   - Returns `''`.
-- If the given string does **not** contain a single quotation mark
-  - Encloses it with single quotation marks.
-- If the given string does **contain** a single quotation mark
-  - Encloses it with double quotation marks.
-- If the given string contains both single and double quotation marks
-  - Encloses it with double quotation marks.
-  - Escapes double quotation marks with a backslash (`\`)
+- If the given string does **not** contain single quotes:
+  - Wraps it in single quotes.
+- If the given string contains single quotes:
+  - Wraps it in double quotes.
+- If the given string contains both single and double quotes:
+  - Wraps it in double quotes.
+  - Double quotes are escaped with a backslash (`\`).
 
 #### Examples
 
-The following examples enclose strings that **do not** contain single quotation marks with single quotation marks:
+The following example shows strings without single quotes being wrapped in single quotes:
 
 ```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
@@ -65,7 +65,7 @@ Output:
 'パ'
 ```
 
-The following examples enclose strings that **do** contain single quotation marks with double quotation marks:
+The following example shows strings containing single quotes being wrapped in double quotes:
 
 ```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
@@ -85,7 +85,7 @@ Output:
 "'パ"
 ```
 
-The following examples enclose strings that contain both single and double quotation marks with double quotation marks and escape them if necessary:
+The following example shows strings containing both single and double quotes being wrapped in double quotes with escaping where necessary:
 
 ```ts
 import { quoteStr } from "@tai-kun/surrealdb/utils";
@@ -109,7 +109,7 @@ Output:
 
 ## escapeKey
 
-`escapeKey` is similar to [`quoteStr`](/v2/api/utils/quote-str/) but is a function used for object keys. For convenience, even an empty string is enclosed in quotation marks.
+`escapeKey` is similar to [`quoteStr`](/v2/api/utils/quote-str/) but is used for object keys. For convenience, it also wraps empty strings in quotes.
 
 ### Import
 
@@ -131,22 +131,22 @@ The object key.
 
 #### Return Value
 
-Returns the escaped string. Encloses it in double quotation marks if necessary:
+Returns the escaped string, wrapped in double quotes if necessary:
 
-- If the given string is empty
+- If the given string is empty:
   - Returns `""`.
-- If the given string does not start with a number and consists only of alphanumeric characters and underscores
-  - Returns it as is.
-- If the given string contains a double quotation mark
-  - Escapes it.
-- If the given string contains a backslash (`\`)
-  - Escapes it.
-- If the given string starts with a number or contains characters other than alphanumeric characters and underscores
-  - Encloses it in double quotation marks.
+- If the given string does not start with a number and consists only of alphanumeric characters and underscores:
+  - Returns the string as is.
+- If the given string contains double quotes:
+  - Escapes them.
+- If the given string contains backslashes (`\`):
+  - Escapes them.
+- If the given string starts with a number or contains characters other than alphanumeric characters and underscores:
+  - Wraps it in double quotes.
 
 #### Examples
 
-The following example shows how to obtain the string as it is because the string consists only of alphanumeric characters and underscores:
+The following example shows a string consisting only of alphanumeric characters and underscores, resulting in the string being returned as is:
 
 ```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
@@ -160,7 +160,7 @@ Output:
 foo_bar
 ```
 
-The following examples enclose the string in double quotation marks and escape them if necessary:
+The following example shows strings being wrapped in double quotes with escaping where necessary:
 
 ```ts
 import { escapeKey } from "@tai-kun/surrealdb/utils";
@@ -188,7 +188,7 @@ Output:
 
 ## escapeRid
 
-`escapeRid` is similar to [`quoteStr`](/v2/api/utils/quote-str/) but is a function used for record IDs. For convenience, even an empty string is enclosed in quotation marks.
+`escapeRid` is similar to [`quoteStr`](/v2/api/utils/quote-str/) but is used for record IDs. For convenience, it also wraps empty strings in quotes.
 
 ### Import
 
@@ -206,24 +206,24 @@ function escapeRid(rid: string): string;
 
 ##### `rid`
 
-The ID part of a record ID.
+The ID part of the record ID.
 
 #### Return Value
 
-Returns the escaped string. Encloses it in brackets (`⟨⟩`) if necessary:
+Returns the escaped string, wrapped in brackets (`⟨⟩`) if necessary:
 
-- If the given string is empty
+- If the given string is empty:
   - Returns `⟨⟩`.
-- If the given string does not start with a number and consists only of alphanumeric characters and underscores
-  - Returns it as is.
-- If the given string contains a bracket (`⟩`)
-  - Escapes it.
-- If the given string consists entirely of numbers or contains characters other than alphanumeric characters and underscores
-  - Encloses it in brackets (`⟨⟩`).
+- If the given string does not start with a number and consists only of alphanumeric characters and underscores:
+  - Returns the string as is.
+- If the given string contains closing brackets (`⟩`):
+  - Escapes them.
+- If the given string consists entirely of numbers or contains characters other than alphanumeric characters and underscores:
+  - Wraps it in brackets (`⟨⟩`).
 
 #### Examples
 
-The following example shows how to obtain the string as it is because the string does not start with a number and consists only of alphanumeric characters and underscores
+The following example shows a string that does not start with a number and consists only of alphanumeric characters and underscores, resulting in the string being returned as is:
 
 ```ts
 import { escapeRid } from "@tai-kun/surrealdb/utils";
@@ -237,7 +237,7 @@ Output:
 foo_123
 ```
 
-The following examples enclose the string in brackets (`⟨⟩`) and escape them if necessary:
+The following example shows strings being wrapped in brackets (`⟨⟩`) with escaping where necessary:
 
 ```ts
 import { escapeRid } from "@tai-kun/surrealdb/utils";
@@ -263,7 +263,7 @@ Output:
 
 ## escapeIdent
 
-`escapeIdent` is similar to [`quoteStr`](/v2/api/utils/quote-str/) but is a function used for namespaces, databases, tables, and field names. For convenience, even an empty string is enclosed in quotation marks.
+`escapeIdent` is similar to [`quoteStr`](/v2/api/utils/quote-str/) but is used for names of namespaces, databases, tables, and fields. For convenience, it also wraps empty strings in quotes.
 
 ### Import
 
@@ -285,20 +285,20 @@ The identifier.
 
 #### Return Value
 
-Returns the escaped string. Encloses it in backticks (<code>`</code>) if necessary:
+Returns the escaped string, wrapped in backticks (`` ` ``) if necessary:
 
-- If the given string is empty
-  - Returns <code>``</code>. {/* TODO(tai-kun): " になる問題解決する */}
-- If the given string does not start with a number and consists only of alphanumeric characters and underscores
-  - Returns it as is.
-- If the given string contains a backtick (<code>`</code>)
-  - Escapes it.
-- If the given string starts with a number or contains characters other than alphanumeric characters and underscores
-  - Encloses it in backticks (<code>`</code>).
+- If the given string is empty:
+  - Returns `` ``.
+- If the given string does not start with a number and consists only of alphanumeric characters and underscores:
+  - Returns the string as is.
+- If the given string contains backticks (`` ` ``):
+  - Escapes them.
+- If the given string starts with a number or contains characters other than alphanumeric characters and underscores:
+  - Wraps it in backticks (`` ` ``).
 
 #### Examples
 
-The following example shows how to obtain the string as it is because the string does not start with a number and consists only of alphanumeric characters and underscores
+The following example shows a string that does not start with a number and consists only of alphanumeric characters and underscores, resulting in the string being returned as is:
 
 ```ts
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
@@ -312,7 +312,7 @@ Output:
 foo_123
 ```
 
-The following examples enclose the string in backticks (<code>`</code>) and escape them if necessary:
+The following example shows strings being wrapped in backticks (`` ` ``) with escaping where necessary:
 
 ```ts
 import { escapeIdent } from "@tai-kun/surrealdb/utils";
@@ -340,13 +340,13 @@ Output:
 
 ### String Length
 
-The strings used in the previous examples contain characters whose length as seen by JavaScript differs from their length as seen by humans:
+The strings used in the previous examples contain characters where the length of the string as seen by JavaScript differs from the length perceived by a human:
 
-| Type | Display | `.length` | `Uint8Array` |
-| --- | --- | --- | --- |
-| ASCII | a | 1 | `[ 0x61 ]` |
-| Surrogate Pair | 𩸽 | 2 | `[ 0xF0, 0xA9, 0xB8, 0xBD ]` |
-| Variation Selector | 👍🏽 | 4 | `[ 0xF0, 0x9F, 0x91, 0x8D, 0xF0, 0x9F, 0x8F, 0xBD ]` |
-| Combining Character | パ | 2 | `[ 0xE3, 0x83, 0x8F, 0xE3, 0x82, 0x9A ]` |
+| Type             | Representation | `.length` | `Uint8Array`      |
+|-----------------|-----------------|-----------|----------------------|
+| ASCII            | a               | 1         | `[ 0x61 ]`          |
+| Surrogate Pair   | 𩸽             | 2         | `[ 0xF0, 0xA9, 0xB8, 0xBD ]` |
+| Variation Selector | 👍🏽             | 4         | `[ 0xF0, 0x9F, 0x91, 0x8D, 0xF0, 0x9F, 0x8F, 0xBD ]` |
+| Combining Marks  | パ             | 2         | `[ 0xE3, 0x83, 0x8F, 0xE3, 0x82, 0x9A ]` |
 
-If the value of `.length` is counterintuitive, it is necessary to carefully consider operations on strings.
+When the value of `.length` is counterintuitive, you must carefully consider operations on the string.

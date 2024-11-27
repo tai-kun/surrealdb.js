@@ -3,7 +3,7 @@ title: makeAbortApi
 slug: en/v1/reference/utils/make-abort-api
 ---
 
-`makeAbortApi` is a function that creates an abort signal and an associated abort function.
+`makeAbortApi` is a function that creates an abort signal and its associated abort function.
 
 ### Import
 
@@ -24,21 +24,21 @@ function makeAbortApi(signal?: AbortSignal): [
 
 ##### `signal`
 
-The abort signal to associate with.
+The abort signal to associate.
 
 #### Return Value
 
-Returns an array with the following order:
+Returns an array containing the following, in order:
 
 ##### `signal`
 
-The abort signal. It is not aborted by default.
+The abort signal.  It is not initially aborted.
 
 ##### `abort`
 
-Dispatches the `"abort"` event to the abort signal. It optionally accepts one argument, `reason`, which can be used to convey the reason for the abort via the `"abort"` event.
+Dispatches an `"abort"` event to the abort signal. Optionally accepts a single argument, `reason`, which can be used to convey the reason for the abortion via the `"abort"` event.
 
-#### Example
+#### Examples
 
 The following example creates an Abort API without arguments:
 
@@ -49,9 +49,9 @@ const [signal, abort] = makeAbortApi();
 abort();
 ```
 
-The above example is almost the same as `new AbortController()`. The difference from `AbortController` is that `makeAbortApi` returns an array instead of an object.
+The above example is almost equivalent to `new AbortController()`. The difference is that `makeAbortApi` returns an array instead of an object.
 
-The following example creates an Abort API with an associated abort signal:
+The following example creates an Abort API specifying an abort signal to associate:
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
@@ -76,7 +76,7 @@ controller.signal test
 signal test
 ```
 
-The abort event propagates from the Abort API to the associated abort signal when aborting from the Abort API:
+Abort events propagate from the Abort API to the associated abort signal even when aborted from the API:
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";

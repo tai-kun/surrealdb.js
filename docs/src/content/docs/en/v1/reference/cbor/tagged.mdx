@@ -5,7 +5,7 @@ slug: en/v1/reference/cbor/tagged
 
 import Badge from "~/components/en/Badge.astro";
 
-`Tagged` represents a custom value identified by an integer between 0 and 2^64-1.
+`Tagged` represents a custom value identified by an integer from 0 to 2<sup>64</sup>-1.
 
 ### Import
 
@@ -23,27 +23,28 @@ new Tagged<T>(tag: number | BigInt, value: T);
 
 ##### `tag`
 
-An integer between 0 and 2^64-1 that identifies the tagged data item. Note that in JavaScript, use BigInt to represent numbers greater than 2^53-1.
+An integer value from 0 to 2<sup>64</sup>-1 that identifies the tagged data item.  Note that in JavaScript, use `BigInt` for numbers exceeding 2<sup>53</sup>-1.
 
 ##### `value`
 
 The value of the tagged data item.
 
-#### Returns
+#### Return Value
 
-When called through `new`, `Tagged` returns its instance.
+When called with `new`, `Tagged` returns its instance.
+
 
 ### `.tag` <Badge variant="instance" /><Badge variant="property" />
 
-`.tag` is a property that holds the integer between 0 and 2^64-1 that identifies the tagged data item.
+`.tag` is a property holding an integer value from 0 to 2<sup>64</sup>-1 that identifies the tagged data item.
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-`.value` is a property that stores the value of the tagged data item.
+`.value` is a property storing the value of the tagged data item.
 
 ### `.toCBOR()` <Badge variant="instance" /><Badge variant="method" />
 
-`.toCBOR` is a function that returns information for encoding to CBOR.
+`.toCBOR()` is a function that returns information for encoding into CBOR.
 
 ```ts
 toCBOR(): [tag: number | bigint, value: unknown];
@@ -53,12 +54,12 @@ toCBOR(): [tag: number | bigint, value: unknown];
 
 None.
 
-#### Returns
+#### Return Value
 
-Returns information for encoding to CBOR.
+Returns the information necessary for CBOR encoding.
 
-### Notes
+### Remarks
 
-Please also refer to the following document:
+See also:
 
 - [https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml)

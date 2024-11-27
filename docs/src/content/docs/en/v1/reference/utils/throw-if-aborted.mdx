@@ -3,7 +3,7 @@ title: throwIfAborted
 slug: en/v1/reference/utils/throw-if-aborted
 ---
 
-The `throwIfAborted` function throws an error if the provided abort signal has been aborted. It is provided for environments where `new AbortSignal().throwIfAborted()` is not implemented.
+`throwIfAborted` is a function that throws an error if the provided abort signal has been aborted, including the reason for abortion. It is provided for environments that do not have `new AbortSignal().throwIfAborted()` implemented.
 
 ## Import
 
@@ -22,6 +22,6 @@ function throwIfAborted(signal: AbortSignal | null | undefined): void;
 `signal`
 :   The abort signal.
 
-#### Returns
+#### Return Value
 
-Nothing.
+None.

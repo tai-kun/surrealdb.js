@@ -1,11 +1,11 @@
 ---
-title: 表格
+title: 表
 slug: zh-CN/v2/api/data/table
 ---
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Table` 类表示一个记录 ID 的表格名称。
+`Table` 类表示记录ID的表名。
 
 ### 导入
 
@@ -28,7 +28,7 @@ new Table(source: string | { name: string }); // standard
 
 ##### `source`
 
-表格名称或 `Table` 对象。如果预设小于 standard，则只能传入表格名称。
+表名或 `Table` 对象。如果预设低于standard，则只能传递表名。
 
 #### 返回值
 
@@ -36,7 +36,7 @@ new Table(source: string | { name: string }); // standard
 
 ### `.name` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-表格名称。获取此属性时，字符串不会被转义。
+表名。获取此属性时，字符串不会被转义。
 
 ```ts
 .name: string;
@@ -56,7 +56,7 @@ console.log(table.name);
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Table` 对象转换为 SurrealQL 中可用的字符串变量。
+将 `Table` 对象转换为SurrealQL变量中可用的字符串。
 
 `.valueOf()` 和 `.toJSON()` 将返回与该方法相同的结果。
 
@@ -70,7 +70,7 @@ console.log(table.name);
 
 #### 返回值
 
-返回表格名称。
+返回表名。
 
 #### 示例
 
@@ -84,7 +84,7 @@ console.log(table.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Table` 对象转换为可以嵌入 SurrealQL 的字符串。与 `.toString()` 类似，但表格名称将根据 SurrealDB 的实现进行转义。
+将 `Table` 对象转换为可嵌入SurrealQL的字符串。与 `.toString()` 类似，但表名将按照SurrealDB的实现进行转义。
 
 ```ts
 .toSurql(): string;
@@ -96,7 +96,7 @@ console.log(table.toString());
 
 #### 返回值
 
-返回转义后的表格名称字符串。
+返回已转义的表名字符串。
 
 #### 示例
 
@@ -122,13 +122,13 @@ console.log(table.toSurql());
 
 #### 返回值
 
-返回一个新的 `Table` 对象。如果继承了 `Table` 类，则将返回该类的实例。
+返回一个新的 `Table` 对象。如果继承了 `Table` 类，则返回该类的实例。
 
 ### 进阶
 
-#### 类型保护
+#### 类型守卫
 
-可以使用 `Table` 的表格名称作为类型参数来实现类型安全：
+可以使用 `Table` 的表名作为类型参数来实现类型安全：
 
 ```ts
 import { Table } from "@tai-kun/surrealdb/standard-datatypes";
@@ -139,9 +139,9 @@ function isUserTable(table: unknown): table is Table<"user"> {
 }
 ```
 
-#### `Table` 对象的通用判定
+#### `Table` 对象的通用判断
 
-建议使用 `isTable` 函数来判定一个值是否为 `Table` 对象，而无需依赖预设。该函数不使用 `instanceof`，因此在验证值的预设未知时很有用。
+建议使用 `isTable` 函数来判断值是否为 `Table` 对象，而无需依赖预设。此函数不使用 `instanceof`，因此在验证值的预设未知时非常有用。
 
 ```ts
 import { isTable } from "@tai-kun/surrealdb";

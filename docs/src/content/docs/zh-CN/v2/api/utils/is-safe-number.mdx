@@ -3,7 +3,7 @@ title: isSafeNumber
 slug: zh-CN/v2/api/utils/is-safe-number
 ---
 
-`isSafeNumber` 用于验证传入的数值是否在运算上是安全的。
+`isSafeNumber` 用于验证传入的数字是否在运算上安全。
 
 ### 导入
 
@@ -21,12 +21,12 @@ function isSafeNumber(value: number): boolean;
 
 ##### `value`
 
-要验证的数值。
+要验证的数字。
 
 #### 返回值
 
-如果 `value` 符合以下情况，则返回 `false`：
+如果 `value` 为以下情况，则返回 `false`：
 
 - `NaN`
-- 无限大
+- 无穷大
 - 超出 ±2^53-1 的范围

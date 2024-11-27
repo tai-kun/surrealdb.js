@@ -1,61 +1,61 @@
 ---
-title: 오류
+title: 에러
 slug: ko/v1/reference/errors
 ---
 
 ## SurrealError
 
-`SurrealError` 는 이 SDK에서 명시적으로 발생시키는 오류 객체의 대부분이 상속하는 기본 클래스입니다. 이 클래스는 JavaScript의 `Error` 클래스를 상속합니다. 이 오류 객체는 단독으로 발생하는 경우가 거의 없으며, 일반적으로 상속받은 특수한 의미를 가진 오류 객체가 발생합니다. `try-catch` 구문 등에서 포착한 오류가 이 SDK에서 명시적으로 발생시킨 오류인지 쉽게 분류하기 위해 사용하는 것이 좋습니다.
+`SurrealError`는 이 SDK가 명시적으로 던지는 에러 객체의 대부분이 상속하는 기본 클래스입니다. 이 클래스는 JavaScript의 `Error` 클래스를 상속합니다. 이 에러 객체가 단독으로 던져지는 경우는 거의 없으며, 기본적으로 상속 클래스의 특별한 의미를 가진 에러 객체가 던져집니다. `try-catch` 구문 등으로 에러를 포착했을 때, 이 SDK가 명시적으로 던진 에러인지 쉽게 분류하기 위해 사용하는 것을 권장합니다.
 
 `.name: "SurrealError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.message`
-:   오류 메시지입니다.
+:   에러 메시지입니다.
 
 `.stack`
-:   스택 트레이스가 기록될 수 있습니다.
+:   스택 트레이스가 기록되어 있을 수 있습니다.
 
 `.cause`
-:   오류가 발생한 원인이나 컨텍스트가 설정될 수 있습니다.
+:   에러가 발생한 원인이나 컨텍스트가 설정되어 있을 수 있습니다.
 
 ## SurrealTypeError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-입력 값이나 다른 검증에 실패한 경우 발생하는 오류입니다.
+입력 값이나 기타 검증에 실패했을 때 던져지는 에러입니다.
 
 `.name: "SurrealTypeError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.expected`
-:   예상되는 데이터 형식입니다.
+:   예상하는 데이터 형식입니다.
 
 `.actual`
 :   실제 값의 문자열 표현입니다.
 
 ## SurrealAggregateError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-여러 오류나 오류 메시지가 함께 제공된 오류입니다.
+여러 에러 또는 에러 메시지가 결합된 에러입니다.
 
 `.name: "SurrealAggregateError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.cause: unknown[]`
-:   배열의 각 요소에 오류나 오류 메시지 등이 포함되어 있습니다.
+:   배열의 각 요소에 에러 또는 에러 메시지 등이 포함되어 있습니다.
 
 ## CircularReferenceError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-순환 참조를 감지한 경우 발생하는 오류입니다. 주로 JavaScript 값을 다른 형식으로 변환하는 과정에서 부모 객체와 동일한 객체가 감지되면 발생합니다.
+순환 참조를 감지했을 때 던져지는 에러입니다. 주로 JavaScript 값을 다른 형식으로 변환하는 과정에서 부모 객체와 동일한 객체가 감지되었을 때 던져집니다.
 
 `.name: "CircularReferenceError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 import { toSurql } from "@tai-kun/surrealdb/utils";
@@ -70,12 +70,12 @@ toSurql(a); // throws CircularReferenceError
 
 ## NumberRangeError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-숫자가 범위를 벗어난 값을 가진 경우 발생하는 오류입니다.
+숫자가 범위를 벗어난 값을 가졌을 때 던져지는 에러입니다.
 
 `.name: "NumberRangeError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.range`
 :   예상 범위입니다.
@@ -84,39 +84,39 @@ toSurql(a); // throws CircularReferenceError
 :   실제 값입니다.
 
 `.integer`
-:   `true`이면 정수를 기대합니다.
+:   `true`인 경우, 정수를 예상합니다.
 
 ## UnsupportedRuntimeError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-지원되지 않는 런타임을 사용하고 있다고 판단된 경우 발생하는 오류입니다.
+지원되지 않는 런타임을 사용하고 있다고 판단될 때 던져지는 에러입니다.
 
 `.name: "UnsupportedRuntimeError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## UnreachableError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-도달할 수 없는 코드에 도달한 경우 발생하는 오류입니다. 이 오류가 발생했다면 아마도 이 SDK의 버그를 만났을 것입니다.
+도달할 수 없는 코드에 도달했을 때 던져지는 에러입니다. 이 에러가 던져졌다면, 아마도 이 SDK의 버그를 만난 것으로 생각됩니다.
 
 `.name: "UnreachableError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## CircularEngineReferenceError
 
-상속 원본: `CircularReferenceError`
+상속원: `CircularReferenceError`
 
-데이터베이스에 연결할 때 엔진 간에 순환 참조가 발생한 경우 발생하는 오류입니다.
+데이터베이스에 연결할 때 엔진 간에 순환 참조가 발생했을 때 던져지는 에러입니다.
 
 `.name: "CircularEngineReferenceError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.seen: string[]`
 :   순환 참조가 발생할 때까지 거친 프로토콜 이름 목록입니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 const { Surreal } = initSurreal({
@@ -131,21 +131,21 @@ await using db = new Surreal();
 await db.connect("https://localhost:8000"); // throws CircularEngineReferenceError: Circular engine reference: http,https
 ```
 
-위 예에서 https 프로토콜의 엔진이 http에 설정된 엔진을 사용하려고 하는 반면, http 프로토콜의 엔진은 https에 설정된 엔진을 사용하려고 하기 때문에 순환 참조 오류가 발생합니다.
+위의 예에서는 https 프로토콜 엔진이 http에 설정된 엔진을 사용하려고 하는데, http 프로토콜 엔진은 https에 설정된 엔진을 사용하려고 하기 때문에 순환 참조 에러가 던져집니다.
 
 ## EngineNotFoundError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-엔진이 설정되지 않은 프로토콜로 연결하려고 할 때 발생하는 오류입니다.
+엔진이 설정되지 않은 프로토콜로 연결하려고 할 때 던져지는 에러입니다.
 
 `.name: "EngineNotFoundError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.protocol: string`
-:   연결 대상 프로토콜 이름입니다.
+:   연결할 프로토콜 이름입니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 const { Surreal } = initSurreal({
@@ -161,12 +161,12 @@ await db.connect("https://localhost:8000"); // throws EngineNotFoundError: No ht
 
 ## ConnectionConflictError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-클라이언트가 여러 엔드포인트에 동시에 연결하려고 할 때 발생하는 오류입니다.
+클라이언트가 여러 엔드포인트에 동시에 연결하려고 할 때 던져지는 에러입니다.
 
 `.name: "ConnectionConflictError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.endpoint1: string`
 :   한쪽 엔드포인트입니다.
@@ -181,7 +181,7 @@ await db.connect("http://localhost:8000");
 await db.connect("http://localhost:11298"); // throws ConnectionConflictError: Connection conflict between http://localhost:8000/rpc and http://localhost:11298/rpc.
 ```
 
-`.connect` 메서드는 전달된 URL의 경로가 `/rpc`로 끝나지 않으면, 그 끝에 `/rpc`를 추가합니다. 따라서 한쪽 엔드포인트의 URL 경로가 `/rpc`로 끝나는 경우, 보기와 달리 오류가 발생하지 않을 수 있습니다.
+`.connect` 메서드는 전달된 URL의 경로가 `/rpc`로 끝나지 않는 경우, 그것을 끝에 추가합니다. 따라서 한쪽 엔드포인트의 URL 경로가 `/rpc`로 끝나는 경우, 외관상으로는 에러가 발생하지 않을 수 있습니다.
 
 ```ts
 await using db = new Surreal();
@@ -199,12 +199,12 @@ await db.connect("http://localhost:8000"); // OK!
 
 ## NamespaceConflictError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-SDK가 동시에 여러 다른 네임스페이스로 전환하려고 할 때 발생하는 오류입니다.
+SDK가 동시에 여러 다른 네임스페이스로 전환하려고 할 때 던져지는 에러입니다.
 
 `.name: "NamespaceConflictError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.namespace1: string`
 :   한쪽 네임스페이스입니다.
@@ -212,7 +212,7 @@ SDK가 동시에 여러 다른 네임스페이스로 전환하려고 할 때 발
 `.namespace2: string`
 :   다른 쪽 네임스페이스입니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 await using db = new Surreal();
@@ -227,12 +227,12 @@ await Promise.all([
 
 ## DatabaseConflictError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-SDK가 동시에 여러 다른 데이터베이스로 전환하려고 할 때 발생하는 오류입니다.
+SDK가 동시에 여러 다른 데이터베이스로 전환하려고 할 때 던져지는 에러입니다.
 
 `.name: "DatabaseConflictError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.database1: string`
 :   한쪽 데이터베이스입니다.
@@ -240,7 +240,7 @@ SDK가 동시에 여러 다른 데이터베이스로 전환하려고 할 때 발
 `.database2: string`
 :   다른 쪽 데이터베이스입니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 await using db = new Surreal();
@@ -255,17 +255,17 @@ await Promise.all([
 
 ## MissingNamespaceError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-데이터베이스를 선택하기 전에 네임스페이스가 선택되지 않은 경우 발생하는 오류입니다. 또는 데이터베이스를 선택한 상태에서 네임스페이스를 선택하지 않은 상태로 전환하려고 할 때도 발생합니다.
+데이터베이스를 선택하기 전에 네임스페이스가 선택되지 않았을 때 던져지는 에러입니다. 또는 데이터베이스를 선택한 상태에서 네임스페이스를 선택하지 않은 상태로 만들려고 할 때도 던져집니다.
 
 `.name: "MissingNamespaceError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.database: string`
 :   데이터베이스 이름입니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 await using db = new Surreal();
@@ -276,32 +276,32 @@ await db.use({ database: "example" }); // throws MissingNamespaceError: The name
 
 ## RpcResponseError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-RPC 응답이 오류를 나타내는 경우 발생하는 오류입니다. 연결된 프로토콜을 통한 통신이나 응답 본문을 디코딩하는 데 문제가 없지만, SurrealDB가 RPC 요청을 처리할 수 없음을 의미합니다.
+RPC 응답이 에러를 나타낼 때 던져지는 에러입니다. 연결된 프로토콜에 의한 통신이나 응답 바디의 디코딩에는 문제가 없지만, SurrealDB가 RPC 요청을 처리할 수 없음을 의미합니다.
 
 `.name: "RpcResponseError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.id?: string`
 :   RPC 요청을 식별하는 ID입니다. ID는 항상 `<메서드 이름>_`으로 시작합니다.
 
 `.code: number`
-:   SurrealDB 문서에 명시되어 있지는 않지만, 아마도 JSON-RPC 오류 코드일 것입니다.
+:   SurrealDB 문서에 명시되어 있지 않지만, 아마도 JSON-RPC의 에러 코드일 것입니다.
 
 ## QueryFailedError
 
-상속 원본: `SurrealAggregateError`
+상속원: `SurrealAggregateError`
 
-쿼리에 실패한 경우 발생하는 오류입니다.
+쿼리에 실패했을 때 던져지는 에러입니다.
 
 `.name: "QueryFailedError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.cause: string[]`
-:   오류 목록입니다.
+:   에러 목록입니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 await using db = new Surreal();
@@ -312,14 +312,14 @@ await db.query("OUTPUT 'Hello'"); // throws QueryFailedError: Query failed with 
 
 ## Disconnected
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-연결이 강제로 종료되었음을 나타내는 오류입니다.
+연결이 강제로 종료되었음을 나타내는 에러입니다.
 
 `.name: "Disconnected"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
-예를 들어 다음과 같은 경우 이 오류를 얻습니다.
+예를 들어 다음과 같은 경우에 이 에러를 얻습니다.
 
 ```ts
 const db = new Surreal();
@@ -340,71 +340,71 @@ await db.disconnect({ force: true });
 
 ## EngineError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-엔진으로 인한 오류임을 나타냅니다. 이벤트 리스너를 통해 전송됩니다.
+엔진에 기인하는 에러임을 나타냅니다. 이벤트 리스너를 통해 전송됩니다.
 
 `.name: "EngineError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.fatal: boolean | undefined`
-:   이 오류가 치명적인지 여부를 나타냅니다.
+:   이 에러가 치명적인지 여부를 나타냅니다.
 
 ## HttpEngineError
 
-상속 원본: `EngineError`
+상속원: `EngineError`
 
-HTTP 엔진으로 인한 오류임을 나타냅니다. 현재 정의만 되어 있고 사용되지 않습니다.
+HTTP 엔진에 기인하는 에러임을 나타냅니다. 현재는 정의만 되어 있고 사용되지 않습니다.
 
 `.name: "HttpEngineError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## WebSocketEngineError
 
-상속 원본: `EngineError`
+상속원: `EngineError`
 
-WebSocket 엔진으로 인한 오류임을 나타냅니다. RPC 요청을 식별하는 ID를 찾기 전에 응답 본문을 파싱하는 데 실패하거나 WebSocket 객체에서 오류 이벤트를 받았을 때, WebSocket 연결을 끊었을 때 등에 사용됩니다.
+WebSocket 엔진에 기인하는 에러임을 나타냅니다. RPC 요청을 식별하는 ID를 찾기 전에 응답 바디의 분석에 실패했거나, WebSocket 객체에서 에러 이벤트를 받았을 때, WebSocket 연결을 끊었을 때 등 사용됩니다.
 
 `.name: "WebSocketEngineError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.code: number`
 :   다음 상태 코드 중 하나입니다.
-    - `1000`~`1015`: [MDN 참조](https://developer.mozilla.org/docs/Web/API/CloseEvent/code)
+    - `1000`~`1015`: [MDN Reference](https://developer.mozilla.org/docs/Web/API/CloseEvent/code)
     - `3150`: `WebSocket`[^1] 인스턴스에서 "error" 이벤트를 받았음을 나타냅니다.
-    - `3151`: WebSocket 엔진이 등록한 "open" 이벤트 핸들러에서 오류가 발생했음을 나타냅니다. 연결 중 상태에서 연결 상태로 전환하는 과정에서 `StateTransitionError`가 발생했을 가능성이 높습니다.
-    - `3152`: WebSocket 엔진이 등록한 "message" 이벤트 핸들러에서 오류가 발생했음을 나타냅니다. 다양한 원인이 있을 수 있지만, 이벤트 핸들러에서 `ResponseError` 또는 `RpcResponseError`가 발생했을 가능성이 높습니다. 원인을 추적해보면 `.query()` 메서드에서 잘못된 문법의 SurrealQL 사용자 지정 쿼리를 요청하거나, 유효하지 않은 RPC 매개변수로 요청했기 때문일 수 있습니다. 그럴 경우 RPC를 호출한 메서드는 (기본적으로) 5초 후에 타임아웃되어 실패합니다.
-    - `3153`: ping을 주고받는 데 실패했음을 나타냅니다. 일시적인 오류일 수 있지만, 계속해서 발생한다면 연결이 유지되지 않을 수 있습니다.
-    - `3154`: WebSocket 엔진이 등록한 "close" 이벤트 핸들러에서 오류가 발생했음을 나타냅니다. 연결 해제 중 상태에서 연결 해제 상태로 전환하는 과정에서 `StateTransitionError`가 발생했을 가능성이 높습니다.
-:   참고로 위에서 다음 상태 코드는 제외됩니다. 이 SDK에서는 오류로 처리하지 않습니다.
-    - `1000`: 정상적으로 연결 해제되었습니다.
-    - `1001`: 조기 연결 해제는 자주 발생합니다.
-    - `1004`: 예약되었습니다.
-    - `1005`: 예약되었습니다.
-    - `1006`: 예약되었습니다.
-    - `1015`: 예약되었습니다.
+    - `3151`: WebSocket 엔진이 등록하는 "open" 이벤트 핸들러에서 에러가 발생했음을 나타냅니다. 연결 중 상태에서 연결 상태로 전이하는 중에 `StateTransitionError`가 발생한 경우가 대부분입니다.
+    - `3152`: WebSocket 엔진이 등록하는 "message" 이벤트 핸들러에서 에러가 발생했음을 나타냅니다. 다양한 원인이 있을 수 있지만, 이벤트 핸들러에서 `ResponseError` 또는 `RpcResponseError`가 던져졌을 가능성이 높습니다. 원인을 추적하면 `.query()` 메서드에서 잘못된 문법의 SurrealQL 커스텀 쿼리를 요청했거나, 잘못된 RPC 매개변수로 요청했기 때문일 수 있습니다. 그 경우, RPC 호출의 원본 메서드는 (기본적으로) 5초 후에 타임아웃되어 실패합니다.
+    - `3153`: ping 송수신에 실패했음을 나타냅니다. 일시적인 에러일 수도 있지만, 계속해서 받고 있다면 연결을 유지하지 못하고 있을 가능성이 있습니다.
+    - `3154`: WebSocket 엔진이 등록하는 "close" 이벤트 핸들러에서 에러가 발생했음을 나타냅니다. 연결 해제 중 상태에서 연결 해제 상태로 전이하는 중에 `StateTransitionError`가 발생한 경우가 대부분입니다.
+:   참고로, 위에서 다음 상태 코드를 제외합니다. 이 SDK에서는 에러로 처리하지 않습니다.
+    - `1000`: 정상적으로 연결이 해제되었습니다.
+    - `1001`: 조기 연결 해제는 흔히 발생합니다.
+    - `1004`: 예약됨.
+    - `1005`: 예약됨.
+    - `1006`: 예약됨.
+    - `1015`: 예약됨.
 
-^1: `WebSocket`은 런타임이 전역 변수에 정의되어 있거나, `ws` SDK의 클래스입니다.
+^1: `WebSocket`은 런타임이 전역 변수에 정의하는 클래스이거나, `ws` SDK의 클래스일 수 있습니다.
 
 ## StateTransitionError
 
-상속 원본: `SurrealAggregateError`
+상속원: `SurrealAggregateError`
 
-상태 전환 중에 이벤트 리스너를 실행하는 데 실패한 경우 발생하는 오류입니다.
+상태 전이 중에 이벤트 리스너의 실행에 실패했을 때 던져지는 에러입니다.
 
 `.name: "StateTransitionError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.from: number`
-:   상태 전환을 시작할 때의 상태입니다.
+:   상태 전이 시작 시 상태입니다.
 
 `.to: number`
-:   전환할 대상 상태입니다.
+:   전이할 상태입니다.
 
 `.fallback: number`
-:   상태 전환에 실패한 경우 대신 전환할 대상입니다. `.to`와 동일한 값이면 강제로 전환되었음을 의미합니다.
+:   상태 전이에 실패했을 때 대체 전이할 상태입니다. `.to`와 같은 값이면, 강제로 전이했음을 의미합니다.
 
-예를 들어 다음과 같은 경우 이 오류가 발생합니다.
+예를 들어 다음과 같은 경우에 이 에러가 던져집니다.
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -431,95 +431,95 @@ await db.connect("http://localhost:8000"); // throws ...
 
 ## ConnectionUnavailableError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-연결되지 않은 상태에서 RPC 요청을 보내려고 할 때 발생하는 오류입니다.
+연결되지 않은 상태에서 RPC 요청을 보내려고 할 때 던져지는 에러입니다.
 
 `.name: "ConnectionUnavailableError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## ResponseError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-응답을 PRC 응답으로 파싱할 수 없는 경우 발생하는 오류입니다. `RpcResponseError`와 다릅니다.
+응답을 PRC 응답으로 분석할 수 없을 때 던져지는 에러입니다. `RpcResponseError`와는 다릅니다.
 
 `.name: "ResponseError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## CborError
 
-상속 원본: `SurrealError`
+상속원: `SurrealError`
 
-`@tai-kun/surrealdb/cbor`에서 명시적으로 발생시키는 CBOR 관련 모든 오류가 상속하는 클래스입니다. 이 오류는 직접 발생하지 않습니다.
+`@tai-kun/surrealdb/cbor`가 명시적으로 던지는, CBOR 관련 모든 에러가 상속하는 클래스입니다. 이것이 직접 던져지는 경우는 없습니다.
 
 `.name: "CborError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## CborWellFormednessError
 
-상속 원본: `CborError`
+상속원: `CborError`
 
-`@tai-kun/surrealdb/cbor`에서 명시적으로 발생시키는 CBOR 디코딩 관련 모든 오류가 상속하는 클래스입니다. 이 오류는 직접 발생하지 않습니다.
+`@tai-kun/surrealdb/cbor`가 명시적으로 던지는, CBOR 디코딩 관련 모든 에러가 상속하는 클래스입니다. 이것이 직접 던져지는 경우는 없습니다.
 
-RFC8949의 부록 F에 있는 "Well-Formedness Errors and Examples"를 참조하십시오.
+RFC8949 부록 F의 "[Well-Formedness Errors and Examples](https://datatracker.ietf.org/doc/html/rfc8949#name-well-formedness-errors-and-)"를 참조하십시오.
 
 `.name: "CborWellFormednessError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## CborTooMuchDataError
 
-상속 원본: `CborWellFormednessError`
+상속원: `CborWellFormednessError`
 
 소비되지 않은 입력 바이트가 남아 있음을 나타냅니다.
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.2)
 
 `.name: "CborTooMuchDataError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## CborTooLittleDataError
 
-상속 원본: `CborWellFormednessError`
+상속원: `CborWellFormednessError`
 
 입력 바이트가 불완전함을 나타냅니다.
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.4)
 
 `.name: "CborTooLittleDataError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## CborSyntaxError
 
-상속 원본: `CborWellFormednessError`
+상속원: `CborWellFormednessError`
 
 입력 바이트가 CBOR의 인코딩 형식과 일치하지 않음을 나타냅니다.
 
 [RFC8949](https://datatracker.ietf.org/doc/html/rfc8949#section-appendix.f-2.6)
 
 `.name: "CborSyntaxError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 ## CborMaxDepthReachedError
 
-상속 원본: `CborError`
+상속원: `CborError`
 
-CBOR을 인코딩하거나 디코딩할 때 JavaScript 객체의 깊이가 최대값에 도달하면 발생하는 오류입니다. 객체나 배열에 들어갈 때마다 깊이가 1 증가합니다.
+CBOR 인코딩 또는 디코딩 시 JavaScript 객체의 깊이가 최대값에 도달했을 때 던져지는 에러입니다. 객체 또는 배열에 들어갈 때마다 깊이가 1 증가합니다.
 
 `.name: "CborMaxDepthReachedError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.maxDepth: number`
 :   최대 깊이입니다.
 
 ## CborUnsafeMapKeyError
 
-상속 원본: `CborError`
+상속원: `CborError`
 
-CBOR을 인코딩하거나 디코딩할 때 안전하지 않은 맵 키가 발견되면 발생하는 오류입니다.
+CBOR 인코딩 또는 디코딩 시 안전하지 않은 맵 키가 발견되었을 때 던져지는 에러입니다.
 
 `.name: "CborUnsafeMapKeyError"`
-:   오류 이름입니다.
+:   에러 이름입니다.
 
 `.key: unknown`
 :   안전하지 않다고 판단된 맵 키입니다.

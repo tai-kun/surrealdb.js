@@ -3,9 +3,9 @@ title: toSurql
 slug: ko/v1/reference/utils/to-surql
 ---
 
-`toSurql`은 JavaScript 값을 SurrealQL 문자열로 변환하는 함수입니다.
+`toSurql` 함수는 JavaScript 값을 SurrealQL 문자열로 변환하는 함수입니다.
 
-### 가져오기
+### import
 
 ```ts
 import { toSurql } from "@tai-kun/surrealdb/utils";
@@ -21,7 +21,7 @@ function toSurql(value: unlnown): string;
 
 ##### `value`
 
-JavaScript 값입니다. 다음 값 중 하나를 받습니다.
+JavaScript 값입니다. 다음 값 중 하나를 허용합니다.
 
 - `string`
 - `number`
@@ -37,17 +37,17 @@ JavaScript 값입니다. 다음 값 중 하나를 받습니다.
 - `Set<unknown>`
 - `Map<unknown, unknown>`
 
-`unknown`은 위의 유형으로 구성된 값을 나타냅니다.
+`unknown`은 위의 타입으로 구성된 값을 나타냅니다.
 
-변환할 때는 위 순서가 우선 순위를 나타냅니다. 즉, 일반 객체에 `.toJSON` 함수가 있어도 `.toSurql` 함수가 있으면 `.toSurql` 함수가 우선합니다.
+변환에서는 위 순서가 우선순위를 나타냅니다. 즉, 일반 객체가 `.toJSON` 함수를 가지고 있더라도 `.toSurql` 함수를 가지고 있다면 `.toSurql` 함수가 우선적으로 사용됩니다.
 
-일반 객체 판별에는 [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj)를 사용합니다. 따라서 일반 객체에 `.toSurql` 또는 `.toJSON`이 없고 `Symbol.toStringTag` 또는 `Symbol.iterator`가 있는 경우 객체로 판별하지 않고 오류를 발생시킵니다.
+일반 객체의 판정에는 [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj)를 사용합니다. 따라서 일반 객체가 `.toSurql`이나 `.toJSON`을 가지고 있지 않고, `Symbol.toStringTag`나 `Symbol.iterator`를 가지고 있는 경우에는 객체로 판정하지 않고 오류를 발생시킵니다.
 
-#### 반환 값
+#### 반환값
 
 SurrealQL 문자열입니다.
 
-#### 예
+#### 예시
 
 ```ts
 import { toSurql } from "@tai-kun/surrealdb/utils";

@@ -5,11 +5,11 @@ slug: zh-CN/v1/guides/authentication
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-SurrealDB 支持两种认证方式。一种是使用用户名和密码进行认证，这需要使用 [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) 语句定义的用户名和密码；另一种是使用 [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) 语句定义的自定义认证。我们将前者称为“用户认证”，后者称为“访问认证”。
+认证方式有两种。一种是使用用户名和密码进行认证，这需要使用[`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user)语句定义的用户名和密码；另一种是使用[`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access)语句定义的自定义认证。在这里，我们将前者称为“用户认证”，后者称为“访问认证”。
 
 ### `.signin()` <Badge variant="instance" /><Badge variant="method" />
 
-使用用户认证或访问认证登录 SurrealDB。
+使用用户认证或访问认证登录SurrealDB。
 
 ```ts
 signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -19,26 +19,26 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-用户认证或访问认证所需的信息。每个认证类型所需的参数如下：
+用户认证或访问认证所需的信息。每种认证类型所需的参数如下：
 
 | 认证类型 | 参数 |
-| --- | ---|
+|---|---|
 | 根用户 | `{ user: string, pass: string }` |
 | 命名空间用户 | `{ user: string, pass: string, ns: string }` |
 | 数据库用户 | `{ user: string, pass: string, ns: string, db: string }` |
-| 范围用户 | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
+| 作用域用户 | `{ sc: string, ns: string, db: string, [param: string]: unknown }` |
 
 ##### `options`
 
-PRC 请求选项。
+PRC 请求的选项。
 
 #### 返回值
 
-返回一个以 `Jwt` 解析的 `Promise` 对象。
+返回一个 `Promise` 对象，该对象将解析为 `Jwt`。
 
 #### 示例
 
-以下示例使用根用户登录 SurrealDB：
+以下示例使用根用户登录SurrealDB：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -51,8 +51,8 @@ const jwt = await db.signin({
   pass: "passw0rd",
 });
 
-console.log(jwt.issuedAt);  // e.g. 1722749786
-console.log(jwt.expiresAt); // e.g. 1722753386
+console.log(jwt.issuedAt);  // 例如 1722749786
+console.log(jwt.expiresAt); // 例如 1722753386
 console.log(jwt.namespace); // undefined
 console.log(jwt.database);  // undefined
 console.log(jwt.access);    // undefined
@@ -64,7 +64,7 @@ console.log(JSON.stringify(jwt)); // '"[REDACTED]"'
 await db.disconnect();
 ```
 
-以下示例使用命名空间用户登录 SurrealDB：
+以下示例使用命名空间用户登录SurrealDB：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -86,7 +86,7 @@ console.log(jwt.user);      // 'ns_user'
 await db.disconnect();
 ```
 
-以下示例使用数据库用户登录 SurrealDB：
+以下示例使用数据库用户登录SurrealDB：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -109,7 +109,7 @@ console.log(jwt.user);      // 'db_user'
 await db.disconnect();
 ```
 
-以下示例使用范围用户登录 SurrealDB。`.user` 将设置为记录 ID：
+以下示例使用作用域用户登录SurrealDB。`.user` 将设置为记录 ID：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -121,20 +121,20 @@ const jwt = await db.signin({
   ns: "my_namespace",
   db: "my_database",
   sc: "account",
-  // ...parmeters
+  // ...参数
 });
 
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
 console.log(jwt.scope);     // 'account'
-console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+console.log(jwt.user);      // 例如 'user:⟨tai-kun⟩'
 
 await db.disconnect();
 ```
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-使用范围用户注册 SurrealDB。
+使用作用域用户注册SurrealDB。
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -144,15 +144,15 @@ signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `auth`
 
-范围用户所需信息。
+作用域用户所需的信息。
 
 ##### `options`
 
-PRC 请求选项。
+PRC 请求的选项。
 
 #### 返回值
 
-返回一个以 `Jwt` 解析的 `Promise` 对象。
+返回一个 `Promise` 对象，该对象将解析为 `Jwt`。
 
 #### 示例
 
@@ -166,20 +166,20 @@ const jwt = await db.signup({
   ns: "my_namespace",
   db: "my_database",
   sc: "account",
-  // ...parmeters
+  // ...参数
 });
 
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
 console.log(jwt.scope);     // 'account'
-console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+console.log(jwt.user);      // 例如 'user:⟨tai-kun⟩'
 
 await db.disconnect();
 ```
 
 ### `.authenticate()` <Badge variant="instance" /><Badge variant="method" />
 
-使用 JWT 认证当前连接。
+使用JWT认证当前连接。
 
 ```ts
 authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
@@ -189,15 +189,15 @@ authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
 
 ##### `token`
 
-要认证的 JWT。
+要认证的JWT。
 
 ##### `options`
 
-RPC 请求选项。
+RPC 请求的选项。
 
 #### 返回值
 
-返回一个以 `undefined` 解析的 `Promise` 对象。
+返回一个解析为 `undefined` 的 `Promise` 对象。
 
 ### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -211,14 +211,14 @@ invalidate(options?: ClientRpcOptions): Promise<void>
 
 ##### `options`
 
-RPC 请求选项。
+RPC 请求的选项。
 
 #### 返回值
 
-返回一个以 `undefined` 解析的 `Promise` 对象。
+返回一个解析为 `undefined` 的 `Promise` 对象。
 
 {/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
 
 #### 参数
 
-#### 返値 */}
+#### 返回值 */}

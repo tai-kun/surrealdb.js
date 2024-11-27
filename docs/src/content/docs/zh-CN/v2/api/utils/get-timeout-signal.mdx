@@ -3,7 +3,7 @@ title: getTimeoutSignal
 slug: zh-CN/v2/api/utils/get-timeout-signal
 ---
 
-`getTimeoutSignal` 函数返回一个在指定毫秒数后超时的 `AbortSignal` 对象。它用于 `AbortSignal.timeout()` 未实现的环境。
+`getTimeoutSignal` 函数返回一个在指定毫秒数后超时的 `AbortSignal` 对象。此函数用于 `AbortSignal.timeout()` 未实现的环境。
 
 ### 导入
 
@@ -21,7 +21,7 @@ function getTimeoutSignal(milliseconds: number): AbortSignal;
 
 ##### `milliseconds`
 
-设置超时前的毫秒数。
+设置超时之前的毫秒数。
 
 #### 返回值
 
@@ -29,11 +29,11 @@ function getTimeoutSignal(milliseconds: number): AbortSignal;
 
 #### 异常
 
-如果服务器端运行时没有 `AbortSignal.timeout` 函数，则会抛出错误。这是因为实现 polyfill 的成本很高。在浏览器中，我们使用了一种稍微强制的方式来实现它。
+如果服务器端运行时环境中不存在 `AbortSignal.timeout` 函数，则会抛出错误。这是因为实现 polyfill 的成本较高。在浏览器中，我们采用了比较“激进”的实现方式。
 
-#### 示例
+#### 例子
 
-以下示例展示如何让 `fetch` 在 5 秒后超时：
+以下示例演示了如何使 `fetch` 在 5 秒后超时：
 
 ```ts
 import { getTimeoutSignal } from "@tai-kun/surrealdb/utils";

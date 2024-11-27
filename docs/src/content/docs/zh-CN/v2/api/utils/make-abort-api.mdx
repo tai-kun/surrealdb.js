@@ -3,7 +3,7 @@ title: makeAbortApi
 slug: zh-CN/v2/api/utils/make-abort-api
 ---
 
-`makeAbortApi` 是一个用于创建中止信号及其相关中止函数的函数。
+`makeAbortApi` 函数用于创建中止信号及其相关的中止函数。
 
 ### 导入
 
@@ -11,7 +11,7 @@ slug: zh-CN/v2/api/utils/make-abort-api
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
 ```
 
-### 用法
+### 使用方法
 
 ```ts
 function makeAbortApi(signal?: AbortSignal): [
@@ -24,23 +24,23 @@ function makeAbortApi(signal?: AbortSignal): [
 
 ##### `signal`
 
-要关联的中止信号。
+关联的中止信号。
 
 #### 返回值
 
-返回一个按以下顺序排列的数组：
+返回一个包含以下两项的数组：
 
 ##### `signal`
 
-中止信号。初始状态下未中止。
+中止信号，初始状态为未中止。
 
 ##### `abort`
 
-向中止信号发送 `"abort"` 事件。可选地接受一个参数 `reason`，它可以用来传递中止原因，通过 `"abort"` 事件进行传递。
+向中止信号发送 `"abort"` 事件。可选地，可以接收一个参数 `reason`，用于通过 `"abort"` 事件传递中止原因。
 
-#### 例子
+#### 示例
 
-以下示例创建了一个无参数的 Abort API：
+以下示例演示了不带参数创建 Abort API 的方法：
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";
@@ -49,9 +49,9 @@ const [signal, abort] = makeAbortApi();
 abort();
 ```
 
-以上示例与 `new AbortController()` 几乎相同。与 `AbortController` 不同的是，`makeAbortApi` 返回的是一个数组，而不是一个对象。
+上述示例与 `new AbortController()` 几乎等效。与 `AbortController` 的区别在于，`makeAbortApi` 返回的是数组而不是对象。
 
-以下示例指定要关联的中止信号来创建 Abort API：
+以下示例演示了指定关联中止信号创建 Abort API 的方法：
 
 ```ts
 import { makeAbortApi } from "@tai-kun/surrealdb/utils";

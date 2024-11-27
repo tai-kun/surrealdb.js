@@ -5,7 +5,7 @@ slug: en/v2/api/cbor/tagged
 
 import Badge from "~/components/en/Badge.astro";
 
-`Tagged` is a custom value identified by an integer value from 0 to 2^64-1.
+`Tagged` represents a custom value identified by an integer from 0 to 2<sup>64</sup>-1.
 
 ### Import
 
@@ -23,7 +23,7 @@ new Tagged<T>(tag: number | BigInt, value: T);
 
 ##### `tag`
 
-An integer value from 0 to 2^64-1 to identify the tagged data item. Note that in JavaScript, use BigInt when using numbers exceeding 2^53-1.
+An integer value from 0 to 2<sup>64</sup>-1 used to identify the tagged data item.  In JavaScript, use `BigInt` for numbers exceeding 2<sup>53</sup>-1.
 
 ##### `value`
 
@@ -35,11 +35,11 @@ When called via `new`, `Tagged` returns its instance.
 
 ### `.tag` <Badge variant="instance" /><Badge variant="property" />
 
-`.tag` is a property that holds the integer value from 0 to 2^64-1 to identify the tagged data item.
+`.tag` is a property holding an integer value from 0 to 2<sup>64</sup>-1 that identifies the tagged data item.
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-`.value` is a property that holds the value of the tagged data item.
+`.value` is a property storing the value of the tagged data item.
 
 ### `.toCBOR()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -55,10 +55,10 @@ None.
 
 #### Return Value
 
-Returns information for encoding into CBOR.
+Returns the information for encoding into CBOR.
 
-### Remarks
+### Notes
 
-Please also refer to the following materials:
+See also:
 
 - [https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml](https://www.iana.org/assignments/cbor-tags/cbor-tags.xhtml)

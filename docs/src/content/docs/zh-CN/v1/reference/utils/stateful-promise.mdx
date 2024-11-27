@@ -5,7 +5,7 @@ slug: zh-CN/v1/reference/utils/stateful-promise
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`StatefulPromise` 是一个实现 `PromiseLike` 接口的类，它不会在未处理的情况下被拒绝时抛出错误。
+`StatefulPromise` 是一个实现了 `PromiseLike` 的类，即使在未处理的情况下被拒绝也不会抛出错误。
 
 ### 导入
 
@@ -23,17 +23,17 @@ new StatefulPromise<T>(executor: StatefulPromiseExecutor<T>);
 
 ##### `executor`
 
-对 `StatefulPromise` 而言，`executor` 的作用与 `Promise()` 构造函数中的 [`executor`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise#executor) 相同。
+对于 `StatefulPromise` 来说，它与 `Promise()` 构造函数的 [`executor`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise#executor) 作用相同。
 
 #### 返回值
 
-当通过 `new` 调用时，`StatefulPromise` 会返回其实例。
+如果通过 `new` 调用，`StatefulPromise` 将返回其实例。
 
-#### 示例
+#### 例子
 
 ##### 解决
 
-以下示例展示了如何等待 `StatefulPromise` 解决并获取结果：
+以下示例等待 `StatefulPromise` 解决，并接收其结果：
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -49,7 +49,7 @@ console.log(result); // "test"
 
 ##### 拒绝
 
-以下示例展示了如何等待 `StatefulPromise` 被拒绝，并期望在处理时抛出错误：
+以下示例等待 `StatefulPromise` 被拒绝，并期望在处理时抛出错误：
 
 ```ts
 const promise = new StatefulPromise((_, reject) => {
@@ -67,19 +67,19 @@ try {
 }
 ```
 
-可以看出，对于普通的 `Promise` 而言，如果未处理的情况下被拒绝（即调用 `reject`），则会发生 `unhandledrejection`，而 `StatefulPromise` 则不会在显式处理之前抛出错误。
+普通的 `Promise` 在未处理的情况下被拒绝（即调用 `reject`）时会发生 `unhandledrejection`，但可以看出，`StatefulPromise` 在明确处理之前不会抛出错误。
 
 ### `.state` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
-表示当前 `StatefulPromise` 的状态。状态有以下三种：
+表示当前 `StatefulPromise` 的状态。状态共有三种：
 
-- `pending`: 表示处于待处理状态，尚未解决或拒绝。
+- `pending`: 表示处于挂起状态。尚未解决或拒绝。
 - `fulfilled`: 表示已解决。
 - `rejected`: 表示已拒绝。
 
 ### `.then()` <Badge variant="instance" /><Badge variant="method" />
 
-`.then` 会接收成功和失败情况下的回调函数，并返回 `StatefulPromise` 对象。
+`.then` 接收 `StatefulPromise` 成功和失败时的回调函数，并返回 `StatefulPromise` 对象。
 
 ```ts
 then<R1, R2>(
@@ -98,7 +98,7 @@ then<R1, R2>(
 
 ### `.resolve()` <Badge variant="static" /><Badge variant="method" />
 
-`.resolve` 会返回一个使用给定值解决的 `StatefulPromise`。
+`.resolve` 返回一个用给定值解决的 `StatefulPromise`。
 
 ```ts
 resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
@@ -108,15 +108,15 @@ resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
 
 ##### `value`
 
-要解决的值，默认值为 `undefined`。
+要解决的值。默认值为 `undefined`。
 
 #### 返回值
 
-返回一个使用给定的 `value` 解决的 `StatefulPromise` 对象。如果 `value` 是 `StatefulPromise` 对象，则直接返回该值。
+返回一个用参数 `value` 解决的 `StatefulPromise` 对象。如果值是 `StatefulPromise` 对象，则返回该值。
 
 ### `.reject()` <Badge variant="static" /><Badge variant="method" />
 
-`.reject` 会返回一个使用给定理由拒绝的 `StatefulPromise` 对象。
+`.reject` 返回一个用给定原因拒绝的 `StatefulPromise` 对象。
 
 ```ts
 reject<T>(reason?: unknown): StatefulPromise<T>;
@@ -126,15 +126,15 @@ reject<T>(reason?: unknown): StatefulPromise<T>;
 
 ##### `reason`
 
-拒绝的理由，默认值为 `undefined`。
+拒绝的原因。默认值为 `undefined`。
 
 #### 返回值
 
-返回一个使用给定的 `reason` 拒绝的 `StatefulPromise`。
+返回一个用参数 `reason` 拒绝的 `StatefulPromise`。
 
 ### `.withResolvers()` <Badge variant="static" /><Badge variant="method" />
 
-`.withResolvers` 会返回一个包含新 `StatefulPromise` 对象以及解决或拒绝该对象的函数的对象。
+`.withResolvers` 返回一个包含新的 `StatefulPromise` 对象以及用于解决或拒绝它的函数的对象。
 
 ```ts
 withResolvers<T>(): {
@@ -150,23 +150,23 @@ withResolvers<T>(): {
 
 #### 返回值
 
-返回一个包含以下属性的普通对象：
+一个包含以下属性的普通对象：
 
 ##### `promise`
 
-一个新的 `StatefulPromise` 对象。
+新的 `StatefulPromise` 对象。
 
 ##### `resolve`
 
-用于解决 `promise` 的函数。
+解决 `promise` 的函数。
 
 ##### `reject`
 
-用于拒绝 `promise` 的函数。
+拒绝 `promise` 的函数。
 
 ### `.try()` <Badge variant="static" /><Badge variant="method" />
 
-`.try` 是一个将函数包装在 `StatefulPromise` 中的函数。
+`.try` 是一个用 `StatefulPromise` 包装函数的函数。
 
 ```ts
 try<T, A extends readonly unknown[]>(
@@ -179,17 +179,17 @@ try<T, A extends readonly unknown[]>(
 
 ##### `func`
 
-要调用的函数，该函数可以返回非 `StatefulPromise` 的值，也可以在函数内部同步地抛出错误。
+要调用的函数。此函数可以返回 `StatefulPromise` 以外的值。也可以在函数内同步抛出错误。
 
 #### 返回值
 
-- 如果 `func` 同步地返回值，则返回处于解决状态的 `StatefulPromise`。
-- 如果 `func` 同步地抛出错误，则返回处于拒绝状态的 `StatefulPromise`。
-- 如果 `func` 异步地解决或拒绝，则返回处于待处理状态的 `StatefulPromise`。
+- 如果 `func` 同步返回值，则返回已解决状态的 `StatefulPromise`。
+- 如果 `func` 同步抛出错误，则返回已拒绝状态的 `StatefulPromise`。
+- 如果 `func` 异步解决或拒绝，则返回挂起状态的 `StatefulPromise`。
 
-#### 示例
+#### 例子
 
-以下示例展示了同步抛出的错误是如何被 `StatefulPromise` 捕获的：
+以下示例显示了同步抛出的错误是如何被 `StatefulPromise` 捕获的：
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -205,7 +205,7 @@ await promise.then(null, e => {
 
 ### `.allRejected()` <Badge variant="static" /><Badge variant="method" />
 
-`.allRejected` 是一个收集被拒绝的 `StatefulPromise` 的理由的函数。
+`.allRejected` 是一个只收集被拒绝的 `StatefulPromise` 原因的函数。
 
 ```ts
 allRejected(promises: Iterable<unknown>): StatefulPromise<unknown[]>;
@@ -219,12 +219,12 @@ allRejected<T>(
 
 ##### `promises`
 
-一个可迭代对象，它可以包含非 `StatefulPromise` 对象，但这些对象会被判定为错误。同时，普通的 `Promise` 也会被忽略。
+可迭代对象。可以包含 `StatefulPromise` 对象以外的对象，但它们不会被判定为错误。普通的 `Promise` 也同样会被忽略。
 
 ##### `extract`
 
-用于从 `promises` 中提取 `StatefulPromise` 对象的函数。
+从 `promises` 中提取 `StatefulPromise` 对象的函数。
 
 #### 返回值
 
-返回一个使用被拒绝的 `StatefulPromise` 对象的理由数组解决的 `StatefulPromise` 对象。
+返回一个用被拒绝的 `StatefulPromise` 对象的原因数组解决的 `StatefulPromise` 对象。

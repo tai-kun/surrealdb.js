@@ -5,7 +5,7 @@ slug: en/v2/api/utils/stateful-promise
 
 import Badge from "~/components/en/Badge.astro";
 
-`StatefulPromise` is a class that implements `PromiseLike` that doesn't throw errors when it is rejected in an unhandled state.
+`StatefulPromise` is a class implementing `PromiseLike` that doesn't throw errors even if rejected in an unhandled state.
 
 ### Import
 
@@ -23,17 +23,17 @@ new StatefulPromise<T>(executor: StatefulPromiseExecutor<T>);
 
 ##### `executor`
 
-Plays the same role as the [`executor`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise#executor) of the `Promise()` constructor for `StatefulPromise`.
+Serves the same purpose as the [`executor`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise#executor) in the `Promise()` constructor for `StatefulPromise`.
 
 #### Return Value
 
-When called via `new`, `StatefulPromise` returns its instance.
+When called with `new`, `StatefulPromise` returns its instance.
 
 #### Examples
 
-##### Resolved
+##### Resolution
 
-The following example waits until the `StatefulPromise` is resolved and then receives its result:
+The following example waits until the `StatefulPromise` resolves and receives its result:
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -47,9 +47,9 @@ const result = await promise;
 console.log(result); // "test"
 ```
 
-##### Rejected
+##### Rejection
 
-The following example waits until the `StatefulPromise` is rejected and then expects to throw an error when handling it:
+The following example waits until the `StatefulPromise` is rejected and expects an error to be thrown upon handling:
 
 ```ts
 const promise = new StatefulPromise((_, reject) => {
@@ -67,19 +67,19 @@ try {
 }
 ```
 
-Normally, a regular `Promise` would produce an `unhandledrejection` if it were rejected in an unhandled state (i.e., if `reject` is called). However, you can see that `StatefulPromise` does not throw an error until it is explicitly handled.
+Note that while a regular `Promise` would trigger an `unhandledrejection` if rejected in an unhandled state (i.e., `reject` is called), `StatefulPromise` does not throw an error until explicitly handled.
 
 ### `.state` <Badge variant="instance" /><Badge variant="property" /><Badge variant="readonly" />
 
-Represents the current state of the `StatefulPromise`. There are three states:
+Represents the current state of the `StatefulPromise`. There are three possible states:
 
-- `pending`: Indicates that it is pending. It has not yet been resolved or rejected.
-- `fulfilled`: Indicates that it has been resolved.
-- `rejected`: Indicates that it has been rejected.
+- `pending`: Indicates that the promise is pending.  It has neither resolved nor rejected yet.
+- `fulfilled`: Indicates that the promise has been resolved.
+- `rejected`: Indicates that the promise has been rejected.
 
 ### `.then()` <Badge variant="instance" /><Badge variant="method" />
 
-`.then` takes callback functions for success and failure cases of the `StatefulPromise` and returns a `StatefulPromise` object.
+`.then` takes callback functions for both success and failure cases of the `StatefulPromise` and returns a `StatefulPromise` object.
 
 ```ts
 then<R1, R2>(
@@ -90,7 +90,7 @@ then<R1, R2>(
 
 #### Arguments
 
-The same as [`Promise.prototype.then`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/then#onfulfilled).
+Same as [`Promise.prototype.then`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/then#onfulfilled).
 
 #### Return Value
 
@@ -98,7 +98,7 @@ Returns a `StatefulPromise` object.
 
 ### `.resolve()` <Badge variant="static" /><Badge variant="method" />
 
-`.resolve` returns a `StatefulPromise` that is resolved with the given value.
+`.resolve` returns a `StatefulPromise` resolved with the given value.
 
 ```ts
 resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
@@ -108,15 +108,15 @@ resolve<T>(value?: T | PromiseLike<T>): StatefulPromise<Awaited<T>>;
 
 ##### `value`
 
-The value to resolve with. Default value is `undefined`.
+The value to resolve with.  Defaults to `undefined`.
 
 #### Return Value
 
-Returns a `StatefulPromise` object that is resolved with the given `value`. If the value is a `StatefulPromise` object, it returns that value.
+Returns a `StatefulPromise` object resolved with the given `value`. If the value is a `StatefulPromise` object, that value is returned.
 
 ### `.reject()` <Badge variant="static" /><Badge variant="method" />
 
-`.reject` returns a `StatefulPromise` object that is rejected with the given reason.
+`.reject` returns a `StatefulPromise` object rejected with the given reason.
 
 ```ts
 reject<T>(reason?: unknown): StatefulPromise<T>;
@@ -126,15 +126,15 @@ reject<T>(reason?: unknown): StatefulPromise<T>;
 
 ##### `reason`
 
-The reason to reject with. Default value is `undefined`.
+The reason for rejection. Defaults to `undefined`.
 
 #### Return Value
 
-Returns a `StatefulPromise` that is rejected with the given `reason`.
+Returns a `StatefulPromise` rejected with the given `reason`.
 
 ### `.withResolvers()` <Badge variant="static" /><Badge variant="method" />
 
-`.withResolvers` is a function that returns a new `StatefulPromise` object and an object that contains functions to resolve or reject it.
+`.withResolvers` is a function that returns a new `StatefulPromise` object and an object containing functions to resolve or reject it.
 
 ```ts
 withResolvers<T>(): {
@@ -150,11 +150,11 @@ None.
 
 #### Return Value
 
-A plain object with the following properties:
+A plain object containing the following properties:
 
 ##### `promise`
 
-A new `StatefulPromise` object.
+The new `StatefulPromise` object.
 
 ##### `resolve`
 
@@ -179,17 +179,17 @@ try<T, A extends readonly unknown[]>(
 
 ##### `func`
 
-The function to be called. This function can return a value other than `StatefulPromise`. It can also throw errors synchronously within the function.
+The function to be called. This function can return values other than `StatefulPromise`.  It can also throw errors synchronously within the function.
 
 #### Return Value
 
-- If `func` returns a value synchronously, it returns a resolved `StatefulPromise`.
-- If `func` throws an error synchronously, it returns a rejected `StatefulPromise`.
-- If `func` resolves or rejects asynchronously, it returns a pending `StatefulPromise`.
+- If `func` returns a value synchronously, a resolved `StatefulPromise` is returned.
+- If `func` throws an error synchronously, a rejected `StatefulPromise` is returned.
+- If `func` resolves or rejects asynchronously, a pending `StatefulPromise` is returned.
 
-#### Examples
+#### Example
 
-The following example shows that an error thrown synchronously is caught by `StatefulPromise`:
+The following example shows that a synchronously thrown error is caught by the `StatefulPromise`:
 
 ```ts
 import { StatefulPromise } from "@tai-kun/surrealdb/utils";
@@ -205,7 +205,7 @@ await promise.then(null, e => {
 
 ### `.allRejected()` <Badge variant="static" /><Badge variant="method" />
 
-`.allRejected` is a function that collects only the reasons of the rejected `StatefulPromise`.
+`.allRejected` is a function that collects only the reasons of rejected `StatefulPromise`s.
 
 ```ts
 allRejected(promises: Iterable<unknown>): StatefulPromise<unknown[]>;
@@ -219,12 +219,12 @@ allRejected<T>(
 
 ##### `promises`
 
-An iterable object. It can contain values other than `StatefulPromise` objects, but they will be treated as errors. Similarly, regular `Promise` objects will also be ignored.
+An iterable object. It can contain non-`StatefulPromise` objects, but they will not be treated as errors.  Regular `Promise` objects are similarly ignored.
 
 ##### `extract`
 
-A function that extracts the `StatefulPromise` object from `promises`.
+A function to extract `StatefulPromise` objects from `promises`.
 
 #### Return Value
 
-Returns a `StatefulPromise` object resolved with an array of reasons why the `StatefulPromise` objects were rejected.
+Returns a `StatefulPromise` object resolved with an array of the reasons why `StatefulPromise` objects were rejected.

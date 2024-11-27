@@ -1,15 +1,15 @@
 ---
-title: 퓨처
+title: Future
 slug: ko/v2/api/data/future
 banner:
-  content: 이 기능은 실험적입니다.
+  content: 이 기능은 실험적인 기능입니다.
 ---
 
 import Badge from "~/components/ko/Badge.astro";
 
-`Future`는 SurrealDB의 [퓨처 기능](https://surrealdb.com/docs/surrealql/datamodel/futures)을 나타내는 클래스입니다.
+`Future`는 SurrealDB의 [Futures 기능](https://surrealdb.com/docs/surrealql/datamodel/futures)을 나타내는 클래스입니다.
 
-### 가져오기
+### import
 
 ```ts
 import { Future } from "@tai-kun/surrealdb/decodeonly-datatypes";
@@ -19,25 +19,25 @@ import { Future } from "@tai-kun/surrealdb/standard-datatypes";
 
 ### `.constructor()`
 
-새로운 `Future` 객체를 만듭니다.
+새로운 `Future` 객체를 생성합니다.
 
 ```ts
 new Future(source: string);
 ```
 
-#### 인수
+#### 매개변수
 
 ##### `source`
 
-퓨처 블록 내부의 값이나 식입니다.
+future 블록 내의 값 또는 식입니다.
 
-#### 반환 값
+#### 반환값
 
-`new`를 통해 호출할 경우, `Future`는 해당 인스턴스를 반환합니다.
+`new`를 통해 호출될 경우, `Future`는 해당 인스턴스를 반환합니다.
 
 ### `.block` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-퓨처 블록 내부의 값이나 식입니다.
+future 블록 내의 값 또는 식입니다.
 
 ```ts
 .block: number;
@@ -51,15 +51,15 @@ new Future(source: string);
 .toString(): string;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
-퓨처 블록 내부의 값이나 식을 반환합니다.
+future 블록 내의 값 또는 식을 반환합니다.
 
-#### 예제
+#### 예시
 
 ```ts
 import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
@@ -71,21 +71,21 @@ console.log(future.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-`Future` 객체를 SurrealQL에 삽입 가능한 문자열로 변환합니다. `.toString()`과 유사하지만, 블록은 중괄호(`{}`)로 둘러싸이고, `<future>`로 캐스팅됩니다.
+`Future` 객체를 SurrealQL에 포함할 수 있는 문자열로 변환합니다. `.toString()`과 유사하지만, 블록은 중괄호(`{}`)로 둘러싸여 있으며 `<future>`로 캐스팅됩니다.
 
 ```ts
 .toSurql(): string;
 ```
 
-#### 인수
+#### 매개변수
 
 없음.
 
-#### 반환 값
+#### 반환값
 
-SurrealQL에 삽입 가능한 퓨처를 반환합니다.
+SurrealQL에 포함할 수 있는 future를 반환합니다.
 
-#### 예제
+#### 예시
 
 ```ts
 import { Future } from "@tai-kun/surrealdb/encodable-datatypes";
@@ -97,13 +97,13 @@ console.log(future.toSurql());
 
 ### `.surql()` <Badge variant="static" /><Badge variant="method" /><Badge variant="standard" />
 
-이 메서드는 SurrealQL 작성을 돕습니다. 템플릿 리터럴을 사용하여 SurrealQL을 작성할 수 있습니다. 템플릿 리터럴에 삽입된 값은 자동으로 SurrealQL로 변환됩니다. 또한 VSCode에서 [SurrealDB 공식 확장 기능](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql)을 설치한 경우, 템플릿 리터럴의 구문 강조 표시가 활성화됩니다.
+이 메서드는 SurrealQL 작성을 지원합니다. 템플릿 리터럴을 사용하여 SurrealQL을 작성할 수 있습니다. 템플릿 리터럴에 포함된 값은 자동으로 SurrealQL로 변환됩니다. 또한 VSCode에서 [SurrealDB 공식 확장 기능](https://marketplace.visualstudio.com/items?itemName=surrealdb.surrealql)을 설치한 경우, 템플릿 리터럴의 구문 강조 표시가 활성화됩니다.
 
 ```ts
 .surql(texts: TemplateStringsArray, ...values: unknown[]): string;
 ```
 
-#### 인수
+#### 매개변수
 
 ##### `texts`
 
@@ -113,11 +113,11 @@ console.log(future.toSurql());
 
 `texts`의 각 요소 사이에 삽입할 값입니다.
 
-#### 반환 값
+#### 반환값
 
 SurrealQL입니다.
 
-#### 예제
+#### 예시
 
 ```ts
 import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
@@ -137,7 +137,7 @@ console.log(future.toSurql());
 //-> }
 ```
 
-위 예제를 `.surql()`을 사용하지 않으면 다음과 같습니다.
+위의 예시를 `.surql()`을 사용하지 않으면 다음과 같습니다.
 
 ```ts
 import { Future, Thing } from "@tai-kun/surrealdb/standard-datatypes";
@@ -159,13 +159,13 @@ console.log(future.toSurql());
 ```
 
 - 문자열이나 객체를 `toSurql` 헬퍼 함수나 `.toSurql()` 메서드를 사용하여 SurrealQL로 변환해야 합니다.
-- `Future.raw`를 사용하지 않고 문자열을 SurrealQL에 삽입할 수 있습니다.
+- `Future.raw`를 사용하지 않고 문자열을 SurrealQL에 포함할 수 있습니다.
 
-### 발전
+### 추가 정보
 
-#### `Future` 객체의 범용적인 판단
+#### `Future` 객체의 일반적인 판별
 
-프리셋에 의존하지 않고 값이 `Future` 객체인지 판단하려면 `isFuture` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로, 검증할 값의 프리셋이 불분명한 경우에 유용합니다.
+프리셋에 의존하지 않고 값이 `Future` 객체인지 판별하려면 `isFuture` 함수를 사용하는 것이 좋습니다. 이 함수는 `instanceof`를 사용하지 않으므로, 검증할 값의 프리셋이 불명확한 경우에 유용합니다.
 
 ```ts
 import { isFuture } from "@tai-kun/surrealdb";

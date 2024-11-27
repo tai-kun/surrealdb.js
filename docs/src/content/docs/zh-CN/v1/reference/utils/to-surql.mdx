@@ -21,7 +21,7 @@ function toSurql(value: unlnown): string;
 
 ##### `value`
 
-JavaScript 值。可以接收以下值之一：
+JavaScript 值。支持以下类型：
 
 - `string`
 - `number`
@@ -37,17 +37,18 @@ JavaScript 值。可以接收以下值之一：
 - `Set<unknown>`
 - `Map<unknown, unknown>`
 
-`unknown` 代表上述类型的组合值。
+`unknown` 表示上述类型的组合值。
 
-在转换过程中，上述顺序代表优先级。也就是说，即使普通对象拥有 `.toJSON` 函数，如果同时拥有 `.toSurql` 函数，则优先使用 `.toSurql` 函数。
+转换时，以上顺序表示优先级。也就是说，即使普通对象具有 `.toJSON` 函数，如果它也具有 `.toSurql` 函数，则后者优先。
 
-普通对象判断使用 [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj) 库。因此，如果普通对象没有 `.toSurql` 或 `.toJSON` 函数，并且拥有 `Symbol.toStringTag` 或 `Symbol.iterator` 属性，则不会被识别为对象，并抛出错误。
+普通对象的判断使用 [`is-plain-obj`](https://github.com/sindresorhus/is-plain-obj)。因此，如果普通对象既不具有 `.toSurql` 也不具有 `.toJSON`，并且具有 `Symbol.toStringTag` 或 `Symbol.iterator`，则不会将其判断为对象，而是抛出错误。
+
 
 #### 返回值
 
 SurrealQL 字符串。
 
-#### 示例
+#### 例子
 
 ```ts
 import { toSurql } from "@tai-kun/surrealdb/utils";
@@ -66,7 +67,7 @@ const surql = toSurql({
   set: new Set([{
     toSurql: () => `<bytes>"hello"`,
   }]),
-  string: "文字列",
+  string: "字符串",
   undefined: undefined,
 });
 
@@ -76,5 +77,5 @@ console.log(surql);
 输出：
 
 ```text
-{bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'文字列',undefined:NONE}
+{bigint:9007199254740992,boolean:[true,false],date:d'2024-06-01T12:34:56.789Z',map:{0:[0,1]},null:NULL,number:123,set:[<bytes>"hello"],string:'字符串',undefined:NONE}
 ```

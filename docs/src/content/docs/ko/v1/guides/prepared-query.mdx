@@ -5,7 +5,7 @@ slug: ko/v1/guides/prepared-query
 
 ## 기본 사용법
 
-미리 준비된 쿼리를 사용하는 기본적인 예는 다음과 같습니다.
+미리 준비된 쿼리를 사용하는 기본적인 예시는 다음과 같습니다.
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -24,11 +24,12 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-쿼리를 미리 준비하면 타입 추론이 유효해집니다. 하지만 추론된 타입은 수동으로 설정해야 합니다.
+쿼리를 미리 준비하면 타입 추론이 효과적으로 작동합니다. 하지만 추론되는 타입은 수동으로 설정해야 합니다.
 
-## 쿼리 결과 검증
 
-`.returns`의 인수에 쿼리 결과 검증자를 전달하면 쿼리가 더 안전해집니다. 다음 예에서는 zod를 사용하여 쿼리 결과가 의도한 값인지 검증합니다.
+## 쿼리 결과 검증하기
+
+`.returns` 인수에 쿼리 결과 검증기를 전달하면 쿼리가 더 안전해집니다. 다음 예시에서는 zod를 사용하여 쿼리 결과가 의도한 값인지 검증합니다.
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";
@@ -57,9 +58,10 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-zod에 의존하지 않으므로 valibot 또는 범용 함수로 응답을 검증할 수 있습니다.
+zod에 의존하지 않아도 valibot 또는 일반적인 함수로 응답을 검증할 수 있습니다.
 
-## 쿼리에 변수 삽입
+
+## 쿼리에 변수 삽입하기
 
 `surql`은 템플릿 문자열로 쿼리를 작성할 수 있으므로 값을 시각적으로 삽입할 수 있습니다.
 
@@ -84,7 +86,7 @@ const results = await db.query(CreateUserQuery);
 await db.disconnect();
 ```
 
-위 예에서 전송되는 RPC 요청의 매개변수는 다음과 같습니다.
+위 예시에서 전송되는 RPC 요청의 파라미터는 다음과 같습니다.
 
 ```text
 CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
@@ -97,7 +99,8 @@ CREATE ONLY type::thing('user', $_jst_0) CONTENT { age: $_jst_1 };
 }
 ```
 
-## 쿼리에 인수 정의
+
+## 쿼리에 인수 정의하기
 
 미리 정의된 쿼리에 인수를 정의하려면 `surql.slot`을 사용합니다.
 
@@ -130,13 +133,13 @@ const results = await db.query(CreateUserQuery, {
 await db.disconnect();
 ```
 
-슬롯에는 반드시 변수 이름이 필요합니다. `.type()` 메서드로 변수에 타입 레벨 제약을 설정할 수 있습니다. `.returns()`와 마찬가지로 `.type()`의 인수에 값을 검증하는 함수를 전달할 수 있습니다. 위 예에서는 변수 이름 `id`의 슬롯은 테이블 이름이 `"user"`인 레코드 ID여야 합니다.
+슬롯에는 반드시 변수 이름이 필요합니다. `.type()` 메서드로 변수에 타입 레벨 제약을 설정할 수 있습니다. `.returns()`와 마찬가지로 `.type()` 인수에 값을 검증하는 함수를 전달할 수 있습니다. 위 예시에서는 변수 이름 `id`의 슬롯은 테이블 이름이 `"user"`인 레코드 ID여야 합니다.
 
-슬롯의 인수에는 변수 이름에 이어 기본값을 설정할 수 있습니다. 실행 시 슬롯의 변수 이름이 생략되면 이 기본값이 사용됩니다. 위 예에서는 변수 이름 `age`의 슬롯에는 기본값 `42`가 설정되어 있습니다.
+슬롯 인수에는 변수 이름 다음에 기본값을 설정할 수 있습니다. 런타임에 슬롯의 변수 이름이 생략되면 이 기본값이 사용됩니다. 위 예시에서는 변수 이름 `age`의 슬롯에는 기본값 `42`가 설정되어 있습니다.
 
-슬롯은 `.type()` 외에도 `.rename()` 및 `.default()`、`.optional()`、`.required()`를 사용할 수 있습니다.
+슬롯은 `.type()` 외에도 `.rename()`, `.default()`, `.optional()`, `.required()`를 사용할 수 있습니다.
 
-미리 정의된 쿼리에 실행 시 변수 지정이 필수적인 슬롯이 포함되어 있는 경우, 해당 슬롯이 지정되지 않으면 쿼리는 실행 시 `SurrealTypeError`로 거부됩니다. TypeScript에서 올바르게 타입 추론이 수행되면 실행하지 않아도 타입 레벨에서 오류가 표시됩니다. 예를 들어, 다음과 같이 필수 변수를 생략하고 `tsc`로 타입 검사를 수행하면 오류가 발생합니다.
+미리 정의된 쿼리에 런타임에 변수 지정이 필수인 슬롯이 포함된 경우, 지정되지 않으면 쿼리는 런타임에 `SurrealTypeError`로 거부됩니다. TypeScript로 정확하게 타입 추론이 되어 있다면 실행하지 않더라도 타입 레벨에서 에러가 표시됩니다. 예를 들어, 다음과 같이 필수 변수를 생략하고 `tsc`로 타입 체크를 하면 에러가 발생합니다.
 
 ```ts
 import { surql, Surreal, Thing } from "@tai-kun/surrealdb";

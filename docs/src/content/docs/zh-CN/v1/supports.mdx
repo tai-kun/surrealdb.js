@@ -7,10 +7,10 @@ import { Aside } from "@astrojs/starlight/components"
 
 ## JavaScript
 
-此 SDK 使用了 `bigint`，因此需要 JavaScript 语言规范为 ES2020 及更高版本。预计在以下浏览器中可以正常运行：
+由于此 SDK 使用了 `bigint`，因此需要 ES2020 或更高版本的 JavaScript 语言规范。预期在以下浏览器中运行：
 
 | 浏览器 | 版本 |
-| --- | --- |
+|---|---|
 | Chrome  | `>=78` |
 | Edge    | `>=79` |
 | Safari  | `>=14` |
@@ -21,22 +21,22 @@ import { Aside } from "@astrojs/starlight/components"
 ### 服务器
 
 | 环境 | 版本 | 状态 |
-| --- | --- | --- |
+|---|---|---|
 | SurrealDB | `^1.5.4` | [GitHub](https://github.com/surrealdb/surrealdb) |
 | Node.js   | `18.x`,<br/>`20.x`,<br/>`^22.5.1` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/nodejs.yml?branch=v1&logo=Node.js&label=Node.js)](https://github.com/tai-kun/surrealdb.js/actions/workflows/nodejs.yml) |
 | Deno      | `^1.44.3` | 未测试 |
 | Bun       | `^1.1.13` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/bun.yml?branch=v1&logo=Bun&label=Bun)](https://github.com/tai-kun/surrealdb.js/actions/workflows/bun.yml) |
 
-- 使用 Node.js v22 时，请注意它目前尚未成为 LTS 版本。
-- Deno 尚未测试，但可能能够正常工作。建议使用 v1.44.3 或更高版本。低于此版本的 Deno 存在将 `AbortSignal.timeout()` 误判为资源泄漏的错误。
-- 建议始终使用 Bun 的最新版本。
+- 请注意，Node.js v22 尚未成为 LTS 版本。
+- Deno 环境下尚未测试，但可能可以运行。建议使用 v1.44.3 或更高版本。较低版本存在将 `AbortSignal.timeout()` 误判为资源泄漏的 bug。
+- 建议 Bun 使用最新版本。
 
 ### 浏览器
 
 | 环境 | 版本 | 状态 |
-| --- | --- | --- |
+|---|---|---|
 | Chromium  | `>=104` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/chromium.yml?branch=v1&logo=googlechrome&label=Chromium)](https://github.com/tai-kun/surrealdb.js/actions/workflows/chromium.yml) |
 | Firefox | `>=100` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/firefox.yml?branch=v1&logo=Firefox&label=Firefox)](https://github.com/tai-kun/surrealdb.js/actions/workflows/firefox.yml) |
 | WebKit  | `>=15.4` | [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/tai-kun/surrealdb.js/webkit.yml?branch=v1&style=flat&logo=safari&label=WebKit)](https://github.com/tai-kun/surrealdb.js/actions/workflows/webkit.yml) |
 
-- 支持的浏览器（引擎）与 CI 上 Playwright 可运行的最低版本一致。因此，低于上述版本也可能能够运行，但未经测试。
+- 支持的浏览器（引擎）与 CI 上 Playwright 运行的最小版本一致。因此，低于上述版本的浏览器也可能运行，但未经测试。

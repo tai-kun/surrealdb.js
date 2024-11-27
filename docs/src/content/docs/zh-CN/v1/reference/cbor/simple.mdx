@@ -1,11 +1,11 @@
 ---
-title: 简单
+title: 简单值
 slug: zh-CN/v1/reference/cbor/simple
 ---
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Simple` 是一个用 0 到 255 之间的整数值标识的简单值。
+`Simple` 代表一个由 0 到 255 的整数标识的简单值。
 
 ### 导入
 
@@ -25,15 +25,15 @@ new Simple(value: number);
 
 ##### `value`
 
-0 到 255 之间的整数值。
+0 到 255 之间的整数。
 
 #### 返回值
 
-通过 `new` 调用时，`Simple` 会返回其实例。
+如果通过 `new` 调用，`Simple` 将返回其实例。
 
 ### `.value` <Badge variant="instance" /><Badge variant="property" />
 
-识别 `Simple` 对象的 0 到 255 之间的整数值。
+一个 0 到 255 之间的整数，用于标识 `Simple` 对象。
 
 ### 备注
 

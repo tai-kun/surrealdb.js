@@ -5,7 +5,7 @@ slug: zh-CN/v2/api/data/thing
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-`Thing` 是一个用来表示 [记录 ID](https://surrealdb.com/docs/surrealql/datamodel/ids) 的类。
+`Thing` 类用于表示[记录 ID](https://surrealdb.com/docs/surrealql/datamodel/ids)。
 
 ### 导入
 
@@ -28,11 +28,11 @@ new Thing(table: string, id: string | number | bigint | object);
 
 ##### `source`
 
-记录 ID 的表名和 ID 的键值对。
+记录 ID 的表名和 ID 部分的组合。
 
 ##### `table`
 
-记录 ID 的表名。
+记录 ID 的表名部分。
 
 ##### `id`
 
@@ -40,11 +40,11 @@ new Thing(table: string, id: string | number | bigint | object);
 
 #### 返回值
 
-如果通过 `new` 调用，`Thing` 将返回其实例。
+如果通过 `new` 关键字调用，`Thing` 将返回它的实例。
 
 ### `.table` <Badge variant="instance" /><Badge variant="property" /><Badge variant="decodeonly" />
 
-记录 ID 的表名。获取该属性时，字符串不会被转义。
+记录 ID 的表名部分。获取此属性时，字符串不会被转义。
 
 ```ts
 .table: string;
@@ -52,7 +52,7 @@ new Thing(table: string, id: string | number | bigint | object);
 
 #### 例子
 
-获取该属性时，字符串不会被转义。
+获取此属性时，字符串不会被转义。
 
 ```ts
 import { Thing } from "@tai-kun/surrealdb/decodeonly-datatypes";
@@ -72,9 +72,9 @@ console.log(this.id);
 
 ### `.toString()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Thing` 对象转换为 SurrealQL 中可用的字符串变量。表名和 ID 部分分别使用与 SurrealDB 实现相同的转义和格式。同时，对象属性将按升序排序。
+将 `Thing` 对象转换为 SurrealQL 中可用的字符串表示形式。表名和 ID 部分将按照 SurrealDB 的实现方式进行转义和格式化。对象属性将按升序排序。
 
-`.valueOf()` 和 `.toJSON()` 将返回与该方法相同的结果。
+`.valueOf()` 和 `.toJSON()` 方法将返回与该方法相同的结果。
 
 ```ts
 .toString(): string;
@@ -86,7 +86,7 @@ console.log(this.id);
 
 #### 返回值
 
-返回格式化的记录 ID 字符串。
+返回格式化后的记录 ID 字符串。
 
 #### 例子
 
@@ -103,7 +103,7 @@ console.log(thing.toString());
 
 ### `.toSurql()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="encodable" />
 
-将 `Thing` 对象转换为可以嵌入到 SurrealQL 中的字符串。与 `.toString()` 类似，但添加了 `r` 前缀，以告知查询解析器该字符串是记录 ID。
+将 `Thing` 对象转换为可以嵌入 SurrealQL 的字符串。类似于 `.toString()`，但添加 `r` 前缀，以便查询解析器识别该字符串是记录 ID。
 
 ```ts
 .toSurql(): string;
@@ -115,7 +115,7 @@ console.log(thing.toString());
 
 #### 返回值
 
-返回格式化的记录 ID 字符串。
+返回格式化后的记录 ID 字符串。
 
 #### 例子
 
@@ -129,7 +129,7 @@ console.log(thing.toSurql());
 
 ### `.clone()` <Badge variant="instance" /><Badge variant="method" /><Badge variant="standard" />
 
-复制 `Thing` 对象。但是，ID 部分不会被复制，而是会被引用。
+复制 `Thing` 对象。但是，ID 部分不会被复制，而是被引用。
 
 ```ts
 .clone(): this;
@@ -143,9 +143,9 @@ console.log(thing.toSurql());
 
 返回一个新的 `Thing` 对象。如果继承了 `Thing` 类，则返回该类的实例。
 
-### 扩展
+### 进阶
 
-#### 类型守卫
+#### 类型保护
 
 可以使用类型参数来确保 `Thing` 的表名和 ID 部分的类型安全：
 
@@ -159,9 +159,9 @@ function isUserRecordId(thing: unknown): thing is Thing<"user", Uuid> {
 }
 ```
 
-#### 对 `Thing` 对象进行通用判断
+#### 通用 `Thing` 对象判断
 
-建议使用 `isThing` 函数来判断一个值是否是 `Thing` 对象，而不依赖于预设。该函数不使用 `instanceof`，因此在验证值预设未知时很有用。
+建议使用 `isThing` 函数来判断值是否是 `Thing` 对象，而无需依赖预设。此函数不使用 `instanceof`，因此在验证值的预设不明确时非常有用。
 
 ```ts
 import { isThing } from "@tai-kun/surrealdb";

@@ -5,11 +5,11 @@ slug: zh-CN/v2/guides/authentication
 
 import Badge from "~/components/zh-CN/Badge.astro";
 
-SurrealDB 支持两种认证方式：用户名和密码认证以及自定义认证。用户名和密码认证需要使用 [`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user) 语句定义的用户名和密码。自定义认证使用 [`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access) 语句定义。在本指南中，我们将前者称为“用户认证”，后者称为“访问认证”。
+认证方式有两种。一种是使用用户名和密码进行认证，这需要使用[`DEFINE USER`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/user)语句定义的用户名和密码；另一种是使用[`DEFINE ACCESS`](https://surrealdb.com/docs/surrealdb/surrealql/statements/define/access)语句定义的自定义认证。这里我们将前者称为“用户认证”，后者称为“访问认证”。
 
 ### `.signin()` <Badge variant="instance" /><Badge variant="method" />
 
-使用用户认证或访问认证登录 SurrealDB。
+使用用户认证或访问认证登录SurrealDB。
 
 ```ts
 signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -22,25 +22,25 @@ signin(auth: Auth, options?: ClientRpcOptions): Promise<Jwt>;
 用户认证或访问认证所需的信息。每种认证类型所需的参数如下：
 
 | 认证类型 | 参数 |
-| --- | ---|
+|---|---|
 | 根用户 | `{ user: string, pass: string }` |
 | 命名空间用户 | `{ user: string, pass: string, ns: string }` |
 | 数据库用户 | `{ user: string, pass: string, ns: string, db: string }` |
 | 访问 | `{ ac: string, ns: string, db: string, [param: string]: unknown }` |
 
-访问认证通常需要定义的访问 (`ac`) 以及其他参数。
+访问认证通常需要根据定义的访问权限(`ac`)添加额外的参数。
 
 ##### `options`
 
-PRC 请求的选项。
+PRC请求的选项。
 
 #### 返回值
 
-返回一个 `Jwt` 类型的值，并通过 `Promise` 对象进行解析。
+返回一个以`Jwt`解析的`Promise`对象。
 
 #### 示例
 
-以下示例使用根用户登录 SurrealDB：
+以下示例使用根用户登录SurrealDB：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -53,8 +53,8 @@ const jwt = await db.signin({
   pass: "passw0rd",
 });
 
-console.log(jwt.issuedAt);  // e.g. 1722749786
-console.log(jwt.expiresAt); // e.g. 1722753386
+console.log(jwt.issuedAt);  // 例如 1722749786
+console.log(jwt.expiresAt); // 例如 1722753386
 console.log(jwt.namespace); // undefined
 console.log(jwt.database);  // undefined
 console.log(jwt.access);    // undefined
@@ -66,7 +66,7 @@ console.log(JSON.stringify(jwt)); // '"[REDACTED]"'
 await db.close();
 ```
 
-以下示例使用命名空间用户登录 SurrealDB：
+以下示例使用命名空间用户登录SurrealDB：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -88,7 +88,7 @@ console.log(jwt.user);      // 'ns_user'
 await db.close();
 ```
 
-以下示例使用数据库用户登录 SurrealDB：
+以下示例使用数据库用户登录SurrealDB：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -111,7 +111,7 @@ console.log(jwt.user);      // 'db_user'
 await db.close();
 ```
 
-以下示例使用记录访问登录 SurrealDB。`.user` 属性将设置为记录 ID：
+以下示例使用记录访问登录SurrealDB。`.user` 将设置记录 ID：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -129,14 +129,14 @@ const jwt = await db.signin({
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
 console.log(jwt.access);    // 'account'
-console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+console.log(jwt.user);      // 例如 'user:⟨tai-kun⟩'
 
 await db.close();
 ```
 
 ### `.signup()` <Badge variant="instance" /><Badge variant="method" />
 
-使用访问认证注册 SurrealDB。
+使用访问认证注册SurrealDB。
 
 ```ts
 signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
@@ -150,11 +150,11 @@ signup(auth: RecordAccessAuth, options?: ClientRpcOptions): Promise<Jwt>;
 
 ##### `options`
 
-PRC 请求的选项。
+PRC请求的选项。
 
 #### 返回值
 
-返回一个 `Jwt` 类型的值，并通过 `Promise` 对象进行解析。
+返回一个以`Jwt`解析的`Promise`对象。
 
 #### 示例
 
@@ -174,14 +174,14 @@ const jwt = await db.signup({
 console.log(jwt.namespace); // 'my_namespace'
 console.log(jwt.database);  // 'my_database'
 console.log(jwt.access);    // 'account'
-console.log(jwt.user);      // e.g. 'user:⟨tai-kun⟩'
+console.log(jwt.user);      // 例如 'user:⟨tai-kun⟩'
 
 await db.close();
 ```
 
 ### `.authenticate()` <Badge variant="instance" /><Badge variant="method" />
 
-使用 JWT 认证当前连接。
+使用JWT认证当前连接。
 
 ```ts
 authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
@@ -191,15 +191,15 @@ authenticate(token: string | Jwt, options?: ClientRpcOptions): Promise<void>
 
 ##### `token`
 
-要认证的 JWT。
+要认证的JWT。
 
 ##### `options`
 
-RPC 请求的选项。
+RPC请求的选项。
 
 #### 返回值
 
-返回一个 `undefined` 类型的值，并通过 `Promise` 对象进行解析。
+返回一个以`undefined`解析的`Promise`对象。
 
 ### `.invalidate()` <Badge variant="instance" /><Badge variant="method" />
 
@@ -213,14 +213,14 @@ invalidate(options?: ClientRpcOptions): Promise<void>
 
 ##### `options`
 
-RPC 请求的选项。
+RPC请求的选项。
 
 #### 返回值
 
-返回一个 `undefined` 类型的值，并通过 `Promise` 对象进行解析。
+返回一个以`undefined`解析的`Promise`对象。
 
 {/* ### `.info()` <Badge variant="instance" /><Badge variant="method" />
 
 #### 参数
 
-#### 返値 */}
+#### 返回值 */}

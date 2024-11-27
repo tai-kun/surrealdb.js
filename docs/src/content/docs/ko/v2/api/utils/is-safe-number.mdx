@@ -3,9 +3,9 @@ title: isSafeNumber
 slug: ko/v2/api/utils/is-safe-number
 ---
 
-`isSafeNumber`는 입력으로 받은 숫자가 연산상 안전한 숫자인지 확인합니다.
+`isSafeNumber` 함수는 인수로 전달된 숫자가 연산상 안전한 숫자인지 확인합니다.
 
-### 임포트
+### import
 
 ```ts
 import { isSafeNumber } from "@tai-kun/surrealdb/utils";
@@ -29,4 +29,4 @@ function isSafeNumber(value: number): boolean;
 
 - `NaN`
 - 무한대
-- ±2^53-1 범위를 벗어나는 경우
+- ±2^53-1 범위를 초과하는 값

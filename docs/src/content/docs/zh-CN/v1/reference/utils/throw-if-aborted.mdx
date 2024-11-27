@@ -3,7 +3,7 @@ title: throwIfAborted
 slug: zh-CN/v1/reference/utils/throw-if-aborted
 ---
 
-`throwIfAborted` 函数用于检查传入的中止信号是否已中止，如果是，则抛出中止原因。它为不支持 `new AbortSignal().throwIfAborted()` 的环境提供替代方案。
+`throwIfAborted` 函数会在传入的中止信号已被中止的情况下抛出错误，包含中止的原因。该函数是为了在未实现 `new AbortSignal().throwIfAborted()` 的环境中提供支持。
 
 ## 导入
 

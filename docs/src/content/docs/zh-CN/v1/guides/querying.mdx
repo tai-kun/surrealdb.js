@@ -7,7 +7,7 @@ import Badge from "~/components/zh-CN/Badge.astro";
 
 ### `.query()` <Badge variant="instance" /><Badge variant="method" />
 
-执行自定义 SurrealQL。
+执行自定义 SurrealQL 查询。
 
 ```ts
 query(
@@ -25,15 +25,15 @@ SurrealQL 字符串或预先准备好的查询。
 
 ##### `vars`
 
-在执行 SurrealQL 时传递的变量。请注意，变量名不要以美元符号开头。
+在执行 SurrealQL 时传递的变量。请注意，变量名不能以美元符号开头。
 
 ##### `options`
 
-PRC 请求的选项。
+PRC 请求选项。
 
 #### 返回值
 
-返回一个以 SurrealQL 执行结果的数组为解析结果的 `Promise` 对象。如果语句出现一个或多个失败，则会以包含这些错误消息的 `QueryFailedError` 拒绝。
+返回一个 `Promise` 对象，该对象解析为 SurrealQL 执行结果的数组。如果一个或多个语句失败，则会以包含这些错误消息的 `QueryFailedError` 拒绝。
 
 如果此方法被拒绝，则无法获得执行结果。如果需要手动进行错误处理，可以使用 [`.queryRaw()`](#queryraw)。
 
@@ -59,7 +59,7 @@ console.log(results);
 await db.disconnect();
 ```
 
-以下示例中，其中一个语句失败，因此查询将以 `QueryFailedError` 拒绝：
+以下示例中，一个语句失败，因此查询将被 `QueryFailedError` 拒绝：
 
 ```ts
 import { Surreal } from "@tai-kun/surrealdb";
@@ -93,7 +93,7 @@ await db.disconnect();
 
 ### `.queryRaw()` <Badge variant="instance" /><Badge variant="method" />
 
-执行自定义 SurrealQL。
+执行自定义 SurrealQL 查询。
 
 ```ts
 queryRaw(
@@ -111,15 +111,15 @@ SurrealQL 字符串或预先准备好的查询。
 
 ##### `vars`
 
-在执行 SurrealQL 时传递的变量。变量名不要以 `$` 开头。
+在执行 SurrealQL 时传递的变量。变量名不能以美元符号开头。
 
 ##### `options`
 
-PRC 请求的选项。
+PRC 请求选项。
 
 #### 返回值
 
-返回一个以 SurrealQL 执行结果的数组为解析结果的 `Promise` 对象。
+返回一个 `Promise` 对象，该对象解析为 SurrealQL 执行结果的数组。
 
 ```ts
 type QueryResult = {

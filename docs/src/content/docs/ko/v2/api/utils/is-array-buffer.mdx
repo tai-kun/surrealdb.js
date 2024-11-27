@@ -3,9 +3,9 @@ title: isBrowser
 slug: ko/v2/api/utils/is-array-buffer
 ---
 
-`isArrayBuffer` 함수는 입력으로 주어진 값이 `ArrayBuffer` 객체인지 확인합니다.
+`isArrayBuffer` 함수는 인수로 주어진 값이 `ArrayBuffer` 객체인지 판별하는 함수입니다.
 
-### 가져오기
+### import
 
 ```ts
 import { isArrayBuffer } from "@tai-kun/surrealdb/utils";
@@ -25,8 +25,8 @@ function isArrayBuffer(value: unknown): value is ArrayBuffer;
 
 #### 반환값
 
-`value`가 `ArrayBuffer` 객체이면 `true`를 반환하고, 그렇지 않으면 `false`를 반환합니다.
+`value`가 `ArrayBuffer` 객체이면 `true`를, 그렇지 않으면 `false`를 반환합니다.
 
 ### 설명
 
-Firefox의 버전에 따라 `fetch`의 응답 본문을 `ArrayBuffer` 객체로 처리할 경우, `instanceof`로 판별이 불가능한 경우가 발생할 수 있습니다. 따라서 태그 이름으로 판별합니다. 이는 lodash의 동작과 유사합니다.
+Firefox의 일부 버전에서는 `fetch`의 응답 본문을 `ArrayBuffer` 객체로 설정하면 메서드는 가지고 있지만 `instanceof`로 판별할 수 없는 경우가 있으므로, 태그 이름으로 판별합니다. 이는 lodash의 동작과 유사합니다.
